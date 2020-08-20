@@ -5,3 +5,11 @@
 .logo{
     max-height: 5vh;
 }
+
+a{
+    color: #f68901 !important;
+}
+
+.dropdown-menu > a:hover{
+    background-color: #72964a65 !important;
+}
