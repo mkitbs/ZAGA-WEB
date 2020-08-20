@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { type } from 'os';
 
 @Component({
   selector: 'app-creatework-order',
@@ -7,48 +9,59 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateworkOrderComponent implements OnInit {
   
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
+
   workers = false;
   machines = false;
   materials = false;
+  workId = this.route.snapshot.params.workId;
+  workOrder;
 
   tempJSON = [
    {
     "id": 1,
-    "name": "",
-    "start": "",
-    "end": "",
+    "name": "Osnovno đubrenje",
+    "start": "19.08.2020.",
+    "end": "20.08.2020.",
     "field": "",
-    "culture": "",
-    "responsible": "",
-    "status": "",
+    "category": "Kategorija 1",
+    "culture": "Kukuruz 2020",
+    "responsible": "Nemanja Nemanjic",
+    "status": "Status 1",
     "machines": [{
       "id": 1,
-      "machine": "",
-      "worker": "",
-      "date": "",
-      "workPeriod": "",
-      "fuel": "",
-      "fuelType": "",
-      "storage": ""
+      "machine": "NH 456/1",
+      "worker": "Miloš Milošević",
+      "date": "20.08.2020.",
+      "workPeriod": "6",
+      "fuel": "10",
+      "fuelType": "Gorivo 1",
+      "storage": "Magacin 1"
     }],
     "workers": [{
         "id": 1,
-        "worker": "",
-        "date": "",
-        "workPeriod": "",
-        "treatedArea": ""
+        "worker": "Miloš Milošević",
+        "date": "20.08.2020.",
+        "workPeriod": "8",
+        "treatedArea": "3"
     }],
     "materials": [{
         "id": 1,
-        "name": "",
-        "quantity": "",
-        "unit": ""      
+        "name": "NPK 15:15:15",
+        "quantity": "1050",
+        "unit": "KG"      
     }]
    },
 ]
   
   ngOnInit() {
+    localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+    if(this.workId == "new") { //new
+
+    } else {
+      const workOrders: any[] = JSON.parse(localStorage["workOrders"]);
+      this.workOrder = workOrders.filter(order => order.id = this.workId)[0];
+    }
   }
 
   expandWorkers() {

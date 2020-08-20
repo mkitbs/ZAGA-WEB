@@ -9,7 +9,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
-  {path: "create/workOrder", component: CreateworkOrderComponent}
+  {path: "create/workOrder/:workId", component: CreateworkOrderComponent}
 ];
 
 @NgModule({

@@ -11,13 +11,13 @@
                    <i class="fa fa-file mr-2"></i>Nalog:
                 </td>
                 <td class="right-col-header">
-                    Osnovno đubrenje
+                    {{ workOrder.name }}
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-tasks mr-2"></i>Status:
                  </td>
                  <td class="right-col-header">
-                    Status 1 
+                    {{ workOrder.status }}
                  </td>
             </tr>
             <tr>
@@ -25,13 +25,13 @@
                     <i class="fa fa-calendar mr-2"></i>Datum:
                 </td>
                 <td class="right-col-header">
-                    19.08.2020. - 20.08.2020.
+                    {{ workOrder.start }} - {{ workOrder.end }}
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    Nemanja Nemanjic
+                    {{ workOrder.responsible }}
                  </td>
             </tr>
             <tr>
@@ -39,13 +39,13 @@
                   <i class="fa fa-cubes "></i> Kultura:
                 </td>
                 <td class="right-col-header">
-                    Kukuruz 2020
+                    {{ workOrder.culture }}
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-database mr-2"></i>Kategorija:
                  </td>
                  <td class="right-col-header">
-                    Kategorija 1
+                    {{ workOrder.category }}
                  </td>
             </tr>
         </table>
@@ -112,26 +112,15 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>Pera Peric</td>
-                    <td>20.08.2020.</td>
-                    <td>2 h</td>
-                    <td>3 ha</td>
+                <tr *ngFor="let worker of workOrder.workers">
+                    <td>{{ worker.worker }}</td>
+                    <td>{{ worker.date }}</td>
+                    <td>{{ worker.workPeriod }} h</td>
+                    <td>{{ worker.treatedArea }} ha</td>
                     <td>
                         <button class="btn btn-primary btn-edit">
                         <i class="fa fa-edit"></i>
                         </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sima Simic</td>
-                    <td>20.08.2020</td>
-                    <td>1 h</td>
-                    <td>10.5 ha</td>
-                    <td >
-                    <button class="btn btn-primary btn-edit">
-                        <i class="fa fa-edit"></i>
-                    </button>
                     </td>
                 </tr>
                 </tbody>
@@ -242,28 +231,14 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>Masina 1</td>
-                    <td>Nemanja Nemanjic</td>
-                    <td>20.08.2020.</td>
-                    <td>2 h</td>
-                    <td >3 ha</td>
-                    <td>Test</td>
-                    <td>Test</td>
-                    <td>
-                        <button class="btn btn-primary btn-edit">
-                        <i class="fa fa-edit"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Masina 1</td>
-                    <td>Milos Milosevic</td>
-                    <td>20.08.2020.</td>
-                    <td>2 h</td>
-                    <td >3 ha</td>
-                    <td>Test</td>
-                    <td>Test</td>
+                <tr *ngFor="let machine of workOrder.machines">
+                    <td>{{ machine.machine }}</td>
+                    <td>{{ machine.worker }}</td>
+                    <td>{{ machine.date }}</td>
+                    <td>{{ machine.workPeriod}} h</td>
+                    <td>{{ machine.fuel }}</td>
+                    <td>{{ machine.fuelType }}</td>
+                    <td>{{ machine.storage }}</td>
                     <td>
                         <button class="btn btn-primary btn-edit">
                         <i class="fa fa-edit"></i>
@@ -332,20 +307,10 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>NPK 15:15:15</td>
-                    <td>2.400</td>
-                    <td>kg</td>
-                    <td>
-                        <button class="btn btn-primary btn-edit">
-                        <i class="fa fa-edit"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Masina 1</td>
-                    <td>Milos Milosevic</td>
-                    <td>kg/ha</td>
+                <tr *ngFor="let material of workOrder.materials">
+                    <td>{{ material.name }}</td>
+                    <td>{{ material.quantity }}</td>
+                    <td>{{ material.unit }}</td>
                     <td>
                         <button class="btn btn-primary btn-edit">
                         <i class="fa fa-edit"></i>
