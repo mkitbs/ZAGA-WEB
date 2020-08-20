@@ -1,0 +1,89 @@
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h3 >Informacije naloga</h3>
+        </div>
+        
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Naziv radnog naloga</label>
+                <div class="input-group">
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Odgovorna osoba</label>
+                <div class="input-group">
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option>--Izaberite--</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Kategorija</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option>--Izaberite--</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Status</label>
+                <div class="radio-toolbar input-group">
+                    <input type="radio" id="radio1" name="radios" value="all" checked>
+                    <label for="radio1">Pending</label>
+                  
+                    <input type="radio" id="radio2" name="radios" value="false">
+                    <label for="radio2">In Progress</label>
+                  
+                    <input type="radio" id="radio3" name="radios" value="true">
+                    <label for="radio3">Finished</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Datum od</label>
+                <div class="input-group">
+                    <input class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Datum do</label>
+                <div class="input-group">
+                    <input class="form-control" id="do" placeholder="yyyy-mm-dd" ngbDatepicker #do="ngbDatepicker">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="do.toggle()" type="button"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  

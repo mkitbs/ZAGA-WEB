@@ -6,9 +6,12 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { CreateworkOrderComponent } from './components/creatework-order/creatework-order.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NalogComponent } from './components/nalog/nalog.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
-  {path:"", component:HomeComponent},
+  {path:"", component:NalogComponent},
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent}
 ];
 
@@ -17,11 +20,14 @@ const routes: Routes = [
     AppComponent,
     HomeComponent,
     CreateworkOrderComponent,
-    NavbarComponent
+    NavbarComponent,
+    NalogComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes,{useHash:true}),
+    BrowserAnimationsModule,
+    NgbDatepickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
