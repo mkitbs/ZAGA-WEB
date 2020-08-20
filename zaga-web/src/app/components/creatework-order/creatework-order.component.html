@@ -1,9 +1,364 @@
-<div class="container">
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Button with data-target
-</button>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-  </div>
+<div class="container mt-4">
+
+    <h3>
+        Informacije o nalogu
+    </h3>
+    <!--header info-->
+    <div class="header-info">
+        <table class="table header-table">
+            <tr>
+                <td class="left-col-header">
+                   <i class="fa fa-file mr-2"></i>Nalog:
+                </td>
+                <td class="right-col-header">
+                    Osnovno đubrenje
+                </td>
+                <td class="left-col-header">
+                    <i class="fa fa-tasks mr-2"></i>Status:
+                 </td>
+                 <td class="right-col-header">
+                    Status 1 
+                 </td>
+            </tr>
+            <tr>
+                <td class="left-col-header">
+                    <i class="fa fa-calendar mr-2"></i>Datum:
+                </td>
+                <td class="right-col-header">
+                    19.08.2020. - 20.08.2020.
+                </td>
+                <td class="left-col-header">
+                    <i class="fa fa-user mr-2"></i>Odgovorna osoba:
+                 </td>
+                 <td class="right-col-header">
+                    Nemanja Nemanjic
+                 </td>
+            </tr>
+            <tr>
+                <td class="left-col-header">
+                  <i class="fa fa-cubes "></i> Kultura:
+                </td>
+                <td class="right-col-header">
+                    Kukuruz 2020
+                </td>
+                <td class="left-col-header">
+                    <i class="fa fa-database mr-2"></i>Kategorija:
+                 </td>
+                 <td class="right-col-header">
+                    Kategorija 1
+                 </td>
+            </tr>
+        </table>
+    </div>
+
+    <!--workers-->
+    <div class="workers">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExample">
+    <div class="card card-body collapse-card">
+        <table class="table table-input">
+            <thead>
+                <th>
+                    Radnik*
+                </th>
+                <th>
+                    Datum*
+                </th>
+                <th>
+                    Radni sati*
+                </th>
+                <th>
+                    Obradjeno*
+                </th>
+                <th>
+                    Dodaj
+                </th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                        <div class="form-group">
+                            <select name="" id="" class="form-control">
+                                <option value="-1"></option>
+                                <option value="Milan Milanovic">Milan Milanovic</option>
+                                <option value="Milos Milosevic">Milos Milosevic</option>
+                                <option value="Milan Milankovic">Milan Milankovic</option>
+                                <option value="Nemanja Nemanjic">Nemanja Nemanjic</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="number" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" >
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pera Peric</td>
+                    <td>20.08.2020.</td>
+                    <td>2 h</td>
+                    <td>3 ha</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sima Simic</td>
+                    <td>20.08.2020</td>
+                    <td>1 h</td>
+                    <td>10.5 ha</td>
+                    <td >
+                    <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+    </div>  
+</div>
+
+<!--machines-->
+<div class="machines mt-4">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button" data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines">
+        <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExampleMachines">
+    <div class="card card-body collapse-card">
+        <table class="table table-input">
+            <thead>
+                <th>
+                    Mašina*     
+                </th>
+                <th>
+                    Radnik*
+                </th>
+                <th>
+                    Datum*
+                </th>
+                <th>
+                    Radni sati*
+                </th>
+                <th>
+                    Gorivo
+                </th>
+                <th>
+                    Tip goriva
+                </th>
+                <th>
+                    Magacin
+                </th>
+                <th>
+                    Dodaj
+                </th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                        <div class="form-group">
+
+                            <select name="" id="" class="form-control">
+                                <option value="-1"></option>
+                                <option value="NH 456/1">NH 456/1</option>
+                                <option value="TM1">TEST MAŠINA 1</option>
+                                <option value="TM2">TEST MAŠINA 2</option>
+                                <option value="TM3">TEST MAŠINA 3</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+
+                            <select name="" id="" class="form-control">
+                                <option value="-1"></option>
+                                <option value="Milan Milanovic">Milan Milanovic</option>
+                                <option value="Milos Milosevic">Milos Milosevic</option>
+                                <option value="Milan Milankovic">Milan Milankovic</option>
+                                <option value="Nemanja Nemanjic">Nemanja Nemanjic</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="number" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <select name="" id="" class="form-control">
+                                <option value="-1"></option>
+                                <option value="G1">GORIVO 1</option>
+                                <option value="G2">GORIVO 2</option>
+                                <option value="G3">GORIVO 3</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <select name="" class="form-control" id="">
+                                <option value="-1"></option>
+                                <option value="M1">MAGACIN 1</option>
+                                <option value="M2">MAGACIN 2</option>
+                                <option value="M3">MAGACIN 3</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-add mr-2">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Masina 1</td>
+                    <td>Nemanja Nemanjic</td>
+                    <td>20.08.2020.</td>
+                    <td>2 h</td>
+                    <td >3 ha</td>
+                    <td>Test</td>
+                    <td>Test</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Masina 1</td>
+                    <td>Milos Milosevic</td>
+                    <td>20.08.2020.</td>
+                    <td>2 h</td>
+                    <td >3 ha</td>
+                    <td>Test</td>
+                    <td>Test</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      
+    </div>  
+    </div>
+</div>
+
+<!--materials-->
+<div class="machines mt-4">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false" aria-controls="collapseExampleMachines">
+        <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExampleMaterials">
+    <div class="card card-body collapse-card">
+        <table class="table table-input">
+            <thead>
+                <th>
+                    Materijal*     
+                </th>
+                <th>
+                    Količina*
+                </th>
+                <th>
+                    Jedinica mere*
+                </th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                        <div class="form-group">
+
+                            <select name="" id="" class="form-control">
+                                <option value="-1"></option>
+                                <option value="MAT1">Materijal 1</option>
+                                <option value="MAT1">Materijal 2</option>
+                                <option value="MAT1">Materijal 3</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+
+                            <input type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+
+                            <select name="" id="" class="form-control">
+                                <option value="KG">kg</option>
+                                <option value="KG/H">kg/h</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-add mr-2">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>NPK 15:15:15</td>
+                    <td>2.400</td>
+                    <td>kg</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Masina 1</td>
+                    <td>Milos Milosevic</td>
+                    <td>kg/ha</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit">
+                        <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      
+    </div>  
+    </div>
+    </div>
+
+</div>
+
 </div>

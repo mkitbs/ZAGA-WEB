@@ -1,5 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+    font-family: "Montserrat", Helvetica, Arial, sans-serif !important;
+}
 
 navbar > nav> div> ul > li >a{
     color: #f68901 !important;
 }
+
+.collapsing-button {
+    width: 100%;
+    text-align: left;
+    background-color: #73964a;
+    border: none;
+    box-shadow: none;
+}
+
+.btn:focus, .btn:active, .btn:hover {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: #33490b !important;
+    -webkit-box-shadow: none;
+}
+
+.arrows {
+    float: right;
+    vertical-align: middle;
+}
+
+.collapse-card {
+    border: 1px solid #33490b;
+}
+
