@@ -9,10 +9,13 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { NalogComponent } from './components/nalog/nalog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
+import { WorkOrderComponent } from './components/workOrder/workOrder.component';
+
 
 const routes: Routes = [
-  {path:"", component:NalogComponent},
-  {path: "create/workOrder/:workId", component: CreateworkOrderComponent}
+  {path:"", component:HomeComponent},
+  {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
+  {path:"workOrder", component: WorkOrderComponent}
 ];
 
 @NgModule({
@@ -21,7 +24,9 @@ const routes: Routes = [
     HomeComponent,
     CreateworkOrderComponent,
     NavbarComponent,
-    NalogComponent
+    NalogComponent,
+    WorkOrderComponent
+
   ],
   imports: [
     BrowserModule,

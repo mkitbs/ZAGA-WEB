@@ -1,0 +1,53 @@
+.forma-filteri {
+    width: 70%;
+    font-size: 12px;
+}
+
+.tabela-nalozi {
+    background: white;
+    width: 100%;
+    padding-top: 10%;
+    padding-bottom: 5%;
+    font-size: 16px;
+}
+
+.break-class {
+    width: 100% !important;
+    border-top: 2px solid #33490b !important;
+    font-size: 12px;
+}
+
+table, td, tr, th {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    text-align: center;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+    font-size: medium;
+    vertical-align: middle;
+}
+
+.info{
+    background-color: #33490b;
+    color: #f68901;
+}
+
+.edit{
+    background-color: #ffc803;
+    color: white;
+}
+
+.collapsing-button {
+    width: fit-content;
+    text-align: center;
+    background-color: #73964a;
+    border: none;
+    box-shadow: none;
+}
+
+.btn:focus, .btn:active, .btn:hover {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: #33490b !important;
+    -webkit-box-shadow: none;
+}
