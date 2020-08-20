@@ -55,7 +55,7 @@ export class CreateworkOrderComponent implements OnInit {
 ]
   
   ngOnInit() {
-    localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+    //localStorage["workOrders"] = JSON.stringify(this.tempJSON);
     if(this.workId == "new") { //new
 
     } else {
