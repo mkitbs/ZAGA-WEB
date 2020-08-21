@@ -1,8 +1,12 @@
 export class WorkOrderInfo {
     name;
     responsible;
-    category;
+    culture;
     status;
     start;
     end;
+    table;
+    area;
+    treated;
+
 }

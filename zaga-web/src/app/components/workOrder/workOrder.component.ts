@@ -17,16 +17,20 @@ export class WorkOrderComponent implements OnInit {
       "name":"Prskanje",
       "start":"13.08.2020.",
       "end":"13.08.2020.",
-      "field":"T46",
-      "fieldArea": "40",
-      "category": "Odrzavanje",
+      "table":"T46",
+      "area": "40",
+      "year": "2020",
       "culture":"Kukuruz",
       "responsible":"Milos Vrgovic",
       "status":"Novi",
+      "treated": "",
       "machines": [
         {
           "id":1,
           "machine":"Traktor",
+          "initialState": "10",
+          "finalState": "10",
+          "sumState": "10",
           "worker":"Pera Peric",
           "date":"13.08.2020.",
           "workPeriod":"4",
@@ -50,15 +54,19 @@ export class WorkOrderComponent implements OnInit {
           "id":1,
           "worker":"Pera Peric",
           "date":"13.08.2020.",
+          "dayWorkPeriod": "10",
+          "nightWorkPeriod": "0",
+          "operation": "Operacija 1",
           "workPeriod":"4",
-          "treatedArea":"20"
         },
         {
           "id":2,
           "worker":"Nikola Nikolic",
           "date":"13.08.2020.",
-          "workPeriod":"2",
-          "treatedArea":"10"
+          "dayWorkPeriod": "10",
+          "nightWorkPeriod": "0",
+          "operation": "Operacija 1",
+          "workPeriod":"4",
         }
       ],
       "materials": [
@@ -66,45 +74,14 @@ export class WorkOrderComponent implements OnInit {
           "id":1,
           "name":"XYZ",
           "quantity":"10",
+          "spent": "10",
+          "spentPerHectar": "10",
+          "quantityPerHectar": "100",
           "unit":"l"
         }
       ]
-    },
-    {
-      "id": 2,
-      "name": "Osnovno đubrenje",
-      "start": "19.08.2020.",
-      "end": "20.08.2020.",
-      "field": "T4",
-      "fieldArea": "80",
-      "category": "Kategorija 1",
-      "culture": "Kukuruz 2020",
-      "responsible": "Nemanja Nemanjic",
-      "status": "U radu",
-      "machines": [{
-        "id": 1,
-        "machine": "NH 456/1",
-        "worker": "Miloš Milošević",
-        "date": "20.08.2020.",
-        "workPeriod": "6",
-        "fuel": "10",
-        "fuelType": "Gorivo 1",
-        "storage": "Magacin 1"
-      }],
-      "workers": [{
-          "id": 1,
-          "worker": "Miloš Milošević",
-          "date": "20.08.2020.",
-          "workPeriod": "8",
-          "treatedArea": "3"
-      }],
-      "materials": [{
-          "id": 1,
-          "name": "NPK 15:15:15",
-          "quantity": "1050",
-          "unit": "KG"      
-      }]
-     }
+    }
+    
   ]
 
 

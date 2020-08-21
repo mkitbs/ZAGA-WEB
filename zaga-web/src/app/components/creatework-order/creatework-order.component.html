@@ -4,11 +4,12 @@
         <div class="button-group">
             <div class="row">
                 <div class="col">
-                    <h3>Kreiranje naloga</h3>
+                    <h3 *ngIf="new">Kreiranje naloga</h3>
+                    <h3 *ngIf="!new">Informacije o nalogu</h3>
                 </div>
                 <div class="col" style="float: right">
-                    <button class="btn btn-primary btn-edit">Zatvori</button>
-                    <button class="btn btn-primary btn-add mr-2">Sačuvaj</button>
+                    <button class="btn btn-primary btn-edit" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
+                    <button class="btn btn-primary btn-add mr-2" (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
 
                 </div>
             </div>
@@ -27,13 +28,10 @@
                     <input type="text" name="" [(ngModel)]="workOrder.name" class="form-control" id="">
                 </td>
                 <td class="left-col-header">
-                    <i class="fa fa-tasks mr-2"></i>Godina:
+                    <i class="fa fa-database mr-2"></i>Tabla:
                  </td>
                  <td class="right-col-header">
-                     <select name="" [(ngModel)]="workOrder.year" id="" class="form-control">
-                         <option value="2020">2020</option>
-                         <option value="2019">2019</option>
-                     </select>
+                     <input type="text" name="" [(ngModel)]="workOrder.table"  id="" class="form-control">
                  </td>
             </tr>
             <tr>
@@ -68,11 +66,14 @@
                     <input type="text" name="" [(ngModel)]="workOrder.culture" id="" class="form-control">
                 </td>
                 <td class="left-col-header">
-                    <i class="fa fa-database mr-2"></i>Tabla:
+                    <i class="fa fa-tasks mr-2"></i>Godina:
                  </td>
                  <td class="right-col-header">
-                     <input type="text" name="" [(ngModel)]="workOrder.table"  id="" class="form-control">
-                 </td>
+                    <select name="" [(ngModel)]="workOrder.year" id="" class="form-control">
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td class="left-col-header">
@@ -81,11 +82,17 @@
                 <td class="right-col-header">
                     <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
                 </td>
-                <td class="left-col-header">
-                    <i class="fa fa-flag mr-2"></i>Obrađeno:
+                <td class="left-col-header" >
+                    <span *ngIf="!new">
+                        <i class="fa fa-flag mr-2"></i>Obrađeno:
+                    </span>
+                    
                  </td>
                  <td class="right-col-header">
-                     <input type="text" name="" [(ngModel)]="workOrder.treated"  id="" class="form-control">
+                     <span *ngIf="!new">
+                        <input type="text" name="" [(ngModel)]="workOrder.treated"  id="" class="form-control">
+                     </span>
+                     
                  </td>
             </tr>
         </table>
@@ -103,16 +110,22 @@
                 <th>
                     Radnik*
                 </th>
-                <th>
+                <th *ngIf="!new">
                     Datum*
                 </th>
                 <th>
                     Operacija
                 </th>
-                <th>
-                    Radni sati
+                <th *ngIf="!new">
+                    Redovan rad
                 </th>
-                <th>
+                <th *ngIf="!new">
+                    Noćni rad
+                </th>
+                <th *ngIf="!new">
+                    Ukupan rad
+                </th>
+                <th style="text-align: right !important;">
                     Dodaj
                 </th>
             </thead>
@@ -131,7 +144,7 @@
                         </select>
                     </div>
                     </td>
-                    <td>
+                    <td *ngIf="!new">
                         <div class="input-group">
                             <input [(ngModel)]="worker.date" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
                             <div class="input-group-append">
@@ -147,7 +160,17 @@
                             </select>
                         </div>
                     </td>
-                    <td>
+                    <td *ngIf="!new">
+                        <div class="form-group">
+                            <input [(ngModel)]="worker.dayWorkPeriod" type="number" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td *ngIf="!new">
+                        <div class="form-group">
+                            <input [(ngModel)]="worker.nightWorkPeriod" type="number" name="" class="form-control" id="">
+                        </div>
+                    </td>
+                    <td *ngIf="!new">
                         <div class="form-group">
                             <input [(ngModel)]="worker.workPeriod" type="number" name="" class="form-control" id="">
                         </div>
@@ -167,9 +190,11 @@
                 </tr>
                 <tr *ngFor="let worker of workOrder.workers">
                     <td>{{ worker.worker }}</td>
-                    <td>{{ worker.date }}</td>
-                    <td>{{ worker.operation }}</td>
-                    <td>{{ worker.workPeriod }} h</td>
+                    <td *ngIf="!new">{{ worker.date }}</td>
+                    <td >{{ worker.operation }}</td>
+                    <td *ngIf="!new">{{ worker.dayWorkPeriod }} h</td>
+                    <td *ngIf="!new">{{ worker.nightWorkPeriod }} h</td>
+                    <td *ngIf="!new">{{ worker.workPeriod }} h</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editWorker(worker)">
                         <i class="fa fa-edit"></i>
@@ -196,13 +221,19 @@
                 <th>
                     Radnik*
                 </th>
-                <th>
-                    Radni sati*
+                <th *ngIf="!new">
+                    Početno stanje MČ (mh)
                 </th>
-                <th>
-                    Gorivo
+                <th *ngIf="!new">
+                    Krajnje stanje MČ (mh)
                 </th>
-                <th>
+                <th *ngIf="!new">
+                    Utrošeni moto časovi
+                </th>
+                <th *ngIf="!new">
+                    Utrošak goriva (l)
+                </th>
+                <th style="text-align: right !important;">
                     Dodaj
                 </th>
             </thead>
@@ -237,12 +268,22 @@
                         </div>
                     </td>
                     
-                    <td>
+                    <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="machine.workPeriod" type="number" name="" id="" class="form-control">
+                            <input [(ngModel)]="machine.initialState" type="number" name="" id="" class="form-control">
                         </div>
                     </td>
-                    <td>
+                    <td *ngIf="!new">
+                        <div class="form-group">
+                            <input [(ngModel)]="machine.finalState" type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+                    <td *ngIf="!new">
+                        <div class="form-group">
+                            <input [(ngModel)]="machine.sumState" type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+                    <td *ngIf="!new">
                         <div class="form-group">
                             <input [(ngModel)]="machine.fuel" type="number" name="" id="" class="form-control">
                         </div>
@@ -264,8 +305,10 @@
                 <tr *ngFor="let machine of workOrder.machines">
                     <td>{{ machine.machine }}</td>
                     <td>{{ machine.worker }}</td>
-                    <td>{{ machine.workPeriod}} h</td>
-                    <td>{{ machine.fuel }}</td>
+                    <td *ngIf="!new">{{ machine.initialState }} </td>
+                    <td *ngIf="!new">{{ machine.finalState }}</td>
+                    <td *ngIf="!new">{{ machine.sumState }}</td>
+                    <td *ngIf="!new">{{ machine.fuel }}</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editMachine(machine)">
                         <i class="fa fa-edit"></i>
@@ -292,13 +335,22 @@
                     Materijal*     
                 </th>
                 <th>
-                    Količina po hektaru*
+                    Planirana količina / ha*
                 </th>
                 <th>
-                    Količina*
+                   Planirana količina*
                 </th>
                 <th>
                     Jedinica mere*
+                </th>
+                <th *ngIf="!new">
+                    Utrošeno / ha
+                </th>
+                <th *ngIf="!new">
+                    Utrošeno 
+                </th>
+                <th style="text-align: right !important;">
+                    Dodaj
                 </th>
             </thead>
             <tbody>
@@ -308,9 +360,9 @@
 
                             <select [(ngModel)]="material.name" name="" id="" class="form-control">
                                 <option value="-1"></option>
-                                <option value="MAT1">Materijal 1</option>
-                                <option value="MAT1">Materijal 2</option>
-                                <option value="MAT1">Materijal 3</option>
+                                <option value="Materijal 1">Materijal 1</option>
+                                <option value="Materijal 2">Materijal 2</option>
+                                <option value="Materijal 3">Materijal 3</option>
                                 <option value="XYZ">XYZ</option>
                             </select>
                         </div>
@@ -334,6 +386,17 @@
                             </select>
                         </div>
                     </td>
+                    <td *ngIf="!new">
+                        <div class="form-group" >
+                            <input [(ngModel)]="material.spentPerHectar" type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+                    <td *ngIf="!new">
+                        <div class="form-group" >
+                            <input [(ngModel)]="material.spent" type="number" name="" id="" class="form-control">
+                        </div>
+                    </td>
+
                     <td>
                         <div *ngIf="!editingMaterial" class="form-group">
                             <button class="btn btn-primary btn-add mr-2" (click)="addMaterial()">
@@ -351,7 +414,10 @@
                     <td>{{ material.name }}</td>
                     <td>{{ material.quantityPerHectar }}</td>
                     <td>{{ material.quantity }}</td>
-                    <td>{{ material.unit }}</td>
+                    <td >{{ material.unit }}</td>
+                    <td *ngIf="!new">{{ material.spentPerHectar }}</td>
+                    <td *ngIf="!new">{{ material.spent }}</td>
+
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editMaterial(material)">
                         <i class="fa fa-edit"></i>

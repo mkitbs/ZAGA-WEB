@@ -4,4 +4,6 @@ export class Material {
     quantity;
     unit;
     quantityPerHectar;
+    spent;
+    spentPerHectar;
 }

@@ -2,6 +2,9 @@ export class Worker {
     id;
     worker;
     date;
-    workPeriod;
-    treatedArea;
+    dayWorkPeriod;
+    nightWorkPeriod;
+    workPeriod: number = this.nightWorkPeriod + this.dayWorkPeriod;
+    operation;
+
 }

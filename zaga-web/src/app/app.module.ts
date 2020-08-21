@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatTooltipModule } from '@angular/material';
 import { CloseWorkOrderComponent } from './components/closework-order/closework-order.component';
+import { ToastrModule } from 'ngx-toastr';
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
@@ -41,6 +42,9 @@ const routes: Routes = [
     BrowserModule,
     RouterModule.forRoot(routes,{useHash:true}),
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      preventDuplicates: false
+    }),
     NgbDatepickerModule,
     ReactiveFormsModule,
     MatTooltipModule,

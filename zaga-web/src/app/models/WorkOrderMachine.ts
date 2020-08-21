@@ -5,6 +5,7 @@ export class WorkOrdeMachine {
     date;
     workPeriod;
     fuel;
-    fuelType;
-    storage;
+    initialState;
+    finalState;
+    sumState = this.finalState - this.initialState;
 }

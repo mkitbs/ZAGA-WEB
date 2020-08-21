@@ -4,6 +4,7 @@ import { WorkOrdeMachine } from 'src/app/models/WorkOrderMachine';
 import { Worker } from 'src/app/models/Worker';
 import { Material } from 'src/app/models/Material';
 import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-creatework-order',
@@ -12,7 +13,7 @@ import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
 })
 export class CreateworkOrderComponent implements OnInit {
   
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private toastr: ToastrService) { }
 
   workers = false;
   machines = false;
@@ -29,53 +30,20 @@ export class CreateworkOrderComponent implements OnInit {
   idOfEditingMaterial:any = 0;
   idOfEditingWorker:any = 0;
   idOfEditingMachine:any = 0;
-
-  tempJSON = [
-   {
-    "id": 1,
-    "name": "Osnovno đubrenje",
-    "start": "19.08.2020.",
-    "end": "20.08.2020.",
-    "field": "",
-    "category": "Kategorija 1",
-    "culture": "Kukuruz 2020",
-    "responsible": "Nemanja Nemanjic",
-    "status": "Status 1",
-    "machines": [{
-      "id": 1,
-      "machine": "NH 456/1",
-      "worker": "Miloš Milošević",
-      "date": "20.08.2020.",
-      "workPeriod": "6",
-      "fuel": "10",
-      "fuelType": "Gorivo 1",
-      "storage": "Magacin 1"
-    }],
-    "workers": [{
-        "id": 1,
-        "worker": "Miloš Milošević",
-        "date": "20.08.2020.",
-        "workPeriod": "8",
-        "operation": "3"
-    }],
-    "materials": [{
-        "id": 1,
-        "name": "NPK 15:15:15",
-        "quantity": "1050",
-        "unit": "KG"      
-    }]
-   },
-]
+  new = false;
+  workOrders: any[];
   
   ngOnInit() {
     if(this.workId == "new") { //new
+      this.new = true;
       this.workOrder = new WorkOrderInfo();
       this.workOrder.machines = [];
       this.workOrder.workers = [];
       this.workOrder.materials = [];
     } else {
-      const workOrders: any[] = JSON.parse(localStorage["workOrders"]);
-      this.workOrder = workOrders[this.workId-1];
+      this.new = false;
+      this.workOrders = JSON.parse(localStorage["workOrders"]);
+      this.workOrder = this.workOrders[this.workId-1];
     }
   }
 
@@ -90,14 +58,14 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addWorker() {
-    
-    if(this.worker.date.month < 10) {
-      this.worker.date.month = '0' + this.worker.date.month;
-    }
-      this.worker.date = this.worker.date.day + '.' 
-      + this.worker.date.month + '.' 
-      + this.worker.date.year + '.';
-      
+      if(this.worker.date != undefined) {
+        if(this.worker.date.month < 10) {
+          this.worker.date.month = '0' + this.worker.date.month;
+        }
+          this.worker.date = this.worker.date.day + '.' 
+          + this.worker.date.month + '.' 
+          + this.worker.date.year + '.';
+      }  
       this.worker.id = this.workOrder.workers.length + 1;
       this.workOrder.workers.push(this.worker);
       this.worker = new Worker();
@@ -105,18 +73,23 @@ export class CreateworkOrderComponent implements OnInit {
   } 
   
   editExistingWorker() {
-    if(this.worker.date.month < 10) {
-      this.worker.date.month = '0' + this.worker.date.month;
+    var dateToAdd = "";
+    if(this.worker.date != undefined) {
+        if(this.worker.date.month < 10) {
+          this.worker.date.month = '0' + this.worker.date.month;
+        }
+        dateToAdd= this.worker.date.day + '.' 
+          + this.worker.date.month + '.' 
+          + this.worker.date.year + '.';
     }
-    var dateToAdd = this.worker.date.day + '.' 
-      + this.worker.date.month + '.' 
-      + this.worker.date.year + '.';
-
     this.workOrder.workers.forEach(element => {
       if(element.id == this.idOfEditingWorker) {
         element.worker = this.worker.worker;
-        element.workPeriod = this.worker.workPeriod;
+        element.dayWorkPeriod = this.worker.dayWorkPeriod;
+        element.nightWorkPeriod = this.worker.nightWorkPeriod;
         element.date = dateToAdd;
+        element.operation = this.worker.operation;
+
       }
     });
     this.worker = new Worker();
@@ -126,10 +99,16 @@ export class CreateworkOrderComponent implements OnInit {
   editWorker(worker) {
     this.worker.worker = worker.worker;
     this.worker.workPeriod = worker.workPeriod;
-    this.worker.date = {day: +worker.date.substring(0,2), 
-                        month: +worker.date.substring(3,5), 
-                        year: +worker.date.substring(6,10)
-                      };
+    this.worker.operation = worker.operation;
+    this.worker.nightWorkPeriod = worker.nightWorkPeriod;
+    this.worker.dayWorkPeriod = worker.dayWorkPeriod;
+    this.worker.workPeriod = worker.workPeriod;
+    if(worker.date != undefined) {
+        this.worker.date = {day: +worker.date.substring(0,2), 
+                            month: +worker.date.substring(3,5), 
+                            year: +worker.date.substring(6,10)
+                          };
+    }
     this.editing = true;
     this.idOfEditingWorker = worker.id;
   }
@@ -145,7 +124,9 @@ export class CreateworkOrderComponent implements OnInit {
   editMachine(machine) {
     this.machine.worker = machine.worker;
     this.machine.machine = machine.machine;
- 
+    this.machine.initialState = machine.initialState;
+    this.machine.finalState = machine.finalState;
+    this.machine.sumState = machine.sumState;
     this.machine.fuel = machine.fuel;
     this.machine.workPeriod = machine.workPeriod;
     this.editingMachine = true;
@@ -160,8 +141,9 @@ export class CreateworkOrderComponent implements OnInit {
         element.workPeriod = this.machine.workPeriod;
         element.machine = this.machine.machine;
         element.fuel = this.machine.fuel;
-        element.fuelType = this.machine.fuelType;
-        element.storage = this.machine.storage;
+        element.finalState = this.machine.finalState;
+        element.initialState = this.machine.initialState;
+        element.sumState = this.machine.sumState;
       }
     });
     this.machine = new WorkOrdeMachine();
@@ -179,6 +161,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.material.name = material.name;
     this.material.quantity = material.quantity;
     this.material.unit = material.unit;
+    this.material.spent = material.spent;
+    this.material.spentPerHectar = material.spentPerHectar;
     this.material.quantityPerHectar = material.quantityPerHectar;
     this.editingMaterial = true;
     this.idOfEditingMaterial = material.id;
@@ -192,10 +176,26 @@ export class CreateworkOrderComponent implements OnInit {
         element.unit = this.material.unit;
         element.quantity = this.material.quantity;
         element.quantityPerHectar = this.material.quantityPerHectar;
+        element.spent = this.material.spent;
+        element.spentPerHectar = this.material.spentPerHectar;
       }
     });
     this.material = new Material();
     this.editingMaterial = false;
+  }
+
+  saveData() {
+    localStorage.clear();
+    localStorage["workOrders"] = JSON.stringify(this.workOrders);
+    this.toastr.success("Uspešno sačuvan radni nalog.")
+  }
+
+  closeWorkOrder() {
+    
+    //logic for validation here
+
+    this.workOrder.status = "Završen";
+    this.toastr.success("Uspešno zatvoren radni nalog.");
   }
 
 
