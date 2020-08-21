@@ -50,3 +50,15 @@ table, td, tr, th {
     background-color: #33490b !important;
     -webkit-box-shadow: none;
 }
+
+.statusNovi{
+    color: #5C7495
+}
+
+.statusURadu{
+    color: #f68901;
+}
+
+.statusZatvoren{
+    color: #73964a;
+}

@@ -51,11 +51,11 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Naziv rada</th>
+                <th scope="col">Operacija</th>
                 <th scope="col">Datum početka</th>
                 <th scope="col">Datum završetka</th>
                 <th scope="col">Tabla</th>
-                <th scope="col">Kategorija</th>
+                <th scope="col">Porvršina</th>
                 <th scope="col">Usev</th>
                 <th scope="col">Odgovorna osoba</th>
                 <th scope="col">Status</th>
@@ -71,10 +71,10 @@
                 <td>{{workOrder.start}}</td>
                 <td>{{workOrder.end}}</td>
                 <td>{{workOrder.field}}</td>
-                <td>{{workOrder.category}}</td>
+                <td>{{workOrder.fieldArea}}ha</td>
                 <td>{{workOrder.culture}}</td>
                 <td>{{workOrder.responsible}}</td>
-                <td>{{workOrder.status}}</td>
+                <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
                 <!--<td><button class="btn btn-primary collapsing-button shadow-none" (click)="editOrder()"><i class="fa fa-edit"></i> Izmeni</button> </td>
                 <td><button class="btn btn-primary collapsing-button shadow-none" (click)="deleteOrder()"><i class="fa fa-trash"></i> Obriši</button></td>
                 -->

@@ -13,12 +13,16 @@ import { WorkOrderComponent } from './components/workOrder/workOrder.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatTooltipModule } from '@angular/material';
+import { CloseWorkOrderComponent } from './components/closework-order/closework-order.component';
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
   {path:"workOrder", component: WorkOrderComponent},
-  {path: "nalog", component: NalogComponent}
+  {path: "nalog", component: NalogComponent},
+  {path: "workOrder", component: WorkOrderComponent},
+  {path: "close/workOrder/:workId", component: CloseWorkOrderComponent}
+
 ];
 
 @NgModule({
@@ -29,7 +33,8 @@ const routes: Routes = [
     NavbarComponent,
     NalogComponent,
     WorkOrderComponent,
-    DashboardComponent
+    DashboardComponent,
+    CloseWorkOrderComponent
 
   ],
   imports: [
