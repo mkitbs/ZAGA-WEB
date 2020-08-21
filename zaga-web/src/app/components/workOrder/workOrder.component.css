@@ -44,7 +44,7 @@ table, td, tr, th {
     box-shadow: none;
 }
 
-.btn:focus, .btn:active, .btn:hover {
+.btn:focus, .btn:active {
     outline: none !important;
     box-shadow: none !important;
     background-color: #33490b !important;

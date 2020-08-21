@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WorkOrdeMachine } from 'src/app/models/WorkOrderMachine';
 import { Worker } from 'src/app/models/Worker';
 import { Material } from 'src/app/models/Material';
+import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
 
 @Component({
   selector: 'app-creatework-order',
@@ -55,7 +56,7 @@ export class CreateworkOrderComponent implements OnInit {
         "worker": "Miloš Milošević",
         "date": "20.08.2020.",
         "workPeriod": "8",
-        "treatedArea": "3"
+        "operation": "3"
     }],
     "materials": [{
         "id": 1,
@@ -68,14 +69,13 @@ export class CreateworkOrderComponent implements OnInit {
   
   ngOnInit() {
     if(this.workId == "new") { //new
-      this.workOrder = JSON.parse(localStorage["workOrder"]);
-      this.workOrder.workers = [];
+      this.workOrder = new WorkOrderInfo();
       this.workOrder.machines = [];
+      this.workOrder.workers = [];
       this.workOrder.materials = [];
     } else {
       const workOrders: any[] = JSON.parse(localStorage["workOrders"]);
-      this.workOrder = workOrders.filter(order => order.id = this.workId)[0];
-      console.log(this.workOrder)
+      this.workOrder = workOrders[this.workId-1];
     }
   }
 
@@ -117,7 +117,6 @@ export class CreateworkOrderComponent implements OnInit {
         element.worker = this.worker.worker;
         element.workPeriod = this.worker.workPeriod;
         element.date = dateToAdd;
-        element.treatedArea = this.worker.treatedArea;
       }
     });
     this.worker = new Worker();
@@ -127,8 +126,6 @@ export class CreateworkOrderComponent implements OnInit {
   editWorker(worker) {
     this.worker.worker = worker.worker;
     this.worker.workPeriod = worker.workPeriod;
-    this.worker.treatedArea = worker.treatedArea;
-    console.log(worker.date);
     this.worker.date = {day: +worker.date.substring(0,2), 
                         month: +worker.date.substring(3,5), 
                         year: +worker.date.substring(6,10)
@@ -138,12 +135,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addMachine() {
-    if(this.machine.date.month < 10) {
-      this.machine.date.month = '0' + this.machine.date.month;
-    }
-    this.machine.date = this.machine.date.day + '.' 
-    + this.machine.date.month + '.' 
-    + this.machine.date.year + '.';
+    
     this.machine.id = this.workOrder.machines.length + 1;
     this.workOrder.machines.push(this.machine);
     this.machine = new WorkOrdeMachine();
@@ -153,32 +145,19 @@ export class CreateworkOrderComponent implements OnInit {
   editMachine(machine) {
     this.machine.worker = machine.worker;
     this.machine.machine = machine.machine;
-    this.machine.date = {day: +machine.date.substring(0,2), 
-      month: +machine.date.substring(3,5), 
-      year: +machine.date.substring(6,10)
-    };
+ 
     this.machine.fuel = machine.fuel;
-    this.machine.fuelType = machine.fuelType;
-    this.machine.storage = machine.storage;
     this.machine.workPeriod = machine.workPeriod;
     this.editingMachine = true;
     this.idOfEditingMachine = machine.id;
   }
 
   updateExistingMachine() {
-    if(this.machine.date.month < 10) {
-      this.machine.date.month = '0' + this.machine.date.month;
-    }
-    var dateToAdd = this.machine.date.day + '.' 
-      + this.machine.date.month + '.' 
-      + this.machine.date.year + '.';
-
  
     this.workOrder.machines.forEach(element => {
       if(element.id == this.idOfEditingMachine) {
         element.worker = this.machine.worker;
         element.workPeriod = this.machine.workPeriod;
-        element.date = dateToAdd;
         element.machine = this.machine.machine;
         element.fuel = this.machine.fuel;
         element.fuelType = this.machine.fuelType;
@@ -200,6 +179,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.material.name = material.name;
     this.material.quantity = material.quantity;
     this.material.unit = material.unit;
+    this.material.quantityPerHectar = material.quantityPerHectar;
     this.editingMaterial = true;
     this.idOfEditingMaterial = material.id;
   }
@@ -211,6 +191,7 @@ export class CreateworkOrderComponent implements OnInit {
         element.name = this.material.name;
         element.unit = this.material.unit;
         element.quantity = this.material.quantity;
+        element.quantityPerHectar = this.material.quantityPerHectar;
       }
     });
     this.material = new Material();

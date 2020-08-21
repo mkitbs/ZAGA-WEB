@@ -1,7 +1,7 @@
 <div class="container">
-    <h3 class="mt-2 mb-2">Radni nalozi > Pregled naloga</h3>
+    <h3 class="mt-2 mb-2">Pregled naloga</h3>
     <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
-        Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up"></i>
+        Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
     </button>
     <br>
     <form action="" class="collapse mb-4" id="collapseExample">
@@ -41,7 +41,7 @@
     </form>
 
     <div class="break-class pt-2 mb-4">
-        <a [routerLink]="['/nalog']" style="float: right">
+        <a [routerLink]="['/create/workOrder/new']" style="float: right">
             <button class="btn btn-primary collapsing-button shadow-none"><i class="fa fa-plus"></i> Kreiraj novi nalog</button>
         </a>
     </div>

@@ -12,23 +12,15 @@ h3 {
 }
 
 .radio-toolbar input[type="radio"]:hover+label {
-  background-color: #33490b !important;
+  background-color: #ffc803 !important;
   color: white;
-}
-
-.rbStatus:hover {
-  background-color: #5C7495 !important;
 }
 
 .btn-next {
   float: right;
-  background-color: #5C7495;
+  background-color: #33490b;
   border: none;
   box-shadow: none;
-}
-
-.btn-next:hover {
-  background-color: #73964a !important;
 }
 
 .radio-toolbar input[type="radio"] {

@@ -27,8 +27,9 @@ h3 {
 .left-col-header {
     font-weight: bold;
     color: #5C7495;
-    padding-right: 0%;
+    padding-right: 0%;  
     margin-right: 0%;
+    vertical-align: middle;
 }
 
 .right-col-header {
@@ -36,6 +37,15 @@ h3 {
     color: #73964a;
     padding-left: 0%;
     margin-left: 0%;
+    vertical-align: middle;
+}
+
+td.right-col-header {
+    width: 300px !important;
+}
+
+td.left-col-header {
+    width: 100px !important;
 }
 
 
@@ -45,22 +55,18 @@ label {
 
 .btn-edit {
     float: right;
-    background-color: #5C7495;
+    background-color: #f68901;
     border: none;
     box-shadow: none;
 }
-
-.btn-edit:hover {
-    background-color: #73964a !important;
-}
-
 
 .btn-add {
     float: right;
-    background-color: #73964a;
+    background-color: #33590b;
     border: none;
     box-shadow: none;
 }
+
 
 button.calendar{
     width: 2.75rem;

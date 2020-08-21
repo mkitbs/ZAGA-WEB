@@ -32,5 +32,11 @@ navbar > nav> div> ul > li >a{
     border: 1px solid #33490b;
 }
 
+
+.btn:hover {
+    background-color: #5C7495 !important;
+}
+
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
