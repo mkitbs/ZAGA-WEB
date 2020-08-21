@@ -10,12 +10,15 @@ import { NalogComponent } from './components/nalog/nalog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { WorkOrderComponent } from './components/workOrder/workOrder.component';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MatTooltipModule } from '@angular/material';
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
-  {path:"workOrder", component: WorkOrderComponent}
+  {path:"workOrder", component: WorkOrderComponent},
+  {path: "nalog", component: NalogComponent}
 ];
 
 @NgModule({
@@ -25,14 +28,18 @@ const routes: Routes = [
     CreateworkOrderComponent,
     NavbarComponent,
     NalogComponent,
-    WorkOrderComponent
+    WorkOrderComponent,
+    DashboardComponent
 
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes,{useHash:true}),
     BrowserAnimationsModule,
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    ReactiveFormsModule,
+    MatTooltipModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

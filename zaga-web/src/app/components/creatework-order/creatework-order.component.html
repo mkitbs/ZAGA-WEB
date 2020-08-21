@@ -1,8 +1,7 @@
 <div class="container mt-4">
-
-    <h3>
-        Informacije o nalogu
-    </h3>
+    <div class="col-12 mb-3">
+        <h3>Informacije o nalogu</h3>
+    </div>
     <!--header info-->
     <div class="header-info">
         <table class="table header-table">
@@ -79,35 +78,45 @@
             <tbody>
             <tr>
                 <td>
-                        <div class="form-group">
-                            <select name="" id="" class="form-control">
-                                <option value="-1"></option>
-                                <option value="Milan Milanovic">Milan Milanovic</option>
-                                <option value="Milos Milosevic">Milos Milosevic</option>
-                                <option value="Milan Milankovic">Milan Milankovic</option>
-                                <option value="Nemanja Nemanjic">Nemanja Nemanjic</option>
-                            </select>
+                    <div class="form-group">
+                        <select [(ngModel)]="worker.worker" name="" id="" class="form-control">
+                            <option value="-1"></option>
+                            <option value="Milan Milanovic">Milan Milanovic</option>
+                            <option value="Milos Milosevic">Milos Milosevic</option>
+                            <option value="Milan Milankovic">Milan Milankovic</option>
+                            <option value="Nemanja Nemanjic">Nemanja Nemanjic</option>
+                            <option value="Pera Peric">Pera Peric</option>
+                            <option value="Nikola Nikolic">Nikola Nikolic</option>
+                        </select>
+                    </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input [(ngModel)]="worker.date" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+                            </div>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="text" name="" class="form-control" id="">
+                            <input [(ngModel)]="worker.workPeriod" type="number" name="" class="form-control" id="">
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="number" name="" class="form-control" id="">
+                            <input [(ngModel)]="worker.treatedArea" type="text" name="" class="form-control" id="">
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
-                            <input type="text" name="" class="form-control" id="">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" >
+                        <div *ngIf="!editing" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addWorker()">
                                 <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="editing" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingWorker()">
+                                <i class="fa fa-check"></i>
                             </button>
                         </div>
                     </td>
@@ -118,7 +127,7 @@
                     <td>{{ worker.workPeriod }} h</td>
                     <td>{{ worker.treatedArea }} ha</td>
                     <td>
-                        <button class="btn btn-primary btn-edit">
+                        <button class="btn btn-primary btn-edit" (click)="editWorker(worker)">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>
@@ -167,66 +176,79 @@
                 <td>
                         <div class="form-group">
 
-                            <select name="" id="" class="form-control">
+                            <select [(ngModel)]="machine.machine" name="" id="" class="form-control">
                                 <option value="-1"></option>
                                 <option value="NH 456/1">NH 456/1</option>
-                                <option value="TM1">TEST MAŠINA 1</option>
-                                <option value="TM2">TEST MAŠINA 2</option>
-                                <option value="TM3">TEST MAŠINA 3</option>
+                                <option value="TEST MAŠINA 1">TEST MAŠINA 1</option>
+                                <option value="TEST MAŠINA 2">TEST MAŠINA 2</option>
+                                <option value="TEST MAŠINA 3">TEST MAŠINA 3</option>
+                                <option value="Traktor">Traktor</option>
+                                <option value="Bager">Bager</option>
                             </select>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
 
-                            <select name="" id="" class="form-control">
+                            <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
                                 <option value="-1"></option>
                                 <option value="Milan Milanovic">Milan Milanovic</option>
                                 <option value="Milos Milosevic">Milos Milosevic</option>
                                 <option value="Milan Milankovic">Milan Milankovic</option>
                                 <option value="Nemanja Nemanjic">Nemanja Nemanjic</option>
+                                <option value="Pera Peric">Pera Peric</option>
+                                <option value="Nikola Nikolic">Nikola Nikolic</option>
                             </select>
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
-                            <input type="text" name="" class="form-control" id="">
+                        <div class="input-group">
+                            <input [(ngModel)]="machine.date" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+                            </div>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="number" name="" class="form-control" id="">
+                            <input [(ngModel)]="machine.workPeriod" type="number" name="" class="form-control" id="">
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="number" name="" id="" class="form-control">
+                            <input [(ngModel)]="machine.fuel" type="number" name="" id="" class="form-control">
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <select name="" id="" class="form-control">
+                            <select [(ngModel)]="machine.fuelType" name="" id="" class="form-control">
                                 <option value="-1"></option>
-                                <option value="G1">GORIVO 1</option>
-                                <option value="G2">GORIVO 2</option>
-                                <option value="G3">GORIVO 3</option>
+                                <option value="GORIVO 1">GORIVO 1</option>
+                                <option value="GORIVO 2">GORIVO 2</option>
+                                <option value="GORIVO 3">GORIVO 3</option>
+                                <option value="disel">DISEL</option>
                             </select>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <select name="" class="form-control" id="">
+                            <select [(ngModel)]="machine.storage" name="" class="form-control" id="">
                                 <option value="-1"></option>
-                                <option value="M1">MAGACIN 1</option>
-                                <option value="M2">MAGACIN 2</option>
-                                <option value="M3">MAGACIN 3</option>
+                                <option value="Magacin 1">MAGACIN 1</option>
+                                <option value="Magacin 2">MAGACIN 2</option>
+                                <option value="Magacin 3">MAGACIN 3</option>
                             </select>
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-add mr-2">
+                        <div *ngIf="!editingMachine" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addMachine()">
                                 <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="editingMachine" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="updateExistingMachine()">
+                                <i class="fa fa-check"></i>
                             </button>
                         </div>
                     </td>
@@ -240,7 +262,7 @@
                     <td>{{ machine.fuelType }}</td>
                     <td>{{ machine.storage }}</td>
                     <td>
-                        <button class="btn btn-primary btn-edit">
+                        <button class="btn btn-primary btn-edit" (click)="editMachine(machine)">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>
@@ -276,33 +298,40 @@
                 <td>
                         <div class="form-group">
 
-                            <select name="" id="" class="form-control">
+                            <select [(ngModel)]="material.name" name="" id="" class="form-control">
                                 <option value="-1"></option>
                                 <option value="MAT1">Materijal 1</option>
                                 <option value="MAT1">Materijal 2</option>
                                 <option value="MAT1">Materijal 3</option>
+                                <option value="XYZ">XYZ</option>
                             </select>
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
 
-                            <input type="number" name="" id="" class="form-control">
+                            <input [(ngModel)]="material.quantity" type="number" name="" id="" class="form-control">
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
 
-                            <select name="" id="" class="form-control">
+                            <select [(ngModel)]="material.unit" name="" id="" class="form-control">
                                 <option value="KG">kg</option>
                                 <option value="KG/H">kg/h</option>
+                                <option value="l">l</option>
                             </select>
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-add mr-2">
+                        <div *ngIf="!editingMaterial" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addMaterial()">
                                 <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="editingMaterial" class="form-group">
+                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial()">
+                                <i class="fa fa-check"></i>
                             </button>
                         </div>
                     </td>
@@ -312,7 +341,7 @@
                     <td>{{ material.quantity }}</td>
                     <td>{{ material.unit }}</td>
                     <td>
-                        <button class="btn btn-primary btn-edit">
+                        <button class="btn btn-primary btn-edit" (click)="editMaterial(material)">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>

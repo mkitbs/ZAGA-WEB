@@ -6,9 +6,7 @@
 .tabela-nalozi {
     background: white;
     width: 100%;
-    padding-top: 10%;
-    padding-bottom: 5%;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .break-class {
@@ -17,14 +15,15 @@
     font-size: 12px;
 }
 
+h3 {
+    color: #5C7495;
+}
+
 table, td, tr, th {
-    margin-left: 0 !important;
-    padding-left: 0 !important;
     text-align: center;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
     font-size: medium;
     vertical-align: middle;
+    font-size: 12px;
 }
 
 .info{

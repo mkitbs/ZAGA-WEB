@@ -34,7 +34,7 @@ export class WorkOrderComponent implements OnInit {
           "storage":"Magacin 1"
         },
         {
-          "id":1,
+          "id":2,
           "machine":"Bager",
           "worker":"Nikola Nikolic",
           "date":"13.08.2020.",

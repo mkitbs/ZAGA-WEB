@@ -1,14 +1,14 @@
 <div class="container pt-3">
     <div class="row">
         <div class="col-12 mb-3">
-            <h3 >Informacije naloga</h3>
+            <h3>Informacije naloga</h3>
         </div>
         
         <div class="col-4">
             <div class="form-group">
                 <label for="dp">Naziv radnog naloga</label>
                 <div class="input-group">
-                    <input class="form-control" type="text">
+                    <input [(ngModel)]="workOrderInfo.name" class="form-control" type="text">
                 </div>
             </div>
         </div>
@@ -16,13 +16,11 @@
             <div class="form-group">
                 <label for="dp">Odgovorna osoba</label>
                 <div class="input-group">
-                    <select class="form-control" id="exampleFormControlSelect1">
+                    <select [(ngModel)]="workOrderInfo.responsible" class="form-control" id="exampleFormControlSelect1">
                         <option>--Izaberite--</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>Miloš Milošević</option>
+                        <option>Milan Milanović</option>
+                        <option>Nemanja Nemanjić</option>
                     </select>
                 </div>
             </div>
@@ -32,14 +30,18 @@
         <div class="col-4">
             <div class="form-group">
                 <label for="dp">Kategorija</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select [(ngModel)]="workOrderInfo.category" class="form-control" id="exampleFormControlSelect1">
                     <option>--Izaberite--</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <option>Kategorija 1</option>
+                    <option>Kategorija 2</option>
+                    <option>Kategorija 3</option>
                 </select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="dp">Kultura</label>
+                <input [(ngModel)]="workOrderInfo.culture" type="text" name="" id="" class="form-control">
             </div>
         </div>
     </div>
@@ -48,14 +50,14 @@
             <div class="form-group">
                 <label for="dp">Status</label>
                 <div class="radio-toolbar input-group">
-                    <input type="radio" id="radio1" name="radios" value="all" checked>
-                    <label for="radio1">Pending</label>
+                    <input (change)="onItemChange($event.target.value)" [(ngModel)]="workOrderInfo.status" type="radio" id="radio1" name="radios" value="Novi" class="rbStatus" checked>
+                    <label for="radio1">Novi</label>
                   
-                    <input type="radio" id="radio2" name="radios" value="false">
-                    <label for="radio2">In Progress</label>
+                    <input (change)="onItemChange($event.target.value)" [(ngModel)]="workOrderInfo.status" type="radio" id="radio2" name="radios" class="rbStatus" value="U radu">
+                    <label for="radio2">U radu</label>
                   
-                    <input type="radio" id="radio3" name="radios" value="true">
-                    <label for="radio3">Finished</label>
+                    <input (change)="onItemChange($event.target.value)" [(ngModel)]="workOrderInfo.status" type="radio" id="radio3" name="radios" class="rbStatus" value="Završen">
+                    <label for="radio3">Završen</label>
                 </div>
             </div>
         </div>
@@ -65,7 +67,7 @@
             <div class="form-group">
                 <label for="dp">Datum od</label>
                 <div class="input-group">
-                    <input class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+                    <input [(ngModel)]="workOrderInfo.start" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
                     </div>
@@ -76,11 +78,20 @@
             <div class="form-group">
                 <label for="dp">Datum do</label>
                 <div class="input-group">
-                    <input class="form-control" id="do" placeholder="yyyy-mm-dd" ngbDatepicker #do="ngbDatepicker">
+                    <input [(ngModel)]="workOrderInfo.end" (click)="do.toggle()" class="form-control" id="do" placeholder="yyyy-mm-dd" ngbDatepicker #do="ngbDatepicker">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="do.toggle()" type="button"></button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group" style="float: right">
+                <button (click)="nextPage()" class="btn btn-primary btn-next">
+                    Dalje <i class="fa fa-arrow-right ml-2"></i>
+                </button>
             </div>
         </div>
     </div>
