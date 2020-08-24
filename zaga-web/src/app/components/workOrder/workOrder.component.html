@@ -70,8 +70,8 @@
                 <td>{{workOrder.name}}</td>
                 <td>{{workOrder.start}}</td>
                 <td>{{workOrder.end}}</td>
-                <td>{{workOrder.field}}</td>
-                <td>{{workOrder.fieldArea}}ha</td>
+                <td>{{workOrder.table}}</td>
+                <td>{{workOrder.area}}ha</td>
                 <td>{{workOrder.culture}}</td>
                 <td>{{workOrder.responsible}}</td>
                 <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>

@@ -76,3 +76,15 @@ button.calendar{
     background-position: center;
     background-color: transparent !important;
   }
+
+.statusNovi{
+    color: #5C7495
+}
+
+.statusURadu{
+    color: #f68901;
+}
+
+.statusZatvoren{
+    color: #73964a;
+}

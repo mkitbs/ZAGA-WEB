@@ -6,6 +6,7 @@
                 <div class="col">
                     <h3 *ngIf="new">Kreiranje naloga</h3>
                     <h3 *ngIf="!new">Informacije o nalogu</h3>
+                    <span>Status: </span><span  [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
                 </div>
                 <div class="col" style="float: right">
                     <button class="btn btn-primary btn-edit" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
@@ -41,13 +42,13 @@
                 <td class="right-col-header">
                     <div class="form-row">
                         <div class="col">
-                            <input type="date" [(ngModel)]="workOrder.start" name="" class="form-control" id="">
+                            <input type="date" [(ngModel)]="workOrder.start" id="from" placeholder="yyyy-mm-dd" ngbDatepicker #from="ngbDatepicker" (click)="from.toggle()" class="form-control" >
                         </div>
                         <div class="mt-2">
                             -
                         </div>
                         <div class="col">
-                            <input type="date" [(ngModel)]="workOrder.end" name="" class="form-control" id="">
+                            <input type="date" [(ngModel)]="workOrder.end" name="" class="form-control" id="to" ngbDatepicker #to="ngbDatepicker" (click)="to.toggle()">
                         </div>
                     </div>
                 </td>
@@ -170,9 +171,9 @@
                             <input [(ngModel)]="worker.nightWorkPeriod" type="number" name="" class="form-control" id="">
                         </div>
                     </td>
-                    <td *ngIf="!new">
+                    <td *ngIf="!new" style="vertical-align: middle;">
                         <div class="form-group">
-                            <input [(ngModel)]="worker.workPeriod" type="number" name="" class="form-control" id="">
+                           {{worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h
                         </div>
                     </td>
                     <td>
@@ -194,7 +195,7 @@
                     <td >{{ worker.operation }}</td>
                     <td *ngIf="!new">{{ worker.dayWorkPeriod }} h</td>
                     <td *ngIf="!new">{{ worker.nightWorkPeriod }} h</td>
-                    <td *ngIf="!new">{{ worker.workPeriod }} h</td>
+                    <td *ngIf="!new">{{ worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 }} h</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editWorker(worker)">
                         <i class="fa fa-edit"></i>
@@ -278,9 +279,9 @@
                             <input [(ngModel)]="machine.finalState" type="number" name="" id="" class="form-control">
                         </div>
                     </td>
-                    <td *ngIf="!new">
+                    <td *ngIf="!new" style="vertical-align: middle;">
                         <div class="form-group">
-                            <input [(ngModel)]="machine.sumState" type="number" name="" id="" class="form-control">
+                            {{machine.finalState*1 - machine.initialState*1 || 0}}mh
                         </div>
                     </td>
                     <td *ngIf="!new">
@@ -307,7 +308,7 @@
                     <td>{{ machine.worker }}</td>
                     <td *ngIf="!new">{{ machine.initialState }} </td>
                     <td *ngIf="!new">{{ machine.finalState }}</td>
-                    <td *ngIf="!new">{{ machine.sumState }}</td>
+                    <td *ngIf="!new">{{machine.finalState*1 - machine.initialState*1 || 0}}mh</td>
                     <td *ngIf="!new">{{ machine.fuel }}</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editMachine(machine)">

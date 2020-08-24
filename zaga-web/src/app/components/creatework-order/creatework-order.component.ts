@@ -44,6 +44,14 @@ export class CreateworkOrderComponent implements OnInit {
       this.new = false;
       this.workOrders = JSON.parse(localStorage["workOrders"]);
       this.workOrder = this.workOrders[this.workId-1];
+      this.workOrder.start = { day: +this.workOrder.start.substring(0,2), 
+                               month: +this.workOrder.start.substring(3,5), 
+                               year: +this.workOrder.start.substring(6,10)
+                             };
+      this.workOrder.end = { day: +this.workOrder.end.substring(0,2), 
+                             month: +this.workOrder.end.substring(3,5), 
+                             year: +this.workOrder.end.substring(6,10)
+                            };
     }
   }
 
@@ -67,6 +75,7 @@ export class CreateworkOrderComponent implements OnInit {
           + this.worker.date.year + '.';
       }  
       this.worker.id = this.workOrder.workers.length + 1;
+      this.worker.workPeriod = this.worker.dayWorkPeriod + this.worker.nightWorkPeriod;
       this.workOrder.workers.push(this.worker);
       this.worker = new Worker();
       this.editing = false;
@@ -102,7 +111,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.worker.operation = worker.operation;
     this.worker.nightWorkPeriod = worker.nightWorkPeriod;
     this.worker.dayWorkPeriod = worker.dayWorkPeriod;
-    this.worker.workPeriod = worker.workPeriod;
+    this.worker.workPeriod = worker.nightWorkPeriod + worker.dayWorkPeriod;
     if(worker.date != undefined) {
         this.worker.date = {day: +worker.date.substring(0,2), 
                             month: +worker.date.substring(3,5), 
@@ -116,6 +125,7 @@ export class CreateworkOrderComponent implements OnInit {
   addMachine() {
     
     this.machine.id = this.workOrder.machines.length + 1;
+    this.machine.sumState = this.machine.finalState - this.machine.initialState;
     this.workOrder.machines.push(this.machine);
     this.machine = new WorkOrdeMachine();
     this.editingMachine = false;
@@ -126,7 +136,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.machine.machine = machine.machine;
     this.machine.initialState = machine.initialState;
     this.machine.finalState = machine.finalState;
-    this.machine.sumState = machine.sumState;
+    this.machine.sumState = machine.finalState - machine.initialState;
     this.machine.fuel = machine.fuel;
     this.machine.workPeriod = machine.workPeriod;
     this.editingMachine = true;
@@ -193,9 +203,14 @@ export class CreateworkOrderComponent implements OnInit {
   closeWorkOrder() {
     
     //logic for validation here
-
-    this.workOrder.status = "Završen";
-    this.toastr.success("Uspešno zatvoren radni nalog.");
+    if(this.workOrder.treated != ""){
+      this.workOrder.status = "Završen";
+      localStorage.clear();
+      localStorage["workOrders"] = JSON.stringify(this.workOrders);
+      this.toastr.success("Uspešno zatvoren radni nalog.");
+    } else{
+      this.toastr.error("Neuspešno zatvoren radni nalog. Popunite sva polja.")
+    }
   }
 
 
