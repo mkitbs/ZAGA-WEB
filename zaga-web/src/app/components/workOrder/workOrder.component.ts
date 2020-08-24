@@ -29,8 +29,8 @@ export class WorkOrderComponent implements OnInit {
           "id":1,
           "machine":"Traktor",
           "initialState": "10",
-          "finalState": "10",
-          "sumState": "10",
+          "finalState": "15",
+          "sumState": "5",
           "worker":"Pera Peric",
           "date":"13.08.2020.",
           "workPeriod":"4",
@@ -41,6 +41,9 @@ export class WorkOrderComponent implements OnInit {
         {
           "id":2,
           "machine":"Bager",
+          "initialState": "10",
+          "finalState": "20",
+          "sumState": "10",
           "worker":"Nikola Nikolic",
           "date":"13.08.2020.",
           "workPeriod":"2",
@@ -73,10 +76,10 @@ export class WorkOrderComponent implements OnInit {
         {
           "id":1,
           "name":"XYZ",
-          "quantity":"10",
-          "spent": "10",
-          "spentPerHectar": "10",
-          "quantityPerHectar": "100",
+          "quantity":"400",
+          "spent": "320",
+          "spentPerHectar": "8",
+          "quantityPerHectar": "10",
           "unit":"l"
         }
       ]

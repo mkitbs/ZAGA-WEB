@@ -42,7 +42,7 @@
                 <td class="right-col-header">
                     <div class="form-row">
                         <div class="col">
-                            <input type="date" [(ngModel)]="workOrder.start" id="from" placeholder="yyyy-mm-dd" ngbDatepicker #from="ngbDatepicker" (click)="from.toggle()" class="form-control" >
+                            <input type="date" [(ngModel)]="workOrder.start" id="from" ngbDatepicker #from="ngbDatepicker" (click)="from.toggle()" class="form-control" >
                         </div>
                         <div class="mt-2">
                             -
@@ -81,7 +81,12 @@
                   <i class="fa fa-clone"></i> Površina:
                 </td>
                 <td class="right-col-header">
-                    <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
+                    <div class="input-group mb-3">
+                        <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">ha</span>
+                        </div>
+                    </div>
                 </td>
                 <td class="left-col-header" >
                     <span *ngIf="!new">
@@ -90,10 +95,16 @@
                     
                  </td>
                  <td class="right-col-header">
-                     <span *ngIf="!new">
-                        <input type="text" name="" [(ngModel)]="workOrder.treated"  id="" class="form-control">
-                     </span>
                      
+                     <span *ngIf="!new">
+                        <div class="input-group mb-3">
+                            <input type="text" name="" [(ngModel)]="workOrder.treated"  id="" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">ha</span>
+                            </div>
+                        </div>
+                     </span>
+                    
                  </td>
             </tr>
         </table>
@@ -163,17 +174,27 @@
                     </td>
                     <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="worker.dayWorkPeriod" type="number" name="" class="form-control" id="">
+                            <div class="input-group mb-3">
+                                <input [(ngModel)]="worker.dayWorkPeriod" type="number" name="" class="form-control" id="">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">h</span>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="worker.nightWorkPeriod" type="number" name="" class="form-control" id="">
+                            <div class="input-group mb-3">
+                                <input [(ngModel)]="worker.nightWorkPeriod" type="number" name="" class="form-control" id="">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">h</span>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="!new" style="vertical-align: middle;">
                         <div class="form-group">
-                           {{worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h
+                           {{worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}} h
                         </div>
                     </td>
                     <td>
@@ -223,16 +244,16 @@
                     Radnik*
                 </th>
                 <th *ngIf="!new">
-                    Početno stanje MČ (mh)
+                    Početno stanje MČ
                 </th>
                 <th *ngIf="!new">
-                    Krajnje stanje MČ (mh)
+                    Krajnje stanje MČ
                 </th>
                 <th *ngIf="!new">
-                    Utrošeni moto časovi
+                    Utrošeni MČ 
                 </th>
                 <th *ngIf="!new">
-                    Utrošak goriva (l)
+                    Utrošak goriva
                 </th>
                 <th style="text-align: right !important;">
                     Dodaj
@@ -271,22 +292,37 @@
                     
                     <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="machine.initialState" type="number" name="" id="" class="form-control">
+                            <div class="input-group mb-3">
+                                <input [(ngModel)]="machine.initialState" type="number" name="" id="" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">mh</span>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="machine.finalState" type="number" name="" id="" class="form-control">
+                            <div class="input-group mb-3">
+                                <input [(ngModel)]="machine.finalState" type="number" name="" id="" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">mh</span>
+                                </div>
+                            </div>
                         </div>
                     </td>
                     <td *ngIf="!new" style="vertical-align: middle;">
                         <div class="form-group">
-                            {{machine.finalState*1 - machine.initialState*1 || 0}}mh
+                            {{machine.finalState*1 - machine.initialState*1 || 0}} mh
                         </div>
                     </td>
                     <td *ngIf="!new">
                         <div class="form-group">
-                            <input [(ngModel)]="machine.fuel" type="number" name="" id="" class="form-control">
+                            <div class="input-group mb-3">
+                                <input [(ngModel)]="machine.fuel" type="number" name="" id="" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">l</span>
+                                </div>
+                            </div>
                         </div>
                     </td>
 
