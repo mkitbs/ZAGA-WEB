@@ -24,6 +24,7 @@ export class WorkOrderComponent implements OnInit {
       "responsible":"Milos Vrgovic",
       "status":"Novi",
       "treated": "",
+      "category": "",
       "machines": [
         {
           "id":1,
