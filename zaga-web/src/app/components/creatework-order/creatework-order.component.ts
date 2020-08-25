@@ -43,6 +43,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrder.workers = [];
       this.workOrder.materials = [];
       this.workOrders = JSON.parse(localStorage["workOrders"]);
+      this.workOrder.status = "Novi";
     } else {
       this.new = false;
       this.workOrders = JSON.parse(localStorage["workOrders"]);
@@ -265,6 +266,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.start = dateStartToAdd;
     this.workOrder.end = dateEndToAdd;
     this.workOrder.id = this.workOrders.length + 1;
+    this.workOrder.status = "Novi";
+    this.workOrder.treated = "";
     this.workOrders.push(this.workOrder);
     localStorage["workOrders"] = JSON.stringify(this.workOrders);
     this.toastr.success("Uspešno dodat nalog.");
