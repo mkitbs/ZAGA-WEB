@@ -60,7 +60,7 @@ export class WorkOrderComponent implements OnInit {
           "date":"13.08.2020.",
           "dayWorkPeriod": "10",
           "nightWorkPeriod": "0",
-          "operation": "Operacija 1",
+          "operation": "Prskanje",
           "workPeriod":"4",
         },
         {
@@ -69,7 +69,67 @@ export class WorkOrderComponent implements OnInit {
           "date":"13.08.2020.",
           "dayWorkPeriod": "10",
           "nightWorkPeriod": "0",
-          "operation": "Operacija 1",
+          "operation": "Prskanje",
+          "workPeriod":"4",
+        }
+      ],
+      "materials": [
+        {
+          "id":1,
+          "name":"XYZ",
+          "quantity":"400",
+          "spent": "320",
+          "spentPerHectar": "8",
+          "quantityPerHectar": "10",
+          "unit":"l"
+        }
+      ]
+    },
+    {
+      "id":2,
+      "name":"Oranje do 35cm",
+      "start":"14.08.2020.",
+      "end":"16.08.2020.",
+      "table":"T20",
+      "area": "80",
+      "year": "2020",
+      "culture":"Kukuruz",
+      "responsible":"Nikola Nikolic",
+      "status":"U radu",
+      "treated": "",
+      "category": "",
+      "machines": [
+        {
+          "id":1,
+          "machine":"Traktor",
+          "initialState": "450",
+          "finalState": "750",
+          "sumState": "300",
+          "worker":"Pera Peric",
+          "date":"14.08.2020.",
+          "workPeriod":"4",
+          "fuel":"80",
+          "fuelType":"disel",
+          "storage":"Magacin 1"
+        }
+      ],
+      "workers": [
+        {
+          "id":1,
+          "worker":"Pera Peric",
+          "date":"14.08.2020.",
+          "dayWorkPeriod": "10",
+          "nightWorkPeriod": "0",
+          "operation": "Oranje do 35cm",
+          "workPeriod":"4",
+        },
+        {
+          "id":2,
+          "worker":"Milan Milankovic",
+          "date":"14.08.2020.",
+          "dayWorkPeriod": "10",
+          "nightWorkPeriod": "0",
+          "operation": "Oranje do 35cm",
           "workPeriod":"4",
         }
       ],

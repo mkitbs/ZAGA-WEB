@@ -88,3 +88,8 @@ button.calendar{
 .statusZatvoren{
     color: #73964a;
 }
+
+.inputFillFalse{
+    border: 2px solid red;
+    border-radius: 4px;
+}
