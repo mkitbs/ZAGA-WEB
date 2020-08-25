@@ -153,7 +153,7 @@ export class WorkOrderComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+    //localStorage["workOrders"] = JSON.stringify(this.tempJSON);
     this.workOrders = JSON.parse(localStorage["workOrders"]);
   }
 
