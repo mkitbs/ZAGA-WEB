@@ -264,6 +264,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.start = dateStartToAdd;
     this.workOrder.end = dateEndToAdd;
     localStorage["workOrders"] = JSON.stringify(this.workOrders);
+    this.toastr.success("Uspešno dodat nalog.");
   }
 
 
