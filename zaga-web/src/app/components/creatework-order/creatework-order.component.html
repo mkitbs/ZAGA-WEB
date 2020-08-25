@@ -25,14 +25,24 @@
                 <td class="left-col-header">
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
-                <td class="right-col-header">
-                    <input type="text" name="" [(ngModel)]="workOrder.name" class="form-control" id="">
+                <td class="right-col-header" >
+                    <select name="" [(ngModel)]="workOrder.name" class="form-control" id="" *ngIf="new; else elseBlockOperation">
+                      <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
+                    </select>
+                    <ng-template #elseBlockOperation>
+                        <input type="text" name=" " [(ngModel)]="workOrder.name" class="form-control">
+                    </ng-template>
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-database mr-2"></i>Tabla:
                  </td>
                  <td class="right-col-header">
-                     <input type="text" name="" [(ngModel)]="workOrder.table"  id="" class="form-control">
+                    <select name="" [(ngModel)]="workOrder.table" class="form-control" id="" *ngIf="new; else elseBlockTable">
+                        <option value="{{table}}" *ngFor="let table of this.tables">{{table}}</option>
+                    </select>
+                    <ng-template #elseBlockTable>
+                        <input type="text" name="" [(ngModel)]="workOrder.table"  id="" class="form-control">
+                    </ng-template>
                  </td>
             </tr>
             <tr>
@@ -56,7 +66,12 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                     <input type="text" name="" [(ngModel)]="workOrder.responsible" id="" class="form-control">
+                    <select [(ngModel)]="worker.responsible" name="" id="" class="form-control" *ngIf="new; else elseBlocResponsible">
+                        <option value="{{employee}}" *ngFor="let employee of this.employees">{{employee}}</option>
+                    </select>
+                     <ng-template #elseBlocResponsible>
+                        <input type="text" name="" [(ngModel)]="workOrder.responsible" id="" class="form-control">
+                    </ng-template>
                  </td>
             </tr>
             <tr>
@@ -64,7 +79,13 @@
                   <i class="fa fa-cubes"></i> Kultura:
                 </td>
                 <td class="right-col-header">
-                    <input type="text" name="" [(ngModel)]="workOrder.culture" id="" class="form-control">
+                    <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="" *ngIf="new; else elseBlockCulture">
+                        <option value="{{culture}}" *ngFor="let culture of this.cultures">{{culture}}</option>
+                    </select>
+                    <ng-template #elseBlockCulture>
+                        <input type="text" name="" [(ngModel)]="workOrder.culture" id="" class="form-control">
+                    </ng-template>
+                   
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-tasks mr-2"></i>Godina:
@@ -151,12 +172,7 @@
                         </select>
                         <ng-template #elseBlockWorkers>
                             <select [(ngModel)]="worker.worker" name="" id="" class="form-control">
-                                <option value="-1"></option>
-                                <option value="Milan Milenkovic">Milan Milenkovic</option>
-                                <option value="Pera Peric">Pera Peric</option>
-                                <option value="Nikola Nikolic">Nikola Nikolic</option>
-                                <option value="Milos Milosevic">Milos Milosevic</option>
-                                <option value="Janko Jankovic">Janko Jankovic</option>
+                                <option value="{{employee}}" *ngFor="let employee of this.employees">{{employee}}</option>
                             </select>
                         </ng-template>
                     </div>
@@ -179,14 +195,7 @@
                             </select>
                             <ng-template #elseBlockOperations>
                                 <select name="" id="" [(ngModel)]="worker.operation" class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="Oranje do 35 cm">Oranje do 35 cm</option>
-                                    <option value="Setva">Setva</option>
-                                    <option value="Prskanje">Prskanje</option>
-                                    <option value="Prskanje međuredno">Prskanje međuredno</option>
-                                    <option value="Okopavanje">Okopavanje</option>
-                                    <option value="Okopavanje međuredno">Okopavanje međuredno</option>
-                                    <option value="Ispomoć">Ispomoć</option>
+                                    <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -293,13 +302,7 @@
                             </select>
                             <ng-template #elseBlockMachine>
                                 <select [(ngModel)]="machine.machine" name="" id="" class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="NH 456/1">NH 456/1</option>
-                                    <option value="Kuhn Axis 30.2">Kuhn Axis 30.2</option>
-                                    <option value="Prskalica AMD 45">Prskalica AMD 45</option>
-                                    <option value="Kombajn JD">Kombajn JD</option>
-                                    <option value="Traktor New Holand T6">Traktor New Holand T6</option>
-                                    <option value="Bager Cat 330">Bager Cat 330</option>
+                                    <option value="{{device}}" *ngFor="let device of this.devices">{{device}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -312,12 +315,7 @@
                             </select>
                             <ng-template #elseBlockWorkersMachine>
                                 <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="Milan Milenkovic">Milan Milenkovic</option>
-                                    <option value="Pera Peric">Pera Peric</option>
-                                    <option value="Nikola Nikolic">Nikola Nikolic</option>
-                                    <option value="Milos Milosevic">Milos Milosevic</option>
-                                    <option value="Janko Jankovic">Janko Jankovic</option>
+                                    <option value="{{employee}}" *ngFor="let employee of this.employees">{{employee}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -438,11 +436,7 @@
                             </select>
                             <ng-template #elseBlockMaterial>
                                 <select [(ngModel)]="material.name" name="" id="" class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="MAP">MAP</option>
-                                    <option value="NPK 15:15:15">NPK 15:15:15</option>
-                                    <option value="ZP 196">ZP 196</option>
-                                    <option value="RWA 120">RWA 120</option>
+                                    <option value="{{substance}}" *ngFor="let substance of this.substances">{{substance}}</option>
                                 </select>
                             </ng-template>
                             
