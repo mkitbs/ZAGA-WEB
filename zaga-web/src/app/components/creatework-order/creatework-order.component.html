@@ -9,8 +9,8 @@
                     <span>Status: </span><span  [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
                 </div>
                 <div class="col" style="float: right">
-                    <button class="btn btn-primary btn-edit" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
-                    <button class="btn btn-primary btn-add mr-2" *ngIf="!new" (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
+                    <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
+                    <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
                     <button class="btn btn-primary btn-add mr-2" *ngIf="new"  (click)="addWorkOrder()"><i class="fa fa-plus mr-2"></i>Dodaj</button>
                 </div>
             </div>
@@ -126,16 +126,16 @@
                     Datum*
                 </th>
                 <th style="width: 230px;">
-                    Operacija
+                    Operacija*
                 </th>
                 <th *ngIf="!new" style="width: 130px;">
-                    Redovan rad
+                    Redovan rad*
                 </th>
                 <th *ngIf="!new" style="width: 130px;"> 
-                    Noćni rad
+                    Noćni rad*
                 </th>
                 <th *ngIf="!new" style="width: 130px;">
-                    Ukupan rad
+                    Ukupan rad*
                 </th>
                 <th style="text-align: right !important;">
                     Dodaj
@@ -223,12 +223,12 @@
                     </td>
                     <td>
                         <div *ngIf="!editing" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="addWorker()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addWorker()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                         <div *ngIf="editing" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingWorker()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingWorker()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-check"></i>
                             </button>
                         </div>
@@ -242,7 +242,7 @@
                     <td *ngIf="!new">{{ worker.nightWorkPeriod }} h</td>
                     <td *ngIf="!new">{{ worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 }} h</td>
                     <td>
-                        <button class="btn btn-primary btn-edit" (click)="editWorker(worker)">
+                        <button class="btn btn-primary btn-edit" (click)="editWorker(worker)" [disabled]="workOrder.status == 'Zatvoren'">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>
@@ -366,12 +366,12 @@
 
                     <td>
                         <div *ngIf="!editingMachine" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="addMachine()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addMachine()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                         <div *ngIf="editingMachine" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="updateExistingMachine()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="updateExistingMachine()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-check"></i>
                             </button>
                         </div>
@@ -385,7 +385,7 @@
                     <td *ngIf="!new">{{machine.finalState*1 - machine.initialState*1 || 0}} mh</td>
                     <td *ngIf="!new">{{ machine.fuel }} l</td>
                     <td>
-                        <button class="btn btn-primary btn-edit" (click)="editMachine(machine)">
+                        <button class="btn btn-primary btn-edit" (click)="editMachine(machine)" [disabled]="workOrder.status == 'Zatvoren'">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>
@@ -500,12 +500,12 @@
 
                     <td>
                         <div *ngIf="!editingMaterial" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="addMaterial()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="addMaterial()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                         <div *ngIf="editingMaterial" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial()">
+                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-check"></i>
                             </button>
                         </div>
@@ -520,7 +520,7 @@
                     <td *ngIf="!new">{{ material.spent }} {{material.unit}}</td>
 
                     <td>
-                        <button class="btn btn-primary btn-edit" (click)="editMaterial(material)">
+                        <button class="btn btn-primary btn-edit" (click)="editMaterial(material)" [disabled]="workOrder.status == 'Zatvoren'">
                         <i class="fa fa-edit"></i>
                         </button>
                     </td>
