@@ -277,6 +277,26 @@ export class CreateworkOrderComponent implements OnInit {
     if(this.workOrder.treated != ""){
       this.workOrder.status = "Zatvoren";
       localStorage.clear();
+      var dateStartToAdd = "";
+      var dateEndToAdd = "";
+      if(this.workOrder.start != undefined) {
+        if(this.workOrder.start.month < 10) {
+          this.workOrder.start.month = '0' + this.workOrder.start.month;
+        }
+        dateStartToAdd= this.workOrder.start.day + '.' 
+          + this.workOrder.start.month + '.' 
+          + this.workOrder.start.year + '.';
+      }
+      if(this.workOrder.end != undefined) {
+        if(this.workOrder.end.month < 10) {
+          this.workOrder.end.month = '0' + this.workOrder.end.month;
+        }
+        dateEndToAdd= this.workOrder.end.day + '.' 
+          + this.workOrder.end.month + '.' 
+          + this.workOrder.end.year + '.';
+      }
+      this.workOrder.start = dateStartToAdd;
+      this.workOrder.end = dateEndToAdd;
       localStorage["workOrders"] = JSON.stringify(this.workOrders);
       this.toastr.success("Uspešno zatvoren radni nalog.");
       this.inputFill = true;
