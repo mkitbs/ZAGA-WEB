@@ -15,6 +15,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatTooltipModule } from '@angular/material';
 import { CloseWorkOrderComponent } from './components/closework-order/closework-order.component';
 import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule, ThemeService } from 'ng2-charts';
+
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
@@ -48,9 +50,10 @@ const routes: Routes = [
     NgbDatepickerModule,
     ReactiveFormsModule,
     MatTooltipModule,
-    FormsModule
+    FormsModule,
+    ChartsModule
   ],
-  providers: [],
+  providers: [ThemeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

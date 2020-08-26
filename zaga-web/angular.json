@@ -26,6 +26,7 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/ngx-toastr/toastr.css",
+              "node_modules/chart.js/dist/Chart.min.css",
               "src/styles.css"
             ],
             "scripts": [
