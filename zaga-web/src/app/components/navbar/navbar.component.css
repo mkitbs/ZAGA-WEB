@@ -24,3 +24,9 @@ a{
     background-color: #5C7495;
     color: orange;
 }
+
+@media (min-width: 979px) {
+    ul.navbar-nav li.dropdown:hover > div.dropdown-menu {
+        display: block;    
+    }
+}
