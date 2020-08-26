@@ -66,7 +66,7 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    <select [(ngModel)]="worker.responsible" name="" id="" class="form-control" *ngIf="new; else elseBlocResponsible">
+                    <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" *ngIf="new; else elseBlocResponsible">
                         <option value="{{employee}}" *ngFor="let employee of this.employees">{{employee}}</option>
                     </select>
                      <ng-template #elseBlocResponsible>

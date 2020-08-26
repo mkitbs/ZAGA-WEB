@@ -315,6 +315,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.id = this.workOrders.length + 1;
     this.workOrder.status = "Novi";
     this.workOrder.treated = "";
+    this.workOrder.responsible = this.workOrder.responsible;
     this.workOrders.push(this.workOrder);
     localStorage["workOrders"] = JSON.stringify(this.workOrders);
     this.toastr.success("Uspešno dodat nalog.");

@@ -6,6 +6,5 @@ export class Worker {
     nightWorkPeriod;
     workPeriod: number = this.nightWorkPeriod + this.dayWorkPeriod;
     operation;
-    responsible;
 
 }
