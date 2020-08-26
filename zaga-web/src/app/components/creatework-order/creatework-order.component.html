@@ -26,23 +26,17 @@
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
                 <td class="right-col-header" >
-                    <select name="" [(ngModel)]="workOrder.name" class="form-control" id="" *ngIf="new; else elseBlockOperation">
+                    <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
                       <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
                     </select>
-                    <ng-template #elseBlockOperation>
-                        <input type="text" name=" " [(ngModel)]="workOrder.name" class="form-control">
-                    </ng-template>
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-database mr-2"></i>Tabla:
                  </td>
                  <td class="right-col-header">
-                    <select name="" [(ngModel)]="workOrder.table" class="form-control" id="" *ngIf="new; else elseBlockTable">
+                    <select name="" [(ngModel)]="workOrder.table" class="form-control" id="">
                         <option value="{{table}}" *ngFor="let table of this.tables">{{table}}</option>
                     </select>
-                    <ng-template #elseBlockTable>
-                        <input type="text" name="" [(ngModel)]="workOrder.table"  id="" class="form-control">
-                    </ng-template>
                  </td>
             </tr>
             <tr>
@@ -66,12 +60,9 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" *ngIf="new; else elseBlocResponsible">
+                    <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
                         <option value="{{employee}}" *ngFor="let employee of this.employees">{{employee}}</option>
                     </select>
-                     <ng-template #elseBlocResponsible>
-                        <input type="text" name="" [(ngModel)]="workOrder.responsible" id="" class="form-control">
-                    </ng-template>
                  </td>
             </tr>
             <tr>
@@ -79,13 +70,9 @@
                   <i class="fa fa-cubes"></i> Kultura:
                 </td>
                 <td class="right-col-header">
-                    <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="" *ngIf="new; else elseBlockCulture">
+                    <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
                         <option value="{{culture}}" *ngFor="let culture of this.cultures">{{culture}}</option>
                     </select>
-                    <ng-template #elseBlockCulture>
-                        <input type="text" name="" [(ngModel)]="workOrder.culture" id="" class="form-control">
-                    </ng-template>
-                   
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-tasks mr-2"></i>Godina:
