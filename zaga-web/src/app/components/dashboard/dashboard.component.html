@@ -68,8 +68,8 @@
                     <th scope="col"><i class="fa fa-database mr-2"></i> Table</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Jockov Željko</td>
+                    <tr> 
+                        <td (click)="markerAnimate()">Jockov Željko</td>
                         <td>IMT 533/539</td>
                         <td>T-119</td>
                     </tr>
@@ -133,7 +133,34 @@
         </div>
         <div class="col">
             <br><br><br>
-            <app-map></app-map>
+            <agm-map [latitude]="lat"  [longitude]="lng"  (mapReady)="onMapReady($event)"  [mapTypeControl]="true"  
+                disableDoubleClickZoom="true"  mapTypeId='satellite'  [zoom]=15 >
+                <agm-marker *ngFor="let worker of markersWorkers"
+                    [latitude]="worker.lat" 
+                    [longitude]="worker.lng"
+                    [animation]="userLocationMarkerAnimation"
+                    [iconUrl]="{
+                        url: './assets/worker.svg',
+                        scaledSize: {
+                            width: 40,
+                            height: 60
+                        }
+                    }">
+                    <agm-info-window>{{worker.name}}</agm-info-window>
+                </agm-marker>
+                <agm-marker *ngFor="let machine of markersMachines"
+                    [latitude]="machine.lat" 
+                    [longitude]="machine.lng"
+                    [iconUrl]="{
+                        url: './assets/machine.png',
+                        scaledSize: {
+                            width: 40,
+                            height: 60
+                        }
+                    }">
+                    <agm-info-window>{{machine.name}}</agm-info-window>
+                </agm-marker>
+            </agm-map>
         </div>
     </div>
     <br>

@@ -494,7 +494,7 @@
                 </tr>
                 <tr *ngFor="let material of workOrder.materials">
                     <td>{{ material.name }}</td>
-                    <td>{{ material.quantity / workOrder.area }} {{material.unit}}/ha</td>
+                    <td>{{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</td>
                     <td>{{ material.quantity }} {{material.unit}}</td>
                     <td >{{ material.unit }}</td>
                     <td *ngIf="!new">{{ material.spent / workOrder.area }} {{material.unit}}/ha</td>

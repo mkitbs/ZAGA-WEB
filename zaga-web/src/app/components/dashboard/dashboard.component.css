@@ -16,3 +16,7 @@ th, td {
     background-color: #f68901;
     color: white;
 }
+
+agm-map{
+    height: 500px;
+}

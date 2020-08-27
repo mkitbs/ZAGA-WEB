@@ -18,7 +18,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule, ThemeService } from 'ng2-charts';
 import { YieldComponent } from './components/yield/yield.component';
 import { AgmCoreModule } from '@agm/core';
-import { MapComponent } from './components/map/map.component';
 
 
 
@@ -29,7 +28,6 @@ const routes: Routes = [
   {path: "workOrder", component: WorkOrderComponent},
   {path: "close/workOrder/:workId", component: CloseWorkOrderComponent},
   {path: "yieldOverview", component: YieldComponent},
-  {path: "mapa", component: MapComponent},
   {path:"", component:HomeComponent}
 
 ];
@@ -44,8 +42,7 @@ const routes: Routes = [
     WorkOrderComponent,
     DashboardComponent,
     CloseWorkOrderComponent,
-    YieldComponent,
-    MapComponent
+    YieldComponent
 
   ],
   imports: [
