@@ -1,0 +1,123 @@
+<div class="container">
+    <div class="topcorner">
+       <select name="" id="" class="form-control" style="width: 200px;">
+           <option value="-1">Izaberite godinu</option>
+           <option value="2020">2020</option>
+           <option value="2019">2019</option>
+       </select>
+    </div>
+    <br><br><br><br>
+    <div class="row">
+       <div class="col">
+           <div style="display: block;">
+               <h3 style="text-align: center;">Prinos po kulturi (Ukupno t)</h3>
+               <canvas baseChart
+                   [data]="pieChartData"
+                   [labels]="pieChartLabels"
+                   [chartType]="pieChartType"
+                   [options]="optionsPieChart"
+                   [colors]="chartColors">
+               </canvas>
+           </div>
+       </div>
+       <div class="col">
+           <div style="display: block">
+               <h3 style="text-align: center;">Prinos po kulturi (t/ha)</h3>
+               <canvas baseChart
+                   [datasets] = "barChartData"
+                   [labels] = "barChartLabels"
+                   [chartType] = "barChartType"
+                   [legend] = "barChartLegend"
+                   [colors]="chartColors"
+                   [options]="barChartOptions">
+               </canvas>
+           </div>
+       </div>
+    </div>
+    <br><br>
+    <h3>Prinos po kulturi</h3>
+    <br>
+    <div>
+        <table class="table">
+            <thead>
+                <th scope="col"></th>
+                <th scope="col" colspan="3" class="prinos">Prinos</th>
+                <th scope="col" colspan="2" class="pokazatelji">Ključni pokazatelji</th>
+            </thead>
+            <tbody>
+                <tr>
+                   <td class="prinos" style="width: 150px;">Kultura / Sorta</td>
+                   <td class="prinos">Planirano</td>
+                   <td class="prinos">Ostvareno</td>
+                   <td class="prinos">%</td>
+                   <td class="pokazatelji">Po površini (ha)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;"><b>Kukuruz</b></td>
+                    <td><b>1 200 t</b></td>
+                    <td><b>1 190 t</b></td>
+                    <td><b><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</b></td>
+                    <td><b>119 t</b></td>
+                </tr>
+                <tr>
+                   <td style="text-align: right;">NS 205</td>
+                   <td>600 t</td>
+                   <td>500 t</td>
+                   <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> -17 %</td>
+                   <td>60 t</td>
+               </tr>
+               <tr>
+                   <td style="text-align: right;">NS 605</td>
+                   <td>600 t</td>
+                   <td>690 t</td>
+                   <td><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 15 %</td>
+                   <td>60 t</td>
+               </tr>
+               <tr>
+                   <td style="text-align: left;"><b>Pšenica</b></td>
+                   <td><b>2 200 t</b></td>
+                   <td><b>2 400 t</b></td>
+                   <td><b><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 10 %</b></td>
+                   <td><b>110 t</b></td>
+               </tr>
+               <tr>
+                   <td style="text-align: right;">KWS 32</td>
+                   <td>1 200 t</td>
+                   <td>900 t</td>
+                   <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> -25 %</td>
+                   <td>18 t</td>
+               </tr>
+               <tr>
+                   <td style="text-align: right;">KWS 45</td>
+                   <td>1 000 t</td>
+                   <td>1 500 t</td>
+                   <td><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 18 %</td>
+                   <td>30 t</td>
+               </tr>
+               <tr>
+                   <td style="text-align: left;"><b>Soja</b></td>
+                   <td><b>2 800 t</b></td>
+                   <td><b>2 750 t</b></td>
+                   <td><b><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</b></td>
+                   <td><b>70 t</b></td>
+               </tr>
+               <tr>
+                   <td style="text-align: right;">NS MAXIMUS</td>
+                   <td>1 400 t</td>
+                   <td>1 350 t</td>
+                   <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</td>
+                   <td>33,75 t</td>
+               </tr>
+               <tr>
+                   <td style="text-align: right;">NS SAVA</td>
+                   <td>1 400 t</td>
+                   <td>1 400 t</td>
+                   <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</td>
+                   <td>35 t</td>
+               </tr>
+            </tbody>
+        </table>
+    </div>
+   
+</div>
+

@@ -1,0 +1,27 @@
+<agm-map [latitude]="lat"  [longitude]="lng"  (mapReady)="onMapReady($event)"  [mapTypeControl]="true"  
+    disableDoubleClickZoom="true"  mapTypeId='satellite'  [zoom]=15 >
+    <agm-marker *ngFor="let worker of markersWorkers"
+        [latitude]="worker.lat" 
+        [longitude]="worker.lng"
+        [iconUrl]="{
+            url: './assets/worker.svg',
+            scaledSize: {
+                width: 40,
+                height: 60
+            }
+        }">
+        <agm-info-window>{{worker.name}}</agm-info-window>
+    </agm-marker>
+    <agm-marker *ngFor="let machine of markersMachines"
+        [latitude]="machine.lat" 
+        [longitude]="machine.lng"
+        [iconUrl]="{
+            url: './assets/machine.png',
+            scaledSize: {
+                width: 40,
+                height: 60
+            }
+        }">
+        <agm-info-window>{{machine.name}}</agm-info-window>
+    </agm-marker>
+</agm-map>

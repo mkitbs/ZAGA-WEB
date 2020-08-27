@@ -12,19 +12,25 @@ import { NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { WorkOrderComponent } from './components/workOrder/workOrder.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule, yearsPerPage } from '@angular/material';
 import { CloseWorkOrderComponent } from './components/closework-order/closework-order.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule, ThemeService } from 'ng2-charts';
+import { YieldComponent } from './components/yield/yield.component';
+import { AgmCoreModule } from '@agm/core';
+import { MapComponent } from './components/map/map.component';
+
 
 
 const routes: Routes = [
-  {path:"", component:HomeComponent},
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
   {path:"workOrder", component: WorkOrderComponent},
   {path: "nalog", component: NalogComponent},
   {path: "workOrder", component: WorkOrderComponent},
-  {path: "close/workOrder/:workId", component: CloseWorkOrderComponent}
+  {path: "close/workOrder/:workId", component: CloseWorkOrderComponent},
+  {path: "yieldOverview", component: YieldComponent},
+  {path: "mapa", component: MapComponent},
+  {path:"", component:HomeComponent}
 
 ];
 
@@ -37,7 +43,9 @@ const routes: Routes = [
     NalogComponent,
     WorkOrderComponent,
     DashboardComponent,
-    CloseWorkOrderComponent
+    CloseWorkOrderComponent,
+    YieldComponent,
+    MapComponent
 
   ],
   imports: [
@@ -51,7 +59,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatTooltipModule,
     FormsModule,
-    ChartsModule
+    ChartsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDq7qhfF3VnG4qBTA9UvmGg99sHeDIjMwc',
+      libraries: ['drawing']
+    })
   ],
   providers: [ThemeService],
   bootstrap: [AppComponent]

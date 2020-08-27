@@ -1,123 +1,141 @@
  <div class="container">
-     <div class="topcorner">
-        <select name="" id="" class="form-control" style="width: 200px;">
-            <option value="-1">Izaberite godinu</option>
-            <option value="2020">2020</option>
-            <option value="2019">2019</option>
-        </select>
-     </div>
-     <br><br><br><br>
+     <br><br>
      <div class="row">
         <div class="col">
             <div style="display: block;">
-                <h3 style="text-align: center;">Prinos po kulturi (Ukupno t)</h3>
-                <canvas baseChart
-                    [data]="pieChartData"
-                    [labels]="pieChartLabels"
-                    [chartType]="pieChartType"
-                    [options]="optionsPieChart"
-                    [colors]="chartColors">
-                </canvas>
-            </div>
-        </div>
-        <div class="col">
-            <div style="display: block">
-                <h3 style="text-align: center;">Prinos po kulturi (t/ha)</h3>
+                <h3 style="text-align: center;">Operacije danas</h3>
                 <canvas baseChart
                     [datasets] = "barChartData"
                     [labels] = "barChartLabels"
                     [chartType] = "barChartType"
                     [legend] = "barChartLegend"
-                    [colors]="chartColors"
                     [options]="barChartOptions">
+                </canvas>
+            </div>
+        </div>
+        <div class="col">
+            <div style="display: block">
+                <h3 style="text-align: center;">Broj zaposlenih po operacijama (danas)</h3>
+                <br>
+                <canvas baseChart
+                    [datasets] = "barChartWorkerNoData"
+                    [labels] = "barChartWorkerNoLabels"
+                    [chartType] = "barChartWorkerNoType"
+                    [legend] = "barChartWorkerNoLegend"
+                    [options]="barChartWorkerNoOptions">
                 </canvas>
             </div>
         </div>
      </div>
      <br><br>
-     <h3>Prinos po kulturi</h3>
-     <br>
-     <div>
-         <table class="table">
-             <thead>
-                 <th scope="col"></th>
-                 <th scope="col" colspan="3" class="prinos">Prinos</th>
-                 <th scope="col" colspan="2" class="pokazatelji">Ključni pokazatelji</th>
-             </thead>
-             <tbody>
-                 <tr>
-                    <td class="prinos" style="width: 150px;">Kultura / Sorta</td>
-                    <td class="prinos">Planirano</td>
-                    <td class="prinos">Ostvareno</td>
-                    <td class="prinos">%</td>
-                    <td class="pokazatelji">Po površini (ha)</td>
-                 </tr>
-                 <tr>
-                     <td style="text-align: left;"><b>Kukuruz</b></td>
-                     <td><b>1 200 t</b></td>
-                     <td><b>1 190 t</b></td>
-                     <td><b><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</b></td>
-                     <td><b>119 t</b></td>
-                 </tr>
-                 <tr>
-                    <td style="text-align: right;">NS 205</td>
-                    <td>600 t</td>
-                    <td>500 t</td>
-                    <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> -17 %</td>
-                    <td>60 t</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">NS 605</td>
-                    <td>600 t</td>
-                    <td>690 t</td>
-                    <td><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 15 %</td>
-                    <td>60 t</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><b>Pšenica</b></td>
-                    <td><b>2 200 t</b></td>
-                    <td><b>2 400 t</b></td>
-                    <td><b><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 10 %</b></td>
-                    <td><b>110 t</b></td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">KWS 32</td>
-                    <td>1 200 t</td>
-                    <td>900 t</td>
-                    <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> -25 %</td>
-                    <td>18 t</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">KWS 45</td>
-                    <td>1 000 t</td>
-                    <td>1 500 t</td>
-                    <td><i class="fa fa-arrow-up" style="color: green; float: left;"></i> 18 %</td>
-                    <td>30 t</td>
-                </tr>
-                <tr>
-                    <td style="text-align: left;"><b>Soja</b></td>
-                    <td><b>2 800 t</b></td>
-                    <td><b>2 750 t</b></td>
-                    <td><b><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</b></td>
-                    <td><b>70 t</b></td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">NS MAXIMUS</td>
-                    <td>1 400 t</td>
-                    <td>1 350 t</td>
-                    <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</td>
-                    <td>33,75 t</td>
-                </tr>
-                <tr>
-                    <td style="text-align: right;">NS SAVA</td>
-                    <td>1 400 t</td>
-                    <td>1 400 t</td>
-                    <td><i class="fa fa-arrow-down" style="color: red; float: left;"></i> 0 %</td>
-                    <td>35 t</td>
-                </tr>
-             </tbody>
-         </table>
+     <div class="row">
+         <div class="col">
+            <div style="display: block">
+                <h3 style="text-align: center;">Površine po kulturama</h3>
+                <br>
+                <canvas baseChart
+                    [datasets] = "pieChartAreaPerCultureData"
+                    [labels] = "pieChartAreaPerCultureLabels"
+                    [chartType] = "pieChartAreaPerCultureType"
+                    [colors] = "chartColors"
+                >
+                </canvas>
+            </div>
+         </div>
+         <div class="col">
+            <div style="display: block">
+                <h3 style="text-align: center;">Prinos po kulturama t/ha</h3>
+                <br>
+                <canvas baseChart
+                    [datasets] = "barChartYieldPerCultureData"
+                    [labels] = "barChartYieldPerCultureLabels"
+                    [chartType] = "barChartYieldPerCultureType"
+                    [legend] = "barChartYieldPerCultureLegend"
+                    [options]="barChartYieldPerCultureOptions">
+                </canvas>
+            </div>
+         </div>
      </div>
-    
+    <br><br>
+    <div class="row">
+        <div class="col">
+            <h3 style="text-align: center;">Na terenu</h3>
+            <br>
+            <table class="table">
+                <thead>
+                    <th scope="col"><i class="fa fa-user mr-2"></i>Radnici</th>
+                    <th scope="col"><i class="fa fa-truck mr-2"></i> Mašine</th>
+                    <th scope="col"><i class="fa fa-database mr-2"></i> Table</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Jockov Željko</td>
+                        <td>IMT 533/539</td>
+                        <td>T-119</td>
+                    </tr>
+                    <tr>
+                        <td>Jokanović Dragan</td>
+                        <td>IMT-539</td>
+                        <td>T-120</td>
+                    </tr>
+                    <tr>
+                        <td>Juhas Zoltan</td>
+                        <td>JOHN DEERE 5510 N</td>
+                        <td>T-123</td>
+                    </tr>
+                    <tr>
+                        <td>Juhas Žolt</td>
+                        <td>JOHN DEERE 6620</td>
+                        <td>T-124</td>
+                    </tr>
+                    <tr>
+                        <td>Kljajić Mićko</td>
+                        <td>JOHN DEERE 6630</td>
+                        <td>T-125</td>
+                    </tr>
+                    <tr>
+                        <td>Knežević Goran</td>
+                        <td>JOHN DEERE 6820</td>
+                        <td>T-131</td>
+                    </tr>
+                    <tr>
+                        <td>Koletar Ervin</td>
+                        <td>JOHN DEERE 8320</td>
+                        <td>T-132</td>
+                    </tr>
+                    <tr>
+                        <td>Koletar Adrian</td>
+                        <td>JOHN DEERE 8330</td>
+                        <td>T-133</td>
+                    </tr>
+                    <tr>
+                        <td>Koletar Žolt</td>
+                        <td>NEW HOLAND T 6.050</td>
+                        <td>T-134</td>
+                    </tr>
+                    <tr>
+                        <td>Mađar Milenko</td>
+                        <td>NEW HOLLAND T 7.210</td>
+                        <td>T-135</td>
+                    </tr>
+                    <tr>
+                        <td>Matić Biljana</td>
+                        <td>NEW HOLAND T 8.410</td>
+                        <td>T-136</td>
+                    </tr>
+                    <tr>
+                        <td>Mesaroš Ištvan</td>
+                        <td></td>
+                        <td>T-137</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <br><br><br>
+            <app-map></app-map>
+        </div>
+    </div>
+    <br>
 </div>
 
