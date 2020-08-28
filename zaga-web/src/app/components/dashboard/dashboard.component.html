@@ -70,7 +70,10 @@
                 <tbody>
                     <tr *ngFor="let worker of markers" id="{{worker.id}}"> 
                         <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)">{{worker.worker}}</td>
-                        <td (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)">{{worker.machine}}</td>
+                        <td *ngIf="worker.machine != ''; else elseBlock" (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)">{{worker.machine}}</td>
+                        <ng-template #elseBlock>
+                            <td></td>
+                        </ng-template>
                         <td>{{worker.table}}</td>
                     </tr>
                 </tbody>

@@ -529,6 +529,7 @@ export class DashboardComponent implements OnInit {
   clickedMarker(latitude, longitude, workerId) {
     this.lat = latitude;    
     this.lng = longitude;
+   
     const element: HTMLElement = document.getElementById(workerId);
     this.renderer.setStyle(element, "background-color", "#ffc803");
     var currentElement = element.id;
