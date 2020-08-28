@@ -530,27 +530,21 @@ export class DashboardComponent implements OnInit {
     this.lat = latitude;    
     this.lng = longitude;
     const element: HTMLElement = document.getElementById(workerId);
+    this.renderer.setStyle(element, "background-color", "#ffc803");
     var currentElement = element.id;
     this.elments.push(currentElement);
     for(var i=0; i<this.elments.length; i++){
        this.previousElement = this.elments[i-1];
     }
     const elementP: HTMLElement = document.getElementById(this.previousElement);
-    this.renderer.setStyle(element, "background-color", "#ffc803");
-    this.renderer.setStyle(elementP, "background-color", "white");
-
+    if(currentElement !== this.previousElement){
+      this.renderer.setStyle(elementP, "background-color", "white");
+    }
   }
 
   onChoseLocation(event){
     this.lat = event.coords.lat;    
     this.lng = event.coords.lng;
-  }
-
-  onClickTableRow(latitude, longitude){
-    this.lat = latitude;
-    this.lng = longitude;
-    console.log(latitude, longitude)
-    
   }
 
   //bounce marker

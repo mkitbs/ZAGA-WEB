@@ -69,8 +69,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let worker of markers" id="{{worker.id}}"> 
-                        <td (click)="onClickTableRow(1*worker.latWorker, 1*worker.lngWorker)">{{worker.worker}}</td>
-                        <td (click)="onClickTableRow(1*worker.latMachine, 1*worker.lngMachine)">{{worker.machine}}</td>
+                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)">{{worker.worker}}</td>
+                        <td (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)">{{worker.machine}}</td>
                         <td>{{worker.table}}</td>
                     </tr>
                 </tbody>
