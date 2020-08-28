@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ChartsModule } from 'ng2-charts';
 import { SelectControlValueAccessor } from '@angular/forms';
 import * as Chart from 'chart.js';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,7 @@ import * as Chart from 'chart.js';
 
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(private renderer: Renderer2) { }
   //ucitava se ovde da bi se na pregledu naloga videle promene postojecih i dodele novih
   tempJSON = [
     {
@@ -393,124 +394,126 @@ export class DashboardComponent implements OnInit {
   lng = 19.996049;
   map: any;
 
-  markersWorkers = [
+  markers = [
     {
-      "lat": "45.584951",
-      "lng": "19.984123",
-      "name": "Jockov Željko"
+      "id": "1",
+      "worker": "Jockov Željko",
+      "latWorker": "45.584951",
+      "lngWorker": "19.984123",
+      "machine": "IMT 533/539",
+      "latMachine": "45.584951",
+      "lngMachine": "19.984123",
+      "table": "T-119"
     },
     {
-      "lat": "45.588531",
-      "lng": "19.985576",
-      "name": "Jokanović Dragan"
+      "id": "2",
+      "worker": "Jokanović Dragan",
+      "latWorker": "45.588531",
+      "lngWorker": "19.985576",
+      "machine": "IMT-539",
+      "latMachine": "45.588531",
+      "lngMachine": "19.985576",
+      "table": "T-120"
     },
     {
-      "lat": "45.593736",
-      "lng": "19.984471",
-      "name": "Juhas Zoltan"
+      "id": "3",
+      "worker": "Juhas Zoltan",
+      "latWorker": "45.593736",
+      "lngWorker": "19.984471",
+      "machine": "JOHN DEERE 5510 N",
+      "latMachine": "45.594387",
+      "lngMachine": "19.984820",
+      "table": "T-123"
     },
     {
-      "lat": "45.592272",
-      "lng": "19.993654",
-      "name": "Juhas Žolt"
+      "id": "4",
+      "worker": "Juhas Žolt",
+      "latWorker": "45.592272",
+      "lngWorker": "19.993654",
+      "machine": "JOHN DEERE 6620",
+      "latMachine": "45.592232",
+      "lngMachine": "19.993480",
+      "table": "T-124"
     },
     {
-      "lat": "45.599145",
-      "lng": "19.997025",
-      "name": "Kljajić Mićko"
+      "id": "5",
+      "worker": "Kljajić Mićko",
+      "latWorker": "45.599145",
+      "lngWorker": "19.997025",
+      "machine": "JOHN DEERE 6630",
+      "latMachine": "45.599430",
+      "lngMachine": "19.995514",
+      "table": "T-125"
     },
     {
-      "lat": "45.593899",
-      "lng": "20.003534",
-      "name": "Knežević Goran"
+      "id": "6",
+      "worker": "Knežević Goran",
+      "latWorker": "45.593899",
+      "lngWorker": "20.003534",
+      "machine": "JOHN DEERE 6820",
+      "latMachine": "45.593899",
+      "lngMachine": "20.003534",
+      "table": "T-131"
     },
     {
-      "lat": "45.572138",
-      "lng": "20.018587",
-      "name": "Koletar Ervin"
+      "id": "7",
+      "worker": "Koletar Ervin",
+      "latWorker": "45.572138",
+      "lngWorker": "20.018587",
+      "machine": "JOHN DEERE 8320",
+      "latMachine": "45.572056",
+      "lngMachine": "20.017773",
+      "table": "T-132"
     },
     {
-      "lat": "45.571527",
-      "lng": "19.999292",
-      "name": "Koletar Adrian"
+      "id": "8",
+      "worker": "Koletar Adrian",
+      "latWorker": "45.571527",
+      "lngWorker": "19.999292",
+      "machine": "JOHN DEERE 8330",
+      "latMachine": "45.571039",
+      "lngMachine": "19.999640",
+      "table": "T-133"
     },
     {
-      "lat": "45.575067",
-      "lng": "20.005452",
-      "name": "Koletar Žolt"
+      "id": "9",
+      "worker": "Koletar Žolt",
+      "latWorker": "45.575067",
+      "lngWorker": "20.005452",
+      "machine": "NEW HOLAND T 6.050",
+      "latMachine": "45.574701",
+      "lngMachine": "20.004115",
+      "table": "T-134"
     },
     {
-      "lat": "45.580884",
-      "lng": "20.021958",
-      "name": "Mađar Milenko"
+      "id": "10",
+      "worker": "Mađar Milenko",
+      "latWorker": "45.580884",
+      "lngWorker": "20.021958",
+      "machine": "NEW HOLLAND T 7.210",
+      "latMachine": "45.580233",
+      "lngMachine": "20.021667",
+      "table": "T-135"
     },
     {
-      "lat": "45.585770",
-      "lng": "20.012857",
-      "name": "Matić Biljana"
+      "id": "11",
+      "worker": "Matić Biljana",
+      "latWorker": "45.585770",
+      "lngWorker": "20.012857",
+      "machine": "NEW HOLAND T 8.410",
+      "latMachine": "45.585974",
+      "lngMachine": "20.012509",
+      "table": "T-136"
     },
     {
-      "lat": "45.598657",
-      "lng": "20.024922",
-      "name": "Mesaroš Ištvan"
-    }
-  ]
-
-  markersMachines = [
-    {
-      "lat": "45.584951",
-      "lng": "19.984123",
-      "name": "IMT 533/539"
-    },
-    {
-      "lat": "45.588531",
-      "lng": "19.985576",
-      "name": "IMT-539"
-    },
-    {
-      "lat": "45.594387",
-      "lng": "19.984820",
-      "name": "JOHN DEERE 5510 N"
-    },
-    {
-      "lat": "45.592232",
-      "lng": "19.993480",
-      "name": "JOHN DEERE 6620"
-    },
-    {
-      "lat": "45.599430",
-      "lng": "19.995514",
-      "name": "JOHN DEERE 6630"
-    },
-    {
-      "lat": "45.593899",
-      "lng": "20.003534",
-      "name": "JOHN DEERE 6820"
-    },
-    {
-      "lat": "45.572056",
-      "lng": "20.017773",
-      "name": "JOHN DEERE 8320"
-    },
-    {
-      "lat": "45.571039",
-      "lng": "19.999640",
-      "name": "JOHN DEERE 8330"
-    },
-    {
-      "lat": "45.574701",
-      "lng": "20.004115",
-      "name": "NEW HOLAND T 6.050"
-    },
-    {
-      "lat": "45.580233",
-      "lng": "20.021667",
-      "name": "NEW HOLLAND T 7.210"
-    },
-    {
-      "lat": "45.585974",
-      "lng": "20.012509",
-      "name": "NEW HOLAND T 8.410"
+      "id": "12",
+      "worker": "Mesaroš Ištvan",
+      "latWorker": "45.598657",
+      "lngWorker": "20.024922",
+      "machine": "",
+      "latMachine": "",
+      "lngMachine": "",
+      "table": "T-137"
     }
   ]
 
@@ -518,14 +521,49 @@ export class DashboardComponent implements OnInit {
     this.map = map;
   }
 
-  //bounce marker
-  userLocationMarkerAnimation: string;
-  markerAnimate(){
-    if (this.userLocationMarkerAnimation !== null) {
-      this.userLocationMarkerAnimation = null;
-    } else {
-      this.userLocationMarkerAnimation = 'BOUNCE';
+  //zatvaranje info prozora na klik drugog markera
+  previous;
+  elments: any[] = [];
+  previousElement;
+
+  clickedMarker(latitude, longitude, workerId) {
+    this.lat = latitude;    
+    this.lng = longitude;
+    const element: HTMLElement = document.getElementById(workerId);
+    var currentElement = element.id;
+    this.elments.push(currentElement);
+    for(var i=0; i<this.elments.length; i++){
+       this.previousElement = this.elments[i-1];
     }
+    const elementP: HTMLElement = document.getElementById(this.previousElement);
+    this.renderer.setStyle(element, "background-color", "#ffc803");
+    this.renderer.setStyle(elementP, "background-color", "white");
+
+  }
+
+  onChoseLocation(event){
+    this.lat = event.coords.lat;    
+    this.lng = event.coords.lng;
+  }
+
+  onClickTableRow(latitude, longitude){
+    this.lat = latitude;
+    this.lng = longitude;
+    console.log(latitude, longitude)
+    
+  }
+
+  //bounce marker
+  workerLocationMarkerAnimation: string;
+  markerAnimate(id){
+    this.markers.forEach(data => {
+      if(data.id !== id){
+        this.workerLocationMarkerAnimation = null;
+      }
+      else{
+        this.workerLocationMarkerAnimation = 'BOUNCE';
+      }
+    })
   }
     
   ngOnInit() {
