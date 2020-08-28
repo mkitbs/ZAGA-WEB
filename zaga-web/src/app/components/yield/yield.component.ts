@@ -49,7 +49,7 @@ export class YieldComponent implements OnInit{
     barChartType = 'horizontalBar';
     barChartLegend = false;
     barChartData = [
-        {data: [84000, 50000, 123000]}
+        {data: [8, 5, 12]}
     ];
 
     ngOnInit() {
