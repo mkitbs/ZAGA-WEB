@@ -403,7 +403,15 @@ export class DashboardComponent implements OnInit {
       "machine": "IMT 533/539",
       "latMachine": "45.584951",
       "lngMachine": "19.984123",
-      "table": "T-119"
+      "table": "T-119",
+      "lat1Table": "45.585607", 
+      "lng1Table": "19.977274",
+      "lat2Table": "45.590156", 
+      "lng2Table": "19.979441",
+      "lat3Table": "45.583342", 
+      "lng3Table": "19.987478",
+      "lat4Table": "45.583342",
+      "lng4Table": "19.987478"
     },
     {
       "id": "2",
@@ -413,17 +421,33 @@ export class DashboardComponent implements OnInit {
       "machine": "IMT-539",
       "latMachine": "45.588531",
       "lngMachine": "19.985576",
-      "table": "T-120"
+      "table": "T-120",
+      "lat1Table": "45.590284", 
+      "lng1Table": "19.979559",
+      "lat2Table": "45.591731", 
+      "lng2Table": "19.980150",
+      "lat3Table": "45.589297", 
+      "lng3Table": "19.990335",
+      "lat4Table": "45.583443",
+      "lng4Table": "19.987652"
     },
     {
       "id": "3",
       "worker": "Juhas Zoltan",
-      "latWorker": "45.593736",
-      "lngWorker": "19.984471",
+      "latWorker": "45.594654",
+      "lngWorker": "19.990213",
       "machine": "JOHN DEERE 5510 N",
-      "latMachine": "45.594387",
-      "lngMachine": "19.984820",
-      "table": "T-123"
+      "latMachine": "45.594766",
+      "lngMachine": "19.989849",
+      "table": "T-123",
+      "lat1Table": "45.590438", 
+      "lng1Table": "19.986123",
+      "lat2Table": "45.589543", 
+      "lng2Table": "19.990443",
+      "lat3Table": "45.597602", 
+      "lng3Table": "19.994150",
+      "lat4Table": "45.598620",
+      "lng4Table": "19.989914"
     },
     {
       "id": "4",
@@ -433,7 +457,15 @@ export class DashboardComponent implements OnInit {
       "machine": "JOHN DEERE 6620",
       "latMachine": "45.592232",
       "lngMachine": "19.993480",
-      "table": "T-124"
+      "table": "T-124",
+      "lat1Table": "45.589497", 
+      "lng1Table": "19.990642",
+      "lat2Table": "45.588524", 
+      "lng2Table": "19.994878",
+      "lat3Table": "45.596583", 
+      "lng3Table": "19.998650",
+      "lat4Table": "45.597509",
+      "lng4Table": "19.994481"
     },
     {
       "id": "5",
@@ -443,7 +475,15 @@ export class DashboardComponent implements OnInit {
       "machine": "JOHN DEERE 6630",
       "latMachine": "45.599430",
       "lngMachine": "19.995514",
-      "table": "T-125"
+      "table": "T-125",
+      "lat1Table": "45.597625", 
+      "lng1Table": "19.994381",
+      "lat2Table": "45.596675", 
+      "lng2Table": "19.998749",
+      "lat3Table": "45.601306", 
+      "lng3Table": "20.000867",
+      "lat4Table": "45.602232",
+      "lng4Table": "19.996598"
     },
     {
       "id": "6",
@@ -453,7 +493,15 @@ export class DashboardComponent implements OnInit {
       "machine": "JOHN DEERE 6820",
       "latMachine": "45.593899",
       "lngMachine": "20.003534",
-      "table": "T-131"
+      "table": "T-131",
+      "lat1Table": "45.591037", 
+      "lng1Table": "20.001139",
+      "lat2Table": "45.589502", 
+      "lng2Table": "20.007475",
+      "lat3Table": "45.593993", 
+      "lng3Table": "20.009642",
+      "lat4Table": "45.595491", 
+      "lng4Table": "20.003251"
     },
     {
       "id": "7",
@@ -463,7 +511,15 @@ export class DashboardComponent implements OnInit {
       "machine": "JOHN DEERE 8320",
       "latMachine": "45.572056",
       "lngMachine": "20.017773",
-      "table": "T-132"
+      "table": "T-132",
+      "lat1Table": "45.573074", 
+      "lng1Table": "20.017973",
+      "lat2Table": "45.572403", 
+      "lng2Table": "20.020951",
+      "lat3Table": "45.570017", 
+      "lng3Table": "20.016417",
+      "lat4Table": "45.573074",
+      "lng4Table": "20.017973"
     },
     {
       "id": "8",
@@ -473,7 +529,15 @@ export class DashboardComponent implements OnInit {
       "machine": "JOHN DEERE 8330",
       "latMachine": "45.571039",
       "lngMachine": "19.999640",
-      "table": "T-133"
+      "table": "T-133",
+      "lat1Table": "45.571034", 
+      "lng1Table": "19.996651",
+      "lat2Table": "45.570200", 
+      "lng2Table": "20.000787",
+      "lat3Table": "45.573003", 
+      "lng3Table": "20.002144",
+      "lat4Table": "45.573906",
+      "lng4Table": "19.998074"
     },
     {
       "id": "9",
@@ -483,7 +547,15 @@ export class DashboardComponent implements OnInit {
       "machine": "NEW HOLAND T 6.050",
       "latMachine": "45.574701",
       "lngMachine": "20.004115",
-      "table": "T-134"
+      "table": "T-134",
+      "lat1Table": "45.573443", 
+      "lng1Table": "20.002475",
+      "lat2Table": "45.572424", 
+      "lng2Table": "20.006711",
+      "lat3Table": "45.575435", 
+      "lng3Table": "20.008266",
+      "lat4Table": "45.576385",
+      "lng4Table": "20.003997"
     },
     {
       "id": "10",
@@ -493,7 +565,15 @@ export class DashboardComponent implements OnInit {
       "machine": "NEW HOLLAND T 7.210",
       "latMachine": "45.580233",
       "lngMachine": "20.021667",
-      "table": "T-135"
+      "table": "T-135",
+      "lat1Table": "45.583519", 
+      "lng1Table": "20.023014",
+      "lat2Table": "45.583401", 
+      "lng2Table": "20.023391",
+      "lat3Table": "45.577915", 
+      "lng3Table": "20.020903",
+      "lat4Table": "45.578020",
+      "lng4Table": "20.020395"
     },
     {
       "id": "11",
@@ -503,7 +583,15 @@ export class DashboardComponent implements OnInit {
       "machine": "NEW HOLAND T 8.410",
       "latMachine": "45.585974",
       "lngMachine": "20.012509",
-      "table": "T-136"
+      "table": "T-136",
+      "lat1Table": "45.585433", 
+      "lng1Table": "20.008278",
+      "lat2Table": "45.583605", 
+      "lng2Table": "20.016601",
+      "lat3Table": "45.591386", 
+      "lng3Table": "20.020407",
+      "lat4Table": "45.593470",
+      "lng4Table": "20.011968"
     },
     {
       "id": "12",
@@ -513,9 +601,19 @@ export class DashboardComponent implements OnInit {
       "machine": "",
       "latMachine": "",
       "lngMachine": "",
-      "table": "T-137"
+      "table": "T-137",
+      "lat1Table": "45.597528", 
+      "lng1Table": "20.023959",
+      "lat2Table": "45.597379", 
+      "lng2Table": "20.024608",
+      "lat3Table": "45.599525", 
+      "lng3Table": "20.025657",
+      "lat4Table": "45.599656",
+      "lng4Table": "20.025088"
     }
   ]
+
+  
 
   onMapReady(map) {
     this.map = map;
@@ -546,6 +644,31 @@ export class DashboardComponent implements OnInit {
   onChoseLocation(event){
     this.lat = event.coords.lat;    
     this.lng = event.coords.lng;
+  }
+
+  //iscrtavanje tabli
+  paths: any[]
+  onTableClick(lat, lng, lat1, lng1, lat2, lng2, lat3, lng3, lat4, lng4, workerId){
+    this.lat = lat;
+    this.lng = lng;
+    this.paths = [
+      {lat: lat1, lng: lng1},
+      {lat: lat2, lng: lng2},
+      {lat: lat3, lng: lng3},
+      {lat: lat4, lng: lng4}
+    ]
+    console.log(this.paths)
+    const element: HTMLElement = document.getElementById(workerId);
+    this.renderer.setStyle(element, "background-color", "#ffc803");
+    var currentElement = element.id;
+    this.elments.push(currentElement);
+    for(var i=0; i<this.elments.length; i++){
+       this.previousElement = this.elments[i-1];
+    }
+    const elementP: HTMLElement = document.getElementById(this.previousElement);
+    if(currentElement !== this.previousElement){
+      this.renderer.setStyle(elementP, "background-color", "white");
+    }
   }
 
   //bounce marker
