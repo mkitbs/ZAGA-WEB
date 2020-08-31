@@ -3,6 +3,8 @@ import { ChartsModule } from 'ng2-charts';
 import { SelectControlValueAccessor } from '@angular/forms';
 import * as Chart from 'chart.js';
 import { stringify } from 'querystring';
+declare const google: any;
+
 
 @Component({
   selector: 'app-dashboard',
@@ -648,16 +650,17 @@ export class DashboardComponent implements OnInit {
 
   //iscrtavanje tabli
   paths: any[]
-  onTableClick(lat, lng, lat1, lng1, lat2, lng2, lat3, lng3, lat4, lng4, workerId){
-    this.lat = lat;
-    this.lng = lng;
+ 
+  onTableClick(lat1, lng1, lat2, lng2, lat3, lng3, lat4, lng4, workerId){
+    this.lat = lat1 + ((lat2 - lat1) / 2);
+    this.lng = lng1 + ((lng2 - lng1) / 2);
     this.paths = [
       {lat: lat1, lng: lng1},
       {lat: lat2, lng: lng2},
       {lat: lat3, lng: lng3},
       {lat: lat4, lng: lng4}
     ]
-    console.log(this.paths)
+    
     const element: HTMLElement = document.getElementById(workerId);
     this.renderer.setStyle(element, "background-color", "#ffc803");
     var currentElement = element.id;
