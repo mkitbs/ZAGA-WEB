@@ -69,13 +69,13 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let worker of markers" id="{{worker.id}}"> 
-                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)">{{worker.worker}}</td>
-                        <td *ngIf="worker.machine != ''; else elseBlock" (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)">{{worker.machine}}</td>
+                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)" style="cursor: pointer;">{{worker.worker}}</td>
+                        <td *ngIf="worker.machine != ''; else elseBlock" (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)" style="cursor: pointer;">{{worker.machine}}</td>
                         <ng-template #elseBlock>
                             <td></td>
                         </ng-template>
                         <td (click)="onTableClick(1*worker.lat1Table, 1*worker.lng1Table, 1*worker.lat2Table, 1*worker.lng2Table, 
-                        1*worker.lat3Table, 1*worker.lng3Table, 1*worker.lat4Table, 1*worker.lng4Table, worker.id)">{{worker.table}}</td>
+                        1*worker.lat3Table, 1*worker.lng3Table, 1*worker.lat4Table, 1*worker.lng4Table, worker.id)" style="cursor: pointer;">{{worker.table}}</td>
                     </tr>
                 </tbody>
             </table>
