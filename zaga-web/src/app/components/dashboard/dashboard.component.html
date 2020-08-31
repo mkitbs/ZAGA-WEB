@@ -34,10 +34,11 @@
                 <h3 style="text-align: center;">Površine po kulturama</h3>
                 <br>
                 <canvas baseChart
-                    [datasets] = "pieChartAreaPerCultureData"
-                    [labels] = "pieChartAreaPerCultureLabels"
-                    [chartType] = "pieChartAreaPerCultureType"
+                    [datasets] = "barChartAreaPerCultureData"
+                    [labels] = "barChartAreaPerCultureLabels"
+                    [chartType] = "barChartAreaPerCultureType"
                     [colors] = "chartColors"
+                    [options] = "barChartAreaPerCultureOptions"
                 >
                 </canvas>
             </div>
@@ -69,7 +70,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let worker of markers" id="{{worker.id}}"> 
-                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)" style="cursor: pointer;">{{worker.worker}}</td>
+                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)" style="cursor: pointer;"><i class="fa fa-exclamation" style="color: red; float: left;" *ngIf="worker.latWorker !== worker.latMachine && worker.lngWorker !== worker.lngMachine && worker.machine != ''" title="Radnik i mašina nisu na istoj lokaciji!"></i> {{worker.worker}}</td>
                         <td *ngIf="worker.machine != ''; else elseBlock" (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)" style="cursor: pointer;">{{worker.machine}}</td>
                         <ng-template #elseBlock>
                             <td></td>

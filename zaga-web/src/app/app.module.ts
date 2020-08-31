@@ -18,8 +18,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule, ThemeService } from 'ng2-charts';
 import { YieldComponent } from './components/yield/yield.component';
 import { AgmCoreModule } from '@agm/core';
-
-
+import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
+import 'chartjs-plugin-labels';
 
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},

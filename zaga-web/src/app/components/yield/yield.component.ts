@@ -16,20 +16,14 @@ export class YieldComponent implements OnInit{
     pieChartType = 'pie';
     optionsPieChart = {
         plugins: {
-            datalabels: {
-                formatter: () => {
-                    let sum = 0;
-                    this.pieChartData.forEach(data =>{
-                        sum += data;
-                    })
-                    this.pieChartData.forEach(data =>{
-                        let percentage = (data*100 / sum).toFixed(2)+"%";
-                        return percentage;
-                    })
-                    
-                },
-                color: '#fff',
-            }
+            datalabels:{
+                display: false
+            },
+            labels: {
+                render: 'percentage',
+                fontColor: 'white',
+                precision: 2
+              }
         }
     };
 
@@ -43,7 +37,15 @@ export class YieldComponent implements OnInit{
                         beginAtZero: true
                     }
                 }]
-            }
+            },
+            plugins: {
+                datalabels: {
+                   display: true,
+                   align: 'center',
+                   anchor: 'center',
+                   color: 'white'
+                }
+             }
     };
     barChartLabels = ['Kukuruz', 'Pšenica', 'Soja'];
     barChartType = 'horizontalBar';

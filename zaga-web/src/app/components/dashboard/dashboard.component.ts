@@ -3,8 +3,7 @@ import { ChartsModule } from 'ng2-charts';
 import { SelectControlValueAccessor } from '@angular/forms';
 import * as Chart from 'chart.js';
 import { stringify } from 'querystring';
-declare const google: any;
-
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-dashboard',
@@ -318,7 +317,15 @@ export class DashboardComponent implements OnInit {
       yAxes: [{
         stacked: true
       }]
-    }
+    },
+    plugins: {
+      datalabels: {
+         display: true,
+         align: 'center',
+         anchor: 'center',
+         color: 'white'
+      }
+   }
   };
   barChartLabels = ['PRIHRANA MIN. ĐUBRIVOM II', 'SETVOSPREMANJE NOŠENIM SPREMAČEM', 'FINO SETVOSPREMANJE', 'PREDSETVENO ĐUBRENJE', 'SETVA',
   'SETVOSPREMANJE VUČENIM SPREMAČEM', 'PRSKANJE KONT. HERBICIDOM I', 'PRSKANJE ZEMLJIŠNIM HERBICIDOM'];
@@ -345,7 +352,15 @@ export class DashboardComponent implements OnInit {
       yAxes: [{
         stacked: true
    }]
-    }
+    },
+    plugins: {
+      datalabels: {
+         display: true,
+         align: 'center',
+         anchor: 'center',
+         color: 'white'
+      }
+   }
   };
   barChartWorkerNoLabels = ['OPŠTI POSLOVI', 'ŽETVA-TRANSPORT ROBE', 'ŽETVA', 'MEHAN. UKANJ. OCEVA U SEM. KUKURUZU', 'PREVOZ GORIVA I SIPANJE GORIVA',
   'TARUPIRANJE', 'MULČIRANJE', 'GRABLJ. LUCERKE, DETEL. I TRAVE'];
@@ -357,12 +372,28 @@ export class DashboardComponent implements OnInit {
   ];
 
   //povrsine po kulturama
-  pieChartAreaPerCultureType = 'pie';
-  pieChartAreaPerCultureLabels = ["Šećerna repa", "Kukuruz", "Soja", "Semenski kukuruz", "Kukuruz šećerac", "Grašak", "Semenska pšenica",
+  barChartAreaPerCultureType = 'bar';
+  barChartAreaPerCultureLabels = ["Šećerna repa", "Kukuruz", "Soja", "Semenski kukuruz", "Kukuruz šećerac", "Grašak", "Semenska pšenica",
   "Kukuruz kokičar", "Ozima pšenica", "Semenska soja", "Postrni kukuruz", "Boranija"];
-  pieChartAreaPerCultureData = [
+  barChartAreaPerCultureData = [
     {data: [1110, 840, 834, 434, 364, 293, 254, 202, 154, 151, 149, 112]}
   ]
+  barChartAreaPerCultureOptions = {
+    legend: false,
+    plugins: {
+      datalabels: {
+         display: false,
+         align: 'center',
+         anchor: 'center',
+         color: 'white'
+      },
+      labels: {
+        render: function (args) {
+          return args.value + ' ha';
+        }
+      }
+   }
+  }
 
   //prinos po kulturama
   barChartYieldPerCultureOptions = {
@@ -379,7 +410,15 @@ export class DashboardComponent implements OnInit {
       yAxes: [{
         stacked: true
    }]
-    }
+    },
+    plugins: {
+      datalabels: {
+         display: true,
+         align: 'center',
+         anchor: 'center',
+         color: 'white'
+      }
+   }
   };
   barChartYieldPerCultureLabels = ['KUKURUZ', 'MKC-SEMENSKA PŠENICA C-2', 'OZIMI JEČAM', 'AGROGLOBE-SEMENSKA PŠENICA C-1', 'OZIMA PŠENICA',
   'SOJA', 'SUNCOKRET', 'POSTRNA SOJA', 'POSTRNA SEMENSKA SOJA'];
