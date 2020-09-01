@@ -679,17 +679,17 @@ export class DashboardComponent implements OnInit {
   clickedMarker(latitude, longitude, workerId, index) {
     this.lat = latitude;    
     this.lng = longitude;
-   
+    
+    if(this.markers[index].animation != 'BOUNCE'){
+      this.markers[index].animation = 'BOUNCE';
+    }
     const element: HTMLElement = document.getElementById(workerId);
     this.renderer.setStyle(element, "background-color", "#ffc803");
+
     var currentElement = element.id;
     this.elments.push(currentElement);
     for(var i=0; i<this.elments.length; i++){
        this.previousElement = this.elments[i-1];
-    }
-    const elementP: HTMLElement = document.getElementById(this.previousElement);
-    if(currentElement !== this.previousElement){
-      this.renderer.setStyle(elementP, "background-color", "white");
     }
 
     this.animationMarkers.push(index);
@@ -697,13 +697,19 @@ export class DashboardComponent implements OnInit {
       this.previousMarker = this.animationMarkers[i-1];
     }
 
-    if(this.markers[index].animation != 'BOUNCE'){
-      this.markers[index].animation = 'BOUNCE';
-      console.log(this.markers[index])
-      if(index != this.previousMarker){
-        this.markers[this.previousMarker].animation = 'null';
-      }
+    if(index != this.previousMarker){
+      this.markers[this.previousMarker].animation = 'null';
     }
+   
+    const elementP: HTMLElement = document.getElementById(this.previousElement);
+    if(currentElement !== this.previousElement){
+      this.renderer.setStyle(elementP, "background-color", "white");
+    }
+
+    
+    
+
+    
   }
 
   onChoseLocation(event){

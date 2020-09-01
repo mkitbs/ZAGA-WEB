@@ -20,10 +20,6 @@ import { YieldComponent } from './components/yield/yield.component';
 import { AgmCoreModule } from '@agm/core';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import 'chartjs-plugin-labels';
-import { environment } from 'src/environments/environment';
-import { env } from 'process';
-
-
 
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
@@ -62,7 +58,7 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: env.API_KEY,
+      apiKey: 'AIzaSyDq7qhfF3VnG4qBTA9UvmGg99sHeDIjMwc',
       libraries: ['drawing']
     })
   ],
