@@ -69,14 +69,21 @@
                     <th scope="col"><i class="fa fa-database mr-2"></i> Table</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let worker of markers" id="{{worker.id}}"> 
-                        <td (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)" style="cursor: pointer;"><i class="fa fa-exclamation" style="color: red; float: left;" *ngIf="worker.latWorker !== worker.latMachine && worker.lngWorker !== worker.lngMachine && worker.machine != ''" title="Radnik i mašina nisu na istoj lokaciji!"></i> {{worker.worker}}</td>
-                        <td *ngIf="worker.machine != ''; else elseBlock" (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id)" style="cursor: pointer;">{{worker.machine}}</td>
+                    <tr *ngFor="let worker of markers; let i = index" id="{{worker.id}}"> 
+                        <td>
+                            <i class="fa fa-exclamation" style="color: red; float: left;" *ngIf="worker.latWorker !== worker.latMachine && worker.lngWorker !== worker.lngMachine && worker.machine != ''" title="Radnik i mašina nisu na istoj lokaciji!"></i> 
+                            <span (click)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id, i)" style="cursor: pointer;" title="Vidi radnika na mapi">{{worker.worker}}</span>
+                        </td>
+                        <td *ngIf="worker.machine != ''; else elseBlock">
+                            <span  (click)="clickedMarker(1*worker.latMachine, 1*worker.lngMachine, worker.id, i)" style="cursor: pointer;" title="Vidi mašinu na mapi">{{worker.machine}}</span>
+                        </td>
                         <ng-template #elseBlock>
                             <td></td>
                         </ng-template>
-                        <td (click)="onTableClick(1*worker.lat1Table, 1*worker.lng1Table, 1*worker.lat2Table, 1*worker.lng2Table, 
-                        1*worker.lat3Table, 1*worker.lng3Table, 1*worker.lat4Table, 1*worker.lng4Table, worker.id)" style="cursor: pointer;">{{worker.table}}</td>
+                        <td >
+                            <span (click)="onTableClick(1*worker.lat1Table, 1*worker.lng1Table, 1*worker.lat2Table, 1*worker.lng2Table, 
+                            1*worker.lat3Table, 1*worker.lng3Table, 1*worker.lat4Table, 1*worker.lng4Table, worker.id)" style="cursor: pointer;" title="Vidi tablu na mapi">{{worker.table}}</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -85,12 +92,12 @@
             <br><br><br>
             <agm-map [latitude]="lat"  [longitude]="lng"  (mapReady)="onMapReady($event)"  [mapTypeControl]="true"  
                 disableDoubleClickZoom="true"  mapTypeId='satellite'  [zoom]=15 (mapClick)="onChoseLocation($event)">
-                <agm-marker *ngFor="let worker of markers"
-                    (markerClick)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id)"
+                <agm-marker *ngFor="let worker of markers; let i = index"
+                    (markerClick)="clickedMarker(1*worker.latWorker, 1*worker.lngWorker, worker.id, i)"
                     [latitude]="worker.latWorker" 
                     [longitude]="worker.lngWorker"
-                    [id] = "worker.id"
-                    [animation] = "workerLocationMarkerAnimation"
+                    [id] = "i"
+                    [animation] = "worker.animation"
                     [iconUrl]="{
                         url: './assets/worker.svg',
                         scaledSize: {
@@ -99,8 +106,8 @@
                         }
                     }">
                 </agm-marker>
-                <agm-marker *ngFor="let machine of markers"
-                    (markerClick)="clickedMarker(1*machine.latMachine, 1*machine.lngMachine, machine.id)"
+                <agm-marker *ngFor="let machine of markers; let i = index"
+                    (markerClick)="clickedMarker(1*machine.latMachine, 1*machine.lngMachine, machine.id, i)"
                     [latitude]="machine.latMachine" 
                     [longitude]="machine.lngMachine"
                     [id] = "machine.id"
@@ -110,7 +117,8 @@
                             width: 40,
                             height: 60
                         }
-                    }">
+                    }"
+                    [animation] = "machine.animation">
                 </agm-marker>
                 <agm-polygon 
                     [paths]="paths" 

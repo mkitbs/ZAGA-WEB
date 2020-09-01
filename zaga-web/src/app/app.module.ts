@@ -23,6 +23,8 @@ import 'chartjs-plugin-labels';
 import { environment } from 'src/environments/environment';
 import { env } from 'process';
 
+
+
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
   {path:"workOrder", component: WorkOrderComponent},
@@ -60,11 +62,12 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: process.env.API_KEY,
+      apiKey: 'AIzaSyDq7qhfF3VnG4qBTA9UvmGg99sHeDIjMwc',
       libraries: ['drawing']
     })
   ],
   providers: [ThemeService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

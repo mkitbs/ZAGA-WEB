@@ -4,6 +4,7 @@
 html, body {
     font-family: "Montserrat", Helvetica, Arial, sans-serif !important;
     font-size: 12px;
+    background-color: #fafafa;
 }
 
 #toast-container > .toast-success {

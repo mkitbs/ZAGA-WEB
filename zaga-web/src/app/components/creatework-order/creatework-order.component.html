@@ -177,8 +177,7 @@
                             <select name="" id="" [(ngModel)]="worker.operation" class="form-control" *ngIf="!new; else elseBlockOperations">
                                 <!--<option value="{{worker.operation}}" selected>{{worker.operation}}</option>-->
                                 <option value="-1"></option>
-                                <option value="{{workOrder.name}}">{{workOrder.name}}</option>
-                                <option value="Ispomoć">Ispomoć</option>
+                                <option  *ngFor="let worker of workOrder.workers" value="{{worker.operation}}">{{worker.operation}}</option>
                             </select>
                             <ng-template #elseBlockOperations>
                                 <select name="" id="" [(ngModel)]="worker.operation" class="form-control">
@@ -234,8 +233,8 @@
                     <td>{{ worker.worker }}</td>
                     <td *ngIf="!new">{{ worker.date }}</td>
                     <td >{{ worker.operation }}</td>
-                    <td *ngIf="!new">{{ worker.dayWorkPeriod }} h</td>
-                    <td *ngIf="!new">{{ worker.nightWorkPeriod }} h</td>
+                    <td *ngIf="!new">{{ worker.dayWorkPeriod || 0}} h</td>
+                    <td *ngIf="!new">{{ worker.nightWorkPeriod || 0}} h</td>
                     <td *ngIf="!new">{{ worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 }} h</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editWorker(worker)" [disabled]="workOrder.status == 'Zatvoren'">
@@ -365,10 +364,10 @@
                 <tr *ngFor="let machine of workOrder.machines">
                     <td>{{ machine.machine }}</td>
                     <td>{{ machine.worker }}</td>
-                    <td *ngIf="!new">{{ machine.initialState }} mh</td>
-                    <td *ngIf="!new">{{ machine.finalState }} mh</td>
+                    <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
+                    <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
                     <td *ngIf="!new">{{machine.finalState*1 - machine.initialState*1 || 0}} mh</td>
-                    <td *ngIf="!new">{{ machine.fuel }} l</td>
+                    <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editMachine(machine)" [disabled]="workOrder.status == 'Zatvoren'">
                         <i class="fa fa-edit"></i>
@@ -498,7 +497,7 @@
                     <td>{{ material.quantity }} {{material.unit}}</td>
                     <td >{{ material.unit }}</td>
                     <td *ngIf="!new">{{ material.spent / workOrder.area }} {{material.unit}}/ha</td>
-                    <td *ngIf="!new">{{ material.spent }} {{material.unit}}</td>
+                    <td *ngIf="!new">{{ material.spent || 0 }} {{material.unit}}</td>
 
                     <td>
                         <button class="btn btn-primary btn-edit" (click)="editMaterial(material)" [disabled]="workOrder.status == 'Zatvoren'">
