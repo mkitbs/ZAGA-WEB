@@ -4,6 +4,7 @@ import { SelectControlValueAccessor } from '@angular/forms';
 import * as Chart from 'chart.js';
 import { stringify } from 'querystring';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { config } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -706,10 +707,6 @@ export class DashboardComponent implements OnInit {
       this.renderer.setStyle(elementP, "background-color", "white");
     }
 
-    
-    
-
-    
   }
 
   onChoseLocation(event){
@@ -719,6 +716,8 @@ export class DashboardComponent implements OnInit {
 
   //iscrtavanje tabli
   paths: any[]
+  require: any;
+  config = require('config');
  
   onTableClick(lat1, lng1, lat2, lng2, lat3, lng3, lat4, lng4, workerId){
     this.lat = lat1 + ((lat3 - lat1) / 2);
@@ -741,11 +740,12 @@ export class DashboardComponent implements OnInit {
     if(currentElement !== this.previousElement){
       this.renderer.setStyle(elementP, "background-color", "white");
     }
-
+    console.log(this.config.api_key)
   }
     
   ngOnInit() {
      localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+     
   }
 
 }
