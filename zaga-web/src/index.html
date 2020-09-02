@@ -17,6 +17,12 @@
   <script>
     window.global = window;
   </script>
+  <script>
+    var process = process || {
+      env: { DEBUG: undefined },
+      version: []
+    };
+  </script>
 </head>
 <body>
   <app-root></app-root>
