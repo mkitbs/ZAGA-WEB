@@ -1,5 +1,5 @@
 var config = {};
 
-config.api_key = process.env.API_KEY;
+config.api_key = 'AIzaSyDq7qhfF3VnG4qBTA9UvmGg99sHeDIjMwc';
 
 module.exports = config;
