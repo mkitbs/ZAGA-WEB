@@ -61,7 +61,7 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: config.api_key,
+      apiKey: '${API_KEY}',
       libraries: ['drawing']
     })
   ],
