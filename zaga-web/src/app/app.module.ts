@@ -20,8 +20,6 @@ import { YieldComponent } from './components/yield/yield.component';
 import { AgmCoreModule } from '@agm/core';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import 'chartjs-plugin-labels';
-import { environment } from 'src/environments/environment';
-import { env } from 'process';
 
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
