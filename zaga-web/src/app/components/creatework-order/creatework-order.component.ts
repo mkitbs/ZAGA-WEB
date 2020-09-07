@@ -5,6 +5,7 @@ import { Worker } from 'src/app/models/Worker';
 import { Material } from 'src/app/models/Material';
 import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-creatework-order',
@@ -13,7 +14,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CreateworkOrderComponent implements OnInit {
   
-  constructor(private route: ActivatedRoute, private toastr: ToastrService) { }
+  constructor(private route: ActivatedRoute, private toastr: ToastrService, private router: Router) { 
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   operations = ["BALIRANJE BIG BALA", "BALIRANJE ROL-PRESOM", "DESIKACIJA", "DRLJANJE", "FINO SETVOSPREMANJE", "FOLIJARNA PRIHRANA",
   "GRABLJ. LUCERKE, DETEL I TRAVA", "GRUBERISANJE DO 15 CM", "GRUBERISANJE NA 15-20 CM", "GRUBERISANJE-LJUŠTENJE DO 15 CM", "KOPANJE KANALA ZA REPINU PIPU",
@@ -45,8 +48,8 @@ export class CreateworkOrderComponent implements OnInit {
   "T-55", "T-56", "T-57", "T-58", "T-59", "T-60", "T-61", "T-62", "T-63", "T-64", "T-65", "T-66", "T-67", "T-68"];
 
   employees = ["ARSENOV NEMANJA", "BALAĆ MILOŠ", "BALANDŽIĆ MILIJANKA", "BELIĆ DRAGOSLAV", "ĆUK ĐURO", "ĆUK RANKO", "DAVIDOVIĆ PAJIĆ VERA", 
-  "FRIC SEPIKA", "JANKOVIĆ SNEŽANA", "JUHAS ROBERT", "KNEŽEVIĆ GORAN", "KORUGA OLIVERA", "KOVAČ DRAGAN", "MARINKOV JOVAN", "MEJIĆ  PETRA", 
-  "MILOVANČEV BRANISLAV", "OBRADOVIĆ  SLAVKO", "PLAVŠIĆ BORKA", "RADOŠEVIĆ DJURO", "RAKIĆ MARINA", "RANC ROBERT", "VELJKOVIĆ BORKO", 
+  "FRIC SEPIKA", "JANKOVIĆ SNEŽANA", "JUHAS ROBERT", "KNEŽEVIĆ GORAN", "KORUGA OLIVERA", "KOVAČ DRAGAN", "MARINKOV JOVAN", 
+  "MILOVANČEV BRANISLAV", "OBRADOVIĆ SLAVKO", "PLAVŠIĆ BORKA", "RADOŠEVIĆ DJURO", "RAKIĆ MARINA", "RANC ROBERT", "VELJKOVIĆ BORKO", 
   "VUJIČIĆ GORAN", "ZLATKA VUJIČIN GLAVAŠKI"];
 
   devices = ["IMT 533/539", "IMT 539", "JCB", "JD 6830", "JD 8320", "JD 8420", "JD6620-AGROPANONIJA KULA", "JOHN DEER-6930", "JOHN DEERE 4755", 

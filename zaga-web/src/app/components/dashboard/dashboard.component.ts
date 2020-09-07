@@ -4,6 +4,7 @@ import { SelectControlValueAccessor } from '@angular/forms';
 import * as Chart from 'chart.js';
 import { stringify } from 'querystring';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { config } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,26 +34,26 @@ export class DashboardComponent implements OnInit {
          {
            "id":1,
            "machine":"JOHN DEERE 6810",
-           "initialState": "680",
-           "finalState": "750",
-           "sumState": "70",
-           "worker":"MEJIĆ PETRA",
-           "date":"13.08.2020.",
-           "workPeriod":"5",
-           "fuel":"28",
+           "initialState": "",
+           "finalState": "",
+           "sumState": "",
+           "worker":"OBRADOVIĆ SLAVKO",
+           "date":"",
+           "workPeriod":"",
+           "fuel":"",
            "fuelType":"disel",
            "storage":"Magacin 1"
          },
          {
            "id":2,
            "machine":"IMT 539",
-           "initialState": "1430",
-           "finalState": "1630",
-           "sumState": "200",
+           "initialState": "",
+           "finalState": "",
+           "sumState": "",
            "worker":"VUJIČIĆ GORAN",
-           "date":"13.08.2020.",
-           "workPeriod":"2",
-           "fuel":"10",
+           "date":"",
+           "workPeriod":"",
+           "fuel":"",
            "fuelType":"disel",
            "storage":"Magacin 1"
          }
@@ -60,21 +61,21 @@ export class DashboardComponent implements OnInit {
        "workers": [
          {
            "id":1,
-           "worker":"MEJIĆ PETRA",
-           "date":"13.08.2020.",
-           "dayWorkPeriod": "8",
-           "nightWorkPeriod": "0",
+           "worker":"OBRADOVIĆ SLAVKO",
+           "date":"",
+           "dayWorkPeriod": "",
+           "nightWorkPeriod": "",
            "operation": "PRSKANJE FUNGICIDOM",
-           "workPeriod":"8",
+           "workPeriod":"",
          },
          {
            "id":2,
            "worker":"VUJIČIĆ GORAN",
-           "date":"13.08.2020.",
-           "dayWorkPeriod": "8",
-           "nightWorkPeriod": "0",
+           "date":"",
+           "dayWorkPeriod": "",
+           "nightWorkPeriod": "",
            "operation": "PREVOZ VODE ZA PRSKANJE",
-           "workPeriod":"8",
+           "workPeriod":"",
          }
        ],
        "materials": [
@@ -82,8 +83,8 @@ export class DashboardComponent implements OnInit {
            "id":1,
            "name":"FERTILEADER AXIS",
            "quantity":"400",
-           "spent": "320",
-           "spentPerHectar": "8",
+           "spent": "",
+           "spentPerHectar": "",
            "quantityPerHectar": "10",
            "unit":"l"
          }
@@ -106,13 +107,13 @@ export class DashboardComponent implements OnInit {
          {
            "id":1,
            "machine":"NEW HOLAND CR7.90",
-           "initialState": "1450",
-           "finalState": "2750",
-           "sumState": "1300",
+           "initialState": "",
+           "finalState": "",
+           "sumState": "",
            "worker":"VELJKOVIĆ BORKO",
-           "date":"14.08.2020.",
-           "workPeriod":"8",
-           "fuel":"103",
+           "date":"",
+           "workPeriod":"",
+           "fuel":"",
            "fuelType":"disel",
            "storage":"Magacin 1"
          }
@@ -121,20 +122,20 @@ export class DashboardComponent implements OnInit {
          {
            "id":1,
            "worker":"VELJKOVIĆ BORKO",
-           "date":"14.08.2020.",
-           "dayWorkPeriod": "8",
-           "nightWorkPeriod": "0",
+           "date":"",
+           "dayWorkPeriod": "",
+           "nightWorkPeriod": "",
            "operation": "ORANJE DO 35 CM",
-           "workPeriod":"8",
+           "workPeriod":"",
          },
          {
            "id":2,
            "worker":"MILOVANČEV BRANISLAV",
-           "date":"14.08.2020.",
-           "dayWorkPeriod": "8",
-           "nightWorkPeriod": "0",
+           "date":"",
+           "dayWorkPeriod": "",
+           "nightWorkPeriod": "",
            "operation": "OPŠTI POSLOVI",
-           "workPeriod":"8",
+           "workPeriod":"",
          }
        ],
        "materials": [
@@ -169,7 +170,7 @@ export class DashboardComponent implements OnInit {
           "initialState": "680",
           "finalState": "750",
           "sumState": "70",
-          "worker":"MEJIĆ PETRA",
+          "worker":"BELIĆ DRAGOSLAV",
           "date":"23.07.2020.",
           "workPeriod":"5",
           "fuel":"28",
@@ -193,7 +194,7 @@ export class DashboardComponent implements OnInit {
       "workers": [
         {
           "id":1,
-          "worker":"MEJIĆ PETRA",
+          "worker":"BELIĆ DRAGOSLAV",
           "date":"23.07.2020.",
           "dayWorkPeriod": "8",
           "nightWorkPeriod": "0",
@@ -239,26 +240,26 @@ export class DashboardComponent implements OnInit {
         {
           "id":1,
           "machine":"IMT 539",
-          "initialState": "1680",
-          "finalState": "1700",
-          "sumState": "320",
+          "initialState": "",
+          "finalState": "",
+          "sumState": "",
           "worker":"JUHAS ROBERT",
-          "date":"01.08.2020.",
-          "workPeriod":"5",
-          "fuel":"28",
+          "date":"",
+          "workPeriod":"",
+          "fuel":"",
           "fuelType":"disel",
           "storage":"Magacin 1"
         },
         {
           "id":2,
           "machine":"NEW HOLAND T 6.050",
-          "initialState": "1430",
-          "finalState": "1630",
-          "sumState": "200",
+          "initialState": "",
+          "finalState": "",
+          "sumState": "",
           "worker":"VUJIČIĆ GORAN",
-          "date":"01.08.2020.",
-          "workPeriod":"4",
-          "fuel":"29",
+          "date":"",
+          "workPeriod":"",
+          "fuel":"",
           "fuelType":"disel",
           "storage":"Magacin 1"
         }
@@ -267,20 +268,20 @@ export class DashboardComponent implements OnInit {
         {
           "id":1,
           "worker":"JUHAS ROBERT",
-          "date":"01.08.2020.",
-          "dayWorkPeriod": "8",
-          "nightWorkPeriod": "0",
+          "date":"",
+          "dayWorkPeriod": "",
+          "nightWorkPeriod": "",
           "operation": "GRABLJ. LUCERKE, DETEL I TRAVA",
-          "workPeriod":"8",
+          "workPeriod":"",
         },
         {
           "id":2,
           "worker":"VUJIČIĆ GORAN",
-          "date":"01.08.2020.",
-          "dayWorkPeriod": "8",
-          "nightWorkPeriod": "0",
+          "date":"",
+          "dayWorkPeriod": "",
+          "nightWorkPeriod": "",
           "operation": "PREVOZ RADNIKA",
-          "workPeriod":"8",
+          "workPeriod":"",
         }
       ],
       "materials": [
@@ -291,7 +292,7 @@ export class DashboardComponent implements OnInit {
           "spent": "",
           "spentPerHectar": "",
           "quantityPerHectar": "",
-          "unit":"l"
+          "unit":""
         }
       ]
     }
@@ -382,10 +383,7 @@ export class DashboardComponent implements OnInit {
     legend: false,
     plugins: {
       datalabels: {
-         display: false,
-         align: 'center',
-         anchor: 'center',
-         color: 'white'
+         display: false
       },
       labels: {
         render: function (args) {
@@ -452,7 +450,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.583342", 
       "lng3Table": "19.987478",
       "lat4Table": "45.583342",
-      "lng4Table": "19.987478"
+      "lng4Table": "19.987478",
+      "animation": "null"
     },
     {
       "id": "2",
@@ -470,7 +469,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.589297", 
       "lng3Table": "19.990335",
       "lat4Table": "45.583443",
-      "lng4Table": "19.987652"
+      "lng4Table": "19.987652",
+      "animation": "null"
     },
     {
       "id": "3",
@@ -488,7 +488,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.597602", 
       "lng3Table": "19.994150",
       "lat4Table": "45.598620",
-      "lng4Table": "19.989914"
+      "lng4Table": "19.989914",
+      "animation": "null"
     },
     {
       "id": "4",
@@ -506,7 +507,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.596583", 
       "lng3Table": "19.998650",
       "lat4Table": "45.597509",
-      "lng4Table": "19.994481"
+      "lng4Table": "19.994481",
+      "animation": "null"
     },
     {
       "id": "5",
@@ -524,7 +526,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.601306", 
       "lng3Table": "20.000867",
       "lat4Table": "45.602232",
-      "lng4Table": "19.996598"
+      "lng4Table": "19.996598",
+      "animation": "null"
     },
     {
       "id": "6",
@@ -542,7 +545,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.593993", 
       "lng3Table": "20.009642",
       "lat4Table": "45.595491", 
-      "lng4Table": "20.003251"
+      "lng4Table": "20.003251",
+      "animation": "null"
     },
     {
       "id": "7",
@@ -560,7 +564,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.570017", 
       "lng3Table": "20.016417",
       "lat4Table": "45.573074",
-      "lng4Table": "20.017973"
+      "lng4Table": "20.017973",
+      "animation": "null"
     },
     {
       "id": "8",
@@ -578,7 +583,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.573003", 
       "lng3Table": "20.002144",
       "lat4Table": "45.573906",
-      "lng4Table": "19.998074"
+      "lng4Table": "19.998074",
+      "animation": "null"
     },
     {
       "id": "9",
@@ -596,7 +602,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.575435", 
       "lng3Table": "20.008266",
       "lat4Table": "45.576385",
-      "lng4Table": "20.003997"
+      "lng4Table": "20.003997",
+      "animation": "null"
     },
     {
       "id": "10",
@@ -614,7 +621,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.577915", 
       "lng3Table": "20.020903",
       "lat4Table": "45.578020",
-      "lng4Table": "20.020395"
+      "lng4Table": "20.020395",
+      "animation": "null"
     },
     {
       "id": "11",
@@ -632,7 +640,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.591386", 
       "lng3Table": "20.020407",
       "lat4Table": "45.593470",
-      "lng4Table": "20.011968"
+      "lng4Table": "20.011968",
+      "animation": "null"
     },
     {
       "id": "12",
@@ -650,7 +659,8 @@ export class DashboardComponent implements OnInit {
       "lat3Table": "45.599525", 
       "lng3Table": "20.025657",
       "lat4Table": "45.599656",
-      "lng4Table": "20.025088"
+      "lng4Table": "20.025088",
+      "animation": "null"
     }
   ]
 
@@ -664,22 +674,39 @@ export class DashboardComponent implements OnInit {
   previous;
   elments: any[] = [];
   previousElement;
+  animationMarkers: any[] = [];
+  previousMarker;
 
-  clickedMarker(latitude, longitude, workerId) {
+  clickedMarker(latitude, longitude, workerId, index) {
     this.lat = latitude;    
     this.lng = longitude;
-   
+    
+    if(this.markers[index].animation != 'BOUNCE'){
+      this.markers[index].animation = 'BOUNCE';
+    }
     const element: HTMLElement = document.getElementById(workerId);
     this.renderer.setStyle(element, "background-color", "#ffc803");
+
     var currentElement = element.id;
     this.elments.push(currentElement);
     for(var i=0; i<this.elments.length; i++){
        this.previousElement = this.elments[i-1];
     }
+
+    this.animationMarkers.push(index);
+    for(var i = 0; i < this.animationMarkers.length; i++){
+      this.previousMarker = this.animationMarkers[i-1];
+    }
+
+    if(index != this.previousMarker){
+      this.markers[this.previousMarker].animation = 'null';
+    }
+   
     const elementP: HTMLElement = document.getElementById(this.previousElement);
     if(currentElement !== this.previousElement){
       this.renderer.setStyle(elementP, "background-color", "white");
     }
+
   }
 
   onChoseLocation(event){
@@ -712,22 +739,10 @@ export class DashboardComponent implements OnInit {
       this.renderer.setStyle(elementP, "background-color", "white");
     }
   }
-
-  //bounce marker
-  workerLocationMarkerAnimation: string;
-  markerAnimate(id){
-    this.markers.forEach(data => {
-      if(data.id !== id){
-        this.workerLocationMarkerAnimation = null;
-      }
-      else{
-        this.workerLocationMarkerAnimation = 'BOUNCE';
-      }
-    })
-  }
     
   ngOnInit() {
      localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+     
   }
 
 }

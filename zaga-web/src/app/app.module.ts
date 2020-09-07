@@ -21,6 +21,9 @@ import { AgmCoreModule } from '@agm/core';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import 'chartjs-plugin-labels';
 
+declare var require: any;
+var config = require('config');
+
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
   {path:"workOrder", component: WorkOrderComponent},
@@ -58,11 +61,12 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: process.env.API_KEY,
+      apiKey: '${API_KEY}',
       libraries: ['drawing']
     })
   ],
   providers: [ThemeService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
