@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container d-none d-md-block">
     <h3 class="mt-2 mb-2">Pregled naloga</h3>
     <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
         Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
@@ -47,7 +47,7 @@
     </div>
     <br>
 
-    <table class="table table-hover tabela-nalozi">
+    <table class="table table-hover tabela-nalozi ">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -81,4 +81,66 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<div class="container d-md-none">
+    <h3 class="mt-2 mb-2">Pregled naloga</h3>
+    <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+        Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+    </button>
+    <br>
+    <form action="" class="collapse mb-4" id="collapseExample">
+        <div class="form-row">
+            <div class="col">
+                <label>
+                    Datum
+                </label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col">
+                <label>
+                    Tabla
+                </label>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <label>
+                    Usev
+                </label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col">
+                <label>
+                    Status
+                </label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option value=""></option>
+                    <option value="novi">Novi</option>
+                    <option value="u redu">U radu</option>
+                    <option value="zavrseno">Završeno</option>
+                  </select>
+            </div>
+        </div>
+    </form>
+    <div style="padding-top: 30px;"></div>
+    <div class="card mb-3" *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="border: 1px solid #5C7495; border-radius: 5px;">
+        <div class="card-body">
+          <h5 class="card-title">{{workOrder.name}}</h5>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-info"><i class="fa fa-user"style="font-size:20px;"></i>  <span style="padding-left: 6px;"> Odgovorna osoba: {{workOrder.responsible}}</span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: {{workOrder.table}} ({{workOrder.area}}ha) </span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Period: {{workOrder.start}} - {{workOrder.end}} </span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-tasks"style="font-size:20px;"></i>   Status:  <span [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}"><b>{{workOrder.status}}</b></span></li>
+          </ul>
+          
+        </div>
+        <!--<div class="card-footer" style="background-color: #acbacc3a;">
+          <button type="button" class="btn" id="left-panel-link" >Register</button>
+          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal1" id="right-panel-link">
+  Learn More
+</button>
+        </div>-->
+      </div>
 </div>
