@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/mkitbs/git-config-repo
+          search-paths:
+           - app-zaga
+          skipSslValidation: true
+server:
+  port: 8888
