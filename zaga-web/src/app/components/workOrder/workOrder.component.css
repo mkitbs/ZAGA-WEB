@@ -62,3 +62,8 @@ table, td, tr, th {
 .statusZatvoren{
     color: #73964a;
 }
+
+.card-title {
+    font-weight:bold;
+    text-align: center;
+}

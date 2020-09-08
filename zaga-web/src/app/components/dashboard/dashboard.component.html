@@ -88,7 +88,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col">
+        <div class="col-sm-12">
             <br><br><br>
             <agm-map [latitude]="lat"  [longitude]="lng"  (mapReady)="onMapReady($event)"  [mapTypeControl]="true"  
                 disableDoubleClickZoom="true"  mapTypeId='satellite'  [zoom]=15 (mapClick)="onChoseLocation($event)">
