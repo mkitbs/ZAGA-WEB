@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+        
+  work-order-mysql:
+    image: mysql:8.0 
+    environment:
+      MYSQL_DATABASE: workorder
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_USER: root
+   ports:
+     - "3306:3306"
+  work-order-service:
+    image: 
+    restart: on-failure
+    depends_on:
+      - work-order-mysql
+    ports:
+      8889:8889
+   
