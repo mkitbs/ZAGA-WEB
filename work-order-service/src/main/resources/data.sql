@@ -1,0 +1,1 @@
+insert into users(name, department, position, perNumber) values ("test", "test", "test", "test")
