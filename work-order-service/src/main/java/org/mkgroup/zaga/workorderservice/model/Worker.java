@@ -28,9 +28,6 @@ public class Worker {
 	private UUID userId;
 	
 	@ManyToMany
-	@JoinTable(
-			  name = "workerOrder", 
-			  joinColumns = @JoinColumn(name = "worker_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "workOrder_id"))
 	private List<WorkOrder> workOrder;
+	
 }

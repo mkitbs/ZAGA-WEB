@@ -27,9 +27,9 @@ public class WorkOrder {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	private Date start;
+	private Date startDate;
 	
-	private Date end;
+	private Date endDate;
 	
 	@Enumerated(EnumType.STRING)
 	private WorkOrderStatus status;
@@ -40,8 +40,8 @@ public class WorkOrder {
 	@ManyToOne
 	private Crop crop;
 	
-	@ManyToMany(mappedBy = "workOrder")
-	List<Worker> workers;
+	@ManyToMany
+	private List<Worker> workers;
 	
 	
 	

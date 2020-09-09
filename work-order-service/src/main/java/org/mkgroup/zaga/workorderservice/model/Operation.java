@@ -37,5 +37,5 @@ public class Operation {
 	private OperationGroup operationGroup;
 	
 	@OneToMany(mappedBy = "operation")
-	List<WorkOrder> workOrders;
+	private List<WorkOrder> workOrders;
 }

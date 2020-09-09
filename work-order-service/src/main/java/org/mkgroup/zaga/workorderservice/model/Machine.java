@@ -29,10 +29,10 @@ public class Machine {
 	private String orgUnit;
 	
 	@Enumerated(EnumType.STRING)
-	private MachineType type;
+	private MachineType machineType;
 	
 	@Enumerated(EnumType.STRING)
-	private FuelType fuel_type;
+	private FuelType fuelType;
 	
 	@Enumerated(EnumType.STRING)
 	private OwnershipType ownershipType;

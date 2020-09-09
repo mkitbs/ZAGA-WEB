@@ -7,8 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -35,13 +35,10 @@ public class SpentMaterial {
 	private double spentPerHectar;
 	
 	@ManyToMany
-	@JoinTable(
-			  name = "spentMaterialOrder", 
-			  joinColumns = @JoinColumn(name = "spentMaterial_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "closeWorkOrder_id"))
-	private List<WorkOrder> workOrder;
+	private List<ClosedWorkOrder> closedWorkOrder;
+	
 	
 	@ManyToOne
-	Material material;
+	private Material material;
 	
 }

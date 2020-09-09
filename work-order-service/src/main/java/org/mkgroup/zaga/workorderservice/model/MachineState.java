@@ -41,10 +41,6 @@ public class MachineState {
 	private UUID workerId;
 	
 	@ManyToMany
-	@JoinTable(
-			  name = "machineStateOrder", 
-			  joinColumns = @JoinColumn(name = "machineState_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "closeWorkOrder_id"))
-	private List<WorkOrder> workOrder;
+	private List<ClosedWorkOrder> closedWorkOrder;
 	
 }

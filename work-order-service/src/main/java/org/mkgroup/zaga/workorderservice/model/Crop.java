@@ -1,7 +1,6 @@
 package org.mkgroup.zaga.workorderservice.model;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -31,7 +30,7 @@ public class Crop {
 	
 	private String orgUnit;
 	
-	private int year;
+	private int season;
 	
 	private double area;
 	
@@ -40,8 +39,8 @@ public class Crop {
 	@ManyToOne
 	private Culture culture;
 	
-	@OneToMany
-	private Set<CropVariety> cropVariety;
+	@OneToMany(mappedBy = "crop")
+	private List<CropVariety> cropVariety;
 	
 	@OneToMany(mappedBy = "crop")
 	private List<WorkOrder> workOrders;

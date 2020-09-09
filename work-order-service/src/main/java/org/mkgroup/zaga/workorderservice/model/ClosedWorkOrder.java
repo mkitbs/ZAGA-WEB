@@ -27,9 +27,9 @@ public class ClosedWorkOrder {
 	
 	private UUID workOrderId;
 	
-	@ManyToMany(mappedBy = "workOrder")
-	List<SpentMaterial> materials;
+	@ManyToMany
+	private List<SpentMaterial> materials;
 	
-	@ManyToMany(mappedBy = "workOrder")
-	List<MachineState> machines;
+	@ManyToMany
+	private List<MachineState> machines;
 }
