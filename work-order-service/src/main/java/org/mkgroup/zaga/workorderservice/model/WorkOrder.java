@@ -43,7 +43,10 @@ public class WorkOrder {
 	@ManyToMany
 	private List<Worker> workers;
 	
+	@ManyToMany
+	private List<Machine> machines;
 	
-	
-	
+	@ManyToMany
+	private List<Material> materials;
+
 }
