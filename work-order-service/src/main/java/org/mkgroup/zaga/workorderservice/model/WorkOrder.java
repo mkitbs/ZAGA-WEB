@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -19,12 +20,14 @@ import lombok.Data;
 
 @Data
 @Entity
-public class WorkOrder {
+public class WorkOrder implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "id", updatable = false, nullable = false)
+	@Column(columnDefinition = "BINARY(16)")
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
 	private Date startDate;

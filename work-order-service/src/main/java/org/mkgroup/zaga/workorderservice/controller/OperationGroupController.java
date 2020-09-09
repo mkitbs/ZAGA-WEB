@@ -21,10 +21,8 @@ public class OperationGroupController {
 
 	@GetMapping
 	public ResponseEntity<?> callSAPOperationGroupSet() throws JSONException {
-		return new ResponseEntity<List<OperationGroupDTO>>(
-							operationGroupService.getOperationGroupsFromSAP(),
-							HttpStatus.OK);
+		return new ResponseEntity<List<OperationGroupDTO>>(operationGroupService.getOperationGroupsFromSAP(),
+				HttpStatus.OK);
 	}
-	
 
 }
