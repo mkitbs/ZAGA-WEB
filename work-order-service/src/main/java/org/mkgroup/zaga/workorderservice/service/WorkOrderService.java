@@ -3,6 +3,7 @@ package org.mkgroup.zaga.workorderservice.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -41,12 +42,25 @@ public class WorkOrderService {
 			workOrder.setEndDate(workOrderDTO.getEnd());
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			Operation operation = operationRepo.findById(workOrderDTO.getOperationId());
+			//operation table does not contain any operations in this moment?
 			workOrder.setOperation(operation);
 			Crop crop = cropRepo.findById(workOrderDTO.getCropId());
+			//crop table does not contain any crops in this moment
 			workOrder.setCrop(crop);
 			List<Machine> machines = new ArrayList<Machine>();
 			ModelMapper modelMapper = new ModelMapper();
 			modelMapper.map(workOrderDTO.getMachines(), machines);
+			/*
+			 * after debugging, this can not be casted with ModelMapper without some configuration
+			 * alternately, java 8 & streams can help, template below
+			 */
+			List<Machine> testMachines = workOrderDTO.getMachines()
+					  .stream()
+					  .map(machine -> modelMapper.map(machine, Machine.class))
+					  .collect(Collectors.toList());
+			/*
+			 * this way we can convert other entities, but beware of Enum<->String conversion
+			 */
 			workOrder.setMachines(machines);
 			List<Material> materials = new ArrayList<Material>();
 			modelMapper.map(workOrderDTO.getMaterials(), materials);
