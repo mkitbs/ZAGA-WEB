@@ -16,8 +16,8 @@ public class WorkOrderDTO {
 	private Date start;
 	private Date end;
 	private String status;
-	private UUID cropId;
-	private UUID operationId;
+	private byte[] cropId;
+	private byte[] operationId;
 	private List<MaterialDTO> materials;
 	private List<MachineDTO> machines;
 	private List<EmployeeDTO> employees;

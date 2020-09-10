@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OperationRepository extends JpaRepository<Operation, Long>{
 	
-	Operation findById(UUID id);
+	Operation findById(byte[] bs);
 }
