@@ -59,25 +59,19 @@
                 <th scope="col">Usev</th>
                 <th scope="col">Odgovorna osoba</th>
                 <th scope="col">Status</th>
-                <!--<th scope="col"></th>
-                <th scope="col"></th>
-                -->
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)">
                 <th scope="row">{{ j + 1}}</th>
-                <td></td>
-                <td>{{workOrder.start}}</td>
-                <td>{{workOrder.end}}</td>
-                <td></td>
-                <td>ha</td>
-                <td></td>
+                <td>{{operation.kind}}</td>
+                <td>{{workOrder.start | date:'dd.MM.yyyy.'}}</td>
+                <td>{{workOrder.end | date:'dd.MM.yyyy.'}}</td>
+                <td>{{crop.FieldId}}</td>
+                <td>{{crop.Area}}ha</td>
+                <td>{{crop.Name}}</td>
                 <td></td>
                 <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
-                <!--<td><button class="btn btn-primary collapsing-button shadow-none" (click)="editOrder()"><i class="fa fa-edit"></i> Izmeni</button> </td>
-                <td><button class="btn btn-primary collapsing-button shadow-none" (click)="deleteOrder()"><i class="fa fa-trash"></i> Obriši</button></td>
-                -->
             </tr>
         </tbody>
     </table>
@@ -127,11 +121,11 @@
     <div style="padding-top: 30px;"></div>
     <div class="card mb-3" *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="border: 1px solid #5C7495; border-radius: 5px;">
         <div class="card-body">
-          <h5 class="card-title"></h5>
+          <h5 class="card-title">{{operation.kind}}</h5>
           <ul class="list-group">
             <li class="list-group-item list-group-item-info"><i class="fa fa-user"style="font-size:20px;"></i>  <span style="padding-left: 6px;"> Odgovorna osoba:</span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: ha) </span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Period: {{workOrder.start}} - {{workOrder.end}} </span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: {{crop.FieldId}} ({{crop.Area}}ha) </span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Period: {{workOrder.start | date:'dd.MM.yyyy.'}} - {{workOrder.end | date:'dd.MM.yyyy.'}} </span></li>
             <li class="list-group-item list-group-item-info"><i class="fa fa-tasks"style="font-size:20px;"></i>   Status:  <span [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}"><b>{{workOrder.status}}</b></span></li>
           </ul>
           

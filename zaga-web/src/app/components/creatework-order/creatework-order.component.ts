@@ -65,6 +65,7 @@ export class CreateworkOrderComponent implements OnInit {
   "FITOFERT HUMI SUPER", "FITOFERT KOMBIVIT", "GENERATE", "GEO 2", "KCL", "MAP", "MELASA", "NITRON", "N-LOCK", "NOVALON 19:6:20", "NUTRI MAP BETA 10:40", 
   "NUTRIAKTIVE", "NUTRIVEG 10:10:20", "ROOTER", "SAN 33% N", "UREA - 46%N"];
 
+  modalHeader = "Dodavanje radnika";
   workers = false;
   machines = false;
   materials = false;
@@ -84,6 +85,7 @@ export class CreateworkOrderComponent implements OnInit {
   workOrders: any[];
   workOrderInfo : WorkOrderInfo = new WorkOrderInfo();
   inputFill = true;
+  workerMob:Worker = new Worker();
 
   ngOnInit() {
     if(this.workId == "new") { //new
@@ -111,12 +113,21 @@ export class CreateworkOrderComponent implements OnInit {
 
   expandWorkers() {
     this.workers = !this.workers;
+    let el = document.getElementById("rad");
+    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+    
   }
   expandMachines() {
     this.machines = !this.machines;
+    let el = document.getElementById("mas");
+    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+    
   }
   expandMaterials() {
     this.materials = !this.materials;
+    let el = document.getElementById("mat");
+    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+    
   }
 
   addWorker() {
@@ -345,5 +356,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
 
+  setForEdit(wor){
+    this.workerMob = wor;
+    console.log(wor)
+  }
 
 }

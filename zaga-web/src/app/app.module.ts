@@ -27,7 +27,6 @@ var config = require('config');
 
 const routes: Routes = [
   {path: "create/workOrder/:workId", component: CreateworkOrderComponent},
-  {path:"workOrder", component: WorkOrderComponent},
   {path: "nalog", component: NalogComponent},
   {path: "workOrder", component: WorkOrderComponent},
   {path: "close/workOrder/:workId", component: CloseWorkOrderComponent},

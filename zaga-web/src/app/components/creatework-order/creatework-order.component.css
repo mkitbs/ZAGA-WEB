@@ -93,3 +93,12 @@ button.calendar{
     border: 2px solid red;
     border-radius: 4px;
 }
+
+@media only screen and (max-width: 600px) {
+    .btn-add, .btn-edit{
+        max-width: 110px;
+    }
+    hr.solid {
+        border-top: 3px solid #5C7495;
+      }
+}

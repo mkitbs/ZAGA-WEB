@@ -14,7 +14,6 @@ import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.model.Worker;
-import org.mkgroup.zaga.workorderservice.repository.CropRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.modelmapper.ModelMapper;
@@ -33,13 +32,13 @@ public class WorkOrderService {
 	OperationRepository operationRepo;
 	
 	@Autowired
-	CropRepository cropRepo;
-	
-	@Autowired
 	WorkerService workerService;
 	
 	@Autowired 
 	OperationService operationService;
+	
+	@Autowired
+	CropService cropService;
 	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
@@ -54,8 +53,7 @@ public class WorkOrderService {
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
 			
-			//izmestiti u service kada bude push
-			Crop crop = cropRepo.getOne(workOrderDTO.getCropId());
+			Crop crop = cropService.getOne(workOrderDTO.getCropId());
 			workOrder.setCrop(crop);
 			
 			ModelMapper modelMapper = new ModelMapper();

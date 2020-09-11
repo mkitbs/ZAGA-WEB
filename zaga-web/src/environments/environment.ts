@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  gatewayWorkOrderURL: "http://localhost:8889/work-order-service/",
+  gatewayWorkOrderURL: "http://localhost:8765/work-order-service/",
   production: false
 };
 
