@@ -3,12 +3,15 @@ package org.mkgroup.zaga.workorderservice.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class OperationService {
 	
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
+	
+	@Autowired
+	OperationRepository operationRepo;
 	
 	public List<OperationDTO> getOperationsFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -71,6 +77,16 @@ public class OperationService {
 	    	
 	    });
 	    return convertedList;
+	}
+	
+	public Operation getOne(UUID id) {
+		try {
+			Operation operation = operationRepo.getOne(id);
+			return operation;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 

@@ -2,10 +2,9 @@ package org.mkgroup.zaga.workorderservice.repository;
 
 import java.util.UUID;
 
-import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Worker;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CropRepository extends JpaRepository<Crop, UUID>{
-	
-	
+public interface WorkerRepository extends JpaRepository<Worker, UUID>{
+
 }

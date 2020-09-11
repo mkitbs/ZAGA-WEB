@@ -13,12 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkOrderDTO {
 	
+	private UUID id;
 	private Date start;
 	private Date end;
 	private String status;
-	private byte[] cropId;
-	private byte[] operationId;
+	private UUID cropId;
+	private UUID operationId;
 	private List<MaterialDTO> materials;
 	private List<MachineDTO> machines;
 	private List<EmployeeDTO> employees;
+	
 }

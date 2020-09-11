@@ -1,8 +1,9 @@
 export class Material {
     id;
     name;
-    quantity;
     unit;
+    group;
+    quantity;
     quantityPerHectar;
     spent;
     spentPerHectar;

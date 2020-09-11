@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class MaterialDTO {
 	
 	@JsonProperty("Id")
-	Long id;
+	UUID id;
 	
 	@JsonProperty("Name")
 	String name;
@@ -20,6 +22,8 @@ public class MaterialDTO {
 	@JsonProperty("Unit")
 	String unit;
 	
+	
 	@JsonProperty("Group")
 	String group;
+	
 }

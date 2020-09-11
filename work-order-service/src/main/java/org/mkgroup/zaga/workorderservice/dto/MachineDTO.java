@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MachineDTO {
 	
-	private Long id;
+	private UUID id;
 	private String companyCode;
 	private String orgUnit;
 	private String fuelType;

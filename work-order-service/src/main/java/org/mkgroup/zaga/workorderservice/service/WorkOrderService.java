@@ -1,7 +1,6 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,8 +10,10 @@ import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
+import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
+import org.mkgroup.zaga.workorderservice.model.Worker;
 import org.mkgroup.zaga.workorderservice.repository.CropRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
@@ -34,40 +35,72 @@ public class WorkOrderService {
 	@Autowired
 	CropRepository cropRepo;
 	
+	@Autowired
+	WorkerService workerService;
+	
+	@Autowired 
+	OperationService operationService;
+	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
-			log.info("Insert work order into db");
+			log.info("Work order creation started");
+			
 			WorkOrder workOrder = new WorkOrder();
+			
 			workOrder.setStartDate(workOrderDTO.getStart());
 			workOrder.setEndDate(workOrderDTO.getEnd());
 			workOrder.setStatus(WorkOrderStatus.NEW);
-			Operation operation = operationRepo.findById(workOrderDTO.getOperationId());
-			//operation table does not contain any operations in this moment?
+			
+			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
-			Crop crop = cropRepo.findById(workOrderDTO.getCropId());
-			//crop table does not contain any crops in this moment
+			
+			//izmestiti u service kada bude push
+			Crop crop = cropRepo.getOne(workOrderDTO.getCropId());
 			workOrder.setCrop(crop);
-			List<Machine> machines = new ArrayList<Machine>();
+			
 			ModelMapper modelMapper = new ModelMapper();
-			modelMapper.map(workOrderDTO.getMachines(), machines);
-			/*
-			 * after debugging, this can not be casted with ModelMapper without some configuration
-			 * alternately, java 8 & streams can help, template below
-			 */
-			List<Machine> testMachines = workOrderDTO.getMachines()
+			
+			List<Machine> machines = workOrderDTO.getMachines()
 					  .stream()
 					  .map(machine -> modelMapper.map(machine, Machine.class))
 					  .collect(Collectors.toList());
-			/*
-			 * this way we can convert other entities, but beware of Enum<->String conversion
-			 */
 			workOrder.setMachines(machines);
-			List<Material> materials = new ArrayList<Material>();
-			modelMapper.map(workOrderDTO.getMaterials(), materials);
+			
+			List<Material> materials = workOrderDTO.getMaterials()
+					.stream()
+					.map(material -> modelMapper.map(material, Material.class))
+					.collect(Collectors.toList());
 			workOrder.setMaterials(materials);
+			
+			List<User> users = workOrderDTO.getEmployees()
+					.stream()
+					.map(user -> modelMapper.map(user, User.class))
+					.collect(Collectors.toList());
+			List<Worker> workers = new ArrayList<Worker>();
+			for(User user : users) {
+				Worker worker = new Worker();
+				worker.setUserId(user.getId());
+				worker.getWorkOrders().add(workOrder);
+				worker = workerService.addWorker(worker);
+				workers.add(worker);
+			}
+			workOrder.setWorkers(workers);
+			
+			log.info("Insert work order into db");
 			workOrderRepo.save(workOrder);
 		}catch(Exception e) {
 			log.error("Insert work order faild", e);
 		}
 	}
+	
+	public List<WorkOrderDTO> getAll(){
+		ModelMapper modelMapper = new ModelMapper();
+		List<WorkOrder> workOrders = workOrderRepo.findAll();
+		List<WorkOrderDTO> workOrdersDTO = workOrders
+				.stream()
+				.map(workOrder -> modelMapper.map(workOrder, WorkOrderDTO.class))
+				.collect(Collectors.toList());
+		return workOrdersDTO;
+	}
+	
 }

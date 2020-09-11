@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { WorkOrderService } from 'src/app/service/work-order.service';
+import { WorkOrder } from 'src/app/models/WorkOrder';
 
 @Component({
   selector: 'app-workOrder',
@@ -10,14 +12,16 @@ export class WorkOrderComponent implements OnInit {
 
   click = false;
   collapseBool = true;
-  workOrders: any[];
+  workOrders: WorkOrder[] = [];
   
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private workOrderService:WorkOrderService) { }
 
   ngOnInit() {
-    
-    this.workOrders = JSON.parse(localStorage["workOrders"]);
+    //this.workOrders = JSON.parse(localStorage["workOrders"]);
+    this.workOrderService.getAll().subscribe(data => {
+      this.workOrders = data;
+    })
   }
 
   changeClick(){

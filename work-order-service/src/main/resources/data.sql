@@ -1,1 +1,0 @@
-insert into users(id, name, department, position, per_number) values ("125kdald12", "test", "test", "test", 12345)
