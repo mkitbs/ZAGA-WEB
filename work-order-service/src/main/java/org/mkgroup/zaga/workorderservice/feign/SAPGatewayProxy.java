@@ -32,5 +32,34 @@ public interface SAPGatewayProxy {
 	public ResponseEntity<Object> fetchOperations(
 			@RequestParam(name = "$format") String format,
 			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/EmployeeSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchEmployees(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/MachineSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchMachines(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
 
+	@GetMapping(value = "/MaterialSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchMaterials(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+
+	@GetMapping(value = "/CropSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchCrops(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/CropVarietySet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchCropVarieties(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/VarietySet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchVarieties(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
 }

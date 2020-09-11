@@ -15,9 +15,11 @@ public class ODataToDTOConvertor {
 	
 	@Autowired
 	ModelMapper mapper;
-	
 	public Object convertODataSetToDTO(String odata) throws JSONException {
-		
+		/*System.out.println(odata);
+		for(int i = 0; i < 89; i++) {
+			System.out.println(odata.charAt(i) + " CAR " + i);
+		}*/
 		JSONObject jsonFromOData = new JSONObject(odata);
 		JSONObject dObject = new JSONObject(jsonFromOData.get("d").toString());
 		JSONArray jsonResultsArray = new JSONArray(dObject.get("results").toString());
