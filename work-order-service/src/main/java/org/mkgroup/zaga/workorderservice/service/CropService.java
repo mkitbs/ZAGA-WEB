@@ -54,7 +54,10 @@ public class CropService {
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
-
+	    for(CropDTO crop : cropList) {
+	    	Crop c = new Crop(crop);
+	    	cropRepo.save(c);
+	    }
 		return cropList;
 	}
 	

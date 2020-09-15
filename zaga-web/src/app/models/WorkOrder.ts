@@ -6,7 +6,7 @@ export class WorkOrder{
     id:string;
     start;
     end;
-    status:string;
+    status;
     cropId:string;
     operationId:string;
     responsibleId:string;

@@ -11,11 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Crop {
 
 	@Id
@@ -44,4 +47,13 @@ public class Crop {
 	
 	@OneToMany(mappedBy = "crop")
 	private List<WorkOrder> workOrders;
+	
+	public Crop(CropDTO crop) {
+		name = crop.getName();
+		companyCode = crop.getCompanyCode();
+		orgUnit = crop.getOrganisationUnit();
+		year = crop.getYear();
+		area = crop.getArea();
+		fieldId = crop.getFieldId();
+	}
 }

@@ -69,7 +69,7 @@ export class CreateworkOrderComponent implements OnInit {
   crop: Crop = new Crop();
   culture: Culture = new Culture();
   employee: Employee = new Employee();
-  wo : WorkOrder = new WorkOrder();
+  workOrder : WorkOrder = new WorkOrder();
   worker : Worker = new Worker();
   employees: Employee[] = [];
   machine: Machine = new Machine();
@@ -83,46 +83,49 @@ export class CreateworkOrderComponent implements OnInit {
   selectedMaterial;
 
   ngOnInit() {
+    console.log(this.workId)
+    this.workOrder.status = "Novi"
     if(this.workId == "new") { //new
       this.new = true;
-      this.wo = new WorkOrder();
-      this.wo.machines = [];
-      this.wo.workers = [];
-      this.wo.materials = [];
-      this.wo.status = "Novi";
+      this.workOrder = new WorkOrder();
+      this.workOrder.machines = [];
+      this.workOrder.workers = [];
+      this.workOrder.materials = [];
+      
+      
     } else {
       this.new = false;
 
       this.workOrderService.getOne(this.workId).subscribe(data => {
-        this.wo = data;
+        this.workOrder = data;
         
-        if(this.wo.status == "NEW"){
-          this.wo.status = "Novi";
-        } else if(this.wo.status == "IN_PROGRESS"){
-          this.wo.status = "U radu";
-        } else if(this.wo.status == "CLOSED"){
-          this.wo.status = "Zatvoren";
+        if(this.workOrder.status == "NEW"){
+          this.workOrder.status = "Novi";
+        } else if(this.workOrder.status == "IN_PROGRESS"){
+          this.workOrder.status = "U radu";
+        } else if(this.workOrder.status == "CLOSED"){
+          this.workOrder.status = "Zatvoren";
         }
 
-        this.wo.start = { day: +this.wo.start.substring(8,10),
-          month: +this.wo.start.substring(5,7), 
-          year: +this.wo.start.substring(0,4)
+        this.workOrder.start = { day: +this.workOrder.start.substring(8,10),
+          month: +this.workOrder.start.substring(5,7), 
+          year: +this.workOrder.start.substring(0,4)
         };
-        this.wo.end = { day: +this.wo.end.substring(8,10), 
-          month: +this.wo.end.substring(5,7), 
-          year: +this.wo.end.substring(0,4)
+        this.workOrder.end = { day: +this.workOrder.end.substring(8,10), 
+          month: +this.workOrder.end.substring(5,7), 
+          year: +this.workOrder.end.substring(0,4)
        };
 
 
-       this.getOperation(this.wo.operationId);
-       this.getCrop(this.wo.cropId);
-       this.getResponsibleEmployee(this.wo.responsibleId);
+       this.getOperation(this.workOrder.operationId);
+       this.getCrop(this.workOrder.cropId);
+       this.getResponsibleEmployee(this.workOrder.responsibleId);
 
-       this.wo.workers.forEach(data => {
+       this.workOrder.workers.forEach(data => {
         this.employee = data;
         this.getWorker(this.employee.userId);
        })
-       console.log(this.wo)
+       console.log(this.workOrder)
       })
     }
 
@@ -198,7 +201,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addWorker(){
-    this.employee.name = this.selectedWorker;
+    this.userService.getOne(this.selectedWorker).subscribe(data => {
+      this.employee = data;
+    })
     this.employees.push(this.employee);
     this.employee = new Employee();
   }
@@ -266,9 +271,9 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkOrder(){
     
    
-    this.wo.machines = this.woMachines;
-    this.wo.workers = this.employees;
-    this.wo.materials = this.woMaterials;
+    this.workOrder.machines = this.woMachines;
+    this.workOrder.workers = this.employees;
+    this.workOrder.materials = this.woMaterials;
 
     /*
     this.workOrderService.addWorkOrder(this.wo).subscribe(data => {
@@ -277,38 +282,38 @@ export class CreateworkOrderComponent implements OnInit {
       this.toastr.error("Radni nalog nije kreiran.");
     })
     */
-    console.log(this.wo)
+    console.log(this.workOrder)
   }
 
   updateWorkOrder(){
     var dateStartToAdd = "";
     var dateEndToAdd = "";
-    if(this.wo.start != undefined) {
-        if(this.wo.start.month < 10) {
-          this.wo.start.month = '0' + this.wo.start.month;
+    if(this.workOrder.start != undefined) {
+        if(this.workOrder.start.month < 10) {
+          this.workOrder.start.month = '0' + this.workOrder.start.month;
         }
-        if(this.wo.start.day < 10){
-          this.wo.start.day = '0' + this.wo.start.day;
+        if(this.workOrder.start.day < 10){
+          this.workOrder.start.day = '0' + this.workOrder.start.day;
         }
-        dateStartToAdd= this.wo.start.year + '-' 
-          + this.wo.start.month + '-' 
-          + this.wo.start.day;
+        dateStartToAdd= this.workOrder.start.year + '-' 
+          + this.workOrder.start.month + '-' 
+          + this.workOrder.start.day;
     }
-    if(this.wo.end != undefined) {
-      if(this.wo.end.month < 10) {
-        this.wo.end.month = '0' + this.wo.end.month;
+    if(this.workOrder.end != undefined) {
+      if(this.workOrder.end.month < 10) {
+        this.workOrder.end.month = '0' + this.workOrder.end.month;
       }
-      if(this.wo.end.day < 10){
-        this.wo.end.day = '0' + this.wo.end.day;
+      if(this.workOrder.end.day < 10){
+        this.workOrder.end.day = '0' + this.workOrder.end.day;
       }
-      dateEndToAdd= this.wo.end.year + '-' 
-        + this.wo.end.month + '-' 
-        + this.wo.end.day;
+      dateEndToAdd= this.workOrder.end.year + '-' 
+        + this.workOrder.end.month + '-' 
+        + this.workOrder.end.day;
     }
    
-    this.wo.machines = this.woMachines;
-    this.wo.workers = this.employees;
-    this.wo.materials = this.woMaterials;
+    this.workOrder.machines = this.woMachines;
+    this.workOrder.workers = this.employees;
+    this.workOrder.materials = this.woMaterials;
 
     /*
     this.workOrderService.updateWorkOrder(this.wo).subscribe(data => {
@@ -317,7 +322,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.toastr.error("Radni nalog nije sačuvan.");
     })
     */
-    console.log(this.wo)
+    console.log(this.workOrder)
   }
 
   setForEdit(wor){

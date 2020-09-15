@@ -6,7 +6,7 @@ import { Operation } from 'src/app/models/Operation';
 import { Crop } from 'src/app/models/Crop';
 import { CropService } from 'src/app/service/crop.service';
 import { OperationService } from 'src/app/service/operation.service';
-import { EmployeeService } from 'src/app/service/employee.service';
+import { UserService } from 'src/app/service/user.service';
 import { Employee } from 'src/app/models/Employee';
 
 @Component({
@@ -26,7 +26,7 @@ export class WorkOrderComponent implements OnInit {
   cropId;
 
   constructor(private router: Router, private workOrderService:WorkOrderService, private cropService:CropService,
-    private operationService:OperationService, private employeeService:EmployeeService) { }
+    private operationService:OperationService, private userService:UserService) { }
 
   ngOnInit() {
     //this.workOrders = JSON.parse(localStorage["workOrders"]);
@@ -61,7 +61,7 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getResponsibleEmployee(id){
-    this.employeeService.getOne(id).subscribe(data => {
+    this.userService.getOne(id).subscribe(data => {
       this.employee = data;
     })
   }

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.repository.CropRepository;
 import org.mkgroup.zaga.workorderservice.service.CropService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CropController {
 
 	@Autowired
 	CropService cropService;
+	
+	@Autowired
+	CropRepository cropRepo;
 	
 	@GetMapping
 	public ResponseEntity<?> callSAPEmployeeSet(){
@@ -39,5 +43,10 @@ public class CropController {
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		return new ResponseEntity<List<Crop>>(cropRepo.findByOrderByNameAsc(), HttpStatus.OK);
 	}
 }
