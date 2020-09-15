@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,13 +14,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Operation {
 	
+
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
@@ -30,6 +35,8 @@ public class Operation {
 	
 	private boolean status;
 	
+	private String name;
+	
 	@Enumerated(EnumType.STRING)
 	private OperationType type;
 	
@@ -37,5 +44,10 @@ public class Operation {
 	private OperationGroup operationGroup;
 	
 	@OneToMany(mappedBy = "operation")
-	private List<WorkOrder> workOrders;
+	private List<WorkOrder> workOrders = new ArrayList<WorkOrder>();
+	
+	public Operation(OperationDTO op) {
+		this.kind = op.getKind();
+		this.name = op.getName();
+	}
 }

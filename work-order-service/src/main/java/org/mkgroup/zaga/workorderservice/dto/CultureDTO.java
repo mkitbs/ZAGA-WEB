@@ -15,13 +15,14 @@ public class CultureDTO {
 	
 	private UUID id;
 	
-	private String name;
-	
 	@JsonProperty("Id")
     Long erpId;
 	
 	@JsonProperty("CultureGroupId")
     Long cultureGroupId;
+	
+	@JsonProperty("Name")
+    String name;
 	
 	@JsonProperty("OrgKon")
     String orgCon;

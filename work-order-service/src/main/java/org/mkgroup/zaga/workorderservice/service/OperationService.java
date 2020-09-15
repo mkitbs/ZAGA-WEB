@@ -47,21 +47,27 @@ public class OperationService {
 		ResponseEntity<Object> cultureGroupSet = 
 				gwProxy.fetchOperations("json", "Basic " + authHeader);
 		String oDataString = cultureGroupSet.getBody().toString().replace(":", "-");
-		oDataString = oDataString.replace("=", ":");
-		oDataString = oDataString.replace("/", "");
+		System.out.println(oDataString);
+		oDataString = formatJSON(oDataString);
+		System.out.println(oDataString);
 		//Map to specific object
-	    ArrayList<OperationDTO> cultureGroupList = 
+	    ArrayList<OperationDTO> operationList = 
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
 
-		return cultureGroupList;
+	    for(OperationDTO op: operationList) {
+	    	Operation operation = new Operation(op);
+	    	operationRepo.save(operation);
+	    }
+		return operationList;
 	}
 	
 	public ArrayList<OperationDTO> convertObjectToLocalList(Object listAsObject) {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	    ArrayList<OperationDTO> convertedList= new ArrayList<OperationDTO>();
 	    list.forEach(objectOfAList -> {
 	    	OperationDTO cultureDTO = new OperationDTO();
@@ -87,6 +93,15 @@ public class OperationService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		return json;
 	}
 
 

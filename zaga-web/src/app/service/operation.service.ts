@@ -13,4 +13,8 @@ export class OperationService {
   getOne(id) : Observable<any>{
     return this.http.get(environment.gatewayWorkOrderURL + "api/operation/getOperation/" + id)
   }
+
+  getAll() : Observable<any>{
+    return this.http.get(environment.gatewayWorkOrderURL + "api/operation/getAll")
+  }
 }

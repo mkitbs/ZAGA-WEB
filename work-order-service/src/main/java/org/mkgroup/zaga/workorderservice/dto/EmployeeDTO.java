@@ -17,9 +17,6 @@ public class EmployeeDTO {
 	
 	private UUID userId;
 	
-	@JsonProperty("Id")
-	Long erpId;
-	
 	@JsonProperty("Name")
 	String name;
 	
@@ -28,7 +25,8 @@ public class EmployeeDTO {
 	
 	@JsonProperty("Position")
 	String position;
-	
+
+	@JsonProperty("Id")
 	Long perNumber;
 
 }

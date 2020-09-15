@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
 import org.mkgroup.zaga.workorderservice.model.Culture;
+import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
 import org.mkgroup.zaga.workorderservice.service.CultureService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class CultureController {
 	
 	@Autowired
 	CultureService cultureService;
+	
+	@Autowired
+	CultureRepository cultureRepo;
 
 	@GetMapping
 	public ResponseEntity<?> callSAPCultureSet() throws JSONException {
@@ -42,5 +46,10 @@ public class CultureController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		return new ResponseEntity<List<Culture>>(cultureRepo.findByOrderByNameAsc(),HttpStatus.OK);
 	}
 }

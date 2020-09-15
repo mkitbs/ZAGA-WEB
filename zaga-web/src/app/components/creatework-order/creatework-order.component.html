@@ -26,8 +26,9 @@
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
                 <td class="right-col-header" >
-                    <select name="" [(ngModel)]="operation.kind" class="form-control" id=""  *ngIf="!new; else elseBlockOperation">
-                      <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
+                    <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
+                      <option value="{{operation}}" *ngFor="let op of operations">{{op.name}}</option>
+
                     </select>
                     <ng-template #elseBlockOperation>
                         <select [(ngModel)]="wo.operationId"  name="" id="" class="form-control">
@@ -66,8 +67,8 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    <select name="" [(ngModel)]="employee.Name" id="" class="form-control" *ngIf="!new; else elseBlockResponsible">
-                        <option value="{{employee}}" *ngFor="let employee of this.employeess">{{employee}}</option>
+                    <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
+                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                     </select>
                     <ng-template #elseBlockResponsible>
                         <select name="" [(ngModel)]="wo.responsible" id="" class="form-control" >
@@ -81,8 +82,8 @@
                   <i class="fa fa-cubes"></i> Kultura:
                 </td>
                 <td class="right-col-header">
-                    <select name="" [(ngModel)]="culture.name"  class="form-control" id="">
-                        <option value="{{culture}}" *ngFor="let culture of this.cultures">{{culture}}</option>
+                    <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
+                        <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.name}}</option>
                     </select>
                 </td>
                 <td class="left-col-header">
@@ -169,9 +170,9 @@
                             <option name="workerId" value="{{worker.id}}" *ngFor="let worker of employees">{{worker.Name}}</option>
                         </select>
                         <ng-template #elseBlockWorkers>
-                            <select [(ngModel)]="selectedWorker"  name="" id="" class="form-control">
-                                <option value="-1"></option>
-                                <option value="{{worker}}" *ngFor="let worker of this.employeess" >{{worker}}</option>
+                            <select  name="" id="" class="form-control">
+                                <option value="-1">--Izaberi--</option>
+                                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                             </select>
                         </ng-template>
                     </div>
@@ -192,9 +193,8 @@
                                 <option   value=""></option>
                             </select>
                             <ng-template #elseBlockOperations>
-                                <select name="" id=""  class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
+                                <select name="" id="" [(ngModel)]="worker.operation" class="form-control">
+                                    <option value="{{operation}}" *ngFor="let op of operations">{{op.name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -300,9 +300,8 @@
                                 <option value="{{m.Name}}" *ngFor="let m of wo.machines">{{m.Name}}</option>
                             </select>
                             <ng-template #elseBlockMachine>
-                                <select name="" [(ngModel)]="selectedMachine" id="" class="form-control">
-                                    <option value="-1"></option>
-                                    <option value="{{device}}" *ngFor="let device of this.devices">{{device}}</option>
+                                <select [(ngModel)]="machine.machine" name="" id="" class="form-control">
+                                    <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -315,7 +314,7 @@
                             </select>
                             <ng-template #elseBlockWorkersMachine>
                                 <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
-                                    <option value="{{employee}}" *ngFor="let employee of this.employeess">{{employee}}</option>
+                                    <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -435,8 +434,8 @@
                                 <option value="{{mat.Name}}" *ngFor="let mat of wo.materials">{{mat.Name}}</option>
                             </select>
                             <ng-template #elseBlockMaterial>
-                                <select [(ngModel)]="selectedMaterial" name="" id="" class="form-control">
-                                    <option value="{{substance}}" *ngFor="let substance of this.substances">{{substance}}</option>
+                                <select [(ngModel)]="material.name" name="" id="" class="form-control">
+                                    <option value="{{sub.id}}" *ngFor="let sub of substances">{{sub.name}}</option>
                                 </select>
                             </ng-template>
                             
@@ -582,8 +581,8 @@
             <i class="fa fa-user mr-2" style="vertical-align: bottom;"></i>Odgovorna osoba:
         </div>
         <div class="col-6">
-            <select  name="" id="" [(ngModel)]="employee.Name" class="form-control" >
-                <option value="{{employee}}" *ngFor="let employee of this.employeess">{{employee}}</option>
+            <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
+                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
             </select>
         </div>
     </div>
@@ -593,8 +592,8 @@
             <i class="fa fa-cubes" style="vertical-align: bottom;"></i> Kultura:
         </div>
         <div class="col-6">
-            <select name="" [(ngModel)]="culture.name" class="form-control" id="">
-                <option value="{{culture}}" *ngFor="let culture of this.cultures">{{culture}}</option>
+            <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
+                <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.name}}</option>
             </select>
         </div>
     </div>

@@ -11,11 +11,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 	
@@ -36,5 +39,11 @@ public class User {
 	@OneToMany(mappedBy = "responsible")
 	List<WorkOrder> workOrders;
 	
+	public User(EmployeeDTO em) {
+		this.name = em.getName();
+		this.department = em.getDepartment();
+		this.position = em.getPosition();
+		this.perNumber = em.getPerNumber();
+	}
 	
 }

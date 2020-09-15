@@ -50,12 +50,17 @@ public class CultureService {
 		oDataString = oDataString.replace("=", ":");
 		oDataString = oDataString.replace("/", "");
 		//Map to specific object
-	    ArrayList<CultureDTO> cultureGroupList = 
+	    ArrayList<CultureDTO> cultureList = 
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
 
-		return cultureGroupList;
+	    for(CultureDTO c : cultureList) {
+	    	Culture culture = new Culture(c);
+	    	cultureRepo.save(culture);
+	    }
+	    
+		return cultureList;
 	}
 	
 	public ArrayList<CultureDTO> convertObjectToLocalList(Object listAsObject) {

@@ -21,6 +21,9 @@ public class ODataToDTOConvertor {
 			System.out.println(odata.charAt(i) + " CAR " + i);
 		}*/
 		JSONObject jsonFromOData = new JSONObject(odata);
+		String decode = jsonFromOData.toString().replaceAll("%2C",",");
+		jsonFromOData = new JSONObject(decode);
+		
 		JSONObject dObject = new JSONObject(jsonFromOData.get("d").toString());
 		JSONArray jsonResultsArray = new JSONArray(dObject.get("results").toString());
 		ArrayList<Object> dtoList = new ArrayList<Object>();

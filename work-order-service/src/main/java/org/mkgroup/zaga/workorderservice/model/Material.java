@@ -11,10 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.MaterialDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Material {
 	
@@ -28,7 +31,14 @@ public class Material {
 	
 	private String unit;
 	
+	private String materialGroup;
+	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<WorkOrder> workOrder;
 	
+	public Material(MaterialDTO m) {
+		this.name = m.getName();
+		this.unit = m.getUnit();
+		this.materialGroup = m.getGroup();
+	}
 }

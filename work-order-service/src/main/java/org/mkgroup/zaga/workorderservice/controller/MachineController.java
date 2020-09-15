@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
+import org.mkgroup.zaga.workorderservice.model.Machine;
+import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,17 @@ public class MachineController {
 	@Autowired
 	MachineService machineService;
 	
+	@Autowired
+	MachineRepository machineRepo;
+	
 	@GetMapping
 	public ResponseEntity<?> callSAPEmployeeSet(){
 		return new ResponseEntity<List<MachineDTO>>(
 				machineService.getMachinesFromSAP(), HttpStatus.OK);
+	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		return new ResponseEntity<List<Machine>>(machineRepo.findByOrderByNameAsc(),HttpStatus.OK);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.model.User;
+import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.mkgroup.zaga.workorderservice.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class EmployeeController {
 	@Autowired
 	EmployeeService empService;
 
+	@Autowired
+	UserRepository userRepo;
+	
 	@GetMapping
 	public ResponseEntity<?> callSAPEmployeeSet(){
 		return new ResponseEntity<List<EmployeeDTO>>(
@@ -39,5 +43,10 @@ public class EmployeeController {
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAllUsers(){
+		return new ResponseEntity<List<User>>(userRepo.findAll(),HttpStatus.OK);
 	}
 }

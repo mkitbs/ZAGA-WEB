@@ -80,11 +80,13 @@ public class CropService {
 	}
 
 	public String formatJSON(String json) {
+		System.out.println(json);
 		json = json.replace("=", ":");
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
+		System.out.println(json);
 		return json;
 	}
 	

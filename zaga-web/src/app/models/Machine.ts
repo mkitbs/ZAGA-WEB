@@ -1,7 +1,7 @@
 
 export class Machine{
     id:string;
-    name:string;
+    name;
     compnayCode:string;
     orgUnit:string;
     fuelType:string;

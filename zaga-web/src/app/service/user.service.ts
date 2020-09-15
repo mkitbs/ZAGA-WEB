@@ -6,15 +6,16 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class CultureService {
+export class UserService {
 
   constructor(private http:HttpClient) { }
 
-  getOne(id) : Observable<any>{
-    return this.http.get(environment.gatewayWorkOrderURL + "api/culture/getCulture/" + id);
-  }
-  
   getAll() : Observable<any>{
-    return this.http.get(environment.gatewayWorkOrderURL+ "api/culture/getAll")
+    return this.http.get(environment.gatewayWorkOrderURL + "api/employee/getAll");
   }
+
+  getOne(id) : Observable<any>{
+    return this.http.get(environment.gatewayWorkOrderURL + "api/employee/getEmployee/" + id);
+  }
+
 }
