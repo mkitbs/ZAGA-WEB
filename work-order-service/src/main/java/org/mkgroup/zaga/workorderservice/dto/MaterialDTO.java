@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class MaterialDTO {
 	
 	@JsonProperty("Id")
-	UUID id;
+	String id;
 	
 	@JsonProperty("Name")
 	String name;

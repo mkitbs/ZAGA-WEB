@@ -11,11 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CultureDTO {
 	
+	
 	@JsonProperty("Id")
     Long id;
 	
 	@JsonProperty("CultureGroupId")
     Long cultureGroupId;
+	
+	@JsonProperty("Name")
+    String name;
 	
 	@JsonProperty("OrgKon")
     String orgKon;

@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Culture;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class CultureService {
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
 	
+	@Autowired
+	CultureRepository cultureRepo;
+	
 	public List<CultureDTO> getCulturesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -44,12 +49,17 @@ public class CultureService {
 		oDataString = oDataString.replace("=", ":");
 		oDataString = oDataString.replace("/", "");
 		//Map to specific object
-	    ArrayList<CultureDTO> cultureGroupList = 
+	    ArrayList<CultureDTO> cultureList = 
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
 
-		return cultureGroupList;
+	    for(CultureDTO c : cultureList) {
+	    	Culture culture = new Culture(c);
+	    	cultureRepo.save(culture);
+	    }
+	    
+		return cultureList;
 	}
 	
 	public ArrayList<CultureDTO> convertObjectToLocalList(Object listAsObject) {

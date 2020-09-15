@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class MachineService {
 	
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
+	
+	@Autowired
+	MachineRepository machineRepository;
 	
 	public List<MachineDTO> getMachinesFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -49,6 +54,10 @@ public class MachineService {
 														.convertODataSetToDTO
 																(oDataString));
 
+	    for(MachineDTO m : machineList) {
+	    	Machine machine = new Machine(m);
+	    	machineRepository.save(machine);
+	    }
 		return machineList;
 	}
 	

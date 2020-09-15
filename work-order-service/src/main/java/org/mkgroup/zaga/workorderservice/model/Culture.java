@@ -12,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Culture {
 	
@@ -38,4 +41,14 @@ public class Culture {
 	
 	@OneToMany(mappedBy = "culture")
 	private List<Crop> crops;
+	
+	public Culture(CultureDTO c) {
+		this.name = c.getName();
+		if(c.getOrgKon().equals("K")) {
+			this.orgCon = OrgCon.CONVENTIONAL;
+		}else {
+			this.orgCon = OrgCon.ORGANIC;
+		}
+		//dovrsiti
+	}
 }

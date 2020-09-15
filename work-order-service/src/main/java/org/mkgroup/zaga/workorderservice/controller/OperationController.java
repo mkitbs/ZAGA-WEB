@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 import org.mkgroup.zaga.workorderservice.model.Operation;
+import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.service.OperationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class OperationController {
 	
 	@Autowired
 	OperationService operationService;
+	
+	@Autowired
+	OperationRepository operationRepo;
 	
 	@GetMapping
 	public ResponseEntity<?> callSAPOperationSet() throws JSONException {
@@ -41,6 +45,11 @@ public class OperationController {
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		return new ResponseEntity<List<Operation>>(operationRepo.findByOrderByNameAsc(),HttpStatus.OK);
 	}
 
 }

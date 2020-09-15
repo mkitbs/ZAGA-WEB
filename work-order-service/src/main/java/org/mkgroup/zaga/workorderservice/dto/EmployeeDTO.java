@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmployeeDTO {
 	
-	@JsonProperty("Id")
-	UUID id;
-	
 	@JsonProperty("Name")
 	String name;
 	
@@ -24,7 +21,8 @@ public class EmployeeDTO {
 	
 	@JsonProperty("Position")
 	String position;
-	
+
+	@JsonProperty("Id")
 	Long perNumber;
 
 }

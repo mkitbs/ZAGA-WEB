@@ -14,10 +14,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Machine {
 
@@ -26,6 +29,8 @@ public class Machine {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
+	
+	private String name;
 	
 	private String companyCode;
 	
@@ -46,4 +51,10 @@ public class Machine {
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<WorkOrder> workOrder;
 
+	public Machine(MachineDTO m) {
+		this.name = m.getName();
+		this.companyCode = m.getCompanyCode();
+		this.orgUnit = m.getOrgUnit();
+		//dovrsiti
+	}
 }

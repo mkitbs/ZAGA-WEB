@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class EmployeeService {
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
 	
+	@Autowired
+	UserRepository userRepo;
+	
 	public List<EmployeeDTO> getEmployeesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -41,15 +46,17 @@ public class EmployeeService {
 		ResponseEntity<Object> cultureGroupSet = 
 				gwProxy.fetchEmployees("json", "Basic " + authHeader);
 		String oDataString = cultureGroupSet.getBody().toString().replace(":", "-");
-		oDataString = oDataString.replace("=", ":");
-		oDataString = oDataString.replace("/", "");
-		oDataString = oDataString.replaceAll(":,", ":\"\",");
+		oDataString = formatJSON(oDataString);
 		//Map to specific object
 	    ArrayList<EmployeeDTO> employeeList = 
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
 
+	    for(EmployeeDTO em:employeeList) {
+			User u = new User(em);
+			userRepo.save(u);
+		}
 		return employeeList;
 	}
 	
@@ -74,4 +81,12 @@ public class EmployeeService {
 	    return convertedList;
 	}
 	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		return json;
+	}
 }

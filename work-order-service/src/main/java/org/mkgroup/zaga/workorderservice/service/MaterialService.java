@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.MaterialDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class MaterialService {
 	
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
+	
+	@Autowired
+	MaterialRepository materialRepo;
 	
 	public List<MaterialDTO> getMaterialsFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -48,6 +53,10 @@ public class MaterialService {
 														.convertODataSetToDTO
 																(oDataString));
 
+	    for(MaterialDTO mat : materialList) {
+	    	Material m = new Material(mat);
+	    	materialRepo.save(m);
+	    }
 		return materialList;
 	}
 	
