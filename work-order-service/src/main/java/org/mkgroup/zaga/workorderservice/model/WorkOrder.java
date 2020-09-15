@@ -38,6 +38,9 @@ public class WorkOrder implements Serializable {
 	private WorkOrderStatus status;
 	
 	@ManyToOne
+	private User responsible;
+	
+	@ManyToOne
 	private Operation operation;
 	
 	@ManyToOne

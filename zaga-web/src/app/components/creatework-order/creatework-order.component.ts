@@ -1,11 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { WorkOrdeMachine } from 'src/app/models/WorkOrderMachine';
 import { Worker } from 'src/app/models/Worker';
 import { Material } from 'src/app/models/Material';
-import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { WorkOrderService } from 'src/app/service/work-order.service';
+import { OperationService } from 'src/app/service/operation.service';
+import { CropService } from 'src/app/service/crop.service';
+import { Operation } from 'src/app/models/Operation';
+import { Crop } from 'src/app/models/Crop';
+import { WorkOrder } from 'src/app/models/WorkOrder';
+import { CultureService } from 'src/app/service/culture.service';
+import { Culture } from 'src/app/models/Culture';
+import { Employee } from 'src/app/models/Employee';
+import { EmployeeService } from 'src/app/service/employee.service';
+import { Machine } from 'src/app/models/Machine';
 
 @Component({
   selector: 'app-creatework-order',
@@ -14,11 +23,13 @@ import { Router } from '@angular/router';
 })
 export class CreateworkOrderComponent implements OnInit {
   
-  constructor(private route: ActivatedRoute, private toastr: ToastrService, private router: Router) { 
+  constructor(private route: ActivatedRoute, private toastr: ToastrService, private router: Router, private workOrderService:WorkOrderService,
+    private operationService:OperationService, private cropService:CropService, private cultureService:CultureService,
+    private employeeService:EmployeeService) { 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
-  operations = ["BALIRANJE BIG BALA", "BALIRANJE ROL-PRESOM", "DESIKACIJA", "DRLJANJE", "FINO SETVOSPREMANJE", "FOLIJARNA PRIHRANA",
+  operations = ["TEST","BALIRANJE BIG BALA", "BALIRANJE ROL-PRESOM", "DESIKACIJA", "DRLJANJE", "FINO SETVOSPREMANJE", "FOLIJARNA PRIHRANA",
   "GRABLJ. LUCERKE, DETEL I TRAVA", "GRUBERISANJE DO 15 CM", "GRUBERISANJE NA 15-20 CM", "GRUBERISANJE-LJUŠTENJE DO 15 CM", "KOPANJE KANALA ZA REPINU PIPU",
   "KOŠENJE LUCER, DETELIN I TRAVA", "KOŠENJE ZELENE MASE", "MEĐUREDNA KULTIVACIJA", "MEĐUREDNA KULTIVACIJA II", "MULČIRANJE",
   "NAVODNJAVANJE", "OPŠTI POSLOVI", "ORANJE DO 30 CM", "ORANJE DO 30 CM SA PAKER VALJK", "ORANJE DO 35 CM", "ORANJE DO 35 CM SA PAKER VALJK",
@@ -39,7 +50,7 @@ export class CreateworkOrderComponent implements OnInit {
   "UZORKOVANJE ZEMLJIŠTA", "VALJANJE GLATKIM VALJKOM", "VALJANJE KEMBRIDZ VALJKOM", "VREME U PUTU", "ZAGRTANJE KROMPIRA", "ZAPRASIVANJE LOVNIH KANALA",
   "ZATVARANJE RAZORA", "ZATVARANJE VLAGE", "ŽETVA", "ŽETVA SA SECK.ŽET.OSTATA", "ŽETVA-TRANSPORT ROBE"];
 
-  cultures = ["BORANIJA", "GRAŠAK", "INDUSTRIJSKA PAPRIKA", "JARI OVAS", "KROMPIR", "KUKURUZ", "KUKURUZ KOKIČAR", "KUKURUZ ŠEĆERAC",
+  cultures = ["BORANIJA", "test", "GRAŠAK", "INDUSTRIJSKA PAPRIKA", "JARI OVAS", "KROMPIR", "KUKURUZ", "KUKURUZ KOKIČAR", "KUKURUZ ŠEĆERAC",
   "LUCERKA", "OZIMA PŠENICA", "OZIMA ULJANA REPICA", "POSTRNA BORANIJA", "POSTRNA SEMENSKA SOJA", "POSTRNI KUKURUZ", "POSTRNI KUKURUZ ŠEĆERAC",
   "RAŽ", "SEMENSKA PAPRIKA", "SEMENSKA PŠENICA", "SEMENSKA SOJA", "SEMENSKA ULJANA REPICA", "SEMENSKI JEČAM", "SEMENSKI KUKURUZ", "SOJA",
   "ŠEĆERNA REPA"];
@@ -47,18 +58,18 @@ export class CreateworkOrderComponent implements OnInit {
   tables = ["T-27", "T-28", "T-29", "T-30", "T-31", "T-37", "T-39", "T-40", "T-42", "T-44", "T-46", "T-47", "T-48", "T-52", "T-53", "T-54", 
   "T-55", "T-56", "T-57", "T-58", "T-59", "T-60", "T-61", "T-62", "T-63", "T-64", "T-65", "T-66", "T-67", "T-68"];
 
-  employees = ["ARSENOV NEMANJA", "BALAĆ MILOŠ", "BALANDŽIĆ MILIJANKA", "BELIĆ DRAGOSLAV", "ĆUK ĐURO", "ĆUK RANKO", "DAVIDOVIĆ PAJIĆ VERA", 
+  employeess = ["test", "ARSENOV NEMANJA", "BALAĆ MILOŠ", "BALANDŽIĆ MILIJANKA", "BELIĆ DRAGOSLAV", "ĆUK ĐURO", "ĆUK RANKO", "DAVIDOVIĆ PAJIĆ VERA", 
   "FRIC SEPIKA", "JANKOVIĆ SNEŽANA", "JUHAS ROBERT", "KNEŽEVIĆ GORAN", "KORUGA OLIVERA", "KOVAČ DRAGAN", "MARINKOV JOVAN", 
   "MILOVANČEV BRANISLAV", "OBRADOVIĆ SLAVKO", "PLAVŠIĆ BORKA", "RADOŠEVIĆ DJURO", "RAKIĆ MARINA", "RANC ROBERT", "VELJKOVIĆ BORKO", 
   "VUJIČIĆ GORAN", "ZLATKA VUJIČIN GLAVAŠKI"];
 
-  devices = ["IMT 533/539", "IMT 539", "JCB", "JD 6830", "JD 8320", "JD 8420", "JD6620-AGROPANONIJA KULA", "JOHN DEER-6930", "JOHN DEERE 4755", 
+  devices = ["test", "IMT 533/539", "IMT 539", "JCB", "JD 6830", "JD 8320", "JD 8420", "JD6620-AGROPANONIJA KULA", "JOHN DEER-6930", "JOHN DEERE 4755", 
   "JOHN DEERE 5510 N", "JOHN DEERE 6620", "JOHN DEERE 6630", "JOHN DEERE 6810", "JOHN DEERE 6820", "JOHN DEERE 8320", "JOHN DEERE 8330", 
   "JOHN DEERE 9680WTS", "JOHN DEERE T660", "JOHN DEERE W650", "MTZ 82", "MTZ 820", "MTZ 892", "MTZ-AGROPANONIJA KULA", "NEW HOLAND CR7.90", 
   "NEW HOLAND T 6.050", "NEW HOLAND T 6.080", "NEW HOLAND T 6.175", "NEW HOLAND T 8.410", "NEW HOLAND T8.410", "NEW HOLAND(VRŠAC)", 
   "NEW HOLLAND T 6.175", "NEW HOLLAND T 7.210", "NEW HOLLAND T-6.050", "NEW HOLLAND T6.080", "NEW HOLLAND T6.175"];
 
-  substances = ["AGROPTIM ZENIT", "ALVERDE", "AMIKSOL", "AMISTER EXTRA", "AMPLIGO", "AN - 34,4 %N", "AZOKSISTAR", "BASAGRAN", "BELVEDERE", 
+  substances = ["test", "AGROPTIM ZENIT", "ALVERDE", "AMIKSOL", "AMISTER EXTRA", "AMPLIGO", "AN - 34,4 %N", "AZOKSISTAR", "BASAGRAN", "BELVEDERE", 
   "BETANAL AM 11 NEW", "BETANAL MAX PRO", "BLAGO 3", "BLAGO 4", "BLAUVIT", "BOSS 300 SL", "BRODISAN", "BUZZ ULTRA-DF", "CALLAM", "CAMBIO", 
   "CERIX", "CODAFOL 14:6:5", "CODAMIN", "DKC 5068", "DKC 5072", "DKC 5075", "DKC 5632", "DKC 5830", "DKC 5832", "DUOFERTIL NPK-46", "EDUARDA", 
   "ELDORADO", "ENTERPRISE", "ERWIX", "EUROFERTIL 67", "EUROFERTIL TOP 51", "FERTILEADER  AXIS", "FERTILEADER AXIS", "FERTILEADER VITAL", 
@@ -73,42 +84,108 @@ export class CreateworkOrderComponent implements OnInit {
   editingMachine = false;
   editingMaterial = false;
   workId = this.route.snapshot.params.workId;
-  workOrder;
-  machine : WorkOrdeMachine = new WorkOrdeMachine();
-  workOrderMachine : WorkOrdeMachine = new WorkOrdeMachine();
-  worker : Worker = new Worker();
+  
   material : Material = new Material();
   idOfEditingMaterial:any = 0;
   idOfEditingWorker:any = 0;
   idOfEditingMachine:any = 0;
   new = false;
-  workOrders: any[];
-  workOrderInfo : WorkOrderInfo = new WorkOrderInfo();
   inputFill = true;
   workerMob:Worker = new Worker();
+
+  operation: Operation = new Operation();
+  crop: Crop = new Crop();
+  culture: Culture = new Culture();
+  employee: Employee = new Employee();
+  wo : WorkOrder = new WorkOrder();
+  worker : Worker = new Worker();
+  employees: Employee[] = [];
+  machine: Machine = new Machine();
+  woMachines: Machine[] = [];
+  woMaterials: Material[] = [];
+  cultureId;
+  startDate:{}
+  endDate:{}
+  selectedWorker;
+  selectedMachine;
+  selectedMaterial;
 
   ngOnInit() {
     if(this.workId == "new") { //new
       this.new = true;
-      this.workOrder = new WorkOrderInfo();
-      this.workOrder.machines = [];
-      this.workOrder.workers = [];
-      this.workOrder.materials = [];
-      this.workOrders = JSON.parse(localStorage["workOrders"]);
-      this.workOrder.status = "Novi";
+      this.wo = new WorkOrder();
+      this.wo.machines = [];
+      this.wo.workers = [];
+      this.wo.materials = [];
+      this.wo.status = "Novi";
     } else {
       this.new = false;
-      this.workOrders = JSON.parse(localStorage["workOrders"]);
-      this.workOrder = this.workOrders[this.workId-1];
-      this.workOrder.start = { day: +this.workOrder.start.substring(0,2), 
-                               month: +this.workOrder.start.substring(3,5), 
-                               year: +this.workOrder.start.substring(6,10)
-                             };
-      this.workOrder.end = { day: +this.workOrder.end.substring(0,2), 
-                             month: +this.workOrder.end.substring(3,5), 
-                             year: +this.workOrder.end.substring(6,10)
-                            };
+
+      this.workOrderService.getOne(this.workId).subscribe(data => {
+        this.wo = data;
+        
+        if(this.wo.status == "NEW"){
+          this.wo.status = "Novi";
+        } else if(this.wo.status == "IN_PROGRESS"){
+          this.wo.status = "U radu";
+        } else if(this.wo.status == "CLOSED"){
+          this.wo.status = "Zatvoren";
+        }
+
+        this.wo.start = { day: +this.wo.start.substring(8,10),
+          month: +this.wo.start.substring(5,7), 
+          year: +this.wo.start.substring(0,4)
+        };
+        this.wo.end = { day: +this.wo.end.substring(8,10), 
+          month: +this.wo.end.substring(5,7), 
+          year: +this.wo.end.substring(0,4)
+       };
+
+
+       this.getOperation(this.wo.operationId);
+       this.getCrop(this.wo.cropId);
+       this.getResponsibleEmployee(this.wo.responsibleId);
+
+       this.wo.workers.forEach(data => {
+        this.employee = data;
+        this.getWorker(this.employee.userId);
+       })
+       console.log(this.wo)
+      })
     }
+  }
+
+  getOperation(id){
+    this.operationService.getOne(id).subscribe(data => {
+      this.operation = data;
+    })
+  }
+
+  getCrop(id){
+    this.cropService.getOne(id).subscribe(data => {
+      this.crop = data;
+      this.cultureId = this.crop.cultureId;
+      this.getCulture(this.cultureId);
+    })
+  }
+
+  getCulture(id){
+    this.cultureService.getOne(id).subscribe(data => {
+      this.culture = data;
+    })
+  }
+
+  getResponsibleEmployee(id){
+    this.employeeService.getOne(id).subscribe(data => {
+      this.employee = data;
+    })
+  }
+
+  getWorker(id){
+    this.employeeService.getOne(id).subscribe(data => {
+      this.employee = data;
+      this.employees.push(this.employee);
+    })
   }
 
   expandWorkers() {
@@ -130,231 +207,128 @@ export class CreateworkOrderComponent implements OnInit {
     
   }
 
-  addWorker() {
-      if(this.worker.date != undefined) {
-        if(this.worker.date.month < 10) {
-          this.worker.date.month = '0' + this.worker.date.month;
-        }
-          this.worker.date = this.worker.date.day + '.' 
-          + this.worker.date.month + '.' 
-          + this.worker.date.year + '.';
-      }  
-      this.worker.id = this.workOrder.workers.length + 1;
-      this.worker.workPeriod = this.worker.dayWorkPeriod + this.worker.nightWorkPeriod;
-      this.workOrder.workers.push(this.worker);
-      this.worker = new Worker();
-      this.editing = false;
-  } 
-  
-  editExistingWorker() {
-    var dateToAdd = "";
-    if(this.worker.date != undefined) {
-        if(this.worker.date.month < 10) {
-          this.worker.date.month = '0' + this.worker.date.month;
-        }
-        dateToAdd= this.worker.date.day + '.' 
-          + this.worker.date.month + '.' 
-          + this.worker.date.year + '.';
-    }
-    this.workOrder.workers.forEach(element => {
-      if(element.id == this.idOfEditingWorker) {
-        element.worker = this.worker.worker;
-        element.dayWorkPeriod = this.worker.dayWorkPeriod;
-        element.nightWorkPeriod = this.worker.nightWorkPeriod;
-        element.date = dateToAdd;
-        element.operation = this.worker.operation;
+  addWorker(){
+    this.employee.name = this.selectedWorker;
+    this.employees.push(this.employee);
+    this.employee = new Employee();
+  }
 
+  editWorker(worker){
+    this.employee.name = worker.name;
+    this.editing = true;
+    this.idOfEditingWorker = worker.name;
+  }
+
+  editExistingWorker(){
+    this.employees.forEach(employee => {
+      if(employee.name == this.idOfEditingWorker){
+        employee.name = this.selectedWorker;
       }
-    });
-    this.worker = new Worker();
+    })
+    this.employee = new Employee();
     this.editing = false;
   }
 
-  editWorker(worker) {
-    this.worker.worker = worker.worker;
-    this.worker.workPeriod = worker.workPeriod;
-    this.worker.operation = worker.operation;
-    this.worker.nightWorkPeriod = worker.nightWorkPeriod;
-    this.worker.dayWorkPeriod = worker.dayWorkPeriod;
-    this.worker.workPeriod = worker.nightWorkPeriod + worker.dayWorkPeriod;
-    if(worker.date != undefined) {
-        this.worker.date = {day: +worker.date.substring(0,2), 
-                            month: +worker.date.substring(3,5), 
-                            year: +worker.date.substring(6,10)
-                          };
-    }
-    this.editing = true;
-    this.idOfEditingWorker = worker.id;
+  addMachine(){
+    this.machine.name = this.selectedMachine;
+    this.woMachines.push(this.machine);
+    this.machine = new Machine();
   }
 
-  addMachine() {
-    
-    this.machine.id = this.workOrder.machines.length + 1;
-    this.machine.sumState = this.machine.finalState - this.machine.initialState;
-    this.workOrder.machines.push(this.machine);
-    this.machine = new WorkOrdeMachine();
+  editMachine(machine){
+    this.machine.name = machine.name;
+    this.editingMachine = true;
+    this.idOfEditingMachine = machine.name;
+  }
+
+  editExistingMachine(){
+    this.woMachines.forEach(machine => {
+      if(machine.name == this.idOfEditingMachine){
+        machine.name = this.selectedMachine;
+      }
+    })
+    this.machine = new Machine();
     this.editingMachine = false;
   }
 
-  editMachine(machine) {
-    this.machine.worker = machine.worker;
-    this.machine.machine = machine.machine;
-    this.machine.initialState = machine.initialState;
-    this.machine.finalState = machine.finalState;
-    this.machine.sumState = machine.finalState - machine.initialState;
-    this.machine.fuel = machine.fuel;
-    this.machine.workPeriod = machine.workPeriod;
-    this.editingMachine = true;
-    this.idOfEditingMachine = machine.id;
-  }
-
-  updateExistingMachine() {
- 
-    this.workOrder.machines.forEach(element => {
-      if(element.id == this.idOfEditingMachine) {
-        element.worker = this.machine.worker;
-        element.workPeriod = this.machine.workPeriod;
-        element.machine = this.machine.machine;
-        element.fuel = this.machine.fuel;
-        element.finalState = this.machine.finalState;
-        element.initialState = this.machine.initialState;
-        element.sumState = this.machine.sumState;
-      }
-    });
-    this.machine = new WorkOrdeMachine();
-    this.editingMachine= false;
-  }
-
-  addMaterial() {
-    this.material.id = this.workOrder.materials.length + 1;
-    this.workOrder.materials.push(this.material);
-    this.editingMaterial = false;
+  addMaterial(){
+    this.material.name = this.selectedMaterial;
+    this.woMaterials.push(this.material);
     this.material = new Material();
   }
 
-  editMaterial(material) {
+  editMaterial(material){
     this.material.name = material.name;
-    this.material.quantity = material.quantity;
-    this.material.unit = material.unit;
-    this.material.spent = material.spent;
-    this.material.spentPerHectar = material.spentPerHectar;
-    this.material.quantityPerHectar = material.quantityPerHectar;
     this.editingMaterial = true;
-    this.idOfEditingMaterial = material.id;
+    this.idOfEditingMaterial = material.name;
   }
 
-  editExistingMaterial() {
-
-    this.workOrder.materials.forEach(element => {
-      if(element.id == this.idOfEditingMaterial) {
-        element.name = this.material.name;
-        element.unit = this.material.unit;
-        element.quantity = this.material.quantity;
-        element.quantityPerHectar = this.material.quantityPerHectar;
-        element.spent = this.material.spent;
-        element.spentPerHectar = this.material.spentPerHectar;
+  editExistingMaterial(){
+    this.woMaterials.forEach(material => {
+      if(material.name == this.idOfEditingMaterial){
+        material.name = this.selectedMaterial;
       }
-    });
+    })
     this.material = new Material();
     this.editingMaterial = false;
-  }
-
-  saveData() {
-    localStorage.clear();
-    var dateStartToAdd = "";
-    var dateEndToAdd = "";
-    if(this.workOrder.start != undefined) {
-        if(this.workOrder.start.month < 10) {
-          this.workOrder.start.month = '0' + this.workOrder.start.month;
-        }
-        dateStartToAdd= this.workOrder.start.day + '.' 
-          + this.workOrder.start.month + '.' 
-          + this.workOrder.start.year + '.';
-    }
-    if(this.workOrder.end != undefined) {
-      if(this.workOrder.end.month < 10) {
-        this.workOrder.end.month = '0' + this.workOrder.end.month;
-      }
-      dateEndToAdd= this.workOrder.end.day + '.' 
-        + this.workOrder.end.month + '.' 
-        + this.workOrder.end.year + '.';
-    }
-    this.workOrder.start = dateStartToAdd;
-    this.workOrder.end = dateEndToAdd;
-    localStorage["workOrders"] = JSON.stringify(this.workOrders);
-    this.toastr.success("Uspešno sačuvan radni nalog.")
-  }
-
-  closeWorkOrder() {
-    
-    //logic for validation here
-    if(this.workOrder.treated != ""){
-      this.workOrder.status = "Zatvoren";
-      localStorage.clear();
-      var dateStartToAdd = "";
-      var dateEndToAdd = "";
-      if(this.workOrder.start != undefined) {
-        if(this.workOrder.start.month < 10) {
-          this.workOrder.start.month = '0' + this.workOrder.start.month;
-        }
-        dateStartToAdd= this.workOrder.start.day + '.' 
-          + this.workOrder.start.month + '.' 
-          + this.workOrder.start.year + '.';
-      }
-      if(this.workOrder.end != undefined) {
-        if(this.workOrder.end.month < 10) {
-          this.workOrder.end.month = '0' + this.workOrder.end.month;
-        }
-        dateEndToAdd= this.workOrder.end.day + '.' 
-          + this.workOrder.end.month + '.' 
-          + this.workOrder.end.year + '.';
-      }
-      this.workOrder.start = dateStartToAdd;
-      this.workOrder.end = dateEndToAdd;
-      localStorage["workOrders"] = JSON.stringify(this.workOrders);
-      this.toastr.success("Uspešno zatvoren radni nalog.");
-      this.inputFill = true;
-    } else{
-      this.toastr.error("Neuspešno zatvoren radni nalog. Popunite sva polja.")
-      this.inputFill = false;
-      
-    }
-  }
-
-  calculationQuantityPerHectar(){
-    this.material.quantityPerHectar = this.material.quantity / this.workOrder.area;
   }
 
   addWorkOrder(){
-    var dateStartToAdd = "";
-    var dateEndToAdd = "";
-    if(this.workOrder.start != undefined) {
-        if(this.workOrder.start.month < 10) {
-          this.workOrder.start.month = '0' + this.workOrder.start.month;
-        }
-        dateStartToAdd= this.workOrder.start.day + '.' 
-          + this.workOrder.start.month + '.' 
-          + this.workOrder.start.year + '.';
-    }
-    if(this.workOrder.end != undefined) {
-      if(this.workOrder.end.month < 10) {
-        this.workOrder.end.month = '0' + this.workOrder.end.month;
-      }
-      dateEndToAdd= this.workOrder.end.day + '.' 
-        + this.workOrder.end.month + '.' 
-        + this.workOrder.end.year + '.';
-    }
-    this.workOrder.start = dateStartToAdd;
-    this.workOrder.end = dateEndToAdd;
-    this.workOrder.id = this.workOrders.length + 1;
-    this.workOrder.status = "Novi";
-    this.workOrder.treated = "";
-    this.workOrder.responsible = this.workOrder.responsible;
-    this.workOrders.push(this.workOrder);
-    localStorage["workOrders"] = JSON.stringify(this.workOrders);
-    this.toastr.success("Uspešno dodat nalog.");
+    
+   
+    this.wo.machines = this.woMachines;
+    this.wo.workers = this.employees;
+    this.wo.materials = this.woMaterials;
+
+    /*
+    this.workOrderService.addWorkOrder(this.wo).subscribe(data => {
+      this.toastr.success("Uspešno kreiran radni nalog.");
+    }, error => {
+      this.toastr.error("Radni nalog nije kreiran.");
+    })
+    */
+    console.log(this.wo)
   }
 
+  updateWorkOrder(){
+    var dateStartToAdd = "";
+    var dateEndToAdd = "";
+    if(this.wo.start != undefined) {
+        if(this.wo.start.month < 10) {
+          this.wo.start.month = '0' + this.wo.start.month;
+        }
+        if(this.wo.start.day < 10){
+          this.wo.start.day = '0' + this.wo.start.day;
+        }
+        dateStartToAdd= this.wo.start.year + '-' 
+          + this.wo.start.month + '-' 
+          + this.wo.start.day;
+    }
+    if(this.wo.end != undefined) {
+      if(this.wo.end.month < 10) {
+        this.wo.end.month = '0' + this.wo.end.month;
+      }
+      if(this.wo.end.day < 10){
+        this.wo.end.day = '0' + this.wo.end.day;
+      }
+      dateEndToAdd= this.wo.end.year + '-' 
+        + this.wo.end.month + '-' 
+        + this.wo.end.day;
+    }
+   
+    this.wo.machines = this.woMachines;
+    this.wo.workers = this.employees;
+    this.wo.materials = this.woMaterials;
+
+    /*
+    this.workOrderService.updateWorkOrder(this.wo).subscribe(data => {
+      this.toastr.success("Uspešno sačuvan radni nalog.");
+    }, error => {
+      this.toastr.error("Radni nalog nije sačuvan.");
+    })
+    */
+    console.log(this.wo)
+  }
 
   setForEdit(wor){
     this.workerMob = wor;

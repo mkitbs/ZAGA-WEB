@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MaterialDTO {
 	
+	private UUID id;
+	
 	@JsonProperty("Id")
-	UUID id;
+	Long erpId;
 	
 	@JsonProperty("Name")
 	String name;

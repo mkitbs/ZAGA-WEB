@@ -4,12 +4,13 @@ import { Employee } from './Employee';
 
 export class WorkOrder{
     id:string;
-    start:Date;
-    end:Date;
+    start;
+    end;
     status:string;
     cropId:string;
     operationId:string;
+    responsibleId:string;
     materials:Material [] = [];
     machines:Machine [] = [];
-    employees: Employee [] = [];
+    workers: Employee [] = [];
 }

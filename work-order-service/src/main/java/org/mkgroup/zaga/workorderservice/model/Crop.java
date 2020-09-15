@@ -30,7 +30,7 @@ public class Crop {
 	
 	private String orgUnit;
 	
-	private int season;
+	private int year;
 	
 	private double area;
 	

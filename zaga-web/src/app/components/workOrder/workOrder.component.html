@@ -41,6 +41,7 @@
     </form>
 
     <div class="break-class pt-2 mb-4">
+        <i class="fa fa-spinner fa-spin" *ngIf="workOrders.length == 0" style="font-size: 15px; float: left;"></i>
         <a [routerLink]="['/create/workOrder/new']" style="float: right">
             <button class="btn btn-primary collapsing-button shadow-none"><i class="fa fa-plus"></i> Kreiraj novi nalog</button>
         </a>
@@ -62,7 +63,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)">
+            <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
                 <th scope="row">{{ j + 1}}</th>
                 <td>{{operation.kind}}</td>
                 <td>{{workOrder.start | date:'dd.MM.yyyy.'}}</td>
@@ -70,7 +71,7 @@
                 <td>{{crop.FieldId}}</td>
                 <td>{{crop.Area}}ha</td>
                 <td>{{crop.Name}}</td>
-                <td></td>
+                <td>{{employee.Name}}</td>
                 <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
             </tr>
         </tbody>

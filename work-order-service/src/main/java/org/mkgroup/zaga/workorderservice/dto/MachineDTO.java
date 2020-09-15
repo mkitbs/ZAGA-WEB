@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,8 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MachineDTO {
 	
+	private UUID id;
+	
 	@JsonProperty("Id")
-	private String id; //iz sapa stize BEZ-MASINE
+	private String erpId; //iz sapa stize BEZ-MASINE
 
 	@JsonProperty("CompanyCode")
 	private String companyCode;
@@ -27,7 +31,7 @@ public class MachineDTO {
 	private String fuelType;
 	
 	@JsonProperty("Type")
-	private String machineType;
+	private String type;
 	
 	@JsonProperty("OwnershipType")
 	private String ownershipType;

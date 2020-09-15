@@ -25,6 +25,6 @@ public class MachineGroup {
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "machineGroup")
+	@OneToMany(mappedBy = "machineGroupId")
 	private List<Machine> machines;
 }

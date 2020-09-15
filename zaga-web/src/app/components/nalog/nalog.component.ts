@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { WorkOrderInfo } from 'src/app/models/WorkOrderInfo';
+import { WorkOrder } from 'src/app/models/WorkOrder';
 
 @Component({
   selector: 'app-nalog',
@@ -11,7 +11,7 @@ export class NalogComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  workOrderInfo :WorkOrderInfo = new WorkOrderInfo();
+  workOrderInfo :WorkOrder = new WorkOrder();
 
   ngOnInit() {
   }

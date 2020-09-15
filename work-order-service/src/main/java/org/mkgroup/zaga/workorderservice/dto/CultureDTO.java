@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,14 +13,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CultureDTO {
 	
+	private UUID id;
+	
+	private String name;
+	
 	@JsonProperty("Id")
-    Long id;
+    Long erpId;
 	
 	@JsonProperty("CultureGroupId")
     Long cultureGroupId;
 	
 	@JsonProperty("OrgKon")
-    String orgKon;
+    String orgCon;
 	
 	@JsonProperty("Type")
     String type;

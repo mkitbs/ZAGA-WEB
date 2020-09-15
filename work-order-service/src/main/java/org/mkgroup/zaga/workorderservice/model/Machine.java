@@ -27,12 +27,14 @@ public class Machine {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
+	private String name;
+	
 	private String companyCode;
 	
 	private String orgUnit;
 	
 	@Enumerated(EnumType.STRING)
-	private MachineType machineType;
+	private MachineType type;
 	
 	@Enumerated(EnumType.STRING)
 	private FuelType fuelType;
@@ -41,7 +43,7 @@ public class Machine {
 	private OwnershipType ownershipType;
 	
 	@ManyToOne
-	private MachineGroup machineGroup;
+	private MachineGroup machineGroupId;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<WorkOrder> workOrder;

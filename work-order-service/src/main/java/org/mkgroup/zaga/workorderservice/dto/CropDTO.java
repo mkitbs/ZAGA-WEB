@@ -14,12 +14,14 @@ import lombok.NoArgsConstructor;
 public class CropDTO {
 	
 	private UUID id;
+	
+	private UUID cultureId;
 
 	@JsonProperty("Id")
 	private Long erpId;
 	
 	@JsonProperty("CultureId")
-	private Long cultureId;
+	private Long erpCultureId;
 	
 	@JsonProperty("Name")
 	private String name;
