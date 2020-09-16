@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class CultureController {
 							HttpStatus.OK);
 	}
 	
-	@GetMapping("/getCulture/{id}")
+	@GetMapping("getCulture/{id}")
 	public ResponseEntity<?> getCulture(@PathVariable UUID id){
 		Culture culture = cultureService.getOne(id);
 		ModelMapper modelMapper = new ModelMapper();
@@ -50,6 +51,12 @@ public class CultureController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		return new ResponseEntity<List<Culture>>(cultureRepo.findByOrderByNameAsc(),HttpStatus.OK);
+		List<Culture> cultures = cultureRepo.findByOrderByNameAsc();
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		for(Culture culture : cultures) {
+			CultureDTO c = new CultureDTO(culture);
+			retValues.add(c);
+		}
+		return new ResponseEntity<List<CultureDTO>>(retValues, HttpStatus.OK);
 	}
 }

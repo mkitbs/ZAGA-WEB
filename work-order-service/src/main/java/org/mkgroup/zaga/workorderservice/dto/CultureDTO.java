@@ -2,6 +2,8 @@ package org.mkgroup.zaga.workorderservice.dto;
 
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.model.Culture;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -29,4 +31,10 @@ public class CultureDTO {
 	
 	@JsonProperty("Type")
     String type;
+	
+	public CultureDTO(Culture culture) {
+		id = culture.getId();
+		name = culture.getName();
+	}
+
 }

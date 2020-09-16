@@ -65,7 +65,7 @@
         <tbody>
             <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
                 <th scope="row">{{ j + 1}}</th>
-                <td>{{operation.kind}}</td>
+                <td>{{operation.Name}}</td>
                 <td>{{workOrder.start | date:'dd.MM.yyyy.'}}</td>
                 <td>{{workOrder.end | date:'dd.MM.yyyy.'}}</td>
                 <td>{{crop.FieldId}}</td>
@@ -122,10 +122,10 @@
     <div style="padding-top: 30px;"></div>
     <div class="card mb-3" *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="border: 1px solid #5C7495; border-radius: 5px;">
         <div class="card-body">
-          <h5 class="card-title">{{operation.kind}}</h5>
+          <h5 class="card-title">{{operation.Name}}</h5>
           <ul class="list-group">
             <li class="list-group-item list-group-item-info"><i class="fa fa-user"style="font-size:20px;"></i>  <span style="padding-left: 6px;"> Odgovorna osoba:</span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: {{crop.FieldId}} ({{crop.Area}}ha) </span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: {{crop.FieldId}} ({{crop.Area}} ha) </span></li>
             <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Period: {{workOrder.start | date:'dd.MM.yyyy.'}} - {{workOrder.end | date:'dd.MM.yyyy.'}} </span></li>
             <li class="list-group-item list-group-item-info"><i class="fa fa-tasks"style="font-size:20px;"></i>   Status:  <span [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}"><b>{{workOrder.status}}</b></span></li>
           </ul>

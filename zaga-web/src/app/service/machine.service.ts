@@ -14,4 +14,8 @@ export class MachineService {
     return this.http.get(environment.gatewayWorkOrderURL + "api/machine/getAll")
   }
 
+  getOne(id) : Observable<any>{
+    return this.http.get(environment.gatewayWorkOrderURL + "api/machine/getMachine/" + id)
+  }
+
 }

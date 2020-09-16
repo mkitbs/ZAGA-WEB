@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +48,12 @@ public class CropController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		return new ResponseEntity<List<Crop>>(cropRepo.findByOrderByNameAsc(), HttpStatus.OK);
+		List<Crop> crops = cropRepo.findByOrderByNameAsc();
+		List<CropDTO> retValues = new ArrayList<CropDTO>();
+		for(Crop crop : crops) {
+			CropDTO c = new CropDTO(crop);
+			retValues.add(c);
+		}
+		return new ResponseEntity<List<CropDTO>>(retValues, HttpStatus.OK);
 	}
 }

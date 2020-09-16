@@ -8,6 +8,7 @@ import { CropService } from 'src/app/service/crop.service';
 import { OperationService } from 'src/app/service/operation.service';
 import { UserService } from 'src/app/service/user.service';
 import { Employee } from 'src/app/models/Employee';
+import { WorkOrderDTO } from 'src/app/models/WorkOrderDTO';
 
 @Component({
   selector: 'app-workOrder',
@@ -20,10 +21,12 @@ export class WorkOrderComponent implements OnInit {
   collapseBool = true;
   workOrders: WorkOrder[] = [];
   operation: Operation;
+  operations: Operation[] = [];
   crop: Crop;
   employee: Employee;
   operationId;
   cropId;
+  workOrderDTO: WorkOrderDTO = new WorkOrderDTO();
 
   constructor(private router: Router, private workOrderService:WorkOrderService, private cropService:CropService,
     private operationService:OperationService, private userService:UserService) { }
@@ -51,6 +54,7 @@ export class WorkOrderComponent implements OnInit {
   getOperation(id){
     this.operationService.getOne(id).subscribe(data => {
       this.operation = data;
+      
     })
   }
 

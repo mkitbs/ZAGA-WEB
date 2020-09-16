@@ -3,6 +3,7 @@ package org.mkgroup.zaga.workorderservice.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
@@ -88,5 +89,15 @@ public class MaterialService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	public Material getOne(UUID id) {
+		try {
+			Material material = materialRepo.getOne(id);
+			return material;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

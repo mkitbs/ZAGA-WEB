@@ -2,6 +2,8 @@ package org.mkgroup.zaga.workorderservice.dto;
 
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.model.Machine;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -38,4 +40,10 @@ public class MachineDTO {
 	
 	@JsonProperty("MachineGroupId")
 	private Long machineGroup;
+	
+	public MachineDTO(Machine machine) {
+		id = machine.getId();
+		name = machine.getName();
+	}
+
 }

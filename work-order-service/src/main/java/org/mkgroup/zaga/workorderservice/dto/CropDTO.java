@@ -2,6 +2,8 @@ package org.mkgroup.zaga.workorderservice.dto;
 
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.model.Crop;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -41,4 +43,12 @@ public class CropDTO {
 	@JsonProperty("FieldId")
 	private Long fieldId;
 	
+	public CropDTO(Crop crop) {
+		id = crop.getId();
+		name = crop.getName();
+		area = crop.getArea();
+		year = crop.getYear();
+		fieldId = crop.getFieldId();
+	}
+
 }

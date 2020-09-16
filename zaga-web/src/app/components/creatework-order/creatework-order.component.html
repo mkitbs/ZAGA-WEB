@@ -6,7 +6,7 @@
                 <div class="col">
                     <h3 *ngIf="new">Kreiranje naloga</h3>
                     <h3 *ngIf="!new">Informacije o nalogu</h3>
-                    <span>Status: </span><span  [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}"></span>
+                    <span>Status: </span><span  [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
                 </div>
                 <div class="col" style="float: right">
                     <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
@@ -26,8 +26,8 @@
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
                 <td class="right-col-header" >
-                    <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
-                      <option value="{{op.id}}" *ngFor="let op of operations">{{op.name}}</option>
+                    <select name="" [(ngModel)]="workOrder.operationId" class="form-control" id="">
+                      <option value="{{op.id}}" *ngFor="let op of operations">{{op.Name}}</option>
                     </select>
                 </td>
                 <td class="left-col-header">
@@ -60,8 +60,8 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
-                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+                    <select [(ngModel)]="workOrder.responsibleId" name="" id="" class="form-control" >
+                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
                     </select>
                  </td>
             </tr>
@@ -71,7 +71,7 @@
                 </td>
                 <td class="right-col-header">
                     <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
-                        <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.name}}</option>
+                        <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.Name}}</option>
                     </select>
                 </td>
                 <td class="left-col-header">
@@ -160,7 +160,7 @@
                         <ng-template #elseBlockWorkers>
                             <select  name="" [(ngModel)]="selectedWorker" id="" class="form-control">
                                 <option value="-1">--Izaberi--</option>
-                                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+                                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
                             </select>
                         </ng-template>
                     </div>
@@ -182,7 +182,7 @@
                             </select>
                             <ng-template #elseBlockOperations>
                                 <select name="" id="" [(ngModel)]="worker.operation" class="form-control">
-                                    <option value="{{operation}}" *ngFor="let op of operations">{{op.name}}</option>
+                                    <option value="{{operation}}" *ngFor="let op of operations">{{op.Name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -288,8 +288,8 @@
                                 <option value="{{m.machine}}" *ngFor="let m of workOrder.machines">{{m.machine}}</option>
                             </select>
                             <ng-template #elseBlockMachine>
-                                <select [(ngModel)]="machine.machine" name="" id="" class="form-control">
-                                    <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.name}}</option>
+                                <select [(ngModel)]="selectedMachine" name="" id="" class="form-control">
+                                    <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.Name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -302,7 +302,7 @@
                             </select>
                             <ng-template #elseBlockWorkersMachine>
                                 <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
-                                    <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+                                    <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -362,8 +362,8 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngFor="let machine of workOrder.machines">
-                    <td>{{ machine.machine }}</td>
+                <tr *ngFor="let machine of woMachines">
+                    <td>{{ machine.name }}</td>
                     <td>{{ machine.worker }}</td>
                     <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
                     <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
@@ -422,8 +422,8 @@
                                 <option value="{{mat.name}}" *ngFor="let mat of workOrder.materials">{{mat.name}}</option>
                             </select>
                             <ng-template #elseBlockMaterial>
-                                <select [(ngModel)]="material.name" name="" id="" class="form-control">
-                                    <option value="{{sub.id}}" *ngFor="let sub of substances">{{sub.name}}</option>
+                                <select [(ngModel)]="selectedMaterial" name="" id="" class="form-control">
+                                    <option value="{{sub.id}}" *ngFor="let sub of substances">{{sub.Name}}</option>
                                 </select>
                             </ng-template>
                             
@@ -492,7 +492,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngFor="let material of workOrder.materials">
+                <tr *ngFor="let material of woMaterials">
                     <td>{{ material.name }}</td>
                     <td>{{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</td>
                     <td>{{ material.quantity }} {{material.unit}}</td>

@@ -13,4 +13,8 @@ export class MaterialService {
   getAll() : Observable<any>{
     return this.http.get(environment.gatewayWorkOrderURL + "api/material/getAll")
   }
+
+  getOne(id) : Observable<any>{
+    return this.http.get(environment.gatewayWorkOrderURL + "api/material/getMaterial/" + id)
+  }
 }

@@ -1,5 +1,10 @@
+import { WorkOrder } from './WorkOrder';
 
 export class Operation{
-    id:string;
-    kind:string;
+    id;
+    kind;
+    name;
+    status;
+    type;
+    operationGroup;
 }

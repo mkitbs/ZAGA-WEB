@@ -83,15 +83,14 @@ export class CreateworkOrderComponent implements OnInit {
   selectedMaterial;
 
   ngOnInit() {
-    console.log(this.workId)
-    this.workOrder.status = "Novi"
+    
     if(this.workId == "new") { //new
       this.new = true;
       this.workOrder = new WorkOrder();
       this.workOrder.machines = [];
       this.workOrder.workers = [];
       this.workOrder.materials = [];
-      
+      this.workOrder.status = "Novi"
       
     } else {
       this.new = false;
@@ -203,21 +202,25 @@ export class CreateworkOrderComponent implements OnInit {
   addWorker(){
     this.userService.getOne(this.selectedWorker).subscribe(data => {
       this.employee = data;
+      this.employee.name = data.Name;
+      this.employees.push(this.employee);
     })
-    this.employees.push(this.employee);
     this.employee = new Employee();
   }
 
   editWorker(worker){
-    this.employee.name = worker.name;
+    this.employee.id = worker.id;
+    this.employee.name = worker.Name;
     this.editing = true;
-    this.idOfEditingWorker = worker.name;
+    this.idOfEditingWorker = worker.id;
   }
 
   editExistingWorker(){
     this.employees.forEach(employee => {
-      if(employee.name == this.idOfEditingWorker){
-        employee.name = this.selectedWorker;
+      if(employee.id == this.idOfEditingWorker){
+        this.userService.getOne(this.selectedWorker).subscribe(data => {
+          employee.name = data.Name;
+        })
       }
     })
     this.employee = new Employee();
@@ -225,21 +228,27 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addMachine(){
-    this.machine.name = this.selectedMachine;
-    this.woMachines.push(this.machine);
+    this.machineService.getOne(this.selectedMachine).subscribe(data => {
+      this.machine = data;
+      this.machine.name = data.Name;
+      this.woMachines.push(this.machine);
+    })
     this.machine = new Machine();
   }
 
   editMachine(machine){
-    this.machine.name = machine.name;
+    this.machine.id = machine.id
+    this.machine.name = machine.Name;
     this.editingMachine = true;
-    this.idOfEditingMachine = machine.name;
+    this.idOfEditingMachine = machine.id;
   }
 
   editExistingMachine(){
     this.woMachines.forEach(machine => {
-      if(machine.name == this.idOfEditingMachine){
-        machine.name = this.selectedMachine;
+      if(machine.id == this.idOfEditingMachine){
+        this.machineService.getOne(this.selectedMachine).subscribe(data => {
+          machine.name = data.Name;
+        })
       }
     })
     this.machine = new Machine();
@@ -247,21 +256,27 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addMaterial(){
-    this.material.name = this.selectedMaterial;
-    this.woMaterials.push(this.material);
+    this.materialService.getOne(this.selectedMaterial).subscribe(data => {
+      this.material = data;
+      this.material.name = data.Name;
+      this.woMaterials.push(this.material);
+    })
     this.material = new Material();
   }
 
   editMaterial(material){
-    this.material.name = material.name;
+    this.material.id = material.id;
+    this.material.name = material.Name;
     this.editingMaterial = true;
-    this.idOfEditingMaterial = material.name;
+    this.idOfEditingMaterial = material.id;
   }
 
   editExistingMaterial(){
     this.woMaterials.forEach(material => {
-      if(material.name == this.idOfEditingMaterial){
-        material.name = this.selectedMaterial;
+      if(material.id == this.idOfEditingMaterial){
+        this.materialService.getOne(this.selectedMaterial).subscribe(data => {
+          material.name = data.Name;
+        })
       }
     })
     this.material = new Material();
@@ -270,18 +285,20 @@ export class CreateworkOrderComponent implements OnInit {
 
   addWorkOrder(){
     
-   
+    this.workOrder.start = '2020-09-16';
+    this.workOrder.end = "2020-09-17";
+    this.workOrder.cropId = "268f6ee1-17fc-44ea-908c-02c218a9a031";
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.employees;
     this.workOrder.materials = this.woMaterials;
 
-    /*
-    this.workOrderService.addWorkOrder(this.wo).subscribe(data => {
+    
+    this.workOrderService.addWorkOrder(this.workOrder).subscribe(data => {
       this.toastr.success("Uspešno kreiran radni nalog.");
     }, error => {
       this.toastr.error("Radni nalog nije kreiran.");
     })
-    */
+    
     console.log(this.workOrder)
   }
 

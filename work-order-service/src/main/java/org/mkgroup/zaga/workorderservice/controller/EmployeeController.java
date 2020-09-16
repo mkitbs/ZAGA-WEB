@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class EmployeeController {
 				empService.getEmployeesFromSAP(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/getEmployee/{id}")
+	@GetMapping("getEmployee/{id}")
 	public ResponseEntity<?> getEmployee(@PathVariable UUID id){
 		User user = empService.getOne(id);
 		ModelMapper modelMapper = new ModelMapper();
@@ -47,6 +48,12 @@ public class EmployeeController {
 
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAllUsers(){
-		return new ResponseEntity<List<User>>(userRepo.findAll(),HttpStatus.OK);
+		List<User> users = userRepo.findAll();
+		List<EmployeeDTO> retValues = new ArrayList<EmployeeDTO>();
+		for(User user : users) {
+			EmployeeDTO emp = new EmployeeDTO(user);
+			retValues.add(emp);
+		}
+		return new ResponseEntity<List<EmployeeDTO>>(retValues,HttpStatus.OK);
 	}
 }

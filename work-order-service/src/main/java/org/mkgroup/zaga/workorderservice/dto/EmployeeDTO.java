@@ -2,6 +2,8 @@ package org.mkgroup.zaga.workorderservice.dto;
 
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.model.User;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -28,5 +30,11 @@ public class EmployeeDTO {
 
 	@JsonProperty("Id")
 	Long perNumber;
+	
+	public EmployeeDTO(User user) {
+		id = user.getId();
+		name = user.getName();
+	}
+
 
 }
