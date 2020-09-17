@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
-import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
 import org.mkgroup.zaga.workorderservice.dto.VarietyDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Variety;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.VarietyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class VarietyService {
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
 	
+	@Autowired
+	VarietyRepository varietyRepo;
+	
 	public List<VarietyDTO> getVarietiesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -38,7 +42,7 @@ public class VarietyService {
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
-		//Call SAP and retrieve cultureGroupSet
+		//Call SAP and retrieve varietySet
 		ResponseEntity<Object> varietySet = 
 				gwProxy.fetchVarieties("json", "Basic " + authHeader);
 		String oDataString = varietySet.getBody().toString().replace(":", "-");
@@ -48,6 +52,11 @@ public class VarietyService {
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
+	    
+	    for(VarietyDTO variety : varietyList) {
+	    	Variety v = new Variety(variety);
+	    	varietyRepo.save(v);
+	    }
 
 		return varietyList;
 	}

@@ -5,54 +5,49 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Entity
-public class Culture {
-	
+@NoArgsConstructor
+public class Field {
+
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
+	private String companyCode;
+	
+	private String orgUnit;
+	
 	private String name;
 	
-	@Enumerated(EnumType.STRING)
-	private OrgCon orgCon;
+	private int year;
 	
-	@Enumerated(EnumType.STRING)
-	private CultureType type;
+	private double area;
 	
 	@ManyToOne
-	private CultureGroup cultureGroup;
+	private FieldGroup fieldGroup;
 	
-	@OneToMany(mappedBy = "culture")
-	private List<Variety> varieties;
-	
-	@OneToMany(mappedBy = "culture")
+	@OneToMany(mappedBy = "field")
 	private List<Crop> crops;
 	
-	public Culture(CultureDTO c) {
-		this.name = c.getName();
-		if(c.getOrgCon().equals("K")) {
-			this.orgCon = OrgCon.CONVENTIONAL;
-		}else {
-			this.orgCon = OrgCon.ORGANIC;
-		}
-		//dovrsiti
+	public Field(FieldDTO field) {
+		this.companyCode = field.getCompanyCode();
+		this.orgUnit = field.getOrgUnit();
+		this.name = field.getName();
+		this.year = field.getYear();
+		this.area = field.getArea();
 	}
 }

@@ -48,7 +48,6 @@ public class CropDTO {
 		name = crop.getName();
 		area = crop.getArea();
 		year = crop.getYear();
-		fieldId = crop.getFieldId();
 	}
 
 }

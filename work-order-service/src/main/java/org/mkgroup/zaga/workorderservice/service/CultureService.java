@@ -67,7 +67,7 @@ public class CultureService {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-	    ArrayList<CultureDTO> convertedList= new ArrayList<CultureDTO>();
+	    ArrayList<CultureDTO> convertedList = new ArrayList<CultureDTO>();
 	    list.forEach(objectOfAList -> {
 	    	CultureDTO cultureDTO = new CultureDTO();
 	    	

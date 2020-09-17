@@ -13,4 +13,5 @@ export class WorkOrder{
     materials:Material [] = [];
     machines:Machine [] = [];
     workers: Employee [] = [];
+    operationName;
 }

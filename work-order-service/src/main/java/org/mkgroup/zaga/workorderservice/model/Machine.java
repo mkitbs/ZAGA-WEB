@@ -55,6 +55,26 @@ public class Machine {
 		this.name = m.getName();
 		this.companyCode = m.getCompanyCode();
 		this.orgUnit = m.getOrgUnit();
+		
+		if(m.getFuelType().equals("0")) {
+			this.fuelType = FuelType.NOT_SELECTED;
+		} else if(m.getFuelType().equals("1")){
+			this.fuelType = FuelType.GASOLINE;
+		} else if(m.getFuelType().equals("2")) {
+			this.fuelType = FuelType.GAS;
+		} else if(m.getFuelType().equals("3")) {
+			this.fuelType = FuelType.EURO_DIESEL;
+		} else if(m.getFuelType().equals("4")) {
+			this.fuelType = FuelType.BIO_DIESEL;
+		} else {
+			this.fuelType = FuelType.DIESEL;
+		}
+		
+		if(m.getType().equals("PG")) {
+			this.type = MachineType.PROPULSION;
+		} else {
+			this.type = MachineType.COUPLING;
+		}
 		//dovrsiti
 	}
 }

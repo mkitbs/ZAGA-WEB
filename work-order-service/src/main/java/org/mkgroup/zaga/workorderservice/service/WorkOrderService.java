@@ -99,19 +99,20 @@ public class WorkOrderService {
 	}
 	
 	public List<WorkOrderDTO> getAll(){
-		ModelMapper modelMapper = new ModelMapper();
 		List<WorkOrder> workOrders = workOrderRepo.findAll();
-		List<WorkOrderDTO> workOrdersDTO = workOrders
-				.stream()
-				.map(workOrder -> modelMapper.map(workOrder, WorkOrderDTO.class))
-				.collect(Collectors.toList());
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		for(WorkOrder workOrder : workOrders) {
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			workOrdersDTO.add(workOrderDTO);
+		}
 		return workOrdersDTO;
 	}
 	
-	public WorkOrder getOne(UUID id) {
+	public WorkOrderDTO getOne(UUID id) {
 		try {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
-			return workOrder;
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			return workOrderDTO;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;

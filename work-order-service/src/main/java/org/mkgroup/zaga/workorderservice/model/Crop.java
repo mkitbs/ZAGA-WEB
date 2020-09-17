@@ -37,7 +37,8 @@ public class Crop {
 	
 	private double area;
 	
-	private Long fieldId;
+	@ManyToOne
+	private Field field;
 	
 	@ManyToOne
 	private Culture culture;
@@ -54,6 +55,5 @@ public class Crop {
 		orgUnit = crop.getOrganisationUnit();
 		year = crop.getYear();
 		area = crop.getArea();
-		fieldId = crop.getFieldId();
 	}
 }
