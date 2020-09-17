@@ -18,6 +18,8 @@ import { Culture } from 'src/app/models/Culture';
 import { Machine } from 'src/app/models/Machine';
 import { MachineService } from 'src/app/service/machine.service';
 import { MaterialService } from 'src/app/service/material.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-creatework-order',
@@ -51,7 +53,7 @@ export class CreateworkOrderComponent implements OnInit {
   editingMachine = false;
   editingMaterial = false;
   workId = this.route.snapshot.params.workId;
-  
+  query = '';
   material : Material = new Material();
   idOfEditingMaterial:any = 0;
   idOfEditingWorker:any = 0;
@@ -82,8 +84,12 @@ export class CreateworkOrderComponent implements OnInit {
   selectedMachine;
   selectedMaterial;
 
+  nameFC : FormControl = new FormControl("");
+  
+  filteredOptions: Observable<string[]>;
+
   ngOnInit() {
-    
+    this.query = this.nameFC.value;
     if(this.workId == "new") { //new
       this.new = true;
       this.workOrder = new WorkOrder();
@@ -129,7 +135,7 @@ export class CreateworkOrderComponent implements OnInit {
     }
 
     this.userService.getAll().subscribe(data=>{
-      this.allEmployees = data;
+      this.allEmployees = data.content;
     })
 
     this.operationService.getAll().subscribe(data=>{
@@ -284,14 +290,14 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addWorkOrder(){
-    
+
     this.workOrder.start = '2020-09-16';
     this.workOrder.end = "2020-09-17";
     this.workOrder.cropId = "268f6ee1-17fc-44ea-908c-02c218a9a031";
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.employees;
     this.workOrder.materials = this.woMaterials;
-
+    this.workOrder.responsibleId = this.nameFC.value;
     
     this.workOrderService.addWorkOrder(this.workOrder).subscribe(data => {
       this.toastr.success("Uspešno kreiran radni nalog.");
@@ -345,6 +351,10 @@ export class CreateworkOrderComponent implements OnInit {
   setForEdit(wor){
     this.workerMob = wor;
     console.log(wor)
+  }
+
+  getEmpName(id) {
+    return this.allEmployees.find(emp => emp.id === id).name;
   }
 
 }

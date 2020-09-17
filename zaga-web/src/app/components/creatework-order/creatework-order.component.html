@@ -60,9 +60,27 @@
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
                  </td>
                  <td class="right-col-header">
-                    <select [(ngModel)]="workOrder.responsibleId" name="" id="" class="form-control" >
+                    <!--<select [(ngModel)]="workOrder.responsibleId" name="" id="" class="form-control" >
                         <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
-                    </select>
+                    </select>-->
+                    <form autocomplete="on">
+                        <mat-form-field class="customAuto">
+                            <input class="form-control" type="text"
+                                aria-label="Number"
+                                matInput
+                                [matAutocomplete]="auto"
+                                [formControl]="nameFC"
+                                #search>
+                            <mat-autocomplete autoActiveFirstOption
+                                [displayWith]="getEmpName.bind(this)"
+                                #auto="matAutocomplete">
+                                <mat-option *ngFor="let emp of allEmployees | SearchEmployees : search.value"
+                                             [value]="emp.id">
+                                             {{emp.name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </form>
                  </td>
             </tr>
             <tr>
@@ -564,14 +582,33 @@
             <label>Do</label> <input type="date" [(ngModel)]="workOrder.end" name="" class="form-control" id="to" ngbDatepicker #to="ngbDatepicker" (click)="to.toggle()">
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-6">
-            <i class="fa fa-user mr-2" style="vertical-align: bottom;"></i>Odgovorna osoba:
+    <div class="row mt-4">
+        <div class="col-6" style="margin-top: 5%;">
+            <i class="fa fa-user mr-2"></i>Odgovorna osoba:
         </div>
         <div class="col-6">
-            <select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
+            <!--<select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
                 <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
-            </select>
+            </select>-->
+            
+                <mat-form-field style="width: 100%;">
+                    <input class="form-control inputAuto" type="text"
+                        aria-label="Number"
+                        matInput
+                        [matAutocomplete]="auto"
+                        [formControl]="nameFC"
+                        #search>
+                    <mat-autocomplete autoActiveFirstOption
+                        [displayWith]="getEmpName.bind(this)"
+                        #auto="matAutocomplete" 
+                        class="inputAuto">
+                        <mat-option *ngFor="let emp of allEmployees | SearchEmployees : search.value" 
+                                    [value]="emp.id">
+                                     {{emp.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            
         </div>
     </div>
     <hr class="solid">
