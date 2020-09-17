@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.Culture;
@@ -11,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface CultureRepository  extends JpaRepository<Culture, UUID>{
 
 	List<Culture> findByOrderByNameAsc();
+	Optional<Culture> findByErpId(Long id);
 }
 

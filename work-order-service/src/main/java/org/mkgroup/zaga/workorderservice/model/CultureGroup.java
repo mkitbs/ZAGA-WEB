@@ -10,13 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.mkgroup.zaga.workorderservice.dto.MachineGroupDTO;
+import org.mkgroup.zaga.workorderservice.dto.CultureGroupDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-public class MachineGroup {
+@NoArgsConstructor
+public class CultureGroup {
 
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
@@ -26,11 +28,10 @@ public class MachineGroup {
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "machineGroupId")
-	private List<Machine> machines;
+	@OneToMany(mappedBy = "cultureGroup")
+	private List<Culture> cultures;
 	
-	public MachineGroup(MachineGroupDTO machine) {
-		this.name = machine.getName();
+	public CultureGroup(CultureGroupDTO culture) {
+		this.name = culture.getName();
 	}
-
 }

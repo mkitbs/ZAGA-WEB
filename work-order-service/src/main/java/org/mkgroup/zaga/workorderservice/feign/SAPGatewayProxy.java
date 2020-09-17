@@ -23,7 +23,7 @@ public interface SAPGatewayProxy {
 			@RequestParam(name = "$format") String format,
 			@RequestHeader("Authorization") String token);
 	
-	@GetMapping(value = "/OperatinGroupSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/OperationGroupSet", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> fetchOperationGroups(
 			@RequestParam(name = "$format") String format,
 			@RequestHeader("Authorization") String token);
@@ -60,6 +60,21 @@ public interface SAPGatewayProxy {
 	
 	@GetMapping(value = "/VarietySet", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> fetchVarieties(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/FieldGroupSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchFieldGroups(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/FieldSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchFields(
+			@RequestParam(name = "$format") String format,
+			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/MachineGroupSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> fetchMachineGroups(
 			@RequestParam(name = "$format") String format,
 			@RequestHeader("Authorization") String token);
 }

@@ -9,7 +9,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
@@ -20,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "culture", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Culture {
 	
 	@Id
@@ -36,6 +40,11 @@ public class Culture {
 	@Enumerated(EnumType.STRING)
 	private CultureType type;
 	
+	@ManyToOne
+	private CultureGroup cultureGroup;
+	
+	private Long erpId;
+	
 	@OneToMany(mappedBy = "culture")
 	private List<Variety> varieties;
 	
@@ -49,6 +58,7 @@ public class Culture {
 		}else {
 			this.orgCon = OrgCon.ORGANIC;
 		}
+		this.erpId = c.getErpId();
 		//dovrsiti
 	}
 }

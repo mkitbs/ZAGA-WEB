@@ -13,6 +13,7 @@ import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,12 @@ public class EmployeeService {
 																(oDataString));
 
 	    for(EmployeeDTO em:employeeList) {
-			User u = new User(em);
-			userRepo.save(u);
+				userRepo
+						.findByPerNumber(em.getPerNumber())
+						.ifPresentOrElse(foundUser -> updateUser(foundUser, em), 
+										() -> createUser(em));
+				
+			
 		}
 		return employeeList;
 	}
@@ -99,5 +104,17 @@ public class EmployeeService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	public void updateUser(User u, EmployeeDTO em) {
+		u.setDepartment(em.getDepartment());
+		u.setPosition(em.getPosition());
+		u.setName(em.getName());
+		userRepo.save(u);
+	}
+	
+	public void createUser(EmployeeDTO employee) {
+		User newUser = new User(employee);
+		userRepo.save(newUser);
 	}
 }

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.CropVarietyDTO;
 
 import lombok.Data;
 
@@ -33,4 +34,11 @@ public class CropVariety {
 	
 	@ManyToOne
 	private Variety variety;
+	
+	public CropVariety(CropVarietyDTO cropVariety) {
+		this.companyCode = cropVariety.getCompanyCode();
+		this.orgUnit = cropVariety.getOrganisationUnit();
+		this.area = cropVariety.getArea();
+	}
+
 }

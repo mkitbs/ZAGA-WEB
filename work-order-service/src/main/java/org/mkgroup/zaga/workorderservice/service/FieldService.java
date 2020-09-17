@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
-import org.mkgroup.zaga.workorderservice.dto.CultureGroupDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
-import org.mkgroup.zaga.workorderservice.model.CultureGroup;
+import org.mkgroup.zaga.workorderservice.model.Field;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
-import org.mkgroup.zaga.workorderservice.repository.CultureGroupRepository;
+import org.mkgroup.zaga.workorderservice.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class CultureGroupService {
+public class FieldService {
 	
 	@Autowired
 	SAPGatewayProxy gwProxy;
@@ -31,9 +31,9 @@ public class CultureGroupService {
 	ODataToDTOConvertor odataConvertor;
 	
 	@Autowired
-	CultureGroupRepository cultureGroupRepo;
+	FieldRepository fieldRepo;
 	
-	public List<CultureGroupDTO> getCultureGroupsFromSAP() throws JSONException {
+	public List<FieldDTO> getFieldsFromSAP() throws JSONException{
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
 				.append(authConfiguration.getUsername())
@@ -41,55 +41,62 @@ public class CultureGroupService {
 				.append(authConfiguration.getPassword());
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
-	    		authEncodingString.toString().getBytes());
-		//Call SAP and retrieve cultureGroupSet
-		ResponseEntity<Object> cultureGroupSet = 
-				gwProxy.fetchCultureGroups("json", "Basic " + authHeader);
-		String oDataString = cultureGroupSet.getBody().toString().replace(":", "-");
+			    authEncodingString.toString().getBytes());
+		//Call SAP and retrieve fieldSet
+		ResponseEntity<Object> fieldSet = 
+				gwProxy.fetchFields("json", "Basic " + authHeader);
+		String oDataString = fieldSet.getBody().toString().replace(":", "-");
 		oDataString = formatJSON(oDataString);
 		//Map to specific object
-	    ArrayList<CultureGroupDTO> cultureGroupList = 
-	    						convertObjectToLocalList(odataConvertor
+		ArrayList<FieldDTO> fieldList = 
+								convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
-	    for(CultureGroupDTO culture : cultureGroupList) {
-	    	CultureGroup c = new CultureGroup(culture);
-	    	cultureGroupRepo.save(c);
-	    }
-
-		return cultureGroupList;
+		for(FieldDTO field : fieldList) {
+			Field f = new Field(field);
+			fieldRepo.save(f);
+		}
+		
+		return fieldList;
 	}
-	
-	public ArrayList<CultureGroupDTO> convertObjectToLocalList(Object listAsObject) {
-	    List<?> list = (List<?>) listAsObject;
+
+	private ArrayList<FieldDTO> convertObjectToLocalList(Object listAsObject) {
+		List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-	    ArrayList<CultureGroupDTO> convertedList= new ArrayList<CultureGroupDTO>();
+	    ArrayList<FieldDTO> convertedList = new ArrayList<FieldDTO>();
 	    list.forEach(objectOfAList -> {
-	    	CultureGroupDTO cultureDTO = new CultureGroupDTO();
+	    	FieldDTO fieldDTO = new FieldDTO();
 	    	
-			try {
-				cultureDTO = objectMapper
-											.readValue(objectOfAList.toString(),
-														CultureGroupDTO.class);
-				convertedList.add(cultureDTO);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	    	
+	    	try {
+	    		fieldDTO = objectMapper
+	    										
+	    									.readValue(objectOfAList.toString(),
+	    												FieldDTO.class);
+	    		convertedList.add(fieldDTO);
+	    	} catch(Exception e) {
+	    		e.printStackTrace();
+	    	}
 	    });
-	    return convertedList;
+		return convertedList;
 	}
 	
 	public String formatJSON(String json) {
-		System.out.println(json);
 		json = json.replace("=", ":");
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
-		System.out.println(json);
 		return json;
 	}
-
+	
+	public List<FieldDTO> getAll() {
+		List<Field> fields = fieldRepo.findAll();
+		List<FieldDTO> retValues = new ArrayList<FieldDTO>();
+		for(Field field : fields) {
+			FieldDTO f = new FieldDTO(field);
+			retValues.add(f);
+		}
+		return retValues;
+	}
 }

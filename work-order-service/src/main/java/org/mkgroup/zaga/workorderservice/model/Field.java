@@ -1,13 +1,10 @@
 package org.mkgroup.zaga.workorderservice.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -16,17 +13,16 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Entity
-@Table(name = "operation", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
-public class Operation {
-	
+@NoArgsConstructor
+@Table(name = "field", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
+public class Field {
 
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
@@ -34,26 +30,29 @@ public class Operation {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
-	private String kind;
+	private String companyCode;
 	
-	private boolean status;
+	private String orgUnit;
 	
 	private String name;
 	
+	private int year;
+	
+	private double area;
+	
 	private Long erpId;
 	
-	@Enumerated(EnumType.STRING)
-	private OperationType type;
-	
 	@ManyToOne
-	private OperationGroup operationGroup;
+	private FieldGroup fieldGroup;
 	
-	@OneToMany(mappedBy = "operation")
-	private List<WorkOrder> workOrders = new ArrayList<WorkOrder>();
+	@OneToMany(mappedBy = "field")
+	private List<Crop> crops;
 	
-	public Operation(OperationDTO op) {
-		this.kind = op.getKind();
-		this.name = op.getName();
-		this.erpId = op.getErpId();
+	public Field(FieldDTO field) {
+		this.companyCode = field.getCompanyCode();
+		this.orgUnit = field.getOrgUnit();
+		this.name = field.getName();
+		this.year = field.getYear();
+		this.area = field.getArea();
 	}
 }
