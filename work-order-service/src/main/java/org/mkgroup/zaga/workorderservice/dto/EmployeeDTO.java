@@ -3,6 +3,7 @@ package org.mkgroup.zaga.workorderservice.dto;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.User;
+import org.mkgroup.zaga.workorderservice.model.Worker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,6 +35,11 @@ public class EmployeeDTO {
 	public EmployeeDTO(User user) {
 		id = user.getId();
 		name = user.getName();
+	}
+
+	public EmployeeDTO(Worker w) {
+		userId = w.getUserId();
+		id = w.getId();
 	}
 
 

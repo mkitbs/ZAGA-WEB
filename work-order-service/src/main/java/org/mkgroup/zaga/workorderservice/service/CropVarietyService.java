@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CropVarietyDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.CropVariety;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.CropVarietyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class CropVarietyService {
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
 	
+	@Autowired
+	CropVarietyRepository cropVarietyRepo;
+	
 	public List<CropVarietyDTO> getCropVarietiesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -37,7 +42,7 @@ public class CropVarietyService {
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
-		//Call SAP and retrieve cultureGroupSet
+		//Call SAP and retrieve cropVarietySet
 		ResponseEntity<Object> cropVarietySet = 
 				gwProxy.fetchCropVarieties("json", "Basic " + authHeader);
 		String oDataString = cropVarietySet.getBody().toString().replace(":", "-");
@@ -48,6 +53,11 @@ public class CropVarietyService {
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
+	    
+	    for(CropVarietyDTO cropVariety : cropVarietyList) {
+	    	CropVariety cv = new CropVariety(cropVariety);
+	    	cropVarietyRepo.save(cv);
+	    }
 
 		return cropVarietyList;
 	}

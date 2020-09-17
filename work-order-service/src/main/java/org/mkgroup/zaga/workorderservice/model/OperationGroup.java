@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.OperationGroupDTO;
 
 import lombok.Data;
 
@@ -27,4 +28,9 @@ public class OperationGroup {
 	
 	@OneToMany(mappedBy = "operationGroup")
 	private List<Operation> operations;
+	
+	public OperationGroup(OperationGroupDTO operation) {
+		this.name = operation.getName();
+	}
+
 }

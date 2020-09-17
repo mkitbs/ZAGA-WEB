@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames ={"perNumber"})})
 public class User {
 	
 	@Id
@@ -34,6 +35,7 @@ public class User {
 	
 	private String position;
 	
+	@Column(name= "perNumber")
 	private Long perNumber;
 	
 	@OneToMany(mappedBy = "responsible")

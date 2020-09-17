@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.Crop;
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface CropRepository extends JpaRepository<Crop, UUID>{
 	
 	List<Crop> findByOrderByNameAsc();
+	Optional<Crop> findByErpId(Long id);
 }

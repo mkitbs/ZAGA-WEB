@@ -2,7 +2,6 @@ package org.mkgroup.zaga.workorderservice.controller;
 
 import java.util.List;
 
-import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.VarietyDTO;
 import org.mkgroup.zaga.workorderservice.service.VarietyService;
 import org.springframework.beans.factory.annotation.Autowired;

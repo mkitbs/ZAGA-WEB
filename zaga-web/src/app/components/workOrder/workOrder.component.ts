@@ -8,7 +8,6 @@ import { CropService } from 'src/app/service/crop.service';
 import { OperationService } from 'src/app/service/operation.service';
 import { UserService } from 'src/app/service/user.service';
 import { Employee } from 'src/app/models/Employee';
-import { WorkOrderDTO } from 'src/app/models/WorkOrderDTO';
 
 @Component({
   selector: 'app-workOrder',
@@ -26,19 +25,13 @@ export class WorkOrderComponent implements OnInit {
   employee: Employee;
   operationId;
   cropId;
-  workOrderDTO: WorkOrderDTO = new WorkOrderDTO();
 
-  constructor(private router: Router, private workOrderService:WorkOrderService, private cropService:CropService,
-    private operationService:OperationService, private userService:UserService) { }
+  constructor(private router: Router, private workOrderService:WorkOrderService) { }
 
   ngOnInit() {
-    //this.workOrders = JSON.parse(localStorage["workOrders"]);
     this.workOrderService.getAll().subscribe(data => {
       this.workOrders = data;
       this.workOrders.forEach(workOrder => {
-        this.getOperation(workOrder.operationId);
-        this.getCrop(workOrder.cropId);
-        this.getResponsibleEmployee(workOrder.responsibleId);
         if(workOrder.status == "NEW"){
           workOrder.status = "Novi";
         } else if(workOrder.status == "IN_PROGRESS"){
@@ -49,25 +42,6 @@ export class WorkOrderComponent implements OnInit {
       })
     })
    
-  }
-
-  getOperation(id){
-    this.operationService.getOne(id).subscribe(data => {
-      this.operation = data;
-      
-    })
-  }
-
-  getCrop(id){
-    this.cropService.getOne(id).subscribe(data => {
-      this.crop = data;
-    })
-  }
-
-  getResponsibleEmployee(id){
-    this.userService.getOne(id).subscribe(data => {
-      this.employee = data;
-    })
   }
 
   changeClick(){

@@ -66,4 +66,22 @@ public class SAPGatewayFallback implements SAPGatewayProxy {
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<Object> fetchFieldGroups(String format, String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchFields(String format, String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchMachineGroups(String format, String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

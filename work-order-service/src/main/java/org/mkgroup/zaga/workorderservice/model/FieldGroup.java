@@ -10,14 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.mkgroup.zaga.workorderservice.dto.MachineGroupDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldGroupDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-public class MachineGroup {
-
+@NoArgsConstructor
+public class FieldGroup {
+	
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
@@ -26,11 +28,17 @@ public class MachineGroup {
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "machineGroupId")
-	private List<Machine> machines;
+	private String companyCode;
 	
-	public MachineGroup(MachineGroupDTO machine) {
-		this.name = machine.getName();
+	private String orgUnit;
+	
+	@OneToMany(mappedBy = "fieldGroup")
+	private List<Field> fields;
+	
+	public FieldGroup(FieldGroupDTO field) {
+		this.name = field.getName();
+		this.companyCode = field.getCompanyCode();
+		this.orgUnit = field.getOrgUnit();
 	}
 
 }

@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
 import { WorkOrderService } from 'src/app/service/work-order.service';
-import { CropService } from 'src/app/service/crop.service';
 import { Crop } from 'src/app/models/Crop';
 import { WorkOrder } from 'src/app/models/WorkOrder';
 import { UserService } from 'src/app/service/user.service';
@@ -20,6 +19,8 @@ import { MachineService } from 'src/app/service/machine.service';
 import { MaterialService } from 'src/app/service/material.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Field } from 'src/app/models/Field';
+import { FieldService } from 'src/app/service/field.service';
 
 @Component({
   selector: 'app-creatework-order',
@@ -37,15 +38,12 @@ export class CreateworkOrderComponent implements OnInit {
     private machineService:MachineService,
     private materialService:MaterialService,
     private workOrderService:WorkOrderService,
-    private cropService:CropService) { 
+    private fieldService:FieldService) { 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
-  tables = ["T-27", "T-28", "T-29", "T-30", "T-31", "T-37", "T-39", "T-40", "T-42", "T-44", "T-46", "T-47", "T-48", "T-52", "T-53", "T-54", 
-  "T-55", "T-56", "T-57", "T-58", "T-59", "T-60", "T-61", "T-62", "T-63", "T-64", "T-65", "T-66", "T-67", "T-68"];
-
-
   modalHeader = "Dodavanje radnika";
+  headerMachine = "Dodavanje mašine";
   workers = false;
   machines = false;
   materials = false;
@@ -65,7 +63,8 @@ export class CreateworkOrderComponent implements OnInit {
   operations : Operation[] = [];
   cultures : Culture[] = [];
   devices : Machine[] = [];
-  substances : Material[] =[];
+  substances : Material[] = [];
+  fields : Field[] = [];
 
   operation: Operation = new Operation();
   crop: Crop = new Crop();
@@ -78,8 +77,6 @@ export class CreateworkOrderComponent implements OnInit {
   woMachines: Machine[] = [];
   woMaterials: Material[] = [];
   cultureId;
-  startDate:{}
-  endDate:{}
   selectedWorker;
   selectedMachine;
   selectedMaterial;
@@ -97,7 +94,6 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrder.workers = [];
       this.workOrder.materials = [];
       this.workOrder.status = "Novi"
-      
     } else {
       this.new = false;
 
@@ -121,16 +117,10 @@ export class CreateworkOrderComponent implements OnInit {
           year: +this.workOrder.end.substring(0,4)
        };
 
-
-       this.getOperation(this.workOrder.operationId);
-       this.getCrop(this.workOrder.cropId);
-       this.getResponsibleEmployee(this.workOrder.responsibleId);
-
        this.workOrder.workers.forEach(data => {
         this.employee = data;
         this.getWorker(this.employee.userId);
        })
-       console.log(this.workOrder)
       })
     }
 
@@ -151,31 +141,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.materialService.getAll().subscribe(data=>{
       this.substances = data;
     })
-  }
 
-  getOperation(id){
-    this.operationService.getOne(id).subscribe(data => {
-      this.operation = data;
-    })
-  }
-
-  getCrop(id){
-    this.cropService.getOne(id).subscribe(data => {
-      this.crop = data;
-      this.cultureId = this.crop.cultureId;
-      this.getCulture(this.cultureId);
-    })
-  }
-
-  getCulture(id){
-    this.cultureService.getOne(id).subscribe(data => {
-      this.culture = data;
-    })
-  }
-
-  getResponsibleEmployee(id){
-    this.userService.getOne(id).subscribe(data => {
-      this.employee = data;
+    this.fieldService.getAll().subscribe(data =>{
+      this.fields = data;
     })
   }
 
@@ -206,12 +174,16 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addWorker(){
-    this.userService.getOne(this.selectedWorker).subscribe(data => {
+   /* this.userService.getOne(this.selectedWorker).subscribe(data => {
       this.employee = data;
       this.employee.name = data.Name;
       this.employees.push(this.employee);
-    })
+    })*/
+    this.employee.id = this.selectedWorker.split("&")[0];
+    this.employee.name = this.selectedWorker.split("&")[1];
+    this.employees.push(this.employee);
     this.employee = new Employee();
+    this.selectedWorker = "-1";
   }
 
   editWorker(worker){
@@ -293,7 +265,7 @@ export class CreateworkOrderComponent implements OnInit {
 
     this.workOrder.start = '2020-09-16';
     this.workOrder.end = "2020-09-17";
-    this.workOrder.cropId = "268f6ee1-17fc-44ea-908c-02c218a9a031";
+    this.workOrder.cropId = "152afb01-a708-4659-9805-bd83f8f742bb";
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.employees;
     this.workOrder.materials = this.woMaterials;
@@ -357,4 +329,7 @@ export class CreateworkOrderComponent implements OnInit {
     return this.allEmployees.find(emp => emp.id === id).name;
   }
 
+  addEmployee(){
+    this.workerMob = new Worker();
+  }
 }

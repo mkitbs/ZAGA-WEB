@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.OperationGroupDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.OperationGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.OperationGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class OperationGroupService {
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
 	
+	@Autowired
+	OperationGroupRepository operationGroupRepo;
+	
 	public List<OperationGroupDTO> getOperationGroupsFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -37,19 +42,23 @@ public class OperationGroupService {
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
-		//Call SAP and retrieve cultureGroupSet
-		ResponseEntity<Object> cultureGroupSet = 
+		//Call SAP and retrieve operationGroupSet
+		ResponseEntity<Object> operationGroupSet = 
 				gwProxy.fetchOperationGroups("json", "Basic " + authHeader);
-		String oDataString = cultureGroupSet.getBody().toString().replace(":", "-");
-		oDataString = oDataString.replace("=", ":");
-		oDataString = oDataString.replace("/", "");
+		String oDataString = operationGroupSet.getBody().toString().replace(":", "-");
+		oDataString = formatJSON(oDataString);
 		//Map to specific object
-	    ArrayList<OperationGroupDTO> cultureGroupList = 
+	    ArrayList<OperationGroupDTO> operationGroupList = 
 	    						convertObjectToLocalList(odataConvertor
 														.convertODataSetToDTO
 																(oDataString));
+	    
+	    for(OperationGroupDTO operation : operationGroupList) {
+	    	OperationGroup op = new OperationGroup(operation);
+	    	operationGroupRepo.save(op);
+	    }
 
-		return cultureGroupList;
+		return operationGroupList;
 	}
 	
 	public ArrayList<OperationGroupDTO> convertObjectToLocalList(Object listAsObject) {
@@ -58,19 +67,28 @@ public class OperationGroupService {
 	    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 	    ArrayList<OperationGroupDTO> convertedList= new ArrayList<OperationGroupDTO>();
 	    list.forEach(objectOfAList -> {
-	    	OperationGroupDTO cultureDTO = new OperationGroupDTO();
+	    	OperationGroupDTO operationDTO = new OperationGroupDTO();
 	    	
 			try {
-				cultureDTO = objectMapper
+				operationDTO = objectMapper
 											.readValue(objectOfAList.toString(),
 													OperationGroupDTO.class);
-				convertedList.add(cultureDTO);
+				convertedList.add(operationDTO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 	    	
 	    });
 	    return convertedList;
+	}
+	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		return json;
 	}
 
 

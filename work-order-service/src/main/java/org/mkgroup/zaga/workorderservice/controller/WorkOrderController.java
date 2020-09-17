@@ -58,12 +58,9 @@ public class WorkOrderController {
 	
 	@GetMapping("/getWorkOrder/{id}")
 	public ResponseEntity<?> getWorkOrder(@PathVariable UUID id){
-		WorkOrder workOrder = workOrderService.getOne(id);
-		ModelMapper modelMapper = new ModelMapper();
+		WorkOrderDTO workOrder = workOrderService.getOne(id);
 		if(workOrder != null) {
-			WorkOrderDTO workOrderDTO = new WorkOrderDTO();
-			modelMapper.map(workOrder, workOrderDTO);
-			return new ResponseEntity<WorkOrderDTO>(workOrderDTO, HttpStatus.OK);
+			return new ResponseEntity<WorkOrderDTO>(workOrder, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

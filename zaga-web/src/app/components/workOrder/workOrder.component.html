@@ -65,13 +65,13 @@
         <tbody>
             <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
                 <th scope="row">{{ j + 1}}</th>
-                <td>{{operation.Name}}</td>
+                <td>{{workOrder.operationName}}</td>
                 <td>{{workOrder.start | date:'dd.MM.yyyy.'}}</td>
                 <td>{{workOrder.end | date:'dd.MM.yyyy.'}}</td>
-                <td>{{crop.FieldId}}</td>
-                <td>{{crop.Area}}ha</td>
-                <td>{{crop.Name}}</td>
-                <td>{{employee.Name}}</td>
+                <td>{{workOrder.table}}</td>
+                <td>{{workOrder.area}}ha</td>
+                <td>{{workOrder.cropName}}</td>
+                <td>{{workOrder.responsibleName}}</td>
                 <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
             </tr>
         </tbody>

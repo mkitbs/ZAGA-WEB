@@ -1,15 +1,13 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import org.mkgroup.zaga.workorderservice.model.User;
+import org.mkgroup.zaga.workorderservice.model.CropVariety;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface CropVarietyRepository extends JpaRepository<CropVariety, UUID>{
 
-	Optional<User> findByPerNumber(Long id);
+	
 }
-
