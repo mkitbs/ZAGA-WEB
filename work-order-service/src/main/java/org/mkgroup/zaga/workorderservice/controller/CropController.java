@@ -33,7 +33,7 @@ public class CropController {
 				cropService.getCropsFromSAP(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/getCrop/{id}")
+	@GetMapping("getCrop/{id}")
 	public ResponseEntity<?> getCrop(@PathVariable UUID id){
 		Crop crop = cropService.getOne(id);
 		ModelMapper modelMapper = new ModelMapper();

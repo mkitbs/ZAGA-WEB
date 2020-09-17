@@ -166,7 +166,7 @@
                         <ng-template #elseBlockWorkers>
                             <select  name="" [(ngModel)]="selectedWorker" id="" class="form-control">
                                 <option value="-1">--Izaberi--</option>
-                                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
+                                <option value="{{emp.id}}&{{emp.Name}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
                             </select>
                         </ng-template>
                     </div>
@@ -189,7 +189,7 @@
                             <ng-template #elseBlockOperations>
                                 <select name="" id="" class="form-control">
                                     <option value="{{workOrder.operationId.split('&')[1]}}" >{{workOrder.operationId.split("&")[0]}}</option>
-                                    <option value="{{op.id}}" *ngFor="let op of operations">{{op.Name}}</option>
+                                    <option value="{{op.id}}&{{op.Name}}" *ngFor="let op of operations">{{op.Name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -545,7 +545,7 @@
         </div>
         <div class="col-8">
             <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
-                <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
+                <option value="{{op.id}}" *ngFor="let op of this.operations">{{op.name}}</option>
             </select>
         </div>
     </div>
@@ -638,6 +638,9 @@
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body collapse-card">
+                <div class="col-12">
+                    <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal" data-target="#exampleModal" (click)="addEmployee()"> <i class="fa fa-plus mr-2"></i>Novi radnik</button>
+                </div>
                 <div class="card mb-3" *ngFor="let wor of workOrder.workers; let i = index;"  style="border: 1px solid #5C7495; border-radius: 5px;">
                     <div *ngIf="i==0" id="rad"></div>
                     <div class="card-body">
@@ -664,6 +667,9 @@
         </button>
         <div class="collapse" id="collapseExampleMachines">
             <div class="card card-body collapse-card">
+                <div class="col-12">
+                    <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal" data-target="#machineModal" (click)="addMachine()"> <i class="fa fa-plus mr-2"></i>Nova mašina</button>
+                </div>
                 <div class="card mb-3" *ngFor="let machine of workOrder.machines; let i = index;"  style="border: 1px solid #5C7495; border-radius: 5px;">
                     <div *ngIf="i==0" id="mas"></div>
                     <div class="card-body">
@@ -724,16 +730,16 @@
                 <div class="form-group">
                     <label for="imePrz">Ime i prezime</label>
                     <select [(ngModel)]="workerMob.worker" name="ime" id="imePrz" class="form-control" >
-                        <option value="{{w.worker}}" *ngFor="let w of workOrder.workers" >{{w.worker}}</option>
+                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees" >{{emp.name}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="imePrz">Operacija</label>
                     <select name="ope" [(ngModel)]="workerMob.operation" class="form-control" id="">
-                        <option value="{{operation}}" *ngFor="let operation of this.operations">{{operation}}</option>
+                        <option value="{{op.id}}" *ngFor="let op of operations">{{op.name}}</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="!new">
                     <label for="imePrz">Datum</label>
                     <div class="input-group">
                         <input [(ngModel)]="workerMob.date" name="dat" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
@@ -742,7 +748,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="!new">
                     <label for="imePrz">Redovan rad</label>
                     <div class="input-group mb-3">
                         <input [(ngModel)]="workerMob.dayWorkPeriod" type="number" name="dayWP" class="form-control" id="">
@@ -751,7 +757,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="!new">
                     <label for="imePrz">Noćni rad</label>
                     <div class="input-group mb-3">
                         <input [(ngModel)]="workerMob.dnightWorkPeriod" type="number" name="nightWP" class="form-control" id="">
@@ -760,7 +766,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" *ngIf="!new">
                     <label for="imePrz">Ukupan rad</label>
                     <div class="input-group mb-3">
                         <input  type="number" name="sumHours" class="form-control" id="" readonly>
@@ -768,6 +774,41 @@
                             <span class="input-group-text" id="basic-addon2">h</span>
                         </div>
                     </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-window-close"></i> Odustani</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Sačuvaj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Machine Modal -->
+<div class="modal fade" id="machineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{headerMachine}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="masina">Mašina</label>
+                    <select  id="masina" class="form-control" >
+                        <option value="{{dev.id}}" *ngFor="let dev of devices" >{{dev.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rad">Radnik</label>
+                    <select  name="rad" id="rad" class="form-control" >
+                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees" >{{emp.name}}</option>
+                    </select>
                 </div>
             </form>
         </div>

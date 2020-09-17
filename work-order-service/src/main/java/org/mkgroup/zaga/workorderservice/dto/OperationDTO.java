@@ -15,6 +15,9 @@ public class OperationDTO {
 
 	private UUID id;
 	
+	@JsonProperty("Id")
+	private Long erpId;
+	
 	@JsonProperty("Kind")
 	private String kind;
 	

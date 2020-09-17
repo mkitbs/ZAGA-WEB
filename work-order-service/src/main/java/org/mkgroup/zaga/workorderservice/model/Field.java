@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
+@Table(name = "field", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Field {
 
 	@Id
@@ -36,6 +39,8 @@ public class Field {
 	private int year;
 	
 	private double area;
+	
+	private Long erpId;
 	
 	@ManyToOne
 	private FieldGroup fieldGroup;

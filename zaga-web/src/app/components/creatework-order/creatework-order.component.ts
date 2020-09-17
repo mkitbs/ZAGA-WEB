@@ -41,6 +41,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   modalHeader = "Dodavanje radnika";
+  headerMachine = "Dodavanje mašine";
   workers = false;
   machines = false;
   materials = false;
@@ -167,12 +168,16 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addWorker(){
-    this.userService.getOne(this.selectedWorker).subscribe(data => {
+   /* this.userService.getOne(this.selectedWorker).subscribe(data => {
       this.employee = data;
       this.employee.name = data.Name;
       this.employees.push(this.employee);
-    })
+    })*/
+    this.employee.id = this.selectedWorker.split("&")[0];
+    this.employee.name = this.selectedWorker.split("&")[1];
+    this.employees.push(this.employee);
     this.employee = new Employee();
+    this.selectedWorker = "-1";
   }
 
   editWorker(worker){
@@ -254,7 +259,7 @@ export class CreateworkOrderComponent implements OnInit {
     
     this.workOrder.start = '2020-09-16';
     this.workOrder.end = "2020-09-17";
-    this.workOrder.cropId = "268f6ee1-17fc-44ea-908c-02c218a9a031";
+    this.workOrder.cropId = "152afb01-a708-4659-9805-bd83f8f742bb";
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.employees;
     this.workOrder.materials = this.woMaterials;
@@ -314,4 +319,7 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(wor)
   }
 
+  addEmployee(){
+    this.workerMob = new Worker();
+  }
 }

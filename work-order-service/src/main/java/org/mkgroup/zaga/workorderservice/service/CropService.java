@@ -10,8 +10,10 @@ import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Field;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.CropRepository;
+import org.mkgroup.zaga.workorderservice.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class CropService {
 	@Autowired
 	CropRepository cropRepo;
 	
+	@Autowired
+	FieldRepository fieldRepo;
+	
 	public List<CropDTO> getCropsFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -55,8 +60,10 @@ public class CropService {
 														.convertODataSetToDTO
 																(oDataString));
 	    for(CropDTO crop : cropList) {
-	    	Crop c = new Crop(crop);
-	    	cropRepo.save(c);
+	    	cropRepo
+	    		.findByErpId(crop.getErpId())
+	    		.ifPresentOrElse(foundCrop -> updateCrop(foundCrop, crop), 
+	    						() -> createCrop(crop));
 	    }
 		return cropList;
 	}
@@ -101,5 +108,19 @@ public class CropService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void createCrop(CropDTO newCrop) {
+		Crop crop = new Crop(newCrop);
+		cropRepo.save(crop);
+	}
+	public void updateCrop(Crop oldCrop, CropDTO updatedCrop) {
+		oldCrop.setArea(updatedCrop.getArea());
+		oldCrop.setCompanyCode(updatedCrop.getCompanyCode());
+		oldCrop.setName(updatedCrop.getName());
+		oldCrop.setYear(updatedCrop.getYear());
+		oldCrop.setOrgUnit(updatedCrop.getOrganisationUnit());
+		Field field = fieldRepo.findByErpId(updatedCrop.getFieldId()).get();
+		oldCrop.setField(field);
 	}
 }

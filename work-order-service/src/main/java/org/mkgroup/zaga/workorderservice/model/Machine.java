@@ -56,25 +56,47 @@ public class Machine {
 		this.companyCode = m.getCompanyCode();
 		this.orgUnit = m.getOrgUnit();
 		
-		if(m.getFuelType().equals("0")) {
-			this.fuelType = FuelType.NOT_SELECTED;
-		} else if(m.getFuelType().equals("1")){
-			this.fuelType = FuelType.GASOLINE;
-		} else if(m.getFuelType().equals("2")) {
-			this.fuelType = FuelType.GAS;
-		} else if(m.getFuelType().equals("3")) {
-			this.fuelType = FuelType.EURO_DIESEL;
-		} else if(m.getFuelType().equals("4")) {
-			this.fuelType = FuelType.BIO_DIESEL;
-		} else {
-			this.fuelType = FuelType.DIESEL;
-		}
-		
 		if(m.getType().equals("PG")) {
 			this.type = MachineType.PROPULSION;
 		} else {
 			this.type = MachineType.COUPLING;
 		}
-		//dovrsiti
+
+		switch (m.getFuelType()) {
+		case "0":
+			this.fuelType = FuelType.NOT_SELECTED;
+			break;
+		case "1":
+			this.fuelType = FuelType.GASOLINE;
+			break;
+		case "2":
+			this.fuelType = FuelType.GAS;
+			break;
+		case "3":
+			this.fuelType = FuelType.EURO_DIESEL;
+			break;
+		case "4":
+			this.fuelType = FuelType.BIO_DIESEL;
+			break;
+		case "5":
+			this.fuelType = FuelType.DIESEL;
+			break;
+		default:
+			this.fuelType = FuelType.NOT_SELECTED;
+			break;
+		}
+		switch (m.getOwnershipType()) {
+		case "S":
+			this.ownershipType = OwnershipType.OWN;
+			break;
+		case "G":
+			this.ownershipType = OwnershipType.IN_THE_GROUP;
+			break;
+		case "E":
+			this.ownershipType = OwnershipType.EXTERNAL;
+			break;
+		default:
+			break;
+		}
 	}
 }
