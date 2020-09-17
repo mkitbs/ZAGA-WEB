@@ -28,9 +28,19 @@ public class UserController {
 	UserService userService;
 
 	@PostMapping
-	public ResponseEntity<?> saveUser(@RequestBody NewUserDTO user) {
-		userRepo.save(new UserElastic(user));
+	public ResponseEntity<?> saveUsers(@RequestBody List<NewUserDTO> users) {
+		users.forEach(user -> {
+			if(!userRepo.findByUserId(user.getId()).isPresent()) { //prevent duplicate persist
+				userService.saveUser(new UserElastic(user));
+			}
+		});
+		
 		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> getAll() {
+		return new ResponseEntity<Iterable<UserElastic>>(userService.getAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("name")
