@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "operation", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Operation {
 	
 
@@ -37,6 +40,8 @@ public class Operation {
 	
 	private String name;
 	
+	private Long erpId;
+	
 	@Enumerated(EnumType.STRING)
 	private OperationType type;
 	
@@ -49,5 +54,6 @@ public class Operation {
 	public Operation(OperationDTO op) {
 		this.kind = op.getKind();
 		this.name = op.getName();
+		this.erpId = op.getErpId();
 	}
 }

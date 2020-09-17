@@ -55,8 +55,10 @@ public class CropService {
 														.convertODataSetToDTO
 																(oDataString));
 	    for(CropDTO crop : cropList) {
-	    	Crop c = new Crop(crop);
-	    	cropRepo.save(c);
+	    	cropRepo
+	    		.findByErpId(crop.getErpId())
+	    		.ifPresentOrElse(foundCrop -> updateCrop(foundCrop, crop), 
+	    						() -> createCrop(crop));
 	    }
 		return cropList;
 	}
@@ -101,5 +103,18 @@ public class CropService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void createCrop(CropDTO newCrop) {
+		Crop crop = new Crop(newCrop);
+		cropRepo.save(crop);
+	}
+	public void updateCrop(Crop oldCrop, CropDTO updatedCrop) {
+		oldCrop.setArea(updatedCrop.getArea());
+		oldCrop.setCompanyCode(updatedCrop.getCompanyCode());
+		oldCrop.setName(updatedCrop.getName());
+		oldCrop.setYear(updatedCrop.getYear());
+		oldCrop.setOrgUnit(updatedCrop.getOrganisationUnit());
+		oldCrop.setFieldId(updatedCrop.getFieldId());
 	}
 }

@@ -57,8 +57,10 @@ public class OperationService {
 																(oDataString));
 
 	    for(OperationDTO op: operationList) {
-	    	Operation operation = new Operation(op);
-	    	operationRepo.save(operation);
+	    	operationRepo
+	    		.findByErpId(op.getErpId())
+	    		.ifPresentOrElse(foundOperation -> updateOperation(foundOperation, op), 
+	    						() -> createOperation(op));
 	    }
 		return operationList;
 	}
@@ -70,13 +72,13 @@ public class OperationService {
 	    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	    ArrayList<OperationDTO> convertedList= new ArrayList<OperationDTO>();
 	    list.forEach(objectOfAList -> {
-	    	OperationDTO cultureDTO = new OperationDTO();
+	    	OperationDTO operationDTO = new OperationDTO();
 	    	
 			try {
-				cultureDTO = objectMapper
+				operationDTO = objectMapper
 											.readValue(objectOfAList.toString(),
 													OperationDTO.class);
-				convertedList.add(cultureDTO);
+				convertedList.add(operationDTO);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -105,4 +107,14 @@ public class OperationService {
 	}
 
 
+	public void updateOperation(Operation oldOperation, OperationDTO newOperation) {
+		oldOperation.setKind(newOperation.getKind());
+		oldOperation.setName(newOperation.getName());
+		operationRepo.save(oldOperation);
+		//dovrsiti
+	}
+	public void createOperation(OperationDTO newOperation) {
+		Operation operation = new Operation(newOperation);
+		operationRepo.save(operation);
+	}
 }

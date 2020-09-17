@@ -36,6 +36,8 @@ public class Culture {
 	@Enumerated(EnumType.STRING)
 	private CultureType type;
 	
+	private Long erpId;
+	
 	@OneToMany(mappedBy = "culture")
 	private List<Variety> varieties;
 	
@@ -49,6 +51,7 @@ public class Culture {
 		}else {
 			this.orgCon = OrgCon.ORGANIC;
 		}
+		this.erpId = c.getErpId();
 		//dovrsiti
 	}
 }

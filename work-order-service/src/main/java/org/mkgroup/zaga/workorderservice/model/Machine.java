@@ -55,6 +55,44 @@ public class Machine {
 		this.name = m.getName();
 		this.companyCode = m.getCompanyCode();
 		this.orgUnit = m.getOrgUnit();
+		switch (m.getFuelType()) {
+		case "0":
+			this.fuelType = FuelType.NOT_SELECTED;
+			break;
+		case "1":
+			this.fuelType = FuelType.GASOLINE;
+			break;
+		case "2":
+			this.fuelType = FuelType.GAS;
+			break;
+		case "3":
+			this.fuelType = FuelType.EURO_DIESEL;
+			break;
+		case "4":
+			this.fuelType = FuelType.BIO_DIESEL;
+			break;
+		case "5":
+			this.fuelType = FuelType.DIESEL;
+			break;
+		default:
+			this.fuelType = FuelType.NOT_SELECTED;
+			break;
+		}
+		switch (m.getOwnershipType()) {
+		case "S":
+			this.ownershipType = OwnershipType.OWN;
+			break;
+		case "G":
+			this.ownershipType = OwnershipType.IN_THE_GROUP;
+			break;
+		case "E":
+			this.ownershipType = OwnershipType.EXTERNAL;
+			break;
+		default:
+			break;
+		}
+
+		
 		//dovrsiti
 	}
 }

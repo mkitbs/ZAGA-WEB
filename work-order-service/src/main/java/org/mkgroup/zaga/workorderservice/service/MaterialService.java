@@ -55,8 +55,10 @@ public class MaterialService {
 																(oDataString));
 
 	    for(MaterialDTO mat : materialList) {
-	    	Material m = new Material(mat);
-	    	materialRepo.save(m);
+	    	materialRepo
+	    		.findByErpId(mat.getErpId())
+	    		.ifPresentOrElse(foundMaterial -> updateMaterial(foundMaterial, mat), 
+	    						() -> createMaterial(mat));
 	    }
 		return materialList;
 	}
@@ -99,5 +101,17 @@ public class MaterialService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void updateMaterial(Material oldMaterial, MaterialDTO newMaterial) {
+		oldMaterial.setMaterialGroup(newMaterial.getGroup());
+		oldMaterial.setName(newMaterial.getName());
+		oldMaterial.setUnit(newMaterial.getUnit());
+		materialRepo.save(oldMaterial);
+	}
+	
+	public void createMaterial(MaterialDTO newMaterial) {
+		Material material = new Material(newMaterial);
+		materialRepo.save(material);
 	}
 }

@@ -56,8 +56,10 @@ public class CultureService {
 																(oDataString));
 
 	    for(CultureDTO c : cultureList) {
-	    	Culture culture = new Culture(c);
-	    	cultureRepo.save(culture);
+	    	cultureRepo
+	    		.findByErpId(c.getErpId())
+	    		.ifPresentOrElse(foundCulture -> updateCulture(foundCulture, c), 
+	    						() -> createCulture(c));
 	    }
 	    
 		return cultureList;
@@ -94,4 +96,14 @@ public class CultureService {
 		}
 	}
 
+	public void updateCulture(Culture oldCulture, CultureDTO newCulture) {
+		oldCulture.setName(newCulture.getName());
+		//dovrsiti
+		cultureRepo.save(oldCulture);
+	}
+	
+	public void createCulture(CultureDTO newCulture) {
+		Culture culture = new Culture(newCulture);
+		cultureRepo.save(culture);
+	}
 }

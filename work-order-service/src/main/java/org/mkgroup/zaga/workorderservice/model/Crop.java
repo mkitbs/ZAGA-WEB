@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
+@Table(name = "crop", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Crop {
 
 	@Id
@@ -32,6 +35,8 @@ public class Crop {
 	private String companyCode;
 	
 	private String orgUnit;
+	
+	private Long erpId;
 	
 	private int year;
 	
@@ -53,6 +58,7 @@ public class Crop {
 		companyCode = crop.getCompanyCode();
 		orgUnit = crop.getOrganisationUnit();
 		year = crop.getYear();
+		erpId = crop.getErpId();
 		area = crop.getArea();
 		fieldId = crop.getFieldId();
 	}
