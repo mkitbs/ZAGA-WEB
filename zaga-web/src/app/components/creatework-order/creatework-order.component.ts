@@ -21,6 +21,8 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Field } from 'src/app/models/Field';
 import { FieldService } from 'src/app/service/field.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { CropService } from 'src/app/service/crop.service';
 
 @Component({
   selector: 'app-creatework-order',
@@ -38,7 +40,9 @@ export class CreateworkOrderComponent implements OnInit {
     private machineService:MachineService,
     private materialService:MaterialService,
     private workOrderService:WorkOrderService,
-    private fieldService:FieldService) { 
+    private fieldService:FieldService,
+    private cropService:CropService,
+    private deviceService:DeviceDetectorService) { 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
@@ -162,15 +166,17 @@ export class CreateworkOrderComponent implements OnInit {
   }
   expandMachines() {
     this.machines = !this.machines;
-    let el = document.getElementById("mas");
-    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
-    
+    if(!this.deviceService.isMobile){
+      let el = document.getElementById("mas");
+      setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+    }
   }
   expandMaterials() {
     this.materials = !this.materials;
-    let el = document.getElementById("mat");
-    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
-    
+    if(!this.deviceService.isMobile){
+      let el = document.getElementById("mat");
+      setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+    }
   }
 
   addWorker(){

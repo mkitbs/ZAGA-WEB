@@ -22,6 +22,7 @@ import { AgmCoreModule } from '@agm/core';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import 'chartjs-plugin-labels';
 import { SearchEmployeesPipe } from './pipes/search-employees.pipe';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 declare var require: any;
 var config = require('config');
@@ -71,7 +72,7 @@ const routes: Routes = [
       libraries: ['drawing']
     })
   ],
-  providers: [ThemeService],
+  providers: [ThemeService, DeviceDetectorService],
   bootstrap: [AppComponent]
 })
 

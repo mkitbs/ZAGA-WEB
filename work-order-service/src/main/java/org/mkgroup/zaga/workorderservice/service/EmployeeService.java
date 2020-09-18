@@ -8,7 +8,9 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserElasticDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
@@ -25,6 +27,9 @@ public class EmployeeService {
 
 	@Autowired
 	SAPGatewayProxy gwProxy;
+	
+	@Autowired
+	SearchServiceProxy ssProxy;
 	
 	@Autowired
 	SAPAuthConfiguration authConfiguration;
@@ -60,9 +65,15 @@ public class EmployeeService {
 						.findByPerNumber(em.getPerNumber())
 						.ifPresentOrElse(foundUser -> updateUser(foundUser, em), 
 										() -> createUser(em));
-				
-			
 		}
+	    
+	    List<UserElasticDTO> sendUsers = new ArrayList<UserElasticDTO>();
+	    for(User u : userRepo.findByOrderByNameAsc()) {
+	    	UserElasticDTO sendUser = new UserElasticDTO(u);
+	    	sendUsers.add(sendUser);
+	    }
+	    ResponseEntity<?> response = ssProxy.sendEmployees(sendUsers);
+	    System.out.println(response.getStatusCodeValue() + " STATUS");
 		return employeeList;
 	}
 	

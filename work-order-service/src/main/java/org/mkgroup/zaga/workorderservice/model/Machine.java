@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "machine", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Machine {
 
 	@Id
@@ -35,6 +38,8 @@ public class Machine {
 	private String companyCode;
 	
 	private String orgUnit;
+	
+	private String erpId;
 	
 	@Enumerated(EnumType.STRING)
 	private MachineType type;
@@ -61,30 +66,9 @@ public class Machine {
 		} else {
 			this.type = MachineType.COUPLING;
 		}
-
-		switch (m.getFuelType()) {
-		case "0":
-			this.fuelType = FuelType.NOT_SELECTED;
-			break;
-		case "1":
-			this.fuelType = FuelType.GASOLINE;
-			break;
-		case "2":
-			this.fuelType = FuelType.GAS;
-			break;
-		case "3":
-			this.fuelType = FuelType.EURO_DIESEL;
-			break;
-		case "4":
-			this.fuelType = FuelType.BIO_DIESEL;
-			break;
-		case "5":
-			this.fuelType = FuelType.DIESEL;
-			break;
-		default:
-			this.fuelType = FuelType.NOT_SELECTED;
-			break;
-		}
+		
+		this.erpId = m.getErpId();
+		this.fuelType = FuelType.values()[Integer.parseInt(m.getFuelType())];
 		switch (m.getOwnershipType()) {
 		case "S":
 			this.ownershipType = OwnershipType.OWN;
