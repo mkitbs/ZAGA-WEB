@@ -1,6 +1,5 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,13 +49,7 @@ public class OperationController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		List<Operation> operations = operationRepo.findByOrderByNameAsc();
-		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
-		for(Operation operation : operations) {
-			OperationDTO op = new OperationDTO(operation);
-			retValues.add(op);
-		}
-		return new ResponseEntity<List<OperationDTO>>(retValues, HttpStatus.OK);
+		return new ResponseEntity<List<OperationDTO>>(operationService.getAll(), HttpStatus.OK);
 	}
 
 }

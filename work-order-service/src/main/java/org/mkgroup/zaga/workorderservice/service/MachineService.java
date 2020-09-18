@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
+import org.mkgroup.zaga.workorderservice.model.FuelType;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -27,6 +29,9 @@ public class MachineService {
 	
 	@Autowired
 	SAPAuthConfiguration authConfiguration;
+	
+	@Autowired
+	SearchServiceProxy ssProxy;
 	
 	@Autowired
 	ODataToDTOConvertor odataConvertor;
@@ -56,9 +61,12 @@ public class MachineService {
 																(oDataString));
 
 	    for(MachineDTO m : machineList) {
-	    	Machine machine = new Machine(m);
-	    	machineRepository.save(machine);
+	    	machineRepository
+	    		.findByErpId(m.getErpId())
+	    		.ifPresentOrElse(foundMachine -> updateMachine(foundMachine, m), 
+	    						() -> createMachine(m));
 	    }
+	    
 		return machineList;
 	}
 	
@@ -102,4 +110,16 @@ public class MachineService {
 		}
 	}
 	
+	public void updateMachine(Machine oldMachine, MachineDTO newMachine) {
+		oldMachine.setCompanyCode(newMachine.getCompanyCode());
+		oldMachine.setFuelType(FuelType.values()[Integer.parseInt(newMachine.getFuelType())]);
+		oldMachine.setName(newMachine.getName());
+		oldMachine.setOrgUnit(newMachine.getOrgUnit());
+		machineRepository.save(oldMachine);
+	}
+	
+	public void createMachine(MachineDTO newMachine) {
+		Machine machine = new Machine(newMachine);
+		machineRepository.save(machine);
+	}
 }

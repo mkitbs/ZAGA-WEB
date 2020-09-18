@@ -14,6 +14,11 @@
     margin-right: 0%;
 }
 
+.customAuto {
+    width: 100% !important;
+    color: black !important;
+}
+
 h3 {
     color: #5C7495;
 }
@@ -92,6 +97,13 @@ button.calendar{
 .inputFillFalse{
     border: 2px solid red;
     border-radius: 4px;
+}
+
+.inputAuto, .mat-form-field-infix {
+    border: 10px solid black !important;
+    font-size: 12px !important;
+    font-family: 'Montserrat' !important;
+    font-size: 12px !important;
 }
 
 @media only screen and (max-width: 600px) {

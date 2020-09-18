@@ -4,19 +4,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.mkgroup.zaga.searchservice.model.UserElastic;
 import org.mkgroup.zaga.searchservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class UserService {
 
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
-		
+
 		QueryBuilder qb = QueryBuilders.wrapperQuery(nativeSearchQueryBuilder.build().getQuery().toString());
 		SearchRequest searchRequest = new SearchRequest("user");
 
@@ -61,6 +62,14 @@ public class UserService {
 		}
 
 		return returnList;
+	}
+
+	public Iterable<UserElastic> getAll() {
+		return userRepo.findAll();
+	}
+
+	public UserElastic saveUser(UserElastic user) {
+		return userRepo.save(user);
 	}
 
 }

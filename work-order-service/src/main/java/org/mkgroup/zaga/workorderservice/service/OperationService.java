@@ -102,6 +102,17 @@ public class OperationService {
 		}
 	}
 	
+	public List<OperationDTO> getAll() {
+		
+		List<Operation> operations = operationRepo.findByOrderByNameAsc();
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		for(Operation operation : operations) {
+			OperationDTO op = new OperationDTO(operation);
+			retValues.add(op);
+		}
+		return retValues;
+	}
+	
 	public String formatJSON(String json) {
 		json = json.replace("=", ":");
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");

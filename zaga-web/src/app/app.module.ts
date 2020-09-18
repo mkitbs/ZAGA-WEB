@@ -13,7 +13,7 @@ import { NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { WorkOrderComponent } from './components/workOrder/workOrder.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { MatTooltipModule, yearsPerPage } from '@angular/material';
+import { MatAutocomplete, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatTooltipModule, yearsPerPage } from '@angular/material';
 import { CloseWorkOrderComponent } from './components/closework-order/closework-order.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ChartsModule, ThemeService } from 'ng2-charts';
@@ -21,6 +21,8 @@ import { YieldComponent } from './components/yield/yield.component';
 import { AgmCoreModule } from '@agm/core';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import 'chartjs-plugin-labels';
+import { SearchEmployeesPipe } from './pipes/search-employees.pipe';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 declare var require: any;
 var config = require('config');
@@ -45,7 +47,8 @@ const routes: Routes = [
     WorkOrderComponent,
     DashboardComponent,
     CloseWorkOrderComponent,
-    YieldComponent
+    YieldComponent,
+    SearchEmployeesPipe
 
   ],
   imports: [
@@ -59,6 +62,9 @@ const routes: Routes = [
     NgbDatepickerModule,
     ReactiveFormsModule,
     MatTooltipModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
@@ -66,7 +72,7 @@ const routes: Routes = [
       libraries: ['drawing']
     })
   ],
-  providers: [ThemeService],
+  providers: [ThemeService, DeviceDetectorService],
   bootstrap: [AppComponent]
 })
 
