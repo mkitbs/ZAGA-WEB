@@ -53,8 +53,10 @@ public class FieldGroupService {
 															.convertODataSetToDTO
 																	(oDataString));
 		for(FieldGroupDTO field : fieldGroupList) {
-			FieldGroup f = new FieldGroup(field);
-			fieldGroupRepo.save(f);
+			fieldGroupRepo
+				.findByErpId(field.getId())
+				.ifPresentOrElse(foundFieldGroup -> updateFiledGroup(foundFieldGroup, field),
+								() -> createFieldGroup(field));
 		}
 		
 		return fieldGroupList;
@@ -88,5 +90,17 @@ public class FieldGroupService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	private void createFieldGroup(FieldGroupDTO field) {
+		FieldGroup fieldGroup = new FieldGroup(field);
+		fieldGroupRepo.save(fieldGroup);
+	}
+
+	private void updateFiledGroup(FieldGroup oldFieldGroup, FieldGroupDTO updatedFieldGroup) {
+		oldFieldGroup.setCompanyCode(updatedFieldGroup.getCompanyCode());
+		oldFieldGroup.setName(updatedFieldGroup.getName());
+		oldFieldGroup.setOrgUnit(updatedFieldGroup.getOrgUnit());
+		fieldGroupRepo.save(oldFieldGroup);
 	}
 }

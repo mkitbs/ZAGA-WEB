@@ -10,9 +10,11 @@ import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Culture;
 import org.mkgroup.zaga.workorderservice.model.Field;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.CropRepository;
+import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
 import org.mkgroup.zaga.workorderservice.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,9 @@ public class CropService {
 	
 	@Autowired
 	FieldRepository fieldRepo;
+	
+	@Autowired
+	CultureRepository cultureRepo;
 	
 	public List<CropDTO> getCropsFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -112,8 +117,13 @@ public class CropService {
 	
 	public void createCrop(CropDTO newCrop) {
 		Crop crop = new Crop(newCrop);
+		Field field = fieldRepo.findByErpId(newCrop.getFieldId()).get();
+		Culture culture = cultureRepo.findByErpId(newCrop.getErpCultureId()).get();
+		crop.setField(field);
+		crop.setCulture(culture);
 		cropRepo.save(crop);
 	}
+	
 	public void updateCrop(Crop oldCrop, CropDTO updatedCrop) {
 		oldCrop.setArea(updatedCrop.getArea());
 		oldCrop.setCompanyCode(updatedCrop.getCompanyCode());
@@ -122,5 +132,8 @@ public class CropService {
 		oldCrop.setOrgUnit(updatedCrop.getOrganisationUnit());
 		Field field = fieldRepo.findByErpId(updatedCrop.getFieldId()).get();
 		oldCrop.setField(field);
+		Culture culture = cultureRepo.findByErpId(updatedCrop.getErpCultureId()).get();
+		oldCrop.setCulture(culture);
+		cropRepo.save(oldCrop);
 	}
 }

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -32,11 +31,12 @@ public class SpentMaterial {
 	
 	private double spentPerHectar;
 	
+	@Column(columnDefinition = "BINARY(16)")
+	private UUID materialId;
+	
 	@ManyToMany
 	private List<ClosedWorkOrder> closedWorkOrder;
 	
 	
-	@ManyToOne
-	private Material material;
 	
 }

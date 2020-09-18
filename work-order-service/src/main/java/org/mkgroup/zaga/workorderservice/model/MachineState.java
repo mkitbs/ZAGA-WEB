@@ -34,8 +34,10 @@ public class MachineState {
 	
 	private Date date;
 	
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID machineId;
 	
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID workerId;
 	
 	@ManyToMany

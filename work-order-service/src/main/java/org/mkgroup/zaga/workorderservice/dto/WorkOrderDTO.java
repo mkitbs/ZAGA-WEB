@@ -26,9 +26,9 @@ public class WorkOrderDTO {
 	private UUID cropId;
 	private UUID operationId;
 	private UUID responsibleId;
-	private List<MaterialDTO> materials;
-	private List<MachineDTO> machines;
-	private List<EmployeeDTO> workers;
+	private List<SpentMaterialDTO> materials;
+	private List<MachineStateDTO> machines;
+	private List<WorkerDTO> workers;
 	private String operationName;
 	private String responsibleName;
 	private double area;
@@ -51,21 +51,21 @@ public class WorkOrderDTO {
 		cropName = wo.getCrop().getName();
 		year = wo.getCrop().getYear();
 		
-		this.materials = new ArrayList<MaterialDTO>();
+		this.materials = new ArrayList<SpentMaterialDTO>();
 		for(Material m : wo.getMaterials()) {
-			MaterialDTO mat = new MaterialDTO(m);
+			SpentMaterialDTO mat = new SpentMaterialDTO(m);
 			this.materials.add(mat);
 		}
 		
-		this.machines = new ArrayList<MachineDTO>();
+		this.machines = new ArrayList<MachineStateDTO>();
 		for(Machine m : wo.getMachines()) {
-			MachineDTO mac = new MachineDTO(m);
+			MachineStateDTO mac = new MachineStateDTO(m);
 			this.machines.add(mac);
 		}
 		
-		this.workers = new ArrayList<EmployeeDTO>();
+		this.workers = new ArrayList<WorkerDTO>();
 		for(Worker w : wo.getWorkers()) {
-			EmployeeDTO user = new EmployeeDTO(w);
+			WorkerDTO user = new WorkerDTO(w);
 			this.workers.add(user);
 		}
 	}	

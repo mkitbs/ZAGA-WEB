@@ -54,13 +54,15 @@ public class OperationGroupService {
 																(oDataString));
 	    
 	    for(OperationGroupDTO operation : operationGroupList) {
-	    	OperationGroup op = new OperationGroup(operation);
-	    	operationGroupRepo.save(op);
+	    	operationGroupRepo
+	    			.findByErpId(operation.getId())
+	    			.ifPresentOrElse(foundOperationGroup -> updateOperationGroup(foundOperationGroup, operation),
+	    							() -> createOperationGroup(operation));
 	    }
 
 		return operationGroupList;
 	}
-	
+
 	public ArrayList<OperationGroupDTO> convertObjectToLocalList(Object listAsObject) {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -90,6 +92,15 @@ public class OperationGroupService {
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
 	}
+	
+	private void createOperationGroup(OperationGroupDTO operation) {
+		OperationGroup op = new OperationGroup(operation);
+    	operationGroupRepo.save(op);
+	}
 
+	private void updateOperationGroup(OperationGroup oldOperationGroup, OperationGroupDTO updatedOperationGroup) {
+		oldOperationGroup.setName(updatedOperationGroup.getName());
+		operationGroupRepo.save(oldOperationGroup);
+	}
 
 }

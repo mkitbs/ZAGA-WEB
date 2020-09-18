@@ -26,11 +26,14 @@ public class MachineGroup {
 	
 	private String name;
 	
+	private Long erpId;
+	
 	@OneToMany(mappedBy = "machineGroupId")
 	private List<Machine> machines;
 	
 	public MachineGroup(MachineGroupDTO machine) {
 		this.name = machine.getName();
+		this.erpId = machine.getErpId();
 	}
 
 }

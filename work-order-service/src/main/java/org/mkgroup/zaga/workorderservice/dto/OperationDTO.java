@@ -25,7 +25,7 @@ public class OperationDTO {
 	private String name;
 	
 	@JsonProperty("Group")
-	private int group;
+	private Long group;
 	
 	@JsonProperty("Type")
 	private String type;

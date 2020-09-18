@@ -61,5 +61,6 @@ public class Crop {
 		year = crop.getYear();
 		erpId = crop.getErpId();
 		area = crop.getArea();
+		erpId = crop.getErpId();
 	}
 }

@@ -10,7 +10,9 @@ import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Operation;
+import org.mkgroup.zaga.workorderservice.model.OperationGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.OperationGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,9 @@ public class OperationService {
 	
 	@Autowired
 	OperationRepository operationRepo;
+	
+	@Autowired
+	OperationGroupRepository operationGroupRepo;
 	
 	public List<OperationDTO> getOperationsFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -110,11 +115,15 @@ public class OperationService {
 	public void updateOperation(Operation oldOperation, OperationDTO newOperation) {
 		oldOperation.setKind(newOperation.getKind());
 		oldOperation.setName(newOperation.getName());
+		OperationGroup operationGroup = operationGroupRepo.findByErpId(newOperation.getGroup()).get();
+		oldOperation.setOperationGroup(operationGroup);
 		operationRepo.save(oldOperation);
 		//dovrsiti
 	}
 	public void createOperation(OperationDTO newOperation) {
 		Operation operation = new Operation(newOperation);
+		OperationGroup operationGroup = operationGroupRepo.findByErpId(newOperation.getGroup()).get();
+		operation.setOperationGroup(operationGroup);
 		operationRepo.save(operation);
 	}
 }

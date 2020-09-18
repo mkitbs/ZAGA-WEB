@@ -54,13 +54,15 @@ public class MachineGroupService {
 																		(oDataString));
 		
 		for(MachineGroupDTO machine : machineGroupList) {
-			MachineGroup m = new MachineGroup(machine);
-			machineGroupRepo.save(m);
+			machineGroupRepo
+				.findByErpId(machine.getErpId())
+				.ifPresentOrElse(foundMachineGroup -> updateMachineGroup(foundMachineGroup, machine),
+								() -> createMachineGroup(machine));
 		}
 		
 		return machineGroupList;
 	}
-	
+
 	private ArrayList<MachineGroupDTO> convertObjectToLocalList(Object listAsObject) {
 		List<?> list = (List<?>) listAsObject;
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -89,5 +91,15 @@ public class MachineGroupService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	private void createMachineGroup(MachineGroupDTO machine) {
+		MachineGroup m = new MachineGroup(machine);
+		machineGroupRepo.save(m);
+	}
+
+	private void updateMachineGroup(MachineGroup oldMachineGroup, MachineGroupDTO updatedMachineGroup) {
+		oldMachineGroup.setName(updatedMachineGroup.getName());
+		machineGroupRepo.save(oldMachineGroup);
 	}
 }

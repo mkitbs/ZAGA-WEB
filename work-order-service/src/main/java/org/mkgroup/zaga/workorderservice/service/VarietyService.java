@@ -8,8 +8,10 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.VarietyDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Culture;
 import org.mkgroup.zaga.workorderservice.model.Variety;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
 import org.mkgroup.zaga.workorderservice.repository.VarietyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,9 @@ public class VarietyService {
 	@Autowired
 	VarietyRepository varietyRepo;
 	
+	@Autowired
+	CultureRepository cultureRepo;
+	
 	public List<VarietyDTO> getVarietiesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -54,13 +59,15 @@ public class VarietyService {
 																(oDataString));
 	    
 	    for(VarietyDTO variety : varietyList) {
-	    	Variety v = new Variety(variety);
-	    	varietyRepo.save(v);
+	    	varietyRepo
+	    			.findByErpId(variety.getId())
+	    			.ifPresentOrElse(foundVariety -> updateVariety(foundVariety, variety),
+	    							() -> createVariety(variety));
 	    }
 
 		return varietyList;
 	}
-	
+
 	public ArrayList<VarietyDTO> convertObjectToLocalList(Object listAsObject) {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -89,6 +96,23 @@ public class VarietyService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	private void createVariety(VarietyDTO variety) {
+		Variety v = new Variety(variety);
+		Culture culture = cultureRepo.findByErpId(variety.getCultureId()).get();
+		v.setCulture(culture);
+    	varietyRepo.save(v);
+	}
+
+	private void updateVariety(Variety oldVariety, VarietyDTO updatedVariety) {
+		oldVariety.setFinishing(updatedVariety.getFinishing());
+		oldVariety.setManufacturer(updatedVariety.getManufacturer());
+		oldVariety.setName(updatedVariety.getName());
+		oldVariety.setProtection(updatedVariety.getProtection());
+		Culture culture = cultureRepo.findByErpId(updatedVariety.getCultureId()).get();
+		oldVariety.setCulture(culture);
+		varietyRepo.save(oldVariety);
 	}
 	
 }

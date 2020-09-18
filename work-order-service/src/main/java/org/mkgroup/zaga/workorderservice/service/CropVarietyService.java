@@ -8,8 +8,10 @@ import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CropVarietyDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
+import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.CropVariety;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.CropRepository;
 import org.mkgroup.zaga.workorderservice.repository.CropVarietyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,10 @@ public class CropVarietyService {
 	@Autowired
 	CropVarietyRepository cropVarietyRepo;
 	
+	@Autowired
+	CropRepository cropRepo;
+	
+	
 	public List<CropVarietyDTO> getCropVarietiesFromSAP() throws JSONException {
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -55,13 +61,15 @@ public class CropVarietyService {
 																(oDataString));
 	    
 	    for(CropVarietyDTO cropVariety : cropVarietyList) {
-	    	CropVariety cv = new CropVariety(cropVariety);
-	    	cropVarietyRepo.save(cv);
+	    	cropVarietyRepo
+	    			.findByErpId(cropVariety.getId())
+	    			.ifPresentOrElse(foundCropVariety -> updateCropVariety(foundCropVariety, cropVariety),
+	    							() -> createCropVariety(cropVariety));
 	    }
 
 		return cropVarietyList;
 	}
-	
+
 	public ArrayList<CropVarietyDTO> convertObjectToLocalList(Object listAsObject) {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -90,6 +98,22 @@ public class CropVarietyService {
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
 		return json;
+	}
+	
+	private void createCropVariety(CropVarietyDTO cropVariety) {
+		CropVariety cv = new CropVariety(cropVariety);
+		Crop crop = cropRepo.findByErpId(cropVariety.getCropId()).get();
+		cv.setCrop(crop);
+    	cropVarietyRepo.save(cv);
+	}
+
+	private void updateCropVariety(CropVariety oldCropVariety, CropVarietyDTO updatedCropVariety) {
+		oldCropVariety.setArea(updatedCropVariety.getArea());
+		oldCropVariety.setCompanyCode(updatedCropVariety.getCompanyCode());
+		oldCropVariety.setOrgUnit(updatedCropVariety.getOrganisationUnit());
+		Crop crop = cropRepo.findByErpId(updatedCropVariety.getCropId()).get();
+		oldCropVariety.setCrop(crop);
+		cropVarietyRepo.save(oldCropVariety);
 	}
 	
 }

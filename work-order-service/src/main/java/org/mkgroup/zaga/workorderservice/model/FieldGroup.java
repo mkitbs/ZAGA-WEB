@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.FieldGroupDTO;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
+@Table(name = "field_group", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class FieldGroup {
 	
 	@Id
@@ -32,6 +35,8 @@ public class FieldGroup {
 	
 	private String orgUnit;
 	
+	private Long erpId;
+	
 	@OneToMany(mappedBy = "fieldGroup")
 	private List<Field> fields;
 	
@@ -39,6 +44,7 @@ public class FieldGroup {
 		this.name = field.getName();
 		this.companyCode = field.getCompanyCode();
 		this.orgUnit = field.getOrgUnit();
+		this.erpId = field.getId();
 	}
 
 }

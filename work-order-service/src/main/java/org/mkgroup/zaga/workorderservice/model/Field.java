@@ -54,5 +54,6 @@ public class Field {
 		this.name = field.getName();
 		this.year = field.getYear();
 		this.area = field.getArea();
+		this.erpId = field.getErpId();
 	}
 }

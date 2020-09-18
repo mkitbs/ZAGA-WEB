@@ -53,13 +53,16 @@ public class CultureGroupService {
 														.convertODataSetToDTO
 																(oDataString));
 	    for(CultureGroupDTO culture : cultureGroupList) {
-	    	CultureGroup c = new CultureGroup(culture);
-	    	cultureGroupRepo.save(c);
+	    	cultureGroupRepo
+	    			.findByErpId(culture.getId())
+	    			.ifPresentOrElse(foundCultureGroup -> updateCultureGroup(foundCultureGroup, culture),
+	    							() -> createCultureGroup(culture));
+	    			
 	    }
 
 		return cultureGroupList;
 	}
-	
+
 	public ArrayList<CultureGroupDTO> convertObjectToLocalList(Object listAsObject) {
 	    List<?> list = (List<?>) listAsObject;
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -90,6 +93,16 @@ public class CultureGroupService {
 		json = json.replaceAll(":}", ":\"\"}");
 		System.out.println(json);
 		return json;
+	}
+	
+	private void createCultureGroup(CultureGroupDTO culture) {
+		CultureGroup c = new CultureGroup(culture);
+    	cultureGroupRepo.save(c);
+	}
+
+	private void updateCultureGroup(CultureGroup oldCultureGroup, CultureGroupDTO updatedCultureGroup) {
+		oldCultureGroup.setName(updatedCultureGroup.getName());
+		cultureGroupRepo.save(oldCultureGroup);
 	}
 
 }

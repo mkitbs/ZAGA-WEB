@@ -28,10 +28,13 @@ public class CultureGroup {
 	
 	private String name;
 	
+	private Long erpId;
+	
 	@OneToMany(mappedBy = "cultureGroup")
 	private List<Culture> cultures;
 	
 	public CultureGroup(CultureGroupDTO culture) {
 		this.name = culture.getName();
+		this.erpId = culture.getId();
 	}
 }

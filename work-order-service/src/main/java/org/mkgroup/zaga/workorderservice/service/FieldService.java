@@ -9,7 +9,9 @@ import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Field;
+import org.mkgroup.zaga.workorderservice.model.FieldGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.FieldGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,9 @@ public class FieldService {
 	@Autowired
 	FieldRepository fieldRepo;
 	
+	@Autowired
+	FieldGroupRepository fieldGroupRepo;
+	
 	public List<FieldDTO> getFieldsFromSAP() throws JSONException{
 		//Authorization String to Encode
 		StringBuilder authEncodingString = new StringBuilder()
@@ -53,8 +58,10 @@ public class FieldService {
 														.convertODataSetToDTO
 																(oDataString));
 		for(FieldDTO field : fieldList) {
-			Field f = new Field(field);
-			fieldRepo.save(f);
+			fieldRepo
+			.findByErpId(field.getErpId())
+			.ifPresentOrElse(foundField -> updateField(foundField, field),
+							() -> createField(field));
 		}
 		
 		return fieldList;
@@ -90,6 +97,23 @@ public class FieldService {
 		return json;
 	}
 	
+	private void createField(FieldDTO field) {
+		Field f = new Field(field);
+		FieldGroup fg = fieldGroupRepo.findByErpId(field.getFieldGroup()).get();
+		f.setFieldGroup(fg);
+		fieldRepo.save(f);
+	}
+
+	private void updateField(Field oldField, FieldDTO updatedField) {
+		oldField.setArea(updatedField.getArea());
+		oldField.setCompanyCode(updatedField.getCompanyCode());
+		oldField.setName(updatedField.getName());
+		oldField.setOrgUnit(updatedField.getOrgUnit());
+		FieldGroup fg = fieldGroupRepo.findByErpId(updatedField.getFieldGroup()).get();
+		oldField.setFieldGroup(fg);
+		fieldRepo.save(oldField);
+	}
+	
 	public List<FieldDTO> getAll() {
 		List<Field> fields = fieldRepo.findAll();
 		List<FieldDTO> retValues = new ArrayList<FieldDTO>();
@@ -99,4 +123,5 @@ public class FieldService {
 		}
 		return retValues;
 	}
+	
 }

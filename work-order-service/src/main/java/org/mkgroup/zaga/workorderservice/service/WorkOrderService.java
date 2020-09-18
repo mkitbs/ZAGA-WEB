@@ -6,16 +6,21 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.MachineStateDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.Machine;
+import org.mkgroup.zaga.workorderservice.model.MachineState;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
+import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.model.Worker;
-import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
+import org.mkgroup.zaga.workorderservice.model.WorkerHours;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +35,6 @@ public class WorkOrderService {
 	WorkOrderRepository workOrderRepo;
 	
 	@Autowired
-	OperationRepository operationRepo;
-	
-	@Autowired
 	WorkerService workerService;
 	
 	@Autowired 
@@ -43,6 +45,21 @@ public class WorkOrderService {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
+	@Autowired
+	WorkerHoursService workerHoursService;
+	
+	@Autowired
+	MachineService machineService;
+	
+	@Autowired
+	MaterialService materialService;
+	
+	@Autowired
+	MachineStateService machineStateService;
+	
+	@Autowired
+	SpentMaterialService spentMaterialService;
 	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
@@ -63,33 +80,57 @@ public class WorkOrderService {
 			User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
 			workOrder.setResponsible(responsible);
 			
-			ModelMapper modelMapper = new ModelMapper();
-			
-			List<Machine> machines = workOrderDTO.getMachines()
-					  .stream()
-					  .map(machine -> modelMapper.map(machine, Machine.class))
-					  .collect(Collectors.toList());
-			workOrder.setMachines(machines);
-			
-			List<Material> materials = workOrderDTO.getMaterials()
-					.stream()
-					.map(material -> modelMapper.map(material, Material.class))
-					.collect(Collectors.toList());
-			workOrder.setMaterials(materials);
-			
-			List<User> users = workOrderDTO.getWorkers()
-					.stream()
-					.map(user -> modelMapper.map(user, User.class))
-					.collect(Collectors.toList());
 			List<Worker> workers = new ArrayList<Worker>();
-			for(User user : users) {
+			for(WorkerDTO w : workOrderDTO.getWorkers()) {
 				Worker worker = new Worker();
-				worker.setUserId(user.getId());
+				worker.setUserId(w.getUserId());
 				worker.getWorkOrders().add(workOrder);
 				worker = workerService.addWorker(worker);
 				workers.add(worker);
+				
+				WorkerHours wh = new WorkerHours();
+				wh.setOperationId(w.getOperationId());
+				wh.setWorkerId(worker.getId());
+				wh = workerHoursService.addWorkerHours(wh);
 			}
 			workOrder.setWorkers(workers);
+			
+			List<Machine> machines = new ArrayList<Machine>();
+			for(MachineStateDTO m : workOrderDTO.getMachines()) {
+				Machine machine = machineService.getOne(m.getMachineId());
+				machines.add(machine);
+				
+				MachineState ms = new MachineState();
+				ms.setMachineId(m.getMachineId());
+				for(Worker w : workers) {
+					if(w.getUserId().equals(m.getWorkerId())) {
+						ms.setWorkerId(w.getId());
+					} else {
+						Worker worker = new Worker();
+						worker.setUserId(m.getWorkerId());
+						worker.getWorkOrders().add(workOrder);
+						worker = workerService.addWorker(worker);
+						ms.setWorkerId(worker.getId());
+					}
+				}
+				ms = machineStateService.addMachineState(ms);
+			}
+			workOrder.setMachines(machines);
+			
+			List<Material> materials = new ArrayList<Material>();
+			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
+				Material material = materialService.getOne(m.getMaterialId());
+				materials.add(material);
+				
+				SpentMaterial spentMaterial = new SpentMaterial();
+				spentMaterial.setMaterialId(m.getMaterialId());
+				spentMaterial.setQuantity(m.getQuantity());
+				spentMaterial.setQuantityPerHectar(m.getQuantityPerHectar());
+				spentMaterial = spentMaterialService.addSpentMaterial(spentMaterial);
+			}
+			workOrder.setMaterials(materials);
+			
+			
 			
 			log.info("Insert work order into db");
 			workOrderRepo.save(workOrder);

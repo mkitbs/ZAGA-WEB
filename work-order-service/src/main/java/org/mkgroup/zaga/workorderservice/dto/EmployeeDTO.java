@@ -37,10 +37,4 @@ public class EmployeeDTO {
 		name = user.getName();
 	}
 
-	public EmployeeDTO(Worker w) {
-		userId = w.getUserId();
-		id = w.getId();
-	}
-
-
 }

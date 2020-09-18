@@ -10,7 +10,9 @@ import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Culture;
+import org.mkgroup.zaga.workorderservice.model.CultureGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.CultureGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,9 @@ public class CultureService {
 	
 	@Autowired
 	CultureRepository cultureRepo;
+	
+	@Autowired
+	CultureGroupRepository cultureGroupRepo;
 	
 	public List<CultureDTO> getCulturesFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -98,12 +103,16 @@ public class CultureService {
 
 	public void updateCulture(Culture oldCulture, CultureDTO newCulture) {
 		oldCulture.setName(newCulture.getName());
+		CultureGroup cultureGroup = cultureGroupRepo.findByErpId(newCulture.getCultureGroupId()).get();
+		oldCulture.setCultureGroup(cultureGroup);
 		//dovrsiti
 		cultureRepo.save(oldCulture);
 	}
 	
 	public void createCulture(CultureDTO newCulture) {
 		Culture culture = new Culture(newCulture);
+		CultureGroup cultureGroup = cultureGroupRepo.findByErpId(newCulture.getCultureGroupId()).get();
+		culture.setCultureGroup(cultureGroup);
 		cultureRepo.save(culture);
 	}
 }
