@@ -56,7 +56,6 @@ export class CreateworkOrderComponent implements OnInit {
   editingMachine = false;
   editingMaterial = false;
   workId = this.route.snapshot.params.workId;
-  query = "";
   material: Material = new Material();
   idOfEditingMaterial: any = 0;
   idOfEditingWorker: any = 0;
@@ -91,7 +90,6 @@ export class CreateworkOrderComponent implements OnInit {
   filteredOptions: Observable<string[]>;
 
   ngOnInit() {
-    this.query = this.nameFC.value;
     if (this.workId == "new") {
       //new
       this.new = true;
