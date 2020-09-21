@@ -10,7 +10,7 @@
                 </div>
                 <div class="col" style="float: right">
                     <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
-                    <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
+                    <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="updateWorkOrder()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
                     <button class="btn btn-primary btn-add mr-2" *ngIf="new"  (click)="addWorkOrder()"><i class="fa fa-plus mr-2"></i>Kreiraj</button>
                 </div>
             </div>
@@ -26,15 +26,15 @@
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
                 <td class="right-col-header" >
-                    <select name="" [(ngModel)]="workOrder.operationId" class="form-control" id="">
-                      <option value="{{op.Name}}&{{op.id}}" *ngFor="let op of operations">{{op.Name}}</option>
+                    <select name="" [(ngModel)]="workOrder.operationId" class="form-control" id="" (change)="getOperation()">
+                      <option value="{{op.id}}&{{op.Name}}" *ngFor="let op of operations">{{op.Name}}</option>
                     </select>
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-database mr-2"></i>Tabla:
                  </td>
                  <td class="right-col-header">
-                    <select name=""  class="form-control" id="">
+                    <select name="" [(ngModel)]="selectedTable" (change)="getCulture()" class="form-control" id="">
                         <option value="{{table.id}}" *ngFor="let table of fields">{{table.Name}}</option>
                     </select>
                  </td>
@@ -75,7 +75,7 @@
                                 [displayWith]="getEmpName.bind(this)"
                                 #auto="matAutocomplete">
                                 <mat-option *ngFor="let emp of allEmployees | SearchEmployees : search.value"
-                                             [value]="emp.id">
+                                             [value]="emp.userId">
                                              {{emp.name}}
                                 </mat-option>
                             </mat-autocomplete>
@@ -88,8 +88,8 @@
                   <i class="fa fa-cubes"></i> Kultura:
                 </td>
                 <td class="right-col-header">
-                    <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
-                        <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.Name}}</option>
+                    <select name="" [(ngModel)]="workOrder.cropId" class="form-control" id="" (change)="getArea()">
+                        <option value="{{crop.id}}" *ngFor="let crop of crops">{{crop.Name.split(',')[1]}}</option>
                     </select>
                 </td>
                 <td class="left-col-header">
@@ -101,7 +101,7 @@
                         <option value="2019">2019</option>
                     </select>
                     <ng-template #elseBlockYear>
-                        <select  name=""  id="" class="form-control">
+                        <select  name="" [(ngModel)]="selectedYear"  id="" class="form-control" (change)="getCulture()">
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
                         </select>
@@ -114,7 +114,7 @@
                 </td>
                 <td class="right-col-header">
                     <div class="input-group mb-3">
-                        <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
+                        <input type="text" name="" [(ngModel)]="crop.Area" id="" class="form-control">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">ha</span>
                         </div>
@@ -182,9 +182,9 @@
                             <option value="{{w.id}}" *ngFor="let w of employees" >{{w.Name}}</option>
                         </select>
                         <ng-template #elseBlockWorkers>
-                            <select  name="" [(ngModel)]="selectedWorker" id="" class="form-control">
-                                <option value="-1">--Izaberi--</option>
-                                <option value="{{emp.id}}&{{emp.Name}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
+                            <select  name="" [(ngModel)]="selectedWorker" id="" class="form-control" >
+                                <option value="-1">Izaberi radnika</option>
+                                <option value="{{emp.userId}}&{{emp.name}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                             </select>
                         </ng-template>
                     </div>
@@ -205,8 +205,8 @@
                                 <option  *ngFor="let op of operations" value="{{op.id}}">{{op.Name}}</option>
                             </select>
                             <ng-template #elseBlockOperations>
-                                <select name="" id="" class="form-control">
-                                    <option value="{{workOrder.operationId.split('&')[1]}}" >{{workOrder.operationId.split("&")[0]}}</option>
+                                <select name="" id="" [(ngModel)]="selectedOperation" class="form-control">
+                                   <!-- <option value="{{workOrder.operationId.split('&')[1]}}" >{{workOrder.operationId.split("&")[0]}}</option>-->
                                     <option value="{{op.id}}&{{op.Name}}" *ngFor="let op of operations">{{op.Name}}</option>
                                 </select>
                             </ng-template>
@@ -255,7 +255,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngFor="let worker of employees">
+                <tr *ngFor="let worker of workerss">
                     <td>{{ worker.name }}</td>
                     <td *ngIf="!new">{{ worker.date }}</td>
                     <td >{{ worker.operation }}</td>
@@ -314,7 +314,8 @@
                             </select>
                             <ng-template #elseBlockMachine>
                                 <select [(ngModel)]="selectedMachine" name="" id="" class="form-control">
-                                    <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.Name}}</option>
+                                    <option value="-1">Izaberi mašinu</option>
+                                    <option value="{{dev.id}}&{{dev.Name}}" *ngFor="let dev of devices">{{dev.Name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -326,8 +327,9 @@
                                 <option value="{{w.id}}" *ngFor="let w of employees" >{{w.Name}}</option>
                             </select>
                             <ng-template #elseBlockWorkersMachine>
-                                <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
-                                    <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.Name}}</option>
+                                <select [(ngModel)]="selectedWorkerForMachine" name="" id="" class="form-control">
+                                    <option value="-1">Izaberite radnika</option>
+                                    <option value="{{emp.userId}}&{{emp.name}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                                 </select>
                             </ng-template>
                         </div>
@@ -381,15 +383,15 @@
                             </button>
                         </div>
                         <div *ngIf="editingMachine" class="form-group">
-                            <button class="btn btn-primary btn-add mr-2" (click)="updateExistingMachine()" [disabled]="workOrder.status == 'Zatvoren'">
+                            <button class="btn btn-primary btn-add mr-2" (click)="editExistingMachine()" [disabled]="workOrder.status == 'Zatvoren'">
                                 <i class="fa fa-check"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
                 <tr *ngFor="let machine of woMachines">
-                    <td>{{ machine.name }}</td>
-                    <td>{{ machine.worker }}</td>
+                    <td>{{ machine.machineName }}</td>
+                    <td>{{ machine.userName }}</td>
                     <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
                     <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
                     <td *ngIf="!new">{{machine.finalState*1 - machine.initialState*1 || 0}} mh</td>
@@ -448,7 +450,8 @@
                             </select>
                             <ng-template #elseBlockMaterial>
                                 <select [(ngModel)]="selectedMaterial" name="" id="" class="form-control">
-                                    <option value="{{sub.id}}" *ngFor="let sub of substances">{{sub.Name}}</option>
+                                    <option value="-1">Izaberi materijal</option>
+                                    <option value="{{sub.id}}&{{sub.Name}}" *ngFor="let sub of substances">{{sub.Name}}</option>
                                 </select>
                             </ng-template>
                             
@@ -457,7 +460,7 @@
                     <td>
                         <div class="form-group">
                             <div class="input-group mb-3">
-                                <input [(ngModel)]="material.quantity/workOrder.area" type="number" name="" id="" class="form-control" disabled >
+                                <input [(ngModel)]="material.quantity/crop.Area" type="number" name="" id="" class="form-control" disabled >
                                 <div class="input-group-append">
                                     <span class="input-group-text" id="basic-addon2">{{material.unit}}/ha</span>
                                 </div>
@@ -518,8 +521,8 @@
                     </td>
                 </tr>
                 <tr *ngFor="let material of woMaterials">
-                    <td>{{ material.name }}</td>
-                    <td>{{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</td>
+                    <td>{{ material.materialName }}</td>
+                    <td>{{ (material.quantity / crop.Area).toFixed(2) }} {{material.unit}}/ha</td>
                     <td>{{ material.quantity }} {{material.unit}}</td>
                     <td >{{ material.unit }}</td>
                     <td *ngIf="!new">{{ material.spent / workOrder.area }} {{material.unit}}/ha</td>

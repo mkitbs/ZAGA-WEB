@@ -70,7 +70,7 @@
                 <td>{{workOrder.end | date:'dd.MM.yyyy.'}}</td>
                 <td>{{workOrder.table}}</td>
                 <td>{{workOrder.area}}ha</td>
-                <td>{{workOrder.cropName}}</td>
+                <td>{{workOrder.cropName.split(',')[1]}}</td>
                 <td>{{workOrder.responsibleName}}</td>
                 <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
             </tr>

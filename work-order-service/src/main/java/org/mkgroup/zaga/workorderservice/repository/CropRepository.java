@@ -6,11 +6,17 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import feign.Param;
 
 @Repository
 public interface CropRepository extends JpaRepository<Crop, UUID>{
 	
 	List<Crop> findByOrderByNameAsc();
 	Optional<Crop> findByErpId(Long id);
+	
+	@Query(value = "SELECT * FROM crop c WHERE c.field_id=:fieldId AND c.year=:year", nativeQuery = true)
+	List<Crop> findByFieldAndYear(@Param("fieldId") UUID fieldId, @Param("year") int year);
 }

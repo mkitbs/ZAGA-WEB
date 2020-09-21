@@ -13,4 +13,8 @@ export class FieldService {
   getAll() : Observable<any>{
     return this.http.get(environment.gatewayWorkOrderURL+ "api/field/getAll")
   }
+
+  getOne(id) : Observable<any>{
+    return this.http.get(environment.gatewayWorkOrderURL+ "api/field/getOne/" + id)
+  }
 }

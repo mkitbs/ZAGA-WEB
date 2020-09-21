@@ -1,6 +1,6 @@
-import { Material } from './Material';
-import { Machine } from './Machine';
-import { Employee } from './Employee';
+import { SpentMaterial } from './SpentMaterial';
+import { MachineState } from './MachineState';
+import { Worker } from './Worker';
 
 export class WorkOrder{
     id:string;
@@ -10,8 +10,8 @@ export class WorkOrder{
     cropId:string;
     operationId:string;
     responsibleId:string;
-    materials:Material [] = [];
-    machines:Machine [] = [];
-    workers: Employee [] = [];
+    materials:SpentMaterial [] = [];
+    machines:MachineState [] = [];
+    workers: Worker [] = [];
     operationName;
 }
