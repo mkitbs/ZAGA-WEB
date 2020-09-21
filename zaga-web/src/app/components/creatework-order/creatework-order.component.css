@@ -1,116 +1,135 @@
 .table-input td {
-    text-align: left;
+  text-align: left;
 }
 
-.table-input > tr > td {
-    border-top: none !important;
-    border-bottom: 1px solid #73964a;
+.table-input>tr>td {
+  border-top: none !important;
+  border-bottom: 1px solid #73964a;
 }
 
 .header-table {
-    padding-left: 0%;
-    padding-right: 0%;
-    margin-left: 0%;
-    margin-right: 0%;
+  padding-left: 0%;
+  padding-right: 0%;
+  margin-left: 0%;
+  margin-right: 0%;
 }
 
 .customAuto {
-    width: 100% !important;
-    color: black !important;
+  width: 100% !important;
+  color: black !important;
 }
 
 h3 {
-    color: #5C7495;
+  color: #5C7495;
 }
 
 .header-table td {
-    border-bottom: 1px solid #73964a;
-    border-top: 1px solid #73964a;
+  border-bottom: 1px solid #73964a;
+  border-top: 1px solid #73964a;
 
 }
 
 .left-col-header {
-    font-weight: bold;
-    color: #5C7495;
-    padding-right: 0%;  
-    margin-right: 0%;
-    vertical-align: middle;
+  font-weight: bold;
+  color: #5C7495;
+  padding-right: 0%;
+  margin-right: 0%;
+  vertical-align: middle;
 }
 
 .right-col-header {
-    font-weight: bold;
-    color: #73964a;
-    padding-left: 0%;
-    margin-left: 0%;
-    vertical-align: middle;
+  font-weight: bold;
+  color: #73964a;
+  padding-left: 0%;
+  margin-left: 0%;
+  vertical-align: middle;
 }
 
 td.right-col-header {
-    width: 300px !important;
+  width: 300px !important;
 }
 
 td.left-col-header {
-    width: 100px !important;
+  width: 100px !important;
 }
 
 
 label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .btn-edit {
-    float: right;
-    background-color: #f68901;
-    border: none;
-    box-shadow: none;
+  float: right;
+  background-color: #f68901;
+  border: none;
+  box-shadow: none;
 }
 
 .btn-add {
-    float: right;
-    background-color: #33590b;
-    border: none;
-    box-shadow: none;
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
 }
 
 
-button.calendar{
-    width: 2.75rem;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
-    background-repeat: no-repeat;
-    background-size: 23px;
-    background-position: center;
-    background-color: transparent !important;
-  }
-
-.statusNovi{
-    color: #5C7495
+button.calendar {
+  width: 2.75rem;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
+  background-repeat: no-repeat;
+  background-size: 23px;
+  background-position: center;
+  background-color: transparent !important;
 }
 
-.statusURadu{
-    color: #f68901;
+.statusNovi {
+  color: #5C7495
 }
 
-.statusZatvoren{
-    color: #73964a;
+.statusURadu {
+  color: #f68901;
 }
 
-.inputFillFalse{
-    border: 2px solid red;
-    border-radius: 4px;
+.statusZatvoren {
+  color: #73964a;
 }
 
-.inputAuto, .mat-form-field-infix {
-    border: 10px solid black !important;
-    font-size: 12px !important;
-    font-family: 'Montserrat' !important;
-    font-size: 12px !important;
+.inputFillFalse {
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
+.inputAuto,
+.mat-form-field-infix {
+  font-size: 12px !important;
+  font-family: 'Montserrat' !important;
+  width: 100% !important;
+  color: black !important;
+}
+
+.mat-input-element {
+  caret-color: #5C7495 !important;
+  /* cursor color on autocomplete input */
+}
+
+::ng-deep .mat-form-field-underline,
+::ng-deep .mat-form-field-ripple {
+  background-color: #5C7495 !important;
+  color: #5C7495 !important
+}
+
+::ng-deep .mat-form-field-empty.mat-form-field-label {
+  color: #5C7495 !important;
 }
 
 @media only screen and (max-width: 600px) {
-    .btn-add, .btn-edit{
-        max-width: 110px;
-    }
-    hr.solid {
-        border-top: 3px solid #5C7495;
-      }
+
+  .btn-add,
+  .btn-edit {
+    max-width: 110px;
+  }
+
+  hr.solid {
+    border-top: 3px solid #5C7495;
+  }
 }
