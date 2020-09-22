@@ -6,6 +6,8 @@ spring:
       server:
         git:
           uri: https://github.com/mkitbs/git-config-repo
+          username: mkitbusiness.solutions@gmail.com
+          password: M0gadish
           search-paths:
            - app-zaga
           skipSslValidation: true
