@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.Material;
+import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.Worker;
 

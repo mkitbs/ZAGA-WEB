@@ -127,9 +127,7 @@ public class WorkOrderService {
 				spentMaterial = spentMaterialService.addSpentMaterial(spentMaterial);
 			}
 			workOrder.setMaterials(materials);
-			
-			
-			
+	
 			log.info("Insert work order into db");
 			workOrderRepo.save(workOrder);
 		}catch(Exception e) {
