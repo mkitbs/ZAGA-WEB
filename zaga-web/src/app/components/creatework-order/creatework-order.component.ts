@@ -27,24 +27,25 @@ import { MachineState } from 'src/app/models/MachineState';
 import { SpentMaterial } from 'src/app/models/SpentMaterial';
 
 @Component({
-  selector: 'app-creatework-order',
-  templateUrl: './creatework-order.component.html',
-  styleUrls: ['./creatework-order.component.css']
+  selector: "app-creatework-order",
+  templateUrl: "./creatework-order.component.html",
+  styleUrls: ["./creatework-order.component.css"],
 })
 export class CreateworkOrderComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute, 
-    private toastr: ToastrService, 
+  constructor(
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
     private router: Router,
     private userService: UserService,
-    private operationService:OperationService,
-    private cultureService:CultureService,
-    private machineService:MachineService,
-    private materialService:MaterialService,
-    private workOrderService:WorkOrderService,
-    private fieldService:FieldService,
-    private cropService:CropService,
-    private deviceService:DeviceDetectorService) { 
+    private operationService: OperationService,
+    private cultureService: CultureService,
+    private machineService: MachineService,
+    private materialService: MaterialService,
+    private workOrderService: WorkOrderService,
+    private fieldService: FieldService,
+    private cropService: CropService,
+    private deviceService: DeviceDetectorService
+  ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
@@ -57,6 +58,7 @@ export class CreateworkOrderComponent implements OnInit {
   editingMachine = false;
   editingMaterial = false;
   workId = this.route.snapshot.params.workId;
+
   query = '';
   material : SpentMaterial = new SpentMaterial();
   idOfEditingMaterial:any = 0;
@@ -78,8 +80,8 @@ export class CreateworkOrderComponent implements OnInit {
   crop: Crop = new Crop();
   culture: Culture = new Culture();
   employee: Employee = new Employee();
-  workOrder : WorkOrder = new WorkOrder();
-  worker : Worker = new Worker();
+  workOrder: WorkOrder = new WorkOrder();
+  worker: Worker = new Worker();
   employees: Employee[] = [];
   machine: MachineState = new MachineState();
   woMachines: MachineState[] = [];
@@ -95,41 +97,43 @@ export class CreateworkOrderComponent implements OnInit {
   selectedYear = 2020;
   selectedCrop;
 
-  nameFC : FormControl = new FormControl("");
-  
+  nameFC: FormControl = new FormControl("");
+
   filteredOptions: Observable<string[]>;
 
   ngOnInit() {
-    this.query = this.nameFC.value;
-    if(this.workId == "new") { //new
+    if (this.workId == "new") {
+      //new
       this.new = true;
       this.workOrder = new WorkOrder();
       this.workOrder.machines = [];
       this.workOrder.workers = [];
       this.workOrder.materials = [];
-      this.workOrder.status = "Novi"
+      this.workOrder.status = "Novi";
     } else {
       this.new = false;
 
-      this.workOrderService.getOne(this.workId).subscribe(data => {
+      this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
-        console.log(this.workOrder)
-        if(this.workOrder.status == "NEW"){
+        
+        if (this.workOrder.status == "NEW") {
           this.workOrder.status = "Novi";
-        } else if(this.workOrder.status == "IN_PROGRESS"){
+        } else if (this.workOrder.status == "IN_PROGRESS") {
           this.workOrder.status = "U radu";
-        } else if(this.workOrder.status == "CLOSED"){
+        } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
         }
 
-        this.workOrder.start = { day: +this.workOrder.start.substring(8,10),
-          month: +this.workOrder.start.substring(5,7), 
-          year: +this.workOrder.start.substring(0,4)
+        this.workOrder.start = {
+          day: +this.workOrder.start.substring(8, 10),
+          month: +this.workOrder.start.substring(5, 7),
+          year: +this.workOrder.start.substring(0, 4),
         };
-        this.workOrder.end = { day: +this.workOrder.end.substring(8,10), 
-          month: +this.workOrder.end.substring(5,7), 
-          year: +this.workOrder.end.substring(0,4)
-       };
+        this.workOrder.end = {
+          day: +this.workOrder.end.substring(8, 10),
+          month: +this.workOrder.end.substring(5, 7),
+          year: +this.workOrder.end.substring(0, 4),
+        };
 
        this.workOrder.workers.forEach(data => {
         this.worker = data;
@@ -137,12 +141,13 @@ export class CreateworkOrderComponent implements OnInit {
        })
       })
     }
+      
 
-    this.userService.getAll().subscribe(data=>{
+    this.userService.getAll().subscribe((data) => {
       this.allEmployees = data.content;
-    })
+    });
 
-    this.operationService.getAll().subscribe(data=>{
+    this.operationService.getAll().subscribe((data) => {
       this.operations = data;
     })
     /*
@@ -150,19 +155,20 @@ export class CreateworkOrderComponent implements OnInit {
       this.crops = data;
     })
     */
-    this.machineService.getAll().subscribe(data=>{
+    this.cultureService.getAll().subscribe((data) => {
+      this.cultures = data;
+    });
+    this.machineService.getAll().subscribe((data) => {
       this.devices = data;
-    })
+    });
 
-    this.materialService.getAll().subscribe(data=>{
+    this.materialService.getAll().subscribe((data) => {
       this.substances = data;
-    })
+    });
 
-    this.fieldService.getAll().subscribe(data =>{
+    this.fieldService.getAll().subscribe((data) => {
       this.fields = data;
-    })
-
-    
+    })  
   }
 
   getArea(){
@@ -176,33 +182,45 @@ export class CreateworkOrderComponent implements OnInit {
     this.selectedOperation = this.workOrder.operationId.split("&")[0]+"&"+this.workOrder.operationId.split("&")[1]
   }
 
-  getWorker(id){
-    this.userService.getOne(id).subscribe(data => {
+  getWorker(id) {
+    this.userService.getOne(id).subscribe((data) => {
       this.employee = data;
       this.employees.push(this.employee);
-    })
+    });
   }
 
   expandWorkers() {
     this.workers = !this.workers;
     let el = document.getElementById("rad");
-    setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
-    
+    setTimeout(() => {
+      el.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, 500);
   }
   expandMachines() {
     this.machines = !this.machines;
-    if(!this.deviceService.isMobile){
+    if (!this.deviceService.isMobile) {
       let el = document.getElementById("mas");
-      setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+      setTimeout(() => {
+        el.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 500);
     }
   }
   expandMaterials() {
     this.materials = !this.materials;
-    if(!this.deviceService.isMobile){
+    if (!this.deviceService.isMobile) {
       let el = document.getElementById("mat");
-      setTimeout(()=>{el.scrollIntoView({behavior:"smooth"})}, 500);
+      setTimeout(() => {
+        el.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 500);
     }
   }
+
 
   addWorker(){
     this.worker.userId = this.selectedWorker.split("&")[0];
@@ -214,6 +232,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.selectedWorker = "-1";
     this.selectedOperation = this.workOrder.operationId.split("&")[0]+"&"+this.workOrder.operationId.split("&")[1]
   }
+
 
   editWorker(worker){
     this.worker.userId = worker.userId;
@@ -333,42 +352,55 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.start = dateStartToAdd;
     this.workOrder.end = dateEndToAdd;
     this.workOrder.operationId = this.workOrder.operationId.split("&")[0]
+
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.workerss;
     this.workOrder.materials = this.woMaterials;
-    this.workOrder.responsibleId = this.nameFC.value;
-    
-    this.workOrderService.addWorkOrder(this.workOrder).subscribe(data => {
-      this.toastr.success("Uspešno kreiran radni nalog.");
-    }, error => {
-      this.toastr.error("Radni nalog nije kreiran.");
-    })
+
+    this.workOrder.responsibleId = this.nameFC.value.userId;
+
+    this.workOrderService.addWorkOrder(this.workOrder).subscribe(
+      (data) => {
+        this.toastr.success("Uspešno kreiran radni nalog.");
+      },
+      (error) => {
+        this.toastr.error("Radni nalog nije kreiran.");
+      }
+    );
+
+    console.log(this.workOrder);
   }
 
-  updateWorkOrder(){
+  updateWorkOrder() {
     var dateStartToAdd = "";
     var dateEndToAdd = "";
-    if(this.workOrder.start != undefined) {
-        if(this.workOrder.start.month < 10) {
-          this.workOrder.start.month = '0' + this.workOrder.start.month;
-        }
-        if(this.workOrder.start.day < 10){
-          this.workOrder.start.day = '0' + this.workOrder.start.day;
-        }
-        dateStartToAdd= this.workOrder.start.year + '-' 
-          + this.workOrder.start.month + '-' 
-          + this.workOrder.start.day;
+    if (this.workOrder.start != undefined) {
+      if (this.workOrder.start.month < 10) {
+        this.workOrder.start.month = "0" + this.workOrder.start.month;
+      }
+      if (this.workOrder.start.day < 10) {
+        this.workOrder.start.day = "0" + this.workOrder.start.day;
+      }
+      dateStartToAdd =
+        this.workOrder.start.year +
+        "-" +
+        this.workOrder.start.month +
+        "-" +
+        this.workOrder.start.day;
     }
-    if(this.workOrder.end != undefined) {
-      if(this.workOrder.end.month < 10) {
-        this.workOrder.end.month = '0' + this.workOrder.end.month;
+    if (this.workOrder.end != undefined) {
+      if (this.workOrder.end.month < 10) {
+        this.workOrder.end.month = "0" + this.workOrder.end.month;
       }
-      if(this.workOrder.end.day < 10){
-        this.workOrder.end.day = '0' + this.workOrder.end.day;
+      if (this.workOrder.end.day < 10) {
+        this.workOrder.end.day = "0" + this.workOrder.end.day;
       }
-      dateEndToAdd= this.workOrder.end.year + '-' 
-        + this.workOrder.end.month + '-' 
-        + this.workOrder.end.day;
+      dateEndToAdd =
+        this.workOrder.end.year +
+        "-" +
+        this.workOrder.end.month +
+        "-" +
+        this.workOrder.end.day;
     }
     
     this.workOrder.start = dateStartToAdd;
@@ -380,20 +412,20 @@ export class CreateworkOrderComponent implements OnInit {
     }, error => {
       this.toastr.error("Radni nalog nije sačuvan.");
     })
-    
+
     console.log(this.workOrder)
+
   }
 
-  setForEdit(wor){
+  setForEdit(wor) {
     this.workerMob = wor;
-    console.log(wor)
   }
 
-  getEmpName(id) {
-    return this.allEmployees.find(emp => emp.id === id).name;
+  displayFn(emp: Employee): string {
+    return emp && emp.name ? emp.name : "";
   }
 
-  addEmployee(){
+  addEmployee() {
     this.workerMob = new Worker();
   }
 

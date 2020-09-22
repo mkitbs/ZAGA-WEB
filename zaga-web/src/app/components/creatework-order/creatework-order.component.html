@@ -1,4 +1,5 @@
 <div class="container mt-4 d-none d-md-block">
+<<<<<<< HEAD
     <div class="col-12 mb-3">
         
         <div class="button-group">
@@ -16,12 +17,184 @@
             </div>
             
             
+=======
+  <div class="col-12 mb-3">
+
+    <div class="button-group">
+      <div class="row">
+        <div class="col">
+          <h3 *ngIf="new">Kreiranje naloga</h3>
+          <h3 *ngIf="!new">Informacije o nalogu</h3>
+          <span>Status: </span><span
+            [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
         </div>
+        <div class="col" style="float: right">
+          <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
+            (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2"></i>Zatvori</button>
+          <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
+            (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
+          <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder()"><i
+              class="fa fa-plus mr-2"></i>Kreiraj</button>
+        </div>
+      </div>
+
+
     </div>
-    <!--header info-->
-    <div class="header-info">
-        <table class="table header-table">
+  </div>
+  <!--header info-->
+  <div class="header-info">
+    <table class="table header-table">
+      <tr>
+        <td class="left-col-header">
+          <i class="fa fa-file mr-2"></i>Operacija:
+        </td>
+        <td class="right-col-header">
+          <select name="" [(ngModel)]="workOrder.operationId" class="form-control" id="">
+            <option value="{{op.Name}}&{{op.id}}" *ngFor="let op of operations">{{op.Name}}</option>
+          </select>
+        </td>
+        <td class="left-col-header">
+          <i class="fa fa-database mr-2"></i>Tabla:
+        </td>
+        <td class="right-col-header">
+          <select name="" class="form-control" id="">
+            <option value="{{table.id}}" *ngFor="let table of fields">{{table.Name}}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="left-col-header">
+          <i class="fa fa-calendar mr-2"></i>Datum:
+        </td>
+        <td class="right-col-header">
+          <div class="form-row">
+            <div class="col">
+              <input type="date" [(ngModel)]="workOrder.start" name="poc" id="from" ngbDatepicker #from="ngbDatepicker"
+                (click)="from.toggle()" class="form-control">
+            </div>
+            <div class="mt-2">
+              -
+            </div>
+            <div class="col">
+              <input type="date" [(ngModel)]="workOrder.end" name="kraj" class="form-control" id="to" ngbDatepicker
+                #to="ngbDatepicker" (click)="to.toggle()">
+            </div>
+          </div>
+        </td>
+        <td class="left-col-header">
+          <i class="fa fa-user mr-2"></i>Odgovorna osoba:
+        </td>
+        <td class="right-col-header">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="auto" #search style="width: 100%;">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let emp of allEmployees 
+                                                    | SearchEmployees : search.value" [value]="emp">
+                  {{emp.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td class="left-col-header">
+          <i class="fa fa-cubes"></i> Kultura:
+        </td>
+        <td class="right-col-header">
+          <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
+            <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.Name}}</option>
+          </select>
+        </td>
+        <td class="left-col-header">
+          <i class="fa fa-tasks mr-2"></i>Godina:
+        </td>
+        <td class="right-col-header">
+          <select name="" [(ngModel)]="workOrder.year" id="" class="form-control" *ngIf="!new; else elseBlockYear">
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+          </select>
+          <ng-template #elseBlockYear>
+            <select name="" id="" class="form-control">
+              <option value="2020">2020</option>
+              <option value="2019">2019</option>
+            </select>
+          </ng-template>
+        </td>
+      </tr>
+      <tr>
+        <td class="left-col-header">
+          <i class="fa fa-clone"></i> Površina:
+        </td>
+        <td class="right-col-header">
+          <div class="input-group mb-3">
+            <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">ha</span>
+            </div>
+          </div>
+        </td>
+        <td class="left-col-header">
+          <span *ngIf="!new">
+            <i class="fa fa-flag mr-2"></i>Obrađeno:
+          </span>
+
+        </td>
+        <td class="right-col-header">
+
+          <span *ngIf="!new">
+            <div class="input-group mb-3">
+              <input type="text" name="" [(ngModel)]="workOrder.treated"
+                [ngClass]="!this.inputFill ? 'inputFillFalse' : null" id="" class="form-control">
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">ha</span>
+              </div>
+            </div>
+          </span>
+
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!--workers-->
+  <div class="workers">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button"
+      data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+        *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body collapse-card">
+        <table class="table table-input">
+          <thead>
+            <th style="width: 190px;">
+              Radnik*
+            </th>
+            <th *ngIf="!new">
+              Datum*
+            </th>
+            <th style="width: 230px;">
+              Operacija*
+            </th>
+            <th *ngIf="!new" style="width: 130px;">
+              Redovan rad*
+            </th>
+            <th *ngIf="!new" style="width: 130px;">
+              Noćni rad*
+            </th>
+            <th *ngIf="!new" style="width: 130px;">
+              Ukupan rad*
+            </th>
+            <th style="text-align: right !important;">
+              Dodaj
+            </th>
+          </thead>
+          <tbody>
             <tr>
+<<<<<<< HEAD
                 <td class="left-col-header">
                    <i class="fa fa-file mr-2"></i>Operacija:
                 </td>
@@ -36,25 +209,56 @@
                  <td class="right-col-header">
                     <select name="" [(ngModel)]="selectedTable" (change)="getCulture()" class="form-control" id="">
                         <option value="{{table.id}}" *ngFor="let table of fields">{{table.Name}}</option>
+=======
+              <td>
+                <div class="form-group">
+                  <select [(ngModel)]="worker.worker" name="" id="" class="form-control"
+                    *ngIf="!new; else elseBlockWorkers">
+                    <option value="-1"></option>
+                    <option value="{{w.id}}" *ngFor="let w of employees">{{w.Name}}</option>
+                  </select>
+                  <ng-template #elseBlockWorkers>
+                    <select name="" [(ngModel)]="selectedWorker" id="" class="form-control">
+                      <option value="-1">--Izaberi--</option>
+                      <option value="{{emp.id}}&{{emp.Name}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
                     </select>
-                 </td>
-            </tr>
-            <tr>
-                <td class="left-col-header">
-                    <i class="fa fa-calendar mr-2"></i>Datum:
-                </td>
-                <td class="right-col-header">
-                    <div class="form-row">
-                        <div class="col">
-                            <input type="date" [(ngModel)]="workOrder.start" name="poc" id="from" ngbDatepicker #from="ngbDatepicker" (click)="from.toggle()" class="form-control" >
-                        </div>
-                        <div class="mt-2">
-                            -
-                        </div>
-                        <div class="col">
-                            <input type="date" [(ngModel)]="workOrder.end" name="kraj" class="form-control" id="to" ngbDatepicker #to="ngbDatepicker" (click)="to.toggle()">
-                        </div>
+                  </ng-template>
+                </div>
+              </td>
+              <td *ngIf="!new">
+                <div class="input-group">
+                  <input [(ngModel)]="worker.date" (click)="od.toggle()" class="form-control" id="od"
+                    placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="form-group">
+                  <select name="" id="" [(ngModel)]="worker.operation" class="form-control"
+                    *ngIf="!new; else elseBlockOperations">
+                    <!--<option value="{{worker.operation}}" selected>{{worker.operation}}</option>-->
+                    <option value="-1"></option>
+                    <option *ngFor="let op of operations" value="{{op.id}}">{{op.Name}}</option>
+                  </select>
+                  <ng-template #elseBlockOperations>
+                    <select name="" id="" class="form-control">
+                      <!--<option value="{{workOrder.operationId.split('&')[1]}}" >{{workOrder.operationId.split("&")[0]}}</option>-->
+                      <option value="{{op.id}}&{{op.Name}}" *ngFor="let op of operations">{{op.Name}}</option>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
+                    </select>
+                  </ng-template>
+                </div>
+              </td>
+              <td *ngIf="!new">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="worker.dayWorkPeriod" type="number" name="" class="form-control" id="">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon2">h</span>
                     </div>
+<<<<<<< HEAD
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
@@ -90,36 +294,167 @@
                 <td class="right-col-header">
                     <select name="" [(ngModel)]="workOrder.cropId" class="form-control" id="" (change)="getArea()">
                         <option value="{{crop.id}}" *ngFor="let crop of crops">{{crop.Name.split(',')[1]}}</option>
+=======
+                  </div>
+                </div>
+              </td>
+              <td *ngIf="!new">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="worker.nightWorkPeriod" type="number" name="" class="form-control" id="">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon2">h</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td *ngIf="!new" style="vertical-align: middle;">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="worker.dayWorkPeriod+worker.nightWorkPeriod" type="number" name=""
+                      class="form-control" id="" disabled>
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon2">h</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="!editing" class="form-group">
+                  <button class="btn btn-primary btn-add mr-2" (click)="addWorker()"
+                    [disabled]="workOrder.status == 'Zatvoren'">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <div *ngIf="editing" class="form-group">
+                  <button class="btn btn-primary btn-add mr-2" (click)="editExistingWorker()"
+                    [disabled]="workOrder.status == 'Zatvoren'">
+                    <i class="fa fa-check"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let worker of employees">
+              <td>{{ worker.name }}</td>
+              <td *ngIf="!new">{{ worker.date }}</td>
+              <td>{{ worker.operation }}</td>
+              <td *ngIf="!new">{{ worker.dayWorkPeriod || 0}} h</td>
+              <td *ngIf="!new">{{ worker.nightWorkPeriod || 0}} h</td>
+              <td *ngIf="!new">{{ worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 }} h</td>
+              <td>
+                <button class="btn btn-primary btn-edit" (click)="editWorker(worker)"
+                  [disabled]="workOrder.status == 'Zatvoren'">
+                  <i class="fa fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--machines-->
+    <div class="machines mt-4">
+      <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button"
+        data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
+        aria-controls="collapseExampleMachines">
+        <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+          *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+      </button>
+      <div class="collapse" id="collapseExampleMachines">
+        <div class="card card-body collapse-card">
+          <table class="table table-input">
+            <thead>
+              <th>
+                Mašina*
+              </th>
+              <th>
+                Radnik*
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Početno stanje MČ
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Krajnje stanje MČ
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Utrošeni MČ
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Utrošak goriva
+              </th>
+              <th style="text-align: right !important;">
+                Dodaj
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="form-group">
+                    <select [(ngModel)]="machine.machine" name="" id="" class="form-control"
+                      *ngIf="!new; else elseBlockMachine">
+                      <option value="-1"></option>
+                      <option value="{{m.id}}" *ngFor="let m of workOrder.machines">{{m.Name}}</option>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
                     </select>
+                    <ng-template #elseBlockMachine>
+                      <select [(ngModel)]="selectedMachine" name="" id="" class="form-control">
+                        <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.Name}}</option>
+                      </select>
+                    </ng-template>
+                  </div>
                 </td>
-                <td class="left-col-header">
-                    <i class="fa fa-tasks mr-2"></i>Godina:
-                 </td>
-                 <td class="right-col-header">
-                    <select name="" [(ngModel)]="workOrder.year" id="" class="form-control" *ngIf="!new; else elseBlockYear">
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
+                <td>
+                  <div class="form-group">
+                    <select [(ngModel)]="machine.worker" name="" id="" class="form-control"
+                      *ngIf="!new; else elseBlockWorkersMachine">
+                      <option value="-1"></option>
+                      <option value="{{w.id}}" *ngFor="let w of employees">{{w.Name}}</option>
                     </select>
+<<<<<<< HEAD
                     <ng-template #elseBlockYear>
                         <select  name="" [(ngModel)]="selectedYear"  id="" class="form-control" (change)="getCulture()">
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
                         </select>
+=======
+                    <ng-template #elseBlockWorkersMachine>
+                      <select [(ngModel)]="machine.worker" name="" id="" class="form-control">
+                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+                      </select>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
                     </ng-template>
+                  </div>
                 </td>
-            </tr>
-            <tr>
-                <td class="left-col-header">
-                  <i class="fa fa-clone"></i> Površina:
-                </td>
-                <td class="right-col-header">
+
+                <td *ngIf="!new">
+                  <div class="form-group">
                     <div class="input-group mb-3">
+                      <input [(ngModel)]="machine.initialState" type="number" name="" id="" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">mh</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="!new">
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+<<<<<<< HEAD
                         <input type="text" name="" [(ngModel)]="crop.Area" id="" class="form-control">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">ha</span>
                         </div>
+=======
+                      <input [(ngModel)]="machine.finalState" type="number" name="" id="" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">mh</span>
+                      </div>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
                     </div>
+                  </div>
                 </td>
+<<<<<<< HEAD
                 <td class="left-col-header" >
                     <span *ngIf="!new">
                         <i class="fa fa-flag mr-2"></i>Obrađeno:
@@ -272,41 +607,32 @@
         </table>
     </div>  
 </div>
+=======
+                <td *ngIf="!new" style="vertical-align: middle;">
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="machine.finalState-machine.initialState" type="number" name="" id=""
+                        class="form-control" disabled>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">mh</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="!new">
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="machine.fuel" type="number" name="" id="" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">l</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
 
-<!--machines-->
-<div class="machines mt-4">
-    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button" data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines">
-        <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-    </button>
-    <div class="collapse" id="collapseExampleMachines">
-    <div class="card card-body collapse-card">
-        <table class="table table-input">
-            <thead>
-                <th>
-                    Mašina*     
-                </th>
-                <th>
-                    Radnik*
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Početno stanje MČ
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Krajnje stanje MČ
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Utrošeni MČ 
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Utrošak goriva
-                </th>
-                <th style="text-align: right !important;">
-                    Dodaj
-                </th>
-            </thead>
-            <tbody>
-            <tr>
                 <td>
+<<<<<<< HEAD
                         <div class="form-group">
                             <select [(ngModel)]="machine.machine" name="" id="" class="form-control" *ngIf="!new; else elseBlockMachine">
                                 <option value="-1"></option>
@@ -402,47 +728,81 @@
                         </button>
                     </td>
                 </tr>
+=======
+                  <div *ngIf="!editingMachine" class="form-group">
+                    <button class="btn btn-primary btn-add mr-2" (click)="addMachine()"
+                      [disabled]="workOrder.status == 'Zatvoren'">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="editingMachine" class="form-group">
+                    <button class="btn btn-primary btn-add mr-2" (click)="updateExistingMachine()"
+                      [disabled]="workOrder.status == 'Zatvoren'">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngFor="let machine of woMachines">
+                <td>{{ machine.name }}</td>
+                <td>{{ machine.worker }}</td>
+                <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
+                <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
+                <td *ngIf="!new">{{machine.finalState*1 - machine.initialState*1 || 0}} mh</td>
+                <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
+                <td>
+                  <button class="btn btn-primary btn-edit" (click)="editMachine(machine)"
+                    [disabled]="workOrder.status == 'Zatvoren'">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
             </tbody>
-        </table>
-      
-    </div>  
-    </div>
-</div>
+          </table>
 
-<!--materials-->
-<div class="machines mt-4">
-    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false" aria-controls="collapseExampleMachines">
-        <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-    </button>
-    <div class="collapse" id="collapseExampleMaterials">
-    <div class="card card-body collapse-card">
-        <table class="table table-input">
+        </div>
+      </div>
+    </div>
+
+    <!--materials-->
+    <div class="machines mt-4">
+      <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button"
+        data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+        aria-controls="collapseExampleMachines">
+        <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+          *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+      </button>
+      <div class="collapse" id="collapseExampleMaterials">
+        <div class="card card-body collapse-card">
+          <table class="table table-input">
             <thead>
-                <th>
-                    Materijal*     
-                </th>
-                <th style="width: 180px;">
-                    Planirana količina / ha*
-                </th>
-                <th style="width: 150px;">
-                   Planirana količina*
-                </th>
-                <th style="width: 100px;">
-                    Jedinica mere*
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Utrošeno / ha*
-                </th>
-                <th *ngIf="!new" style="width: 150px;">
-                    Utrošeno*
-                </th>
-                <th style="text-align: right !important;">
-                    Dodaj
-                </th>
+              <th>
+                Materijal*
+              </th>
+              <th style="width: 180px;">
+                Planirana količina / ha*
+              </th>
+              <th style="width: 150px;">
+                Planirana količina*
+              </th>
+              <th style="width: 100px;">
+                Jedinica mere*
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Utrošeno / ha*
+              </th>
+              <th *ngIf="!new" style="width: 150px;">
+                Utrošeno*
+              </th>
+              <th style="text-align: right !important;">
+                Dodaj
+              </th>
             </thead>
             <tbody>
-            <tr>
+              <tr>
                 <td>
+<<<<<<< HEAD
                         <div class="form-group">
                             <select [(ngModel)]="material.name" name="" id="" class="form-control" *ngIf="!new; else elseBlockMaterial">
                                 <option value="-1"></option>
@@ -527,335 +887,468 @@
                     <td >{{ material.unit }}</td>
                     <td *ngIf="!new">{{ material.spent / workOrder.area }} {{material.unit}}/ha</td>
                     <td *ngIf="!new">{{ material.spent || 0 }} {{material.unit}}</td>
+=======
+                  <div class="form-group">
+                    <select [(ngModel)]="material.name" name="" id="" class="form-control"
+                      *ngIf="!new; else elseBlockMaterial">
+                      <option value="-1"></option>
+                      <option value="{{mat.id}}" *ngFor="let mat of workOrder.materials">{{mat.Name}}</option>
+                    </select>
+                    <ng-template #elseBlockMaterial>
+                      <select [(ngModel)]="selectedMaterial" name="" id="" class="form-control">
+                        <option value="{{sub.id}}" *ngFor="let sub of substances">{{sub.Name}}</option>
+                      </select>
+                    </ng-template>
 
-                    <td>
-                        <button class="btn btn-primary btn-edit" (click)="editMaterial(material)" [disabled]="workOrder.status == 'Zatvoren'">
-                        <i class="fa fa-edit"></i>
-                        </button>
-                    </td>
-                </tr>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="material.quantity/workOrder.area" type="number" name="" id=""
+                        class="form-control" disabled>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">{{material.unit}}/ha</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="material.quantity" type="number" name="" id="" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">{{material.unit}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <select [(ngModel)]="material.unit" name="" id="" class="form-control">
+                      <option value="kg">kg</option>
+                      <option value="t">t</option>
+                      <option value="l">l</option>
+                    </select>
+                  </div>
+                </td>
+                <td *ngIf="!new">
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="material.spent/workOrder.area" type="number" name="" id=""
+                        class="form-control" disabled>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">{{material.unit}}/ha</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="!new">
+                  <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input [(ngModel)]="material.spent" type="number" name="" id="" class="form-control">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">{{material.unit}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div *ngIf="!editingMaterial" class="form-group">
+                    <button class="btn btn-primary btn-add mr-2" (click)="addMaterial()"
+                      [disabled]="workOrder.status == 'Zatvoren'">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="editingMaterial" class="form-group">
+                    <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial()"
+                      [disabled]="workOrder.status == 'Zatvoren'">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngFor="let material of woMaterials">
+                <td>{{ material.name }}</td>
+                <td>{{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</td>
+                <td>{{ material.quantity }} {{material.unit}}</td>
+                <td>{{ material.unit }}</td>
+                <td *ngIf="!new">{{ material.spent / workOrder.area }} {{material.unit}}/ha</td>
+                <td *ngIf="!new">{{ material.spent || 0 }} {{material.unit}}</td>
+>>>>>>> 9ec9db8cd2a09c435ee48906372c9234e672a6d6
+
+                <td>
+                  <button class="btn btn-primary btn-edit" (click)="editMaterial(material)"
+                    [disabled]="workOrder.status == 'Zatvoren'">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
             </tbody>
-        </table>
-      
-    </div>  
-    </div>
+          </table>
+
+        </div>
+      </div>
     </div>
 
-</div>
+  </div>
 
 </div>
 
 <div class="container d-md-none">
-    <div class="row" style="margin-top: 10px;">
-        <div class="col-8">
-            <h3 *ngIf="new">Kreiranje naloga</h3>
-            <h3 *ngIf="!new">Informacije o nalogu</h3>
-            <span>Status: </span><span  [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
-        </div>
-        <div class="col">
-            <div class="btn-group-vertical" style="float: right;">
-                <button class="btn btn-primary btn-edit mb-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2" ></i>Zatvori</button>
-                <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new" (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
-                <button class="btn btn-primary btn-add mr-2" *ngIf="new"  (click)="addWorkOrder()"><i class="fa fa-plus mr-2"></i>Dodaj</button>
-            </div>
-        </div>
+  <div class="row" style="margin-top: 10px;">
+    <div class="col-8">
+      <h3 *ngIf="new">Kreiranje naloga</h3>
+      <h3 *ngIf="!new">Informacije o nalogu</h3>
+      <span>Status: </span><span
+        [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</span>
     </div>
-    <div class="row" style="margin-top: 10px;">
-        <div class="col-4">
-            <i class="fa fa-file mr-2" style="vertical-align: middle;"></i><span style="vertical-align: bottom;"> Operacija:</span>
-        </div>
-        <div class="col-8">
-            <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
-                <option value="{{op.id}}" *ngFor="let op of this.operations">{{op.name}}</option>
-            </select>
-        </div>
+    <div class="col">
+      <div class="btn-group-vertical" style="float: right;">
+        <button class="btn btn-primary btn-edit mb-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
+          (click)="closeWorkOrder()"><i class="fa fa-window-close mr-2"></i>Zatvori</button>
+        <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
+          (click)="saveData()"><i class="fa fa-save mr-2"></i>Sačuvaj</button>
+        <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder()"><i
+            class="fa fa-plus mr-2"></i>Dodaj</button>
+      </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-4">
-            <i class="fa fa-database mr-2" style="vertical-align: middle;"></i>Tabla:
-        </div>
-        <div class="col-4">
-            <select name="" [(ngModel)]="workOrder.table" class="form-control" id="">
-                <option value="{{table}}" *ngFor="let table of this.tables">{{table}}</option>
-            </select>
-        </div>
+  </div>
+  <div class="row" style="margin-top: 10px;">
+    <div class="col-4">
+      <i class="fa fa-file mr-2" style="vertical-align: middle;"></i><span style="vertical-align: bottom;">
+        Operacija:</span>
     </div>
-    <hr class="solid">
-    <div class="row mt-2">
-        <div class="col-12">
-            <i class="fa fa-calendar mr-2" style="vertical-align: middle;"></i>Datum:
-        </div>
-        <div class="col-6">
-            <label>Od</label><input type="date" [(ngModel)]="workOrder.start" id="from" ngbDatepicker #from="ngbDatepicker" (click)="from.toggle()" class="form-control" >
-        </div>
-        <div class="col-6">
-            <label>Do</label> <input type="date" [(ngModel)]="workOrder.end" name="" class="form-control" id="to" ngbDatepicker #to="ngbDatepicker" (click)="to.toggle()">
-        </div>
+    <div class="col-8">
+      <select name="" [(ngModel)]="workOrder.name" class="form-control" id="">
+        <option value="{{op.id}}" *ngFor="let op of this.operations">{{op.name}}</option>
+      </select>
     </div>
-    <div class="row mt-4">
-        <div class="col-6" style="margin-top: 5%;">
-            <i class="fa fa-user mr-2"></i>Odgovorna osoba:
-        </div>
-        <div class="col-6">
-            <!--<select [(ngModel)]="workOrder.responsible" name="" id="" class="form-control" >
-                <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
-            </select>-->
-            
-                <mat-form-field style="width: 100%;">
-                    <input class="form-control inputAuto" type="text"
-                        aria-label="Number"
-                        matInput
-                        [matAutocomplete]="auto"
-                        [formControl]="nameFC"
-                        #search>
-                    <mat-autocomplete autoActiveFirstOption
-                        [displayWith]="getEmpName.bind(this)"
-                        #auto="matAutocomplete" 
-                        class="inputAuto">
-                        <mat-option *ngFor="let emp of allEmployees | SearchEmployees : search.value" 
-                                    [value]="emp.id">
-                                     {{emp.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            
-        </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-4">
+      <i class="fa fa-database mr-2" style="vertical-align: middle;"></i>Tabla:
     </div>
-    <hr class="solid">
-    <div class="row mt-2">
-        <div class="col-6">
-            <i class="fa fa-cubes" style="vertical-align: bottom;"></i> Kultura:
-        </div>
-        <div class="col-6">
-            <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
-                <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.name}}</option>
-            </select>
-        </div>
+    <div class="col-4">
+      <select name="" [(ngModel)]="workOrder.table" class="form-control" id="">
+        <option value="{{table}}" *ngFor="let table of this.tables">{{table}}</option>
+      </select>
     </div>
-    <div class="row mt-2">
-        <div class="col-6">
-            <i class="fa fa-tasks mr-2"></i>Godina:
-        </div>
-        <div class="col-6">
-            <select name="" [(ngModel)]="workOrder.year" id="" class="form-control">
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-            </select>
-        </div>
+  </div>
+  <hr class="solid">
+  <div class="row mt-2">
+    <div class="col-12">
+      <i class="fa fa-calendar mr-2" style="vertical-align: middle;"></i>Datum:
     </div>
-    <hr class="solid">
-    <div class="row mt-2">
-        <div class="col-6">
-            <i class="fa fa-clone" style="vertical-align: bottom;"></i> Površina:
-        </div>
-        <div class="col-6">
-            <div class="input-group">
-                <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon2">ha</span>
-                </div>
-            </div>
-        </div>
+    <div class="col-6">
+      <label>Od</label><input type="date" [(ngModel)]="workOrder.start" id="from" ngbDatepicker #from="ngbDatepicker"
+        (click)="from.toggle()" class="form-control">
     </div>
-    <div class="row mt-2">
-        <div class="col-6">
-            <i class="fa fa-flag mr-2"></i>Obrađeno:
-        </div>
-        <div class="col-6">
-            <div class="input-group">
-                <input type="text" name="" [(ngModel)]="workOrder.treated" [ngClass]="!this.inputFill ? 'inputFillFalse' : null" id="" class="form-control">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon2">ha</span>
-                </div>
-            </div>
-        </div>
+    <div class="col-6">
+      <label>Do</label> <input type="date" [(ngModel)]="workOrder.end" name="" class="form-control" id="to"
+        ngbDatepicker #to="ngbDatepicker" (click)="to.toggle()">
     </div>
-    <hr class="solid">
+  </div>
+  <div class="row mt-4">
+    <div class="col-6" style="margin-top: 5%;">
+      <i class="fa fa-user mr-2"></i>Odgovorna osoba:
+    </div>
+    <div class="col-6">
+      <mat-form-field style="width: 100%;">
+        <input class="form-control inputAuto" type="text" aria-label="Number" matInput [matAutocomplete]="autophone"
+          [formControl]="nameFC" #searchPhone>
+        <mat-autocomplete autoActiveFirstOption [displayWith]="displayFn" #autophone="matAutocomplete"
+          class="inputAuto">
+          <mat-option *ngFor="let emp of allEmployees | SearchEmployeesPhone : searchPhone.value" [value]="emp.id">
+            {{emp.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+  <hr class="solid">
+  <div class="row mt-2">
+    <div class="col-6">
+      <i class="fa fa-cubes" style="vertical-align: bottom;"></i> Kultura:
+    </div>
+    <div class="col-6">
+      <select name="" [(ngModel)]="workOrder.culture" class="form-control" id="">
+        <option value="{{cul.id}}" *ngFor="let cul of cultures">{{cul.name}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-6">
+      <i class="fa fa-tasks mr-2"></i>Godina:
+    </div>
+    <div class="col-6">
+      <select name="" [(ngModel)]="workOrder.year" id="" class="form-control">
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+      </select>
+    </div>
+  </div>
+  <hr class="solid">
+  <div class="row mt-2">
+    <div class="col-6">
+      <i class="fa fa-clone" style="vertical-align: bottom;"></i> Površina:
+    </div>
+    <div class="col-6">
+      <div class="input-group">
+        <input type="text" name="" [(ngModel)]="workOrder.area" id="" class="form-control">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">ha</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-6">
+      <i class="fa fa-flag mr-2"></i>Obrađeno:
+    </div>
+    <div class="col-6">
+      <div class="input-group">
+        <input type="text" name="" [(ngModel)]="workOrder.treated" [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
+          id="" class="form-control">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">ha</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="solid">
 
-    <div class="workers">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-        </button>
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body collapse-card">
-                <div class="col-12">
-                    <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal" data-target="#exampleModal" (click)="addEmployee()"> <i class="fa fa-plus mr-2"></i>Novi radnik</button>
-                </div>
-                <div class="card mb-3" *ngFor="let wor of workOrder.workers; let i = index;"  style="border: 1px solid #5C7495; border-radius: 5px;">
-                    <div *ngIf="i==0" id="rad"></div>
-                    <div class="card-body">
-                      <h5 class="card-title">{{wor.worker}}</h5>
-                      <ul class="list-group">
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-table"style="font-size:20px;"></i>  <span style="padding-left: 2px;"> Datum: {{wor.date}}</span></li>
-                        <li class="list-group-item list-group-item-info"><i class="fa fa-suitcase"style="font-size:20px;"></i>  <span style="padding-left: 2px;"> Operacija: {{wor.operation}} </span></li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Redovan rad: {{wor.dayWorkPeriod || 0}} </span></li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Noćni rad:  {{wor.nightWorkPeriod || 0}}</span> </li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"style="font-size:20px;"></i>  <span style="padding-left: 6px;">Ukupan rad:  {{wor.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h</span> </li>
-                      </ul>
-                      
-                    </div>
-                    <div class="card-footer" style="background-color: #acbacc3a;">
-                        <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"(click)="setForEdit(wor)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
-                    </div>
-                </div>
-            </div>
+  <div class="workers">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button"
+      data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+        *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body collapse-card">
+        <div class="col-12">
+          <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal"
+            data-target="#exampleModal" (click)="addEmployee()"> <i class="fa fa-plus mr-2"></i>Novi radnik</button>
         </div>
-    </div>
-    <div class="machines mt-4">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button" data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines">
-            <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-        </button>
-        <div class="collapse" id="collapseExampleMachines">
-            <div class="card card-body collapse-card">
-                <div class="col-12">
-                    <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal" data-target="#machineModal" (click)="addMachine()"> <i class="fa fa-plus mr-2"></i>Nova mašina</button>
-                </div>
-                <div class="card mb-3" *ngFor="let machine of workOrder.machines; let i = index;"  style="border: 1px solid #5C7495; border-radius: 5px;">
-                    <div *ngIf="i==0" id="mas"></div>
-                    <div class="card-body">
-                      <h5 class="card-title">{{machine.machine}}</h5>
-                      <ul class="list-group">
-                        <li class="list-group-item list-group-item-info"><i class="fa fa-suitcase"style="font-size:20px;"></i>  <span style="padding-left: 2px;"> Radnik: {{machine.worker}} </span></li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Početno stanje MČ: {{machine.initialState || 0}} mh</span></li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Krajnje stanje MČ:  {{machine.finalState || 0}} mh</span> </li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"style="font-size:20px;"></i>  <span style="padding-left: 6px;">Utrošeni MČ:  {{machine.initialState*1 - machine.finalState*1 || 0}}h</span> </li>
-                        <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-gas-pump"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Utrošak goriva:  {{machine.fuel || 0}} l</span> </li>
-                      </ul>
-                    </div>
-                    <div class="card-footer" style="background-color: #acbacc3a;">
-                        <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"(click)="setMachForEdit(machine)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
-                    </div>
-                </div>
-            </div>
+        <div class="card mb-3" *ngFor="let wor of workOrder.workers; let i = index;"
+          style="border: 1px solid #5C7495; border-radius: 5px;">
+          <div *ngIf="i==0" id="rad"></div>
+          <div class="card-body">
+            <h5 class="card-title">{{wor.worker}}</h5>
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-table"
+                  style="font-size:20px;"></i> <span style="padding-left: 2px;"> Datum: {{wor.date}}</span></li>
+              <li class="list-group-item list-group-item-info"><i class="fa fa-suitcase" style="font-size:20px;"></i>
+                <span style="padding-left: 2px;"> Operacija: {{wor.operation}} </span></li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"
+                  style="font-size:20px;"></i> <span style="padding-left: 3px;"> Redovan rad: {{wor.dayWorkPeriod || 0}}
+                </span></li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"
+                  style="font-size:20px;"></i> <span style="padding-left: 3px;"> Noćni rad:
+                  {{wor.nightWorkPeriod || 0}}</span> </li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"
+                  style="font-size:20px;"></i> <span style="padding-left: 6px;">Ukupan rad:
+                  {{wor.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h</span> </li>
+            </ul>
+
+          </div>
+          <div class="card-footer" style="background-color: #acbacc3a;">
+            <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"
+              (click)="setForEdit(wor)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="machines mt-4">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false" aria-controls="collapseExampleMachines">
-            <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-        </button>
-        <div class="collapse" id="collapseExampleMaterials">
-            <div class="card mb-3" *ngFor="let material of workOrder.materials; let i = index;"  style="border: 1px solid #5C7495; border-radius: 5px;">
-                <div *ngIf="i==0" id="mat"></div>
-                <div class="card-body">
-                  <h5 class="card-title">{{material.name}}</h5>
-                  <ul class="list-group">
-                    <li class="list-group-item list-group-item-info" ><i class="fa fa-suitcase"style="font-size:20px;"></i>  <span style="padding-left: 2px;"> Planirana količina: {{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</span></li>
-                    <li class="list-group-item list-group-item-info" ><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Planirana količina: {{material.quantity}} {{material.unit}}</span></li>
-                    <li class="list-group-item list-group-item-info" ><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Jedinica mere:  {{material.unit}}</span> </li>
-                    <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"style="font-size:20px;"></i>  <span style="padding-left: 6px;">Utrošeno / ha:  {{material.spent / workOrder.area}} {{material.unit}}/ha</span> </li>
-                    <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-gas-pump"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Utrošeno:  {{material.spent || 0}} {{material.unit}}</span> </li>
-                  </ul>
-                  
-                </div>
-                <div class="card-footer" style="background-color: #acbacc3a;">
-                    <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"(click)="setMachForEdit(machine)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
-                </div>
-            </div>
+  </div>
+  <div class="machines mt-4">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button"
+      data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
+      aria-controls="collapseExampleMachines">
+      <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+        *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExampleMachines">
+      <div class="card card-body collapse-card">
+        <div class="col-12">
+          <button class="btn btn-primary" style="float: right; margin-top: 5px;" data-toggle="modal"
+            data-target="#machineModal" (click)="addMachine()"> <i class="fa fa-plus mr-2"></i>Nova mašina</button>
         </div>
+        <div class="card mb-3" *ngFor="let machine of workOrder.machines; let i = index;"
+          style="border: 1px solid #5C7495; border-radius: 5px;">
+          <div *ngIf="i==0" id="mas"></div>
+          <div class="card-body">
+            <h5 class="card-title">{{machine.machine}}</h5>
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-info"><i class="fa fa-suitcase" style="font-size:20px;"></i>
+                <span style="padding-left: 2px;"> Radnik: {{machine.worker}} </span></li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"
+                  style="font-size:20px;"></i> <span style="padding-left: 3px;"> Početno stanje MČ:
+                  {{machine.initialState || 0}} mh</span></li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-clock-o"
+                  style="font-size:20px;"></i> <span style="padding-left: 3px;"> Krajnje stanje MČ:
+                  {{machine.finalState || 0}} mh</span> </li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"
+                  style="font-size:20px;"></i> <span style="padding-left: 6px;">Utrošeni MČ:
+                  {{machine.initialState*1 - machine.finalState*1 || 0}}h</span> </li>
+              <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-gas-pump"
+                  style="font-size:20px;"></i> <span style="padding-left: 3px;"> Utrošak goriva: {{machine.fuel || 0}}
+                  l</span> </li>
+            </ul>
+          </div>
+          <div class="card-footer" style="background-color: #acbacc3a;">
+            <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"
+              (click)="setMachForEdit(machine)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="machines mt-4">
+    <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button"
+      data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+      aria-controls="collapseExampleMachines">
+      <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+        *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+    </button>
+    <div class="collapse" id="collapseExampleMaterials">
+      <div class="card mb-3" *ngFor="let material of workOrder.materials; let i = index;"
+        style="border: 1px solid #5C7495; border-radius: 5px;">
+        <div *ngIf="i==0" id="mat"></div>
+        <div class="card-body">
+          <h5 class="card-title">{{material.name}}</h5>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-info"><i class="fa fa-suitcase" style="font-size:20px;"></i>
+              <span style="padding-left: 2px;"> Planirana količina:
+                {{ (material.quantity / workOrder.area).toFixed(2) }} {{material.unit}}/ha</span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o" style="font-size:20px;"></i> <span
+                style="padding-left: 3px;"> Planirana količina: {{material.quantity}} {{material.unit}}</span></li>
+            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o" style="font-size:20px;"></i> <span
+                style="padding-left: 3px;"> Jedinica mere: {{material.unit}}</span> </li>
+            <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-plus"
+                style="font-size:20px;"></i> <span style="padding-left: 6px;">Utrošeno / ha:
+                {{material.spent / workOrder.area}} {{material.unit}}/ha</span> </li>
+            <li class="list-group-item list-group-item-info" *ngIf="!new"><i class="fa fa-gas-pump"
+                style="font-size:20px;"></i> <span style="padding-left: 3px;"> Utrošeno: {{material.spent || 0}}
+                {{material.unit}}</span> </li>
+          </ul>
+
+        </div>
+        <div class="card-footer" style="background-color: #acbacc3a;">
+          <button class="btn btn-secondary" style="float: right;" data-toggle="modal" data-target="#exampleModal"
+            (click)="setMachForEdit(machine)"><i class="fa fa-edit mr-2"></i>Izmeni</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{modalHeader}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="form-group">
-                    <label for="imePrz">Ime i prezime</label>
-                    <select [(ngModel)]="workerMob.worker" name="ime" id="imePrz" class="form-control" >
-                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees" >{{emp.name}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="imePrz">Operacija</label>
-                    <select name="ope" [(ngModel)]="workerMob.operation" class="form-control" id="">
-                        <option value="{{op.id}}" *ngFor="let op of operations">{{op.name}}</option>
-                    </select>
-                </div>
-                <div class="form-group" *ngIf="!new">
-                    <label for="imePrz">Datum</label>
-                    <div class="input-group">
-                        <input [(ngModel)]="workerMob.date" name="dat" (click)="od.toggle()" class="form-control" id="od" placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group" *ngIf="!new">
-                    <label for="imePrz">Redovan rad</label>
-                    <div class="input-group mb-3">
-                        <input [(ngModel)]="workerMob.dayWorkPeriod" type="number" name="dayWP" class="form-control" id="">
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">h</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group" *ngIf="!new">
-                    <label for="imePrz">Noćni rad</label>
-                    <div class="input-group mb-3">
-                        <input [(ngModel)]="workerMob.dnightWorkPeriod" type="number" name="nightWP" class="form-control" id="">
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">h</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group" *ngIf="!new">
-                    <label for="imePrz">Ukupan rad</label>
-                    <div class="input-group mb-3">
-                        <input  type="number" name="sumHours" class="form-control" id="" readonly>
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">h</span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-window-close"></i> Odustani</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Sačuvaj</button>
-        </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{modalHeader}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="imePrz">Ime i prezime</label>
+            <select [(ngModel)]="workerMob.worker" name="ime" id="imePrz" class="form-control">
+              <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="imePrz">Operacija</label>
+            <select name="ope" [(ngModel)]="workerMob.operation" class="form-control" id="">
+              <option value="{{op.id}}" *ngFor="let op of operations">{{op.name}}</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="!new">
+            <label for="imePrz">Datum</label>
+            <div class="input-group">
+              <input [(ngModel)]="workerMob.date" name="dat" (click)="od.toggle()" class="form-control" id="od"
+                placeholder="yyyy-mm-dd" ngbDatepicker #od="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="!new">
+            <label for="imePrz">Redovan rad</label>
+            <div class="input-group mb-3">
+              <input [(ngModel)]="workerMob.dayWorkPeriod" type="number" name="dayWP" class="form-control" id="">
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">h</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="!new">
+            <label for="imePrz">Noćni rad</label>
+            <div class="input-group mb-3">
+              <input [(ngModel)]="workerMob.dnightWorkPeriod" type="number" name="nightWP" class="form-control" id="">
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">h</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="!new">
+            <label for="imePrz">Ukupan rad</label>
+            <div class="input-group mb-3">
+              <input type="number" name="sumHours" class="form-control" id="" readonly>
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">h</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-window-close"></i>
+          Odustani</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Sačuvaj</button>
       </div>
     </div>
   </div>
+</div>
 
 
-  <!-- Machine Modal -->
-<div class="modal fade" id="machineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{headerMachine}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="form-group">
-                    <label for="masina">Mašina</label>
-                    <select  id="masina" class="form-control" >
-                        <option value="{{dev.id}}" *ngFor="let dev of devices" >{{dev.name}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="rad">Radnik</label>
-                    <select  name="rad" id="rad" class="form-control" >
-                        <option value="{{emp.id}}" *ngFor="let emp of allEmployees" >{{emp.name}}</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-window-close"></i> Odustani</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Sačuvaj</button>
-        </div>
+<!-- Machine Modal -->
+<div class="modal fade" id="machineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{headerMachine}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="masina">Mašina</label>
+            <select id="masina" class="form-control">
+              <option value="{{dev.id}}" *ngFor="let dev of devices">{{dev.name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="rad">Radnik</label>
+            <select name="rad" id="rad" class="form-control">
+              <option value="{{emp.id}}" *ngFor="let emp of allEmployees">{{emp.name}}</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-window-close"></i>
+          Odustani</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Sačuvaj</button>
       </div>
     </div>
   </div>
+</div>
