@@ -1,141 +1,189 @@
 <div class="container d-none d-md-block">
-    <h3 class="mt-2 mb-2">Pregled naloga</h3>
-    <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
-        Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
-    </button>
-    <br>
-    <form action="" class="collapse mb-4" id="collapseExample">
-        <div class="form-row">
-            <div class="col">
-                <label>
-                    Datum
-                </label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col">
-                <label>
-                    Tabla
-                </label>
-                <input type="text" class="form-control">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col">
-                <label>
-                    Usev
-                </label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col">
-                <label>
-                    Status
-                </label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                    <option value=""></option>
-                    <option value="novi">Novi</option>
-                    <option value="u redu">U radu</option>
-                    <option value="zavrseno">Završeno</option>
-                  </select>
-            </div>
-        </div>
-    </form>
-
-    <div class="break-class pt-2 mb-4">
-        <i class="fa fa-spinner fa-spin" *ngIf="workOrders.length == 0" style="font-size: 15px; float: left;"></i>
-        <a [routerLink]="['/create/workOrder/new']" style="float: right">
-            <button class="btn btn-primary collapsing-button shadow-none"><i class="fa fa-plus"></i> Kreiraj novi nalog</button>
-        </a>
+  <h3 class="mt-2 mb-2">Pregled naloga</h3>
+  <button
+    class="btn btn-primary collapsing-button mb-2 shadow-none"
+    data-toggle="collapse"
+    data-target="#collapseExample"
+    aria-expanded="false"
+    aria-controls="collapseExample"
+    (click)="collapse()"
+  >
+    Filteri
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+  </button>
+  <br />
+  <form action="" class="collapse mb-4" id="collapseExample">
+    <div class="form-row">
+      <div class="col">
+        <label> Datum </label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="col">
+        <label> Tabla </label>
+        <input type="text" class="form-control" />
+      </div>
     </div>
-    <br>
+    <div class="form-row">
+      <div class="col">
+        <label> Usev </label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="col">
+        <label> Status </label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option value=""></option>
+          <option value="novi">Novi</option>
+          <option value="u redu">U radu</option>
+          <option value="zavrseno">Završeno</option>
+        </select>
+      </div>
+    </div>
+  </form>
 
-    <table class="table table-hover tabela-nalozi ">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Operacija</th>
-                <th scope="col">Datum početka</th>
-                <th scope="col">Datum završetka</th>
-                <th scope="col">Tabla</th>
-                <th scope="col">Površina</th>
-                <th scope="col">Usev</th>
-                <th scope="col">Odgovorna osoba</th>
-                <th scope="col">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
-                <th scope="row">{{ j + 1}}</th>
-                <td>{{workOrder.operationName}}</td>
-                <td>{{workOrder.start | date:'dd.MM.yyyy.'}}</td>
-                <td>{{workOrder.end | date:'dd.MM.yyyy.'}}</td>
-                <td>{{workOrder.table}}</td>
-                <td>{{workOrder.area}}ha</td>
-                <td>{{workOrder.cropName.split(',')[1]}}</td>
-                <td>{{workOrder.responsibleName}}</td>
-                <td [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}">{{workOrder.status}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <div class="break-class pt-2 mb-4">
+    <i
+      class="fa fa-spinner fa-spin"
+      *ngIf="workOrders.length == 0"
+      style="font-size: 15px; float: left"
+    ></i>
+    <a [routerLink]="['/create/workOrder/new']" style="float: right">
+      <button class="btn btn-primary collapsing-button shadow-none">
+        <i class="fa fa-plus"></i> Kreiraj novi nalog
+      </button>
+    </a>
+  </div>
+  <br />
+
+  <table class="table table-hover tabela-nalozi">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Operacija</th>
+        <th scope="col">Datum početka</th>
+        <th scope="col">Datum završetka</th>
+        <th scope="col">Tabla</th>
+        <th scope="col">Površina</th>
+        <th scope="col">Usev</th>
+        <th scope="col">Odgovorna osoba</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let workOrder of workOrders; let j = index"
+        (click)="changeRoute(workOrder.id)"
+        style="cursor: pointer"
+      >
+        <th scope="row">{{ j + 1 }}</th>
+        <td>{{ workOrder.operationName }}</td>
+        <td>{{ workOrder.start | date: "dd.MM.yyyy." }}</td>
+        <td>{{ workOrder.end | date: "dd.MM.yyyy." }}</td>
+        <td>{{ workOrder.table }}</td>
+        <td>{{ workOrder.area }}ha</td>
+        <td>{{ workOrder.cropName.split(",")[1] }}</td>
+        <td>{{ workOrder.responsibleName }}</td>
+        <td
+          [ngClass]="{
+            statusNovi: workOrder.status == 'Novi',
+            statusURadu: workOrder.status == 'U radu',
+            statusZatvoren: workOrder.status == 'Zatvoren'
+          }"
+        >
+          {{ workOrder.status }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="container d-md-none">
-    <h3 class="mt-2 mb-2">Pregled naloga</h3>
-    <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
-        Filteri <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i> <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
-    </button>
-    <br>
-    <form action="" class="collapse mb-4" id="collapseExample">
-        <div class="form-row">
-            <div class="col">
-                <label>
-                    Datum
-                </label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col">
-                <label>
-                    Tabla
-                </label>
-                <input type="text" class="form-control">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col">
-                <label>
-                    Usev
-                </label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col">
-                <label>
-                    Status
-                </label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                    <option value=""></option>
-                    <option value="novi">Novi</option>
-                    <option value="u redu">U radu</option>
-                    <option value="zavrseno">Završeno</option>
-                  </select>
-            </div>
-        </div>
-    </form>
-    <div style="padding-top: 30px;"></div>
-    <div class="card mb-3" *ngFor="let workOrder of workOrders;let j = index" (click)="changeRoute(workOrder.id)" style="border: 1px solid #5C7495; border-radius: 5px;">
-        <div class="card-body">
-          <h5 class="card-title">{{operation.Name}}</h5>
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-info"><i class="fa fa-user"style="font-size:20px;"></i>  <span style="padding-left: 6px;"> Odgovorna osoba:</span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-map-marker"style="font-size:20px;"></i>  <span style="padding-left: 9px;"> Tabla i površina: {{crop.FieldId}} ({{crop.Area}} ha) </span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-clock-o"style="font-size:20px;"></i>  <span style="padding-left: 3px;"> Period: {{workOrder.start | date:'dd.MM.yyyy.'}} - {{workOrder.end | date:'dd.MM.yyyy.'}} </span></li>
-            <li class="list-group-item list-group-item-info"><i class="fa fa-tasks"style="font-size:20px;"></i>   Status:  <span [ngClass]="{'statusNovi': workOrder.status == 'Novi', 'statusURadu': workOrder.status == 'U radu', 'statusZatvoren' : workOrder.status == 'Zatvoren'}"><b>{{workOrder.status}}</b></span></li>
-          </ul>
-          
-        </div>
-        <!--<div class="card-footer" style="background-color: #acbacc3a;">
+  <h3 class="mt-2 mb-2">Pregled naloga</h3>
+  <button
+    class="btn btn-primary collapsing-button mb-2 shadow-none"
+    data-toggle="collapse"
+    data-target="#collapseExample"
+    aria-expanded="false"
+    aria-controls="collapseExample"
+    (click)="collapse()"
+  >
+    Filteri
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+  </button>
+  <br />
+  <form action="" class="collapse mb-4" id="collapseExample">
+    <div class="form-row">
+      <div class="col">
+        <label> Datum </label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="col">
+        <label> Tabla </label>
+        <input type="text" class="form-control" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <label> Usev </label>
+        <input type="text" class="form-control" />
+      </div>
+      <div class="col">
+        <label> Status </label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option value=""></option>
+          <option value="novi">Novi</option>
+          <option value="u redu">U radu</option>
+          <option value="zavrseno">Završeno</option>
+        </select>
+      </div>
+    </div>
+  </form>
+  <div style="padding-top: 30px"></div>
+  <div
+    class="card mb-3"
+    *ngFor="let workOrder of workOrders; let j = index"
+    (click)="changeRoute(workOrder.id)"
+    style="border: 1px solid #5c7495; border-radius: 5px"
+  >
+    <div class="card-body">
+      <h5 class="card-title">{{ operation.Name }}</h5>
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-info">
+          <i class="fa fa-user" style="font-size: 20px"></i>
+          <span style="padding-left: 6px"> Odgovorna osoba:</span>
+        </li>
+        <li class="list-group-item list-group-item-info">
+          <i class="fa fa-map-marker" style="font-size: 20px"></i>
+          <span style="padding-left: 9px">
+            Tabla i površina: {{ crop.FieldId }} ({{ crop.Area }} ha)
+          </span>
+        </li>
+        <li class="list-group-item list-group-item-info">
+          <i class="fa fa-clock-o" style="font-size: 20px"></i>
+          <span style="padding-left: 3px">
+            Period: {{ workOrder.start | date: "dd.MM.yyyy." }} -
+            {{ workOrder.end | date: "dd.MM.yyyy." }}
+          </span>
+        </li>
+        <li class="list-group-item list-group-item-info">
+          <i class="fa fa-tasks" style="font-size: 20px"></i> Status:
+          <span
+            [ngClass]="{
+              statusNovi: workOrder.status == 'Novi',
+              statusURadu: workOrder.status == 'U radu',
+              statusZatvoren: workOrder.status == 'Zatvoren'
+            }"
+            ><b>{{ workOrder.status }}</b></span
+          >
+        </li>
+      </ul>
+    </div>
+    <!--<div class="card-footer" style="background-color: #acbacc3a;">
           <button type="button" class="btn" id="left-panel-link" >Register</button>
           <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal1" id="right-panel-link">
   Learn More
 </button>
         </div>-->
-      </div>
+  </div>
 </div>
