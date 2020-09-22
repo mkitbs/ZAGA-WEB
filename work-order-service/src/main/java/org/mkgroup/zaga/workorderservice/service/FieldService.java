@@ -116,7 +116,7 @@ public class FieldService {
 	}
 	
 	public List<FieldDTO> getAll() {
-		List<Field> fields = fieldRepo.findAll();
+		List<Field> fields = fieldRepo.findByOrderByNameAsc();
 		List<FieldDTO> retValues = new ArrayList<FieldDTO>();
 		for(Field field : fields) {
 			FieldDTO f = new FieldDTO(field);

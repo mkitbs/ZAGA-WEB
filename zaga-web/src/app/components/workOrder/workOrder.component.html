@@ -147,34 +147,38 @@
     style="border: 1px solid #5c7495; border-radius: 5px"
   >
     <div class="card-body">
-      <h5 class="card-title">{{ operation.Name }}</h5>
+      <h5 class="card-title">{{ workOrder.operationName }}</h5>
       <ul class="list-group">
         <li class="list-group-item list-group-item-info">
           <i class="fa fa-user" style="font-size: 20px"></i>
-          <span style="padding-left: 6px"> Odgovorna osoba:</span>
+          <span style="padding-left: 6px; vertical-align: middle">
+            Odgovorna osoba: {{ workOrder.responsibleName }}</span
+          >
         </li>
         <li class="list-group-item list-group-item-info">
           <i class="fa fa-map-marker" style="font-size: 20px"></i>
-          <span style="padding-left: 9px">
-            Tabla i površina: {{ crop.FieldId }} ({{ crop.Area }} ha)
+          <span style="padding-left: 9px; vertical-align: middle">
+            Tabla i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
           </span>
         </li>
         <li class="list-group-item list-group-item-info">
           <i class="fa fa-clock-o" style="font-size: 20px"></i>
-          <span style="padding-left: 3px">
+          <span style="padding-left: 3px; vertical-align: middle">
             Period: {{ workOrder.start | date: "dd.MM.yyyy." }} -
             {{ workOrder.end | date: "dd.MM.yyyy." }}
           </span>
         </li>
         <li class="list-group-item list-group-item-info">
-          <i class="fa fa-tasks" style="font-size: 20px"></i> Status:
+          <i class="fa fa-tasks" style="font-size: 20px"></i>
           <span
+            style="padding-left: 3px; vertical-align: middle"
             [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
             }"
-            ><b>{{ workOrder.status }}</b></span
+          >
+            Status: <b>{{ workOrder.status }}</b></span
           >
         </li>
       </ul>

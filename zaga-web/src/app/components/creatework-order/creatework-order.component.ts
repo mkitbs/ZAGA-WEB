@@ -51,6 +51,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   modalHeader = "Dodavanje radnika";
   headerMachine = "Dodavanje mašine";
+  headerMaterial = "Dodavanje materijala";
   workers = false;
   machines = false;
   materials = false;
@@ -232,9 +233,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.worker = new Worker();
     this.selectedWorker = "-1";
     this.selectedOperation =
-      this.workOrder.operationId.split("&")[0] +
+      this.workOrder.operationId.split("&")[1] +
       "&" +
-      this.workOrder.operationId.split("&")[1];
+      this.workOrder.operationId.split("&")[0];
   }
 
   editWorker(worker) {
@@ -243,6 +244,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.editing = true;
     this.idOfEditingWorker = worker.userId;
     this.selectedWorker = worker.userId + "&" + worker.name;
+    this.selectedOperation = worker.operationId + "&" + worker.operation;
   }
 
   editExistingWorker() {
@@ -361,7 +363,7 @@ export class CreateworkOrderComponent implements OnInit {
 
     this.workOrder.start = dateStartToAdd;
     this.workOrder.end = dateEndToAdd;
-    this.workOrder.operationId = this.workOrder.operationId.split("&")[0];
+    this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
 
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.workerss;
@@ -372,6 +374,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrderService.addWorkOrder(this.workOrder).subscribe(
       (data) => {
         this.toastr.success("Uspešno kreiran radni nalog.");
+        this.router.navigate(["/workOrder"]);
       },
       (error) => {
         this.toastr.error("Radni nalog nije kreiran.");
