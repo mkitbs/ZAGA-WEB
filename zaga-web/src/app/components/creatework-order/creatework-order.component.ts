@@ -358,4 +358,12 @@ export class CreateworkOrderComponent implements OnInit {
   addEmployee() {
     this.workerMob = new Worker();
   }
+
+  closeWorkOrder() {}
+
+  saveData() {}
+
+  updateExistingMachine() {}
+
+  setMachForEdit(arg1) {}
 }

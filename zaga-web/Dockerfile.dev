@@ -1,0 +1,13 @@
+FROM node:alpine
+
+WORKDIR /usr/src/app/zaga-web
+
+COPY package*.json ./
+
+RUN npm install -g @angular/cli @angular-devkit/build-angular && npm install
+
+EXPOSE 4200
+
+#ne treba mi copy jer sam linkovao sa volumom
+
+CMD ["npm", "start"]

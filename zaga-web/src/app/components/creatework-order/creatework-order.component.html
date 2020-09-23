@@ -601,9 +601,9 @@
       <i class="fa fa-database mr-2" style="vertical-align: middle;"></i>Tabla:
     </div>
     <div class="col-4">
-      <select name="" [(ngModel)]="workOrder.table" class="form-control" id="">
-        <option value="{{table}}" *ngFor="let table of this.tables">{{table}}</option>
-      </select>
+      <!--<select name="" [(ngModel)]="workOrder.table" class="form-control" id="">
+        <option value="{{table.id}}" *ngFor="let table of tables">{{table}}</option>
+      </select>-->
     </div>
   </div>
   <hr class="solid">
@@ -860,7 +860,7 @@
           <div class="form-group" *ngIf="!new">
             <label for="imePrz">Noćni rad</label>
             <div class="input-group mb-3">
-              <input [(ngModel)]="workerMob.dnightWorkPeriod" type="number" name="nightWP" class="form-control" id="">
+              <input [(ngModel)]="workerMob.nightWorkPeriod" type="number" name="nightWP" class="form-control" id="">
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">h</span>
               </div>
