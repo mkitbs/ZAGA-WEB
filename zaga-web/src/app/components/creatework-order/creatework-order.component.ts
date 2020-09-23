@@ -90,13 +90,15 @@ export class CreateworkOrderComponent implements OnInit {
   cultureId;
   selectedWorker = "-1";
   selectedMachine = "-1";
-  selectedMaterial = "-1";
+  selectedMaterial;
   selectedWorkerForMachine = "-1";
   workerss: Worker[] = [];
   selectedOperation;
   selectedTable;
   selectedYear = 2020;
   selectedCrop;
+  clickAddMaterial = false;
+  clickAddWorkOrder = false;
 
   nameFC: FormControl = new FormControl("");
 
@@ -229,13 +231,17 @@ export class CreateworkOrderComponent implements OnInit {
     this.worker.name = this.selectedWorker.split("&")[1];
     this.worker.operationId = this.selectedOperation.split("&")[0];
     this.worker.operation = this.selectedOperation.split("&")[1];
-    this.workerss.push(this.worker);
-    this.worker = new Worker();
-    this.selectedWorker = "-1";
-    this.selectedOperation =
-      this.workOrder.operationId.split("&")[1] +
-      "&" +
-      this.workOrder.operationId.split("&")[0];
+    if (this.worker.userId != "-1") {
+      this.workerss.push(this.worker);
+      this.worker = new Worker();
+      this.selectedWorker = "-1";
+      this.selectedOperation =
+        this.workOrder.operationId.split("&")[1] +
+        "&" +
+        this.workOrder.operationId.split("&")[0];
+    } else {
+      this.toastr.error("Izaberite radnika.");
+    }
   }
 
   editWorker(worker) {
@@ -265,10 +271,20 @@ export class CreateworkOrderComponent implements OnInit {
     this.machine.machineName = this.selectedMachine.split("&")[1];
     this.machine.userId = this.selectedWorkerForMachine.split("&")[0];
     this.machine.userName = this.selectedWorkerForMachine.split("&")[1];
-    this.woMachines.push(this.machine);
-    this.machine = new MachineState();
-    this.selectedMachine = "-1";
-    this.selectedWorkerForMachine = "-1";
+    if (this.machine.machineId != "-1" && this.machine.userId != "-1") {
+      this.woMachines.push(this.machine);
+      this.machine = new MachineState();
+      this.selectedMachine = "-1";
+      this.selectedWorkerForMachine = "-1";
+    } else if (this.machine.machineId == "-1") {
+      if (this.machine.userId == "-1") {
+        this.toastr.error("Izaberite mašinu i radnika.");
+      } else {
+        this.toastr.error("Izaberite mašinu.");
+      }
+    } else {
+      this.toastr.error("Izaberite radnika.");
+    }
   }
 
   editMachine(machine) {
@@ -293,14 +309,19 @@ export class CreateworkOrderComponent implements OnInit {
     this.editingMachine = false;
   }
 
-  addMaterial() {
-    this.material.materialId = this.selectedMaterial.split("&")[0];
-    this.material.materialName = this.selectedMaterial.split("&")[1];
-    this.getArea();
-    this.material.quantityPerHectar = this.material.quantity / this.crop.area;
-    this.woMaterials.push(this.material);
-    this.material = new SpentMaterial();
-    this.selectedMaterial = "-1";
+  addMaterial(valid) {
+    if (this.selectedMaterial != null) {
+      this.material.materialId = this.selectedMaterial.split("&")[0];
+      this.material.materialName = this.selectedMaterial.split("&")[1];
+    }
+    if (valid) {
+      this.getArea();
+      this.material.quantityPerHectar = this.material.quantity / this.crop.area;
+      this.woMaterials.push(this.material);
+      this.selectedMaterial = null;
+      this.material = new SpentMaterial();
+    }
+    this.clickAddMaterial = true;
   }
 
   editMaterial(material) {
@@ -329,7 +350,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.editingMaterial = false;
   }
 
-  addWorkOrder() {
+  addWorkOrder(valid) {
     var dateStartToAdd = "";
     var dateEndToAdd = "";
     if (this.workOrder.start != undefined) {
@@ -363,14 +384,16 @@ export class CreateworkOrderComponent implements OnInit {
 
     this.workOrder.start = dateStartToAdd;
     this.workOrder.end = dateEndToAdd;
-    this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
+    //this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
 
     this.workOrder.machines = this.woMachines;
     this.workOrder.workers = this.workerss;
     this.workOrder.materials = this.woMaterials;
 
     this.workOrder.responsibleId = this.nameFC.value.userId;
+    this.clickAddWorkOrder = true;
 
+    /*
     this.workOrderService.addWorkOrder(this.workOrder).subscribe(
       (data) => {
         this.toastr.success("Uspešno kreiran radni nalog.");
@@ -380,8 +403,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.toastr.error("Radni nalog nije kreiran.");
       }
     );
-
-    console.log(this.workOrder);
+      */
+    console.log(valid);
   }
 
   updateWorkOrder() {
