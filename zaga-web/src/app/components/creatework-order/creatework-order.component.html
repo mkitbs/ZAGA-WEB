@@ -71,7 +71,7 @@
             </select>
             <div
               *ngIf="operation.invalid && clickAddWorkOrder"
-              style="color: red"
+              style="color: red; font-weight: normal"
             >
               Izaberite operaciju.
             </div>
@@ -93,7 +93,10 @@
                 {{ table.Name }}
               </option>
             </select>
-            <div *ngIf="table.invalid && clickAddWorkOrder" style="color: red">
+            <div
+              *ngIf="table.invalid && clickAddWorkOrder"
+              style="color: red; font-weight: normal"
+            >
               Izaberite tablu.
             </div>
           </td>
@@ -109,17 +112,17 @@
                   type="date"
                   [(ngModel)]="workOrder.start"
                   name="poc"
-                  id="from"
+                  id="od"
                   ngbDatepicker
-                  #from="ngbDatepicker"
-                  (click)="from.toggle()"
+                  #od="ngbDatepicker"
+                  (click)="od.toggle()"
                   class="form-control"
                   #dateFrom="ngModel"
                   required
                 />
                 <div
                   *ngIf="dateFrom.invalid && clickAddWorkOrder"
-                  style="color: red"
+                  style="color: red; font-weight: normal"
                 >
                   Izaberite datum.
                 </div>
@@ -131,16 +134,16 @@
                   [(ngModel)]="workOrder.end"
                   name="kraj"
                   class="form-control"
-                  id="to"
+                  id="do"
                   ngbDatepicker
-                  #to="ngbDatepicker"
-                  (click)="to.toggle()"
+                  #do="ngbDatepicker"
+                  (click)="do.toggle()"
                   #dateTo="ngModel"
                   required
                 />
                 <div
                   *ngIf="dateTo.invalid && clickAddWorkOrder"
-                  style="color: red"
+                  style="color: red; font-weight: normal"
                 >
                   Izaberite datum.
                 </div>
@@ -162,12 +165,7 @@
                   style="width: 100%"
                   required
                 />
-                <div
-                  *ngIf="nameFC.invalid && clickAddWorkOrder"
-                  style="color: red"
-                >
-                  Izaberite odgovornu osobu.
-                </div>
+
                 <mat-autocomplete
                   #auto="matAutocomplete"
                   [displayWith]="displayFn"
@@ -182,6 +180,12 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
+              <div
+                *ngIf="nameFC.invalid && clickAddWorkOrder"
+                style="color: red; font-weight: normal"
+              >
+                Izaberite odgovornu osobu.
+              </div>
             </form>
           </td>
         </tr>
@@ -203,7 +207,7 @@
             </select>
             <div
               *ngIf="culture.invalid && clickAddWorkOrder"
-              style="color: red"
+              style="color: red; font-weight: normal"
             >
               Izaberite kulturu.
             </div>
@@ -235,7 +239,10 @@
                 <option value="2020">2020</option>
                 <option value="2019">2019</option>
               </select>
-              <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red">
+              <div
+                *ngIf="year.invalid && clickAddWorkOrder"
+                style="color: red; font-weight: normal"
+              >
                 Izaberite godinu.
               </div>
             </ng-template>
@@ -258,7 +265,10 @@
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
             </div>
-            <div *ngIf="area.invalid && clickAddWorkOrder" style="color: red">
+            <div
+              *ngIf="area.invalid && clickAddWorkOrder"
+              style="color: red; font-weight: normal"
+            >
               Unesite površinu.
             </div>
           </td>
