@@ -146,30 +146,44 @@
     (click)="changeRoute(workOrder.id)"
     style="border: 1px solid #5c7495; border-radius: 5px"
   >
-    <div class="card-body">
-      <h5 class="card-title">{{ workOrder.operationName }}</h5>
+    <div class="card-body" style="background-color: #5c7495">
+      <h5 class="card-title" style="color: white">
+        {{ workOrder.operationName }}
+      </h5>
       <ul class="list-group">
-        <li class="list-group-item list-group-item-info">
-          <i class="fa fa-user" style="font-size: 20px"></i>
+        <li class="list-group-item list-group-item">
+          <i
+            class="fa fa-user"
+            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
+          ></i>
           <span style="padding-left: 6px; vertical-align: middle">
             Odgovorna osoba: {{ workOrder.responsibleName }}</span
           >
         </li>
-        <li class="list-group-item list-group-item-info">
-          <i class="fa fa-map-marker" style="font-size: 20px"></i>
+        <li class="list-group-item list-group-item">
+          <i
+            class="fa fa-map-marker"
+            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
+          ></i>
           <span style="padding-left: 9px; vertical-align: middle">
             Tabla i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
           </span>
         </li>
-        <li class="list-group-item list-group-item-info">
-          <i class="fa fa-clock-o" style="font-size: 20px"></i>
+        <li class="list-group-item list-group-item">
+          <i
+            class="fa fa-clock-o"
+            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
+          ></i>
           <span style="padding-left: 3px; vertical-align: middle">
             Period: {{ workOrder.start | date: "dd.MM.yyyy." }} -
             {{ workOrder.end | date: "dd.MM.yyyy." }}
           </span>
         </li>
-        <li class="list-group-item list-group-item-info">
-          <i class="fa fa-tasks" style="font-size: 20px"></i>
+        <li class="list-group-item list-group-item">
+          <i
+            class="fa fa-tasks"
+            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
+          ></i>
           <span
             style="padding-left: 3px; vertical-align: middle"
             [ngClass]="{
