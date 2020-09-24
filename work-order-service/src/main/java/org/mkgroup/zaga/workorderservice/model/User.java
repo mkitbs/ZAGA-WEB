@@ -1,12 +1,15 @@
 package org.mkgroup.zaga.workorderservice.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -39,7 +42,16 @@ public class User {
 	private Long perNumber;
 	
 	@OneToMany(mappedBy = "responsible")
-	List<WorkOrder> workOrders;
+	private List<WorkOrder> responsible = new ArrayList<WorkOrder>();
+	
+	@OneToMany(mappedBy = "user")
+	private List<WorkOrderMachine> workOrderMachines = new ArrayList<WorkOrderMachine>();
+	
+	@ManyToMany(mappedBy = "assignedUsers")
+	private List<WorkOrder> workOrdersWorkingOn;
+	
+	@OneToMany(mappedBy = "user")
+	private List<WorkOrderWorker> workOrderWorking = new ArrayList<WorkOrderWorker>();
 	
 	public User(EmployeeDTO em) {
 		this.name = em.getName();

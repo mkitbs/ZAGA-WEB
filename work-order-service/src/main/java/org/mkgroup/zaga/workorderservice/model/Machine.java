@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -53,8 +54,8 @@ public class Machine {
 	@ManyToOne
 	private MachineGroup machineGroupId;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<WorkOrder> workOrder;
+	@OneToMany(mappedBy = "machine")
+	private List<WorkOrderMachine> workOrders;
 
 	public Machine(MachineDTO m) {
 		this.name = m.getName();

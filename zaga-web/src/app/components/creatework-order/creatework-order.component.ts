@@ -23,6 +23,7 @@ import { Field } from "src/app/models/Field";
 import { FieldService } from "src/app/service/field.service";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { CropService } from "src/app/service/crop.service";
+import { WorkOrderWorker } from "src/app/models/WorkOrderWorker";
 
 @Component({
   selector: "app-creatework-order",
@@ -104,6 +105,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
 
+        console.log(this.workOrder);
         if (this.workOrder.status == "NEW") {
           this.workOrder.status = "Novi";
         } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -122,11 +124,6 @@ export class CreateworkOrderComponent implements OnInit {
           month: +this.workOrder.end.substring(5, 7),
           year: +this.workOrder.end.substring(0, 4),
         };
-
-        this.workOrder.workers.forEach((data) => {
-          this.employee = data;
-          this.getWorker(this.employee.userId);
-        });
       });
     }
 
@@ -284,9 +281,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.start = "2020-09-16";
     this.workOrder.end = "2020-09-17";
     this.workOrder.cropId = "152afb01-a708-4659-9805-bd83f8f742bb";
-    this.workOrder.machines = this.woMachines;
-    this.workOrder.workers = this.employees;
-    this.workOrder.materials = this.woMaterials;
+    //this.workOrder.machines = this.woMachines;
+    //this.workOrder.workers = this.employees;
+    //this.workOrder.materials = this.woMaterials;
     this.workOrder.responsibleId = this.nameFC.value.userId;
 
     this.workOrderService.addWorkOrder(this.workOrder).subscribe(
@@ -333,9 +330,9 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.end.day;
     }
 
-    this.workOrder.machines = this.woMachines;
-    this.workOrder.workers = this.employees;
-    this.workOrder.materials = this.woMaterials;
+    //this.workOrder.machines = this.woMachines;
+    //this.workOrder.workers = this.employees;
+    //this.workOrder.materials = this.woMaterials;
 
     /*
     this.workOrderService.updateWorkOrder(this.wo).subscribe(data => {

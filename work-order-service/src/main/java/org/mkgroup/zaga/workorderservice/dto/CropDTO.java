@@ -44,10 +44,10 @@ public class CropDTO {
 	private Long fieldId;
 	
 	public CropDTO(Crop crop) {
-		id = crop.getId();
-		name = crop.getName();
-		area = crop.getArea();
-		year = crop.getYear();
+		this.id = crop.getId();
+		this.name = crop.getName();
+		this.area = crop.getArea();
+		this.year = crop.getYear();
 	}
 
 }
