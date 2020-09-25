@@ -25,6 +25,7 @@ import { DeviceDetectorService } from "ngx-device-detector";
 import { CropService } from "src/app/service/crop.service";
 import { MachineState } from "src/app/models/MachineState";
 import { SpentMaterial } from "src/app/models/SpentMaterial";
+import { WorkOrderWorker } from "src/app/models/WorkOrderWorker";
 
 @Component({
   selector: "app-creatework-order",
@@ -117,6 +118,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
 
+        console.log(this.workOrder);
         if (this.workOrder.status == "NEW") {
           this.workOrder.status = "Novi";
         } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -135,11 +137,6 @@ export class CreateworkOrderComponent implements OnInit {
           month: +this.workOrder.end.substring(5, 7),
           year: +this.workOrder.end.substring(0, 4),
         };
-
-        this.workOrder.workers.forEach((data) => {
-          this.worker = data;
-          this.getWorker(this.worker.userId);
-        });
       });
     }
 
@@ -294,8 +291,8 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addMaterial() {
-    this.material.materialId = this.selectedMaterial.split("&")[0];
-    this.material.materialName = this.selectedMaterial.split("&")[1];
+    this.material.material.id = this.selectedMaterial.split("&")[0];
+    this.material.material.name = this.selectedMaterial.split("&")[1];
     this.getArea();
     this.material.quantityPerHectar = this.material.quantity / this.crop.area;
     this.woMaterials.push(this.material);
@@ -304,22 +301,22 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editMaterial(material) {
-    this.material.materialId = material.materialId;
-    this.material.materialName = material.materialName;
+    this.material.material.id = material.materialId;
+    this.material.material.name = material.materialName;
     this.editingMaterial = true;
     this.idOfEditingMaterial = material.materialId;
     this.selectedMaterial = material.materialId + "&" + material.materialName;
     this.material.quantity = material.quantity;
-    this.material.unit = material.unit;
+    this.material.material.unit = material.unit;
   }
 
   editExistingMaterial() {
     this.woMaterials.forEach((material) => {
-      if (material.materialId == this.idOfEditingMaterial) {
-        material.materialId = this.selectedMaterial.split("&")[0];
-        material.materialName = this.selectedMaterial.split("&")[1];
+      if (material.material.id == this.idOfEditingMaterial) {
+        material.material.id = this.selectedMaterial.split("&")[0];
+        material.material.name = this.selectedMaterial.split("&")[1];
         material.quantity = this.material.quantity;
-        material.unit = this.material.unit;
+        material.material.unit = this.material.material.unit;
         this.getArea();
         this.material.quantityPerHectar =
           this.material.quantity / this.crop.area;
@@ -365,8 +362,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.end = dateEndToAdd;
     this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
 
-    this.workOrder.machines = this.woMachines;
-    this.workOrder.workers = this.workerss;
+    //this.workOrder.machines = this.woMachines;
+    //this.workOrder.workers = this.workerss;
     this.workOrder.materials = this.woMaterials;
 
     this.workOrder.responsibleId = this.nameFC.value.userId;

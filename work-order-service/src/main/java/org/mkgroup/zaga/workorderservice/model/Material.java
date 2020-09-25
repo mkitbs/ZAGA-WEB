@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -39,8 +40,8 @@ public class Material {
 	@Column(name = "erpId")
 	private Long erpId;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<WorkOrder> workOrder;
+	@OneToMany(mappedBy = "material")
+	private List<SpentMaterial> spentMaterials; //materials used in workOrders
 	
 	public Material(MaterialDTO m) {
 		this.name = m.getName();

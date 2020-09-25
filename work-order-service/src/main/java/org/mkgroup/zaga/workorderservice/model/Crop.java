@@ -55,11 +55,13 @@ public class Crop {
 	private List<WorkOrder> workOrders;
 	
 	public Crop(CropDTO crop) {
-		name = crop.getName();
-		companyCode = crop.getCompanyCode();
-		orgUnit = crop.getOrganisationUnit();
-		year = crop.getYear();
-		erpId = crop.getErpId();
-		area = crop.getArea();
+
+		this.name = crop.getName();
+		this.companyCode = crop.getCompanyCode();
+		this.orgUnit = crop.getOrganisationUnit();
+		this.year = crop.getYear();
+		this.erpId = crop.getErpId();
+		this.area = crop.getArea();
+
 	}
 }

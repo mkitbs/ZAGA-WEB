@@ -46,6 +46,7 @@ public class CropDTO {
 	private Long erpFieldId;
 	
 	public CropDTO(Crop crop) {
+
 		id = crop.getId();
 		name = crop.getName();
 		area = crop.getArea();
