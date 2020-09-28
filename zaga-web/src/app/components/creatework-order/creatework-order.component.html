@@ -280,7 +280,7 @@
               <div class="input-group mb-3">
                 <input
                   type="text"
-                  name=""
+                  name="treated"
                   [(ngModel)]="workOrder.treated"
                   [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
                   id=""
@@ -371,6 +371,7 @@
                 <td *ngIf="!new">
                   <div class="input-group">
                     <input
+                      name="date"
                       [(ngModel)]="worker.date"
                       (click)="od.toggle()"
                       class="form-control"
@@ -391,7 +392,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      name=""
+                      name="operation"
                       id=""
                       [(ngModel)]="worker.operation"
                       class="form-control"
@@ -434,7 +435,7 @@
                       <input
                         [(ngModel)]="worker.dayWorkPeriod"
                         type="number"
-                        name=""
+                        name="dayHour"
                         class="form-control"
                         id=""
                       />
@@ -452,7 +453,7 @@
                       <input
                         [(ngModel)]="worker.nightWorkPeriod"
                         type="number"
-                        name=""
+                        name="nightHour"
                         class="form-control"
                         id=""
                       />
@@ -472,7 +473,7 @@
                           worker.dayWorkPeriod + worker.nightWorkPeriod
                         "
                         type="number"
-                        name=""
+                        name="sumHour"
                         class="form-control"
                         id=""
                         disabled
@@ -651,7 +652,7 @@
                       <input
                         [(ngModel)]="machine.initialState"
                         type="number"
-                        name=""
+                        name="initialState"
                         id=""
                         class="form-control"
                       />
@@ -669,7 +670,7 @@
                       <input
                         [(ngModel)]="machine.finalState"
                         type="number"
-                        name=""
+                        name="finalState"
                         id=""
                         class="form-control"
                       />
@@ -687,7 +688,7 @@
                       <input
                         [(ngModel)]="machine.finalState - machine.initialState"
                         type="number"
-                        name=""
+                        name="sumState"
                         id=""
                         class="form-control"
                         disabled
@@ -706,7 +707,7 @@
                       <input
                         [(ngModel)]="machine.fuel"
                         type="number"
-                        name=""
+                        name="fuel"
                         id=""
                         class="form-control"
                       />
@@ -1251,7 +1252,7 @@
           <div class="input-group">
             <input
               type="text"
-              name=""
+              name="treated"
               [(ngModel)]="workOrder.treated"
               [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
               id=""
@@ -1711,7 +1712,6 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          data-dismiss="modal"
           (click)="editExistingWorker()"
         >
           <i class="fa fa-save"></i> Sačuvaj
@@ -1818,7 +1818,6 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          data-dismiss="modal"
           (click)="editExistingMachine()"
         >
           <i class="fa fa-save"></i> Sačuvaj
@@ -1961,7 +1960,6 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          data-dismiss="modal"
           (click)="editExistingMaterial()"
         >
           <i class="fa fa-save"></i> Sačuvaj

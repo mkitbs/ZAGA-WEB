@@ -289,7 +289,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.selectedOperation = null;
     }
-
+    this.closeButtonWorkerModal.nativeElement.click();
     this.editing = false;
   }
 
@@ -333,6 +333,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.selectedMachine = null;
     this.selectedWorkerForMachine = null;
     this.editingMachine = false;
+    this.closeButtonMachineModal.nativeElement.click();
   }
 
   addMaterial(valid) {
@@ -383,6 +384,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.selectedUnit = null;
     this.quantityEntered = null;
     this.editingMaterial = false;
+    this.closebuttonMaterialModal.nativeElement.click();
   }
 
   addWorkOrder(valid) {
@@ -503,7 +505,14 @@ export class CreateworkOrderComponent implements OnInit {
   addEmployee() {
     this.worker = new Worker();
     this.selectedWorker = null;
-    this.selectedOperation = null;
+    if (this.workOrder.operationId != null) {
+      this.selectedOperation =
+        this.workOrder.operationId.split("&")[1] +
+        "&" +
+        this.workOrder.operationId.split("&")[0];
+    } else {
+      this.selectedOperation = null;
+    }
   }
 
   addDevice() {
