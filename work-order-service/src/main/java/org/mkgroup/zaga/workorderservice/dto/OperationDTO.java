@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value =  Include.NON_NULL)
 public class OperationDTO {
 
+	@JsonProperty("id")
 	private UUID id;
 	
 	@JsonProperty("Id")

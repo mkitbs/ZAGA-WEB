@@ -26,6 +26,8 @@ import { CropService } from "src/app/service/crop.service";
 import { MachineState } from "src/app/models/MachineState";
 import { SpentMaterial } from "src/app/models/SpentMaterial";
 import { WorkOrderWorker } from "src/app/models/WorkOrderWorker";
+import { ViewChild } from "@angular/core";
+import { WorkOrderWorkerService } from "src/app/service/work-order-worker.service";
 
 @Component({
   selector: "app-creatework-order",
@@ -33,6 +35,10 @@ import { WorkOrderWorker } from "src/app/models/WorkOrderWorker";
   styleUrls: ["./creatework-order.component.css"],
 })
 export class CreateworkOrderComponent implements OnInit {
+  @ViewChild("closeButtonMachineModal", null) closeButtonMachineModal;
+  @ViewChild("closeButtonMaterialModal", null) closebuttonMaterialModal;
+  @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
+
   constructor(
     private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -45,7 +51,8 @@ export class CreateworkOrderComponent implements OnInit {
     private workOrderService: WorkOrderService,
     private fieldService: FieldService,
     private cropService: CropService,
-    private deviceService: DeviceDetectorService
+    private deviceService: DeviceDetectorService,
+    private wowService: WorkOrderWorkerService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -76,6 +83,7 @@ export class CreateworkOrderComponent implements OnInit {
   substances: Material[] = [];
   fields: Field[] = [];
   crops: Crop[] = [];
+  wow: WorkOrderWorker = new WorkOrderWorker();
 
   field: Field = new Field();
   operation: Operation = new Operation();
@@ -89,15 +97,22 @@ export class CreateworkOrderComponent implements OnInit {
   woMachines: MachineState[] = [];
   woMaterials: SpentMaterial[] = [];
   cultureId;
-  selectedWorker = "-1";
-  selectedMachine = "-1";
-  selectedMaterial = "-1";
-  selectedWorkerForMachine = "-1";
+  selectedWorker;
+  selectedMachine;
+  selectedMaterial;
+  selectedWorkerForMachine;
   workerss: Worker[] = [];
   selectedOperation;
   selectedTable;
   selectedYear = 2020;
   selectedCrop;
+  clickAddMaterial = false;
+  clickAddWorkOrder = false;
+  clickAddWorker = false;
+  clickAddMachine = false;
+  //dodato zbog validacije, jer ngModel ne izmapira material.quantity i material.unit
+  quantityEntered;
+  selectedUnit;
 
   nameFC: FormControl = new FormControl("");
 
@@ -137,6 +152,12 @@ export class CreateworkOrderComponent implements OnInit {
           month: +this.workOrder.end.substring(5, 7),
           year: +this.workOrder.end.substring(0, 4),
         };
+
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
       });
     }
 
@@ -172,6 +193,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.cropService.getOne(this.workOrder.cropId).subscribe((data) => {
       this.crop = data;
       this.crop.area = data.Area;
+      this.workOrder.area = data.Area;
     });
   }
 
@@ -221,18 +243,29 @@ export class CreateworkOrderComponent implements OnInit {
     }
   }
 
-  addWorker() {
-    this.worker.userId = this.selectedWorker.split("&")[0];
-    this.worker.name = this.selectedWorker.split("&")[1];
-    this.worker.operationId = this.selectedOperation.split("&")[0];
-    this.worker.operation = this.selectedOperation.split("&")[1];
-    this.workerss.push(this.worker);
-    this.worker = new Worker();
-    this.selectedWorker = "-1";
-    this.selectedOperation =
-      this.workOrder.operationId.split("&")[1] +
-      "&" +
-      this.workOrder.operationId.split("&")[0];
+  addWorker(valid) {
+    this.clickAddWorker = true;
+    if (this.selectedWorker != null && this.selectedOperation != null) {
+      this.worker.userId = this.selectedWorker.split("&")[0];
+      this.worker.name = this.selectedWorker.split("&")[1];
+      this.worker.operationId = this.selectedOperation.split("&")[0];
+      this.worker.operation = this.selectedOperation.split("&")[1];
+    }
+    if (valid) {
+      this.workerss.push(this.worker);
+      this.worker = new Worker();
+      this.selectedWorker = null;
+      if (this.workOrder.operationId != null) {
+        this.selectedOperation =
+          this.workOrder.operationId.split("&")[1] +
+          "&" +
+          this.workOrder.operationId.split("&")[0];
+      } else {
+        this.selectedOperation = null;
+      }
+      this.closeButtonWorkerModal.nativeElement.click();
+      this.clickAddWorker = false;
+    }
   }
 
   editWorker(worker) {
@@ -254,18 +287,44 @@ export class CreateworkOrderComponent implements OnInit {
       }
     });
     this.worker = new Worker();
+    this.selectedWorker = null;
+    if (this.workOrder.operationId != null) {
+      this.selectedOperation =
+        this.workOrder.operationId.split("&")[1] +
+        "&" +
+        this.workOrder.operationId.split("&")[0];
+    } else {
+      this.selectedOperation = null;
+    }
+
     this.editing = false;
   }
 
-  addMachine() {
-    this.machine.machineId = this.selectedMachine.split("&")[0];
-    this.machine.machineName = this.selectedMachine.split("&")[1];
-    this.machine.userId = this.selectedWorkerForMachine.split("&")[0];
-    this.machine.userName = this.selectedWorkerForMachine.split("&")[1];
-    this.woMachines.push(this.machine);
-    this.machine = new MachineState();
-    this.selectedMachine = "-1";
-    this.selectedWorkerForMachine = "-1";
+  addNewWorker() {
+    this.wow.user.name = "AAAAAAAA";
+    this.wow.operation.name = "BBBBBBBBBB";
+    console.log(this.wow);
+    this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  addMachine(valid) {
+    this.clickAddMachine = true;
+    if (this.selectedMachine != null && this.selectedWorkerForMachine != null) {
+      this.machine.machineId = this.selectedMachine.split("&")[0];
+      this.machine.machineName = this.selectedMachine.split("&")[1];
+      this.machine.userId = this.selectedWorkerForMachine.split("&")[0];
+      this.machine.userName = this.selectedWorkerForMachine.split("&")[1];
+    }
+    if (valid) {
+      this.woMachines.push(this.machine);
+      this.machine = new MachineState();
+      this.selectedMachine = null;
+      this.selectedWorkerForMachine = null;
+      this.closeButtonMachineModal.nativeElement.click();
+      this.clickAddMachine = false;
+    }
   }
 
   editMachine(machine) {
@@ -287,17 +346,30 @@ export class CreateworkOrderComponent implements OnInit {
       }
     });
     this.machine = new MachineState();
+    this.selectedMachine = null;
+    this.selectedWorkerForMachine = null;
     this.editingMachine = false;
   }
 
-  addMaterial() {
-    this.material.material.id = this.selectedMaterial.split("&")[0];
-    this.material.material.name = this.selectedMaterial.split("&")[1];
-    this.getArea();
-    this.material.quantityPerHectar = this.material.quantity / this.crop.area;
-    this.woMaterials.push(this.material);
-    this.material = new SpentMaterial();
-    this.selectedMaterial = "-1";
+  addMaterial(valid) {
+    this.clickAddMaterial = true;
+    if (this.selectedMaterial != null) {
+      this.material.material.id = this.selectedMaterial.split("&")[0];
+      this.material.material.name = this.selectedMaterial.split("&")[1];
+    }
+    if (valid) {
+      this.getArea();
+      this.material.quantity = this.quantityEntered;
+      this.material.material.unit = this.selectedUnit;
+      this.material.quantityPerHectar = this.material.quantity / this.crop.area;
+      this.woMaterials.push(this.material);
+      this.material = new SpentMaterial();
+      this.selectedMaterial = null;
+      this.quantityEntered = null;
+      this.selectedUnit = null;
+      this.clickAddMaterial = false;
+      this.closebuttonMaterialModal.nativeElement.click();
+    }
   }
 
   editMaterial(material) {
@@ -306,8 +378,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.editingMaterial = true;
     this.idOfEditingMaterial = material.materialId;
     this.selectedMaterial = material.materialId + "&" + material.materialName;
-    this.material.quantity = material.quantity;
-    this.material.material.unit = material.unit;
+    this.quantityEntered = material.quantity;
+    this.selectedUnit = material.unit;
   }
 
   editExistingMaterial() {
@@ -323,62 +395,66 @@ export class CreateworkOrderComponent implements OnInit {
       }
     });
     this.material = new SpentMaterial();
+    this.selectedMaterial = null;
+    this.selectedUnit = null;
+    this.quantityEntered = null;
     this.editingMaterial = false;
   }
 
-  addWorkOrder() {
-    var dateStartToAdd = "";
-    var dateEndToAdd = "";
-    if (this.workOrder.start != undefined) {
-      if (this.workOrder.start.month < 10) {
-        this.workOrder.start.month = "0" + this.workOrder.start.month;
+  addWorkOrder(valid) {
+    this.clickAddWorkOrder = true;
+    if (valid) {
+      var dateStartToAdd = "";
+      var dateEndToAdd = "";
+      if (this.workOrder.start != undefined) {
+        if (this.workOrder.start.month < 10) {
+          this.workOrder.start.month = "0" + this.workOrder.start.month;
+        }
+        if (this.workOrder.start.day < 10) {
+          this.workOrder.start.day = "0" + this.workOrder.start.day;
+        }
+        dateStartToAdd =
+          this.workOrder.start.year +
+          "-" +
+          this.workOrder.start.month +
+          "-" +
+          this.workOrder.start.day;
       }
-      if (this.workOrder.start.day < 10) {
-        this.workOrder.start.day = "0" + this.workOrder.start.day;
+      if (this.workOrder.end != undefined) {
+        if (this.workOrder.end.month < 10) {
+          this.workOrder.end.month = "0" + this.workOrder.end.month;
+        }
+        if (this.workOrder.end.day < 10) {
+          this.workOrder.end.day = "0" + this.workOrder.end.day;
+        }
+        dateEndToAdd =
+          this.workOrder.end.year +
+          "-" +
+          this.workOrder.end.month +
+          "-" +
+          this.workOrder.end.day;
       }
-      dateStartToAdd =
-        this.workOrder.start.year +
-        "-" +
-        this.workOrder.start.month +
-        "-" +
-        this.workOrder.start.day;
+
+      this.workOrder.start = dateStartToAdd;
+      this.workOrder.end = dateEndToAdd;
+      this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
+
+      //this.workOrder.machines = this.woMachines;
+      //this.workOrder.workers = this.workerss;
+      this.workOrder.materials = this.woMaterials;
+
+      this.workOrder.responsibleId = this.nameFC.value.userId;
+
+      this.workOrderService.addWorkOrder(this.workOrder).subscribe(
+        (data) => {
+          this.toastr.success("Uspešno kreiran radni nalog.");
+          this.router.navigate(["/workOrder"]);
+        },
+        (error) => {
+          this.toastr.error("Radni nalog nije kreiran.");
+        }
+      );
     }
-    if (this.workOrder.end != undefined) {
-      if (this.workOrder.end.month < 10) {
-        this.workOrder.end.month = "0" + this.workOrder.end.month;
-      }
-      if (this.workOrder.end.day < 10) {
-        this.workOrder.end.day = "0" + this.workOrder.end.day;
-      }
-      dateEndToAdd =
-        this.workOrder.end.year +
-        "-" +
-        this.workOrder.end.month +
-        "-" +
-        this.workOrder.end.day;
-    }
-
-    this.workOrder.start = dateStartToAdd;
-    this.workOrder.end = dateEndToAdd;
-    this.workOrder.operationId = this.workOrder.operationId.split("&")[1];
-
-    //this.workOrder.machines = this.woMachines;
-    //this.workOrder.workers = this.workerss;
-    this.workOrder.materials = this.woMaterials;
-
-    this.workOrder.responsibleId = this.nameFC.value.userId;
-
-    this.workOrderService.addWorkOrder(this.workOrder).subscribe(
-      (data) => {
-        this.toastr.success("Uspešno kreiran radni nalog.");
-        this.router.navigate(["/workOrder"]);
-      },
-      (error) => {
-        this.toastr.error("Radni nalog nije kreiran.");
-      }
-    );
-
-    console.log(this.workOrder);
   }
 
   updateWorkOrder() {
@@ -437,14 +513,33 @@ export class CreateworkOrderComponent implements OnInit {
     return emp && emp.name ? emp.name : "";
   }
 
+  /*metoda za ponistavanje selectovanih radnika i operacija jer ukoliko se 
+  dodan radnik i operacija, a zatim izmene, prilikom dodavanja novog 
+  radnika i operacije bice selektovani prethodni, pa se ovom metodom to izbegava*/
   addEmployee() {
-    this.workerMob = new Worker();
+    this.worker = new Worker();
+    this.selectedWorker = null;
+    this.selectedOperation = null;
+  }
+
+  addDevice() {
+    this.machine = new MachineState();
+    this.selectedMachine = null;
+    this.selectedWorkerForMachine = null;
+  }
+
+  addSubstance() {
+    this.material = new SpentMaterial();
+    this.selectedMaterial = null;
+    this.selectedUnit = null;
+    this.quantityEntered = null;
   }
 
   getCulture() {
     this.cropService
-      .getAllByFieldAndYear(this.selectedTable, this.selectedYear)
+      .getAllByFieldAndYear(this.workOrder.tableId, this.selectedYear)
       .subscribe((data) => {
+        console.log(data);
         this.crops = data;
       });
   }

@@ -1,7 +1,7 @@
 import { WorkOrder } from "./WorkOrder";
 
 export class Employee {
-  id: string;
+  id = "";
   name: string;
   department: string;
   position: string;

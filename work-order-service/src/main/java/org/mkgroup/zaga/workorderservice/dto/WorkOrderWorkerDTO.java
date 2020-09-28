@@ -22,7 +22,7 @@ public class WorkOrderWorkerDTO {
 	private EmployeeDTO user;
 	private OperationDTO operation;
 	private Date date;
-	private double dayWorkPeriod;
+	private double dayPeriod;
 	private double dayNightPeriod;
 	private double workPeriod;
 	
@@ -32,7 +32,7 @@ public class WorkOrderWorkerDTO {
 		this.operation = new OperationDTO(wow.getOperation());
 		this.date = wow.getDate();
 		this.dayNightPeriod = wow.getDayNightPeriod();
-		this.dayWorkPeriod = wow.getDayWorkPeriod();
+		this.dayPeriod = wow.getDayWorkPeriod();
 		this.workPeriod = wow.getWorkPeriod();
 	}
 }

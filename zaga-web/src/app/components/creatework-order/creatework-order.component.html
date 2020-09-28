@@ -62,10 +62,7 @@
               #operation="ngModel"
               required
             >
-              <option
-                value="{{ op.Name }}&{{ op.id }}"
-                *ngFor="let op of operations"
-              >
+              <option value="{{ op.id }}" *ngFor="let op of operations">
                 {{ op.Name }}
               </option>
             </select>
@@ -84,7 +81,7 @@
               name="selectedTable"
               class="form-control"
               id=""
-              [(ngModel)]="selectedTable"
+              [(ngModel)]="workOrder.tableId"
               (change)="getCulture()"
               #table="ngModel"
               required
@@ -255,7 +252,7 @@
               <input
                 type="text"
                 name="area"
-                [(ngModel)]="crop.area"
+                [(ngModel)]="workOrder.area"
                 id=""
                 class="form-control"
                 #area="ngModel"
@@ -280,7 +277,7 @@
               <div class="input-group mb-3">
                 <input
                   type="text"
-                  name=""
+                  name="treated"
                   [(ngModel)]="workOrder.treated"
                   [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
                   id=""
@@ -332,15 +329,18 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="worker.worker"
+                      [(ngModel)]="wow.user.id"
                       name="worker"
                       id=""
                       class="form-control"
                       *ngIf="!new; else elseBlockWorkers"
                     >
-                      <option value="-1"></option>
-                      <option value="{{ w.id }}" *ngFor="let w of employees">
-                        {{ w.Name }}
+                      <option value="">Izaberite</option>
+                      <option
+                        value="{{ assignedUser.id }}"
+                        *ngFor="let assignedUser of workOrder.assignedUsers"
+                      >
+                        {{ assignedUser.Name }}
                       </option>
                     </select>
                     <ng-template #elseBlockWorkers>
@@ -374,6 +374,7 @@
                       [(ngModel)]="worker.date"
                       (click)="od.toggle()"
                       class="form-control"
+                      name="dateFrom"
                       id="od"
                       placeholder="yyyy-mm-dd"
                       ngbDatepicker
@@ -391,14 +392,13 @@
                 <td>
                   <div class="form-group">
                     <select
-                      name=""
+                      name="operation"
                       id=""
-                      [(ngModel)]="worker.operation"
+                      [(ngModel)]="wow.operation.id"
                       class="form-control"
                       *ngIf="!new; else elseBlockOperations"
                     >
-                      <!--<option value="{{worker.operation}}" selected>{{worker.operation}}</option>-->
-                      <option value="-1"></option>
+                      <option value="">Izaberite</option>
                       <option *ngFor="let op of operations" value="{{ op.id }}">
                         {{ op.Name }}
                       </option>
@@ -432,9 +432,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="worker.dayWorkPeriod"
+                        [(ngModel)]="wow.dayPeriod"
                         type="number"
-                        name=""
+                        name="dayWorkPeriod"
                         class="form-control"
                         id=""
                       />
@@ -450,9 +450,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="worker.nightWorkPeriod"
+                        [(ngModel)]="wow.dayNightPeriod"
                         type="number"
-                        name=""
+                        name="nightWorkPeriod"
                         class="form-control"
                         id=""
                       />
@@ -468,11 +468,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="
-                          worker.dayWorkPeriod + worker.nightWorkPeriod
-                        "
+                        [(ngModel)]="wow.workPeriod"
                         type="number"
-                        name=""
+                        name="workPeriod"
                         class="form-control"
                         id=""
                         disabled
@@ -490,6 +488,15 @@
                     <button
                       class="btn btn-primary btn-add mr-2"
                       (click)="addWorker(workerForm.valid)"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="!new" class="form-group">
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="addNewWorker()"
                       [disabled]="workOrder.status == 'Zatvoren'"
                     >
                       <i class="fa fa-plus"></i>
@@ -651,7 +658,7 @@
                       <input
                         [(ngModel)]="machine.initialState"
                         type="number"
-                        name=""
+                        name="initialState"
                         id=""
                         class="form-control"
                       />
@@ -669,7 +676,7 @@
                       <input
                         [(ngModel)]="machine.finalState"
                         type="number"
-                        name=""
+                        name="finalState"
                         id=""
                         class="form-control"
                       />
@@ -687,7 +694,7 @@
                       <input
                         [(ngModel)]="machine.finalState - machine.initialState"
                         type="number"
-                        name=""
+                        name="sumState"
                         id=""
                         class="form-control"
                         disabled
@@ -706,7 +713,7 @@
                       <input
                         [(ngModel)]="machine.fuel"
                         type="number"
-                        name=""
+                        name="fuel"
                         id=""
                         class="form-control"
                       />
@@ -1251,7 +1258,7 @@
           <div class="input-group">
             <input
               type="text"
-              name=""
+              name="treated"
               [(ngModel)]="workOrder.treated"
               [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
               id=""

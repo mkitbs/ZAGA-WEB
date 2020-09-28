@@ -11,7 +11,6 @@ import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderMachineDTO;
-import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.Material;
@@ -21,9 +20,7 @@ import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderMachine;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
-import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.model.Worker;
-import org.mkgroup.zaga.workorderservice.model.WorkerHours;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
@@ -103,20 +100,6 @@ public class WorkOrderService {
 			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
-			
-		/*	for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
-				WorkOrderWorker wow = new WorkOrderWorker();
-				
-				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
-				wow.setDate(new Date());
-				wow.setDayNightPeriod(0);
-				wow.setDayWorkPeriod(0);
-				wow.setWorkOrder(workOrder);
-				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wowRepo.save(wow);
-			}
-			*/
-			
 			
 			for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
 				WorkOrderMachine wom = new WorkOrderMachine();
