@@ -1,21 +1,52 @@
 version: "3"
 services:
-  zaga-web:
+  # MYSQL
+  mysql:
+    image: mysql
+    restart: always
     environment:
-      - CHOKIDAR_USEPOLLING=true
-    build:
-      context: ./zaga-web/
-      dockerfile: Dockerfile.dev
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root"
     ports:
-      - "4200:4200"
-    volumes:
-      - /usr/src/app/zaga-web/node_modules
-      - ./zaga-web:/usr/src/app/zaga-web/
-  config-server:
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    build:
-      context: ./config-server/
-      dockerfile: Dockerfile.dev
-    ports:
-      - "8888:8888"
+      - "3306:3306"
+    expose:
+      - "3306"
+# ZAGA-WEB UI
+zaga-web:
+  environment:
+    - CHOKIDAR_USEPOLLING=true
+  build:
+    context: ./zaga-web/
+    dockerfile: Dockerfile.dev
+  ports:
+    - "4200:4200"
+  volumes:
+    - /usr/src/app/zaga-web/node_modules
+    - ./zaga-web:/usr/src/app/zaga-web/
+# EUREKA-SERVICE-DISCOVERY
+eureka:
+  environment:
+    - CHOKIDAR_USEPOLLING=true
+  build:
+    context: ./eureka-service-discovery
+    dockerfile: Dockerfile.dev
+  ports:
+    - "8761:8761"
+  depends_on:
+    - config-server
+# CONFIG-SERVER
+config-server:
+  environment:
+    - CHOKIDAR_USEPOLLING=true
+  build:
+    context: ./config-server/
+    dockerfile: Dockerfile.dev
+  ports:
+    - "8888:8888"
+  restart: always
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8888"]
+    interval: 30s
+    timeout: 10s
+    retries: 5
