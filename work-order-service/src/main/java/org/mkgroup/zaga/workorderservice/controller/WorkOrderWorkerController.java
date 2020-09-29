@@ -10,7 +10,6 @@ import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
-import org.mkgroup.zaga.workorderservice.service.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +43,6 @@ public class WorkOrderWorkerController {
 		wow.setDayNightPeriod(wowDTO.getDayNightPeriod());
 		wow.setDayWorkPeriod(wowDTO.getDayPeriod());
 		wow.setWorkPeriod(wowDTO.getDayNightPeriod() + wowDTO.getDayPeriod());
-		System.out.println(wowDTO.getUser().getId());
-		System.out.println(wowDTO.getOperation().getId());
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
 		wow.setWorkOrder(workOrder);
 		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
