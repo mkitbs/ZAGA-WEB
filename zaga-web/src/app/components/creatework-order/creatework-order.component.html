@@ -485,7 +485,7 @@
                   </div>
                 </td>
                 <td>
-                  <div *ngIf="!editing" class="form-group">
+                  <div *ngIf="!editing && !editingWorker" class="form-group">
                     <button
                       class="btn btn-primary btn-add mr-2"
                       (click)="addWorker(workerForm.valid)"
@@ -494,13 +494,13 @@
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
-                  <div *ngIf="!new" class="form-group">
+                  <div *ngIf="editingWorker" class="form-group">
                     <button
                       class="btn btn-primary btn-add mr-2"
                       (click)="addNewWorker()"
                       [disabled]="workOrder.status == 'Zatvoren'"
                     >
-                      <i class="fa fa-plus"></i>
+                      <i class="fa fa-check"></i>
                     </button>
                   </div>
                   <div *ngIf="editing" class="form-group">
@@ -574,7 +574,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="machine.machine"
+                      [(ngModel)]="wom.machine.id"
                       name="machine"
                       id=""
                       class="form-control"
@@ -616,7 +616,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="machine.worker"
+                      [(ngModel)]="wom.user.id"
                       name="machineWorker"
                       id=""
                       class="form-control"
@@ -660,7 +660,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="machine.initialState"
+                        [(ngModel)]="wom.initialState"
                         type="number"
                         name="initialState"
                         id=""
@@ -678,7 +678,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="machine.finalState"
+                        [(ngModel)]="wom.finalState"
                         type="number"
                         name="finalState"
                         id=""
@@ -696,7 +696,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="machine.finalState - machine.initialState"
+                        [(ngModel)]="wom.finalState - wom.initialState"
                         type="number"
                         name="sumState"
                         id=""
@@ -731,7 +731,10 @@
                 </td>
 
                 <td>
-                  <div *ngIf="!editingMachine" class="form-group">
+                  <div
+                    *ngIf="!editingMachine && !editingMachineState"
+                    class="form-group"
+                  >
                     <button
                       class="btn btn-primary btn-add mr-2"
                       (click)="addMachine(machineForm.valid)"
@@ -749,28 +752,61 @@
                       <i class="fa fa-check"></i>
                     </button>
                   </div>
+                  <div *ngIf="editingMachineState" class="form-group">
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="addMachineState()"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
-              <tr *ngFor="let machine of woMachines">
-                <td>{{ machine.machine.name }}</td>
-                <td>{{ machine.user.name }}</td>
-                <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
-                <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
-                <td *ngIf="!new">
-                  {{ machine.finalState * 1 - machine.initialState * 1 || 0 }}
-                  mh
-                </td>
-                <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
-                <td>
-                  <button
-                    class="btn btn-primary btn-edit mr-2"
-                    (click)="editMachine(machine)"
-                    [disabled]="workOrder.status == 'Zatvoren'"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-              </tr>
+              <div *ngIf="new; else elseBlockMachineState">
+                <tr *ngFor="let machine of woMachines">
+                  <td>{{ machine.machine.name }}</td>
+                  <td>{{ machine.user.name }}</td>
+                  <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
+                  <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
+                  <td *ngIf="!new">
+                    {{ machine.finalState * 1 - machine.initialState * 1 || 0 }}
+                    mh
+                  </td>
+                  <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
+                  <td>
+                    <button
+                      class="btn btn-primary btn-edit mr-2"
+                      (click)="editMachine(machine)"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                </tr>
+              </div>
+              <ng-template #elseBlockMachineState>
+                <tr *ngFor="let machine of workOrder.machines">
+                  <td>{{ machine.machine.Name }}</td>
+                  <td>{{ machine.user.Name }}</td>
+                  <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
+                  <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
+                  <td *ngIf="!new">
+                    {{ machine.finalState * 1 - machine.initialState * 1 || 0 }}
+                    mh
+                  </td>
+                  <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
+                  <td>
+                    <button
+                      class="btn btn-primary btn-edit mr-2"
+                      (click)="editMachineState(machine)"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
             </tbody>
           </table>
         </form>
@@ -801,11 +837,11 @@
           <table class="table table-input">
             <thead>
               <th>Materijal*</th>
-              <th style="width: 100px">Jedinica mere*</th>
               <th style="width: 150px">Planirana količina*</th>
               <th style="width: 180px">Planirana količina / ha*</th>
               <th *ngIf="!new" style="width: 150px">Utrošeno*</th>
               <th *ngIf="!new" style="width: 150px">Utrošeno / ha*</th>
+              <th style="width: 100px">Jedinica mere*</th>
               <th style="text-align: right !important">Dodaj</th>
             </thead>
             <tbody>
@@ -833,15 +869,16 @@
                         name="selectedMaterial"
                         id=""
                         class="form-control"
+                        (change)="getUnitOfMaterial()"
                         #name="ngModel"
                         required
                       >
                         <option value="-1"></option>
                         <option
-                          value="{{ sub.id }}&{{ sub.Name }}"
+                          value="{{ sub.id }}&{{ sub.name }}"
                           *ngFor="let sub of substances"
                         >
-                          {{ sub.Name }}
+                          {{ sub.name }}
                         </option>
                       </select>
                       <div
@@ -851,28 +888,6 @@
                         Izaberite materijal.
                       </div>
                     </ng-template>
-                  </div>
-                </td>
-                <td>
-                  <div class="form-group">
-                    <select
-                      [(ngModel)]="selectedUnit"
-                      name="unit"
-                      id=""
-                      class="form-control"
-                      #unit="ngModel"
-                      required
-                    >
-                      <option value="kg">kg</option>
-                      <option value="t">t</option>
-                      <option value="l">l</option>
-                    </select>
-                    <div
-                      *ngIf="unit.invalid && clickAddMaterial"
-                      style="color: red"
-                    >
-                      Izaberite jed. mere.
-                    </div>
                   </div>
                 </td>
                 <td>
@@ -900,7 +915,7 @@
                       </ng-template>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
-                          selectedUnit
+                          unit
                         }}</span>
                       </div>
                       <div
@@ -925,7 +940,7 @@
                       />
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2"
-                          >{{ selectedUnit }}/ha</span
+                          >{{ unit }}/ha</span
                         >
                       </div>
                     </div>
@@ -944,7 +959,7 @@
 
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
-                          selectedUnit
+                          unit
                         }}</span>
                       </div>
                     </div>
@@ -963,9 +978,29 @@
                       />
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2"
-                          >{{ selectedUnit }}/ha</span
+                          >{{ unit }}/ha</span
                         >
                       </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <input
+                      [(ngModel)]="unit"
+                      type="text"
+                      name="jm"
+                      id=""
+                      class="form-control"
+                      #matUnit="ngModel"
+                      required
+                      readonly
+                    />
+                    <div
+                      *ngIf="matUnit.invalid && clickAddMaterial"
+                      style="color: red"
+                    >
+                      Izaberite jed. mere.
                     </div>
                   </div>
                 </td>
@@ -1901,14 +1936,14 @@
               id="jm"
               class="form-control"
               [(ngModel)]="selectedMaterial"
-              #unit="ngModel"
+              #matUnit="ngModel"
               required
             >
               <option value="kg">kg</option>
               <option value="t">t</option>
               <option value="l">l</option>
             </select>
-            <div *ngIf="unit.invalid && clickAddMaterial" style="color: red">
+            <div *ngIf="matUnit.invalid && clickAddMaterial" style="color: red">
               Izaberite jedinicu mere.
             </div>
           </div>
@@ -1930,7 +1965,10 @@
                 }}</span>
               </div>
             </div>
-            <div *ngIf="unit.invalid && clickAddMaterial" style="color: red">
+            <div
+              *ngIf="quantity.invalid && clickAddMaterial"
+              style="color: red"
+            >
               Unesite količinu.
             </div>
           </div>

@@ -37,10 +37,10 @@ public class WorkOrderMachineController {
 	@Autowired
 	MachineRepository machineRepo;
 	
-	@PostMapping("{id}")
+	@PostMapping("addMachineState/{id}")
 	public ResponseEntity<?> addMachine(@PathVariable UUID id, @RequestBody WorkOrderMachineDTO womDTO){
 		WorkOrder workOrder = workOrderRepo.getOne(id);
-		WorkOrderMachine wom = new WorkOrderMachine();
+		WorkOrderMachine wom = womRepo.getOne(womDTO.getId());
 		wom.setWorkOrder(workOrder);
 		wom.setDate(new Date());//zakucano
 		wom.setInitialState(womDTO.getFinalState());
@@ -55,7 +55,7 @@ public class WorkOrderMachineController {
 		wom.setMachine(machine);
 		
 		womRepo.save(wom);
-		return new ResponseEntity<WorkOrderMachine>(wom, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 }

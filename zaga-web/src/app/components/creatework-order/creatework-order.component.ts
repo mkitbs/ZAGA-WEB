@@ -29,6 +29,7 @@ import { WorkOrderWorker } from "src/app/models/WorkOrderWorker";
 import { ViewChild } from "@angular/core";
 import { WorkOrderWorkerService } from "src/app/service/work-order-worker.service";
 import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
+import { WorkOrderMachineService } from "src/app/service/work-order-machine.service";
 
 @Component({
   selector: "app-creatework-order",
@@ -53,7 +54,8 @@ export class CreateworkOrderComponent implements OnInit {
     private fieldService: FieldService,
     private cropService: CropService,
     private deviceService: DeviceDetectorService,
-    private wowService: WorkOrderWorkerService
+    private wowService: WorkOrderWorkerService,
+    private womService: WorkOrderMachineService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -67,6 +69,8 @@ export class CreateworkOrderComponent implements OnInit {
   editing = false;
   editingMachine = false;
   editingMaterial = false;
+  editingMachineState = false;
+  editingWorker = false;
   workId = this.route.snapshot.params.workId;
 
   query = "";
@@ -85,6 +89,7 @@ export class CreateworkOrderComponent implements OnInit {
   fields: Field[] = [];
   crops: Crop[] = [];
   wow: WorkOrderWorker = new WorkOrderWorker();
+  wom: WorkOrderMachine = new WorkOrderMachine();
 
   field: Field = new Field();
   operation: Operation = new Operation();
@@ -315,6 +320,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
     });
+    this.editingWorker = false;
   }
 
   addMachine(valid) {
@@ -579,5 +585,42 @@ export class CreateworkOrderComponent implements OnInit {
       }
     }
     return output;
+  }
+
+  editMachineState(machine) {
+    this.machine.id = machine.id;
+    this.machine.machine.id = machine.machine.id;
+    this.machine.machine.name = machine.machine.Name;
+    this.machine.initialState = machine.initialState;
+    this.machine.finalState = machine.finalState;
+    this.editingMachineState = true;
+    this.idOfEditingMachine = machine.machine.id;
+    this.wom.machine.id = machine.machine.id;
+    this.wom.user.id = machine.user.id;
+    this.wom.initialState = machine.initialState;
+    this.wom.finalState = machine.finalState;
+    //this.fuel = machine.fuel;
+  }
+
+  addMachineState() {
+    this.wom.id = this.machine.id;
+
+    this.womService.addMachineState(this.wom, this.workId).subscribe((res) => {
+      console.log(res);
+    });
+
+    this.workOrder.machines.forEach((machine) => {
+      if (machine.machine.id == this.idOfEditingMachine) {
+        machine.machine.name = this.wom.machine.name;
+        machine.machine.id = this.wom.machine.id;
+        machine.user.id = this.wom.user.id;
+        machine.user.name = this.wom.user.name;
+        machine.initialState = this.wom.initialState;
+        machine.finalState = this.wom.finalState;
+        machine.sumState = this.wom.finalState - this.wom.initialState;
+      }
+    });
+
+    this.editingMachineState = false;
   }
 }

@@ -1,14 +1,16 @@
 package org.mkgroup.zaga.workorderservice.model;
 
 import java.util.Date;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +22,10 @@ public class WorkOrderMachine {
 
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(columnDefinition = "BINARY(16)")
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	private UUID id;
 	
 	@ManyToOne
 	@JoinColumn(name="worker_id", nullable=true)
@@ -44,4 +48,6 @@ public class WorkOrderMachine {
 	private double workPeriod;
 	
 	private Date date;
+	
+	private double fuel;
 }

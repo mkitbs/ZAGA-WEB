@@ -1,13 +1,8 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-
-import org.mkgroup.zaga.workorderservice.model.Machine;
-import org.mkgroup.zaga.workorderservice.model.User;
-import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderMachine;
 
 import lombok.Data;
@@ -17,8 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkOrderMachineDTO {
 
-private Long id;
-	
+	private UUID id;
 	private EmployeeDTO user;
 	private MachineDTO machine;
 	private double initialState;
