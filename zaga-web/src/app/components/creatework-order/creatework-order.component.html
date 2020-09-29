@@ -28,7 +28,7 @@
             class="btn btn-primary btn-add mr-2"
             [disabled]="workOrder.status == 'Zatvoren'"
             *ngIf="!new"
-            (click)="saveData()"
+            (click)="updateWorkOrder()"
           >
             <i class="fa fa-save mr-2"></i>Sačuvaj
           </button>
@@ -62,11 +62,8 @@
               #operation="ngModel"
               required
             >
-              <option
-                value="{{ op.Name }}&{{ op.id }}"
-                *ngFor="let op of operations"
-              >
-                {{ op.Name }}
+              <option value="{{ op.id }}" *ngFor="let op of operations">
+                {{ op.name }}
               </option>
             </select>
             <div
@@ -84,7 +81,7 @@
               name="selectedTable"
               class="form-control"
               id=""
-              [(ngModel)]="selectedTable"
+              [(ngModel)]="workOrder.tableId"
               (change)="getCulture()"
               #table="ngModel"
               required
@@ -255,7 +252,7 @@
               <input
                 type="text"
                 name="area"
-                [(ngModel)]="crop.area"
+                [(ngModel)]="workOrder.area"
                 id=""
                 class="form-control"
                 #area="ngModel"
@@ -332,15 +329,18 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="worker.worker"
+                      [(ngModel)]="wow.user.id"
                       name="worker"
                       id=""
                       class="form-control"
                       *ngIf="!new; else elseBlockWorkers"
                     >
-                      <option value="-1"></option>
-                      <option value="{{ w.id }}" *ngFor="let w of employees">
-                        {{ w.Name }}
+                      <option value="">Izaberite</option>
+                      <option
+                        value="{{ assignedUser.id }}"
+                        *ngFor="let assignedUser of workOrder.assignedUsers"
+                      >
+                        {{ assignedUser.Name }}
                       </option>
                     </select>
                     <ng-template #elseBlockWorkers>
@@ -375,6 +375,7 @@
                       [(ngModel)]="worker.date"
                       (click)="od.toggle()"
                       class="form-control"
+                      name="dateFrom"
                       id="od"
                       placeholder="yyyy-mm-dd"
                       ngbDatepicker
@@ -394,12 +395,11 @@
                     <select
                       name="operation"
                       id=""
-                      [(ngModel)]="worker.operation"
+                      [(ngModel)]="wow.operation.id"
                       class="form-control"
                       *ngIf="!new; else elseBlockOperations"
                     >
-                      <!--<option value="{{worker.operation}}" selected>{{worker.operation}}</option>-->
-                      <option value="-1"></option>
+                      <option value="">Izaberite</option>
                       <option *ngFor="let op of operations" value="{{ op.id }}">
                         {{ op.Name }}
                       </option>
@@ -414,10 +414,10 @@
                         required
                       >
                         <option
-                          value="{{ op.id }}&{{ op.Name }}"
+                          value="{{ op.id }}"
                           *ngFor="let op of operations"
                         >
-                          {{ op.Name }}
+                          {{ op.name }}
                         </option>
                       </select>
                       <div
@@ -433,9 +433,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="worker.dayWorkPeriod"
+                        [(ngModel)]="wow.dayPeriod"
                         type="number"
-                        name="dayHour"
+                        name="dayWorkPeriod"
                         class="form-control"
                         id=""
                       />
@@ -451,9 +451,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="worker.nightWorkPeriod"
+                        [(ngModel)]="wow.dayNightPeriod"
                         type="number"
-                        name="nightHour"
+                        name="nightWorkPeriod"
                         class="form-control"
                         id=""
                       />
@@ -469,11 +469,9 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="
-                          worker.dayWorkPeriod + worker.nightWorkPeriod
-                        "
+                        [(ngModel)]="wow.workPeriod"
                         type="number"
-                        name="sumHour"
+                        name="workPeriod"
                         class="form-control"
                         id=""
                         disabled
@@ -496,6 +494,15 @@
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
+                  <div *ngIf="!new" class="form-group">
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="addNewWorker()"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
                   <div *ngIf="editing" class="form-group">
                     <button
                       class="btn btn-primary btn-add mr-2"
@@ -507,7 +514,7 @@
                   </div>
                 </td>
               </tr>
-              <tr *ngFor="let worker of workerss">
+              <tr *ngFor="let worker of employees">
                 <td>{{ worker.name }}</td>
                 <td *ngIf="!new">{{ worker.date }}</td>
                 <td>{{ worker.operation }}</td>
@@ -575,10 +582,10 @@
                     >
                       <option value="-1"></option>
                       <option
-                        value="{{ m.id }}"
+                        value="{{ m.machine.id }}"
                         *ngFor="let m of workOrder.machines"
                       >
-                        {{ m.Name }}
+                        {{ m.machine.Name }}
                       </option>
                     </select>
                     <ng-template #elseBlockMachine>
@@ -616,8 +623,11 @@
                       *ngIf="!new; else elseBlockWorkersMachine"
                     >
                       <option value="-1"></option>
-                      <option value="{{ w.id }}" *ngFor="let w of employees">
-                        {{ w.Name }}
+                      <option
+                        value="{{ m.user.id }}"
+                        *ngFor="let m of workOrder.machines"
+                      >
+                        {{ m.user.Name }}
                       </option>
                     </select>
                     <ng-template #elseBlockWorkersMachine>
@@ -630,10 +640,10 @@
                         required
                       >
                         <option
-                          value="{{ worker.userId }}&{{ worker.name }}"
-                          *ngFor="let worker of workerss"
+                          value="{{ emp.userId }}&{{ emp.name }}"
+                          *ngFor="let emp of allEmployees"
                         >
-                          {{ worker.name }}
+                          {{ emp.name }}
                         </option>
                       </select>
                       <div
@@ -742,8 +752,8 @@
                 </td>
               </tr>
               <tr *ngFor="let machine of woMachines">
-                <td>{{ machine.machineName }}</td>
-                <td>{{ machine.userName }}</td>
+                <td>{{ machine.machine.name }}</td>
+                <td>{{ machine.user.name }}</td>
                 <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
                 <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
                 <td *ngIf="!new">
@@ -811,10 +821,10 @@
                     >
                       <option value="-1"></option>
                       <option
-                        value="{{ mat.id }}"
+                        value="{{ mat.material.id }}"
                         *ngFor="let mat of workOrder.materials"
                       >
-                        {{ mat.Name }}
+                        {{ mat.material.Name }}
                       </option>
                     </select>
                     <ng-template #elseBlockMaterial>
@@ -869,6 +879,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
+                        *ngIf="new; else elseBlockQuantity"
                         [(ngModel)]="quantityEntered"
                         type="number"
                         name="quantity"
@@ -877,6 +888,16 @@
                         #quantity="ngModel"
                         required
                       />
+                      <ng-template #elseBlockQuantity>
+                        <input
+                          *ngFor="let mat of workOrder.materials"
+                          [(ngModel)]="mat.quantity"
+                          type="number"
+                          name="quantity"
+                          id=""
+                          class="form-control"
+                        />
+                      </ng-template>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
                           selectedUnit
@@ -971,18 +992,19 @@
               </tr>
 
               <tr *ngFor="let material of woMaterials">
-                <td>{{ material.materialName }}</td>
-                <td>{{ material.unit }}</td>
-                <td>{{ material.quantity }} {{ material.unit }}</td>
+                <td>{{ material.material.name }}</td>
+                <td>{{ material.material.unit }}</td>
+                <td>{{ material.quantity }} {{ material.material.unit }}</td>
                 <td>
                   {{ (material.quantity / crop.area).toFixed(2) }}
-                  {{ material.unit }}/ha
+                  {{ material.material.unit }}/ha
                 </td>
                 <td *ngIf="!new">
-                  {{ material.spent || 0 }} {{ material.unit }}
+                  {{ material.spent || 0 }} {{ material.material.unit }}
                 </td>
                 <td *ngIf="!new">
-                  {{ material.spent / workOrder.area }} {{ material.unit }}/ha
+                  {{ material.spent / workOrder.area }}
+                  {{ material.material.unit }}/ha
                 </td>
                 <td>
                   <button
@@ -1061,11 +1083,8 @@
           #operation="ngModel"
           required
         >
-          <option
-            value="{{ op.Name }}&{{ op.id }}"
-            *ngFor="let op of operations"
-          >
-            {{ op.Name }}
+          <option value="{{ op.id }}" *ngFor="let op of operations">
+            {{ op.name }}
           </option>
         </select>
         <div *ngIf="operation.invalid && clickAddWorkOrder" style="color: red">
@@ -1080,7 +1099,7 @@
       <div class="col-4">
         <select
           name="selectedTable"
-          [(ngModel)]="selectedTable"
+          [(ngModel)]="workOrder.tableId"
           (change)="getCulture()"
           class="form-control"
           id=""
@@ -1228,7 +1247,7 @@
           <input
             type="text"
             name="area"
-            [(ngModel)]="crop.Area"
+            [(ngModel)]="workOrder.area"
             id=""
             class="form-control"
             #area="ngModel"
@@ -1299,12 +1318,12 @@
         <br />
         <div
           class="card mb-3"
-          *ngFor="let worker of workerss; let i = index"
+          *ngFor="let emp of employees; let i = index"
           style="border: 1px solid #5c7495; border-radius: 5px"
         >
           <div *ngIf="i == 0" id="rad"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ worker.name }}</h5>
+            <h5 class="card-title">{{ emp.name }}</h5>
             <ul class="list-group">
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-table" style="font-size: 20px"></i>
@@ -1316,7 +1335,7 @@
                   style="font-size: 20px; vertical-align: bottom"
                 ></i>
                 <span style="padding-left: 2px; vertical-align: middle">
-                  Operacija: {{ worker.operation }}
+                  Operacija: {{ emp.operation }}
                 </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
@@ -1348,7 +1367,7 @@
               style="float: right"
               data-toggle="modal"
               data-target="#exampleModal"
-              (click)="editWorker(worker)"
+              (click)="editWorker(emp)"
             >
               <i class="fa fa-edit mr-2"></i>Izmeni
             </button>
@@ -1394,7 +1413,7 @@
         >
           <div *ngIf="i == 0" id="mas"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ machine.machineName }}</h5>
+            <h5 class="card-title">{{ machine.machine.name }}</h5>
             <ul class="list-group">
               <li class="list-group-item list-group-item-info">
                 <i
@@ -1402,7 +1421,7 @@
                   style="font-size: 20px; vertical-align: bottom"
                 ></i>
                 <span style="padding-left: 2px; vertical-align: middle">
-                  Radnik: {{ machine.userName }}
+                  Radnik: {{ machine.user.name }}
                 </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
@@ -1487,7 +1506,7 @@
         >
           <div *ngIf="i == 0" id="mat"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ material.materialName }}</h5>
+            <h5 class="card-title">{{ material.material.name }}</h5>
             <ul class="list-group">
               <li class="list-group-item list-group-item-info">
                 <i
@@ -1497,7 +1516,7 @@
                 <span style="padding-left: 2px; vertical-align: middle">
                   Planirana količina po ha:
                   {{ (material.quantity / crop.Area).toFixed(2) }}
-                  {{ material.unit }}/ha</span
+                  {{ material.material.unit }}/ha</span
                 >
               </li>
               <li class="list-group-item list-group-item-info">
@@ -1507,7 +1526,7 @@
                 ></i>
                 <span style="padding-left: 3px; vertical-align: middle">
                   Planirana količina: {{ material.quantity }}
-                  {{ material.unit }}</span
+                  {{ material.material.unit }}</span
                 >
               </li>
               <li class="list-group-item list-group-item-info">
@@ -1516,7 +1535,7 @@
                   style="font-size: 20px; vertical-align: bottom"
                 ></i>
                 <span style="padding-left: 3px; vertical-align: middle">
-                  Jedinica mere: {{ material.unit }}</span
+                  Jedinica mere: {{ material.material.unit }}</span
                 >
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
@@ -1609,11 +1628,8 @@
               #operation="ngModel"
               required
             >
-              <option
-                value="{{ op.id }}&{{ op.Name }}"
-                *ngFor="let op of operations"
-              >
-                {{ op.Name }}
+              <option value="{{ op.id }}" *ngFor="let op of operations">
+                {{ op.name }}
               </option>
             </select>
             <div *ngIf="operation.invalid && clickAddWorker" style="color: red">
@@ -1862,12 +1878,13 @@
               [(ngModel)]="selectedMaterial"
               #material="ngModel"
               required
+              (change)="getUnitOfMaterial()"
             >
               <option
-                value="{{ sub.id }}&{{ sub.Name }}"
+                value="{{ sub.id }}&{{ sub.name }}"
                 *ngFor="let sub of substances"
               >
-                {{ sub.Name }}
+                {{ sub.name }}
               </option>
             </select>
             <div
@@ -1883,7 +1900,7 @@
               name="jm"
               id="jm"
               class="form-control"
-              [(ngModel)]="selectedUnit"
+              [(ngModel)]="selectedMaterial"
               #unit="ngModel"
               required
             >

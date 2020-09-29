@@ -1,7 +1,10 @@
+import { Material } from "./Material";
+
 export class SpentMaterial {
-    materialId;
-    materialName;
-    quantity;
-    quantityPerHectar;
-    unit;
+  id;
+  quantity;
+  spent;
+  quantityPerHectar;
+  spentPerHectar;
+  material: Material = new Material();
 }

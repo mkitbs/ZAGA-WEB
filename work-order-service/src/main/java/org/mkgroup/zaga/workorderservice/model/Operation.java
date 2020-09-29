@@ -49,7 +49,7 @@ public class Operation {
 	private OperationGroup operationGroup;
 	
 	@OneToMany(mappedBy = "operation")
-	private List<WorkOrder> workOrders = new ArrayList<WorkOrder>();
+	private List<WorkOrderWorker> workOrders = new ArrayList<WorkOrderWorker>();
 	
 	public Operation(OperationDTO op) {
 		this.kind = op.getKind();
