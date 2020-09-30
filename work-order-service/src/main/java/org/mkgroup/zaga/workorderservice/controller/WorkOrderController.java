@@ -5,15 +5,16 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.service.WorkOrderService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class WorkOrderController {
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request){
 		try {
 			workOrderService.addWorkOrder(request);
-			return new ResponseEntity<String>("Work order created successfully.", HttpStatus.CREATED);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<String>("Work order not created.", HttpStatus.BAD_REQUEST);
 		}
@@ -74,6 +75,15 @@ public class WorkOrderController {
 		}catch(Exception e) {
 			return new ResponseEntity<String>("Work order not updated. Error " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PutMapping("/closeWorkOrder/{id}")
+	public ResponseEntity<?> closeWorkOrder(@PathVariable UUID id){
+		WorkOrder workOrder = wrepo.getOne(id);
+		workOrder.setStatus(WorkOrderStatus.CLOSED);
+		wrepo.save(workOrder);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

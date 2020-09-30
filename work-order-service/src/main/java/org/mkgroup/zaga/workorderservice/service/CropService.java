@@ -117,7 +117,7 @@ public class CropService {
 	
 	public void createCrop(CropDTO newCrop) {
 		Crop crop = new Crop(newCrop);
-		Field field = fieldRepo.findByErpId(newCrop.getFieldId()).get();
+		Field field = fieldRepo.findByErpId(newCrop.getErpFieldId()).get();
 		Culture culture = cultureRepo.findByErpId(newCrop.getErpCultureId()).get();
 		crop.setField(field);
 		crop.setCulture(culture);
@@ -130,10 +130,25 @@ public class CropService {
 		oldCrop.setName(updatedCrop.getName());
 		oldCrop.setYear(updatedCrop.getYear());
 		oldCrop.setOrgUnit(updatedCrop.getOrganisationUnit());
-		Field field = fieldRepo.findByErpId(updatedCrop.getFieldId()).get();
+		Field field = fieldRepo.findByErpId(updatedCrop.getErpFieldId()).get();
 		oldCrop.setField(field);
 		Culture culture = cultureRepo.findByErpId(updatedCrop.getErpCultureId()).get();
 		oldCrop.setCulture(culture);
 		cropRepo.save(oldCrop);
+	}
+	
+	public List<CropDTO> getAllByFieldAndYear(UUID fieldId, int year){
+		try {
+			List<Crop> crops = cropRepo.findByFieldAndYear(fieldId, year);
+			List<CropDTO> cropsDTO = new ArrayList<CropDTO>();
+			for(Crop crop : crops) {
+				CropDTO cropDTO = new CropDTO(crop);
+				cropsDTO.add(cropDTO);
+			}
+			return cropsDTO;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

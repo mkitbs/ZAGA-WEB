@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class MachineStateDTO {
 	
 	private UUID machineId;
-	private UUID workerId;
+	private UUID userId;
 	
 	public MachineStateDTO(Machine m) {
 		machineId = m.getId();

@@ -25,6 +25,7 @@ public class Worker {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID userId;
 	
 	@ManyToMany(cascade = CascadeType.ALL)

@@ -47,6 +47,8 @@ public class FieldDTO implements Serializable{
 	public FieldDTO(Field field) {
 		id = field.getId();
 		name = field.getName();
+		year = field.getYear();
+		area = field.getArea();
 	}
 
 }
