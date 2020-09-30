@@ -30,6 +30,7 @@ import { ViewChild } from "@angular/core";
 import { WorkOrderWorkerService } from "src/app/service/work-order-worker.service";
 import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
 import { WorkOrderMachineService } from "src/app/service/work-order-machine.service";
+import { SpentMaterialService } from "src/app/service/spent-material.service";
 
 @Component({
   selector: "app-creatework-order",
@@ -55,7 +56,8 @@ export class CreateworkOrderComponent implements OnInit {
     private cropService: CropService,
     private deviceService: DeviceDetectorService,
     private wowService: WorkOrderWorkerService,
-    private womService: WorkOrderMachineService
+    private womService: WorkOrderMachineService,
+    private spentMaterialService: SpentMaterialService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -71,6 +73,7 @@ export class CreateworkOrderComponent implements OnInit {
   editingMaterial = false;
   editingMachineState = false;
   editingWorker = false;
+  editingSpentMaterial = false;
   workId = this.route.snapshot.params.workId;
 
   query = "";
@@ -90,6 +93,7 @@ export class CreateworkOrderComponent implements OnInit {
   crops: Crop[] = [];
   wow: WorkOrderWorker = new WorkOrderWorker();
   wom: WorkOrderMachine = new WorkOrderMachine();
+  spentMaterial: SpentMaterial = new SpentMaterial();
 
   field: Field = new Field();
   operation: Operation = new Operation();
@@ -121,6 +125,7 @@ export class CreateworkOrderComponent implements OnInit {
   selectedUnit;
 
   unit;
+  exists = false;
 
   nameFC: FormControl = new FormControl("");
 
@@ -151,14 +156,14 @@ export class CreateworkOrderComponent implements OnInit {
         }
 
         this.workOrder.start = {
-          day: +this.workOrder.start.substring(8, 10),
-          month: +this.workOrder.start.substring(5, 7),
-          year: +this.workOrder.start.substring(0, 4),
+          day: +this.workOrder.start.day,
+          month: +this.workOrder.start.month,
+          year: +this.workOrder.start.year,
         };
         this.workOrder.end = {
-          day: +this.workOrder.end.substring(8, 10),
-          month: +this.workOrder.end.substring(5, 7),
-          year: +this.workOrder.end.substring(0, 4),
+          day: +this.workOrder.end.day,
+          month: +this.workOrder.end.month,
+          year: +this.workOrder.end.year,
         };
 
         this.cropService
@@ -171,6 +176,12 @@ export class CreateworkOrderComponent implements OnInit {
 
     this.userService.getAll().subscribe((data) => {
       this.allEmployees = data.content;
+      var comparableId = this.workOrder.responsibleId;
+      var filterById = function (element) {
+        return element.userId == comparableId;
+      };
+
+      this.nameFC.setValue(this.allEmployees.filter(filterById)[0]);
     });
 
     this.operationService.getAll().subscribe((data) => {
@@ -268,8 +279,21 @@ export class CreateworkOrderComponent implements OnInit {
       this.employee.operationId = this.selectedOperation;
     }
     if (valid) {
-      this.employees.push(this.employee);
-      this.employee = new Employee();
+      this.employees.forEach((emp) => {
+        if (
+          emp.id == this.employee.id &&
+          emp.operationId == this.employee.operationId
+        ) {
+          this.toastr.error("Radnik i operacija su već dodati.");
+          this.exists = true;
+        }
+      });
+      if (!this.exists) {
+        this.employees.push(this.employee);
+        this.exists = false;
+        this.employee = new Employee();
+      }
+      this.exists = false;
       this.selectedWorker = null;
       if (this.workOrder.operationId != null) {
         this.selectedOperation = this.workOrder.operationId;
@@ -376,13 +400,13 @@ export class CreateworkOrderComponent implements OnInit {
     if (valid) {
       this.getArea();
       this.material.quantity = this.quantityEntered;
-      this.material.material.unit = this.selectedUnit;
+      this.material.material.unit = this.unit;
       this.material.quantityPerHectar = this.material.quantity / this.crop.area;
       this.woMaterials.push(this.material);
       this.material = new SpentMaterial();
       this.selectedMaterial = null;
       this.quantityEntered = null;
-      this.selectedUnit = null;
+      this.unit = null;
       this.clickAddMaterial = false;
       this.closebuttonMaterialModal.nativeElement.click();
     }
@@ -422,8 +446,6 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkOrder(valid) {
     this.clickAddWorkOrder = true;
     if (valid) {
-      var dateStartToAdd = "";
-      var dateEndToAdd = "";
       if (this.workOrder.start != undefined) {
         if (this.workOrder.start.month < 10) {
           this.workOrder.start.month = "0" + this.workOrder.start.month;
@@ -431,12 +453,6 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.start.day < 10) {
           this.workOrder.start.day = "0" + this.workOrder.start.day;
         }
-        dateStartToAdd =
-          this.workOrder.start.year +
-          "-" +
-          this.workOrder.start.month +
-          "-" +
-          this.workOrder.start.day;
       }
       if (this.workOrder.end != undefined) {
         if (this.workOrder.end.month < 10) {
@@ -445,16 +461,10 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.end.day < 10) {
           this.workOrder.end.day = "0" + this.workOrder.end.day;
         }
-        dateEndToAdd =
-          this.workOrder.end.year +
-          "-" +
-          this.workOrder.end.month +
-          "-" +
-          this.workOrder.end.day;
       }
 
-      this.workOrder.start = dateStartToAdd;
-      this.workOrder.end = dateEndToAdd;
+      //this.workOrder.start = dateStartToAdd;
+      //this.workOrder.end = dateEndToAdd;
 
       this.workOrder.machines = this.woMachines;
       this.workOrder.assignedUsers = this.employees;
@@ -593,13 +603,14 @@ export class CreateworkOrderComponent implements OnInit {
     this.machine.machine.name = machine.machine.Name;
     this.machine.initialState = machine.initialState;
     this.machine.finalState = machine.finalState;
+    this.machine.fuel = machine.fuel;
     this.editingMachineState = true;
     this.idOfEditingMachine = machine.machine.id;
     this.wom.machine.id = machine.machine.id;
     this.wom.user.id = machine.user.id;
     this.wom.initialState = machine.initialState;
     this.wom.finalState = machine.finalState;
-    //this.fuel = machine.fuel;
+    this.wom.fuel = machine.fuel;
   }
 
   addMachineState() {
@@ -618,9 +629,44 @@ export class CreateworkOrderComponent implements OnInit {
         machine.initialState = this.wom.initialState;
         machine.finalState = this.wom.finalState;
         machine.sumState = this.wom.finalState - this.wom.initialState;
+        machine.fuel = this.wom.fuel;
       }
     });
 
     this.editingMachineState = false;
+  }
+
+  editSpentMaterial(material) {
+    this.spentMaterial.id = material.id;
+    this.spentMaterial.material.id = material.material.id;
+    this.spentMaterial.quantity = material.quantity;
+    this.spentMaterial.quantityPerHectar = material.quantityPerHectar;
+    this.spentMaterial.spent = material.spent;
+    this.spentMaterial.spentPerHectar = material.spentPerHectar;
+    this.spentMaterial.material.unit = material.material.Unit;
+    this.editingSpentMaterial = true;
+    this.idOfEditingMaterial = material.material.id;
+  }
+
+  addSpentMaterial() {
+    this.spentMaterialService
+      .addSpentMaterial(this.workId, this.spentMaterial)
+      .subscribe((res) => {
+        console.log(res);
+      });
+
+    this.workOrder.materials.forEach((material) => {
+      if (material.material.id == this.idOfEditingMaterial) {
+        material.material.id = this.spentMaterial.material.id;
+        material.material.unit = this.spentMaterial.material.unit;
+        material.quantity = this.spentMaterial.quantity;
+        material.quantityPerHectar =
+          this.spentMaterial.quantity / this.workOrder.area;
+        material.spent = this.spentMaterial.spent;
+        material.spentPerHectar =
+          this.spentMaterial.spent / this.workOrder.area;
+      }
+    });
+    this.editingSpentMaterial = false;
   }
 }

@@ -43,10 +43,11 @@ public class WorkOrderMachineController {
 		WorkOrderMachine wom = womRepo.getOne(womDTO.getId());
 		wom.setWorkOrder(workOrder);
 		wom.setDate(new Date());//zakucano
-		wom.setInitialState(womDTO.getFinalState());
+		wom.setInitialState(womDTO.getInitialState());
 		wom.setFinalState(womDTO.getFinalState());
-		wom.setSumState(womDTO.getSumState());
+		wom.setSumState(womDTO.getFinalState() - womDTO.getInitialState());
 		wom.setWorkPeriod(wom.getWorkPeriod());
+		wom.setFuel(womDTO.getFuel());
 		
 		User user = userRepo.getOne(womDTO.getUser().getId());
 		wom.setUser(user);

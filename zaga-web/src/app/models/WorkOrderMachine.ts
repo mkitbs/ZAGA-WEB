@@ -10,4 +10,5 @@ export class WorkOrderMachine {
   sumState;
   workPeriod;
   date;
+  fuel;
 }

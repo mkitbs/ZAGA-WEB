@@ -1,6 +1,6 @@
 export class Material {
-  id;
-  name;
-  unit;
-  group;
+  id: string;
+  name: string;
+  unit: string;
+  group: string;
 }

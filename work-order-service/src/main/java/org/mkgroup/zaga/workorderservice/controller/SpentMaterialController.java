@@ -36,16 +36,17 @@ public class SpentMaterialController {
 	public ResponseEntity<?> addSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		
-		SpentMaterial spentMaterial = new SpentMaterial();
+		SpentMaterial spentMaterial = spentMaterialRepo.getOne(spentMaterialDTO.getId());
 		spentMaterial.setWorkOrder(workOrder);
 		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
-		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantityPerHectar());
+		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
 		spentMaterial.setSpent(spentMaterialDTO.getSpent());
+		spentMaterial.setSpentPerHectar(spentMaterialDTO.getSpent() / workOrder.getCrop().getArea());
 		
 		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
 		spentMaterial.setMaterial(material);
 		
 		spentMaterialRepo.save(spentMaterial);
-		return new ResponseEntity<SpentMaterial>(spentMaterial, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

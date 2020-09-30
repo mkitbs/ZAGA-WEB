@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 public class WorkOrderDTO {
 	
 	private UUID id;
-	private Date start;
-	private Date end;
+	private DateDTO start;
+	private DateDTO end;
 	private String status;
 	private UUID cropId;
 	private UUID operationId;
@@ -42,8 +42,8 @@ public class WorkOrderDTO {
 	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
-		start = wo.getStartDate();
-		end = wo.getEndDate();
+		start = new DateDTO(wo);
+		end = new DateDTO(wo);
 		status = wo.getStatus().toString();
 		cropId = wo.getCrop().getId();
 		cultureId = wo.getCrop().getCulture().getId();

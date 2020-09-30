@@ -20,6 +20,7 @@ public class WorkOrderMachineDTO {
 	private double sumState;
 	private double workPeriod;
 	private Date date;
+	private double fuel;
 
 	public WorkOrderMachineDTO(WorkOrderMachine wom){
 		this.id = wom.getId();
@@ -30,5 +31,6 @@ public class WorkOrderMachineDTO {
 		this.sumState = wom.getSumState();
 		this.workPeriod = wom.getWorkPeriod();
 		this.date = wom.getDate();
+		this.fuel = wom.getFuel();
 	}
 }

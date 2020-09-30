@@ -401,7 +401,7 @@
                     >
                       <option value="">Izaberite</option>
                       <option *ngFor="let op of operations" value="{{ op.id }}">
-                        {{ op.Name }}
+                        {{ op.name }}
                       </option>
                     </select>
                     <ng-template #elseBlockOperations>
@@ -715,7 +715,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="machine.fuel"
+                        [(ngModel)]="wom.fuel"
                         type="number"
                         name="fuel"
                         id=""
@@ -763,7 +763,7 @@
                   </div>
                 </td>
               </tr>
-              <div *ngIf="new; else elseBlockMachineState">
+              <ng-container *ngIf="new; else elseBlockMachineState">
                 <tr *ngFor="let machine of woMachines">
                   <td>{{ machine.machine.name }}</td>
                   <td>{{ machine.user.name }}</td>
@@ -784,7 +784,7 @@
                     </button>
                   </td>
                 </tr>
-              </div>
+              </ng-container>
               <ng-template #elseBlockMachineState>
                 <tr *ngFor="let machine of workOrder.machines">
                   <td>{{ machine.machine.Name }}</td>
@@ -849,7 +849,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="material.name"
+                      [(ngModel)]="spentMaterial.material.id"
                       name="material"
                       id=""
                       class="form-control"
@@ -869,7 +869,6 @@
                         name="selectedMaterial"
                         id=""
                         class="form-control"
-                        (change)="getUnitOfMaterial()"
                         #name="ngModel"
                         required
                       >
@@ -903,21 +902,26 @@
                         #quantity="ngModel"
                         required
                       />
+                      <div class="input-group-append" *ngIf="new">
+                        <span class="input-group-text" id="basic-addon2">{{
+                          unit
+                        }}</span>
+                      </div>
                       <ng-template #elseBlockQuantity>
                         <input
-                          *ngFor="let mat of workOrder.materials"
-                          [(ngModel)]="mat.quantity"
+                          [(ngModel)]="spentMaterial.quantity"
                           type="number"
                           name="quantity"
                           id=""
                           class="form-control"
                         />
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2">{{
+                            spentMaterial.material.unit
+                          }}</span>
+                        </div>
                       </ng-template>
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">{{
-                          unit
-                        }}</span>
-                      </div>
+
                       <div
                         *ngIf="quantity.invalid && clickAddMaterial"
                         style="color: red"
@@ -931,6 +935,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
+                        *ngIf="new; else elseBlockQuantityPerHectar"
                         [(ngModel)]="quantityEntered / crop.Area"
                         type="number"
                         name="quantityPerHectar"
@@ -938,9 +943,24 @@
                         class="form-control"
                         disabled
                       />
-                      <div class="input-group-append">
+                      <div class="input-group-append" *ngIf="new">
                         <span class="input-group-text" id="basic-addon2"
                           >{{ unit }}/ha</span
+                        >
+                      </div>
+                      <ng-template #elseBlockQuantityPerHectar>
+                        <input
+                          [(ngModel)]="spentMaterial.quantity / workOrder.area"
+                          type="number"
+                          name="quantityPerHectar"
+                          id=""
+                          class="form-control"
+                          disabled
+                        />
+                      </ng-template>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2"
+                          >{{ spentMaterial.material.unit }}/ha</span
                         >
                       </div>
                     </div>
@@ -950,7 +970,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="material.spent"
+                        [(ngModel)]="spentMaterial.spent"
                         type="number"
                         name="spent"
                         id=""
@@ -959,7 +979,7 @@
 
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
-                          unit
+                          spentMaterial.material.unit
                         }}</span>
                       </div>
                     </div>
@@ -969,7 +989,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="material.spent / workOrder.area"
+                        [(ngModel)]="spentMaterial.spent / workOrder.area"
                         type="number"
                         name="spentPerHectar"
                         id=""
@@ -978,7 +998,7 @@
                       />
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2"
-                          >{{ unit }}/ha</span
+                          >{{ spentMaterial.material.unit }}/ha</span
                         >
                       </div>
                     </div>
@@ -987,6 +1007,7 @@
                 <td>
                   <div class="form-group">
                     <input
+                      *ngIf="new; else elseBlockUnit"
                       [(ngModel)]="unit"
                       type="text"
                       name="jm"
@@ -996,6 +1017,18 @@
                       required
                       readonly
                     />
+                    <ng-template #elseBlockUnit>
+                      <input
+                        [(ngModel)]="spentMaterial.material.unit"
+                        type="text"
+                        name="jm"
+                        id=""
+                        class="form-control"
+                        #matUnit="ngModel"
+                        required
+                        readonly
+                      />
+                    </ng-template>
                     <div
                       *ngIf="matUnit.invalid && clickAddMaterial"
                       style="color: red"
@@ -1005,7 +1038,10 @@
                   </div>
                 </td>
                 <td>
-                  <div *ngIf="!editingMaterial" class="form-group">
+                  <div
+                    *ngIf="!editingMaterial && !editingSpentMaterial"
+                    class="form-group"
+                  >
                     <button
                       class="btn btn-primary btn-add mr-2"
                       (click)="addMaterial(materialForm.valid)"
@@ -1023,34 +1059,71 @@
                       <i class="fa fa-check"></i>
                     </button>
                   </div>
+                  <div *ngIf="editingSpentMaterial" class="form-group">
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="addSpentMaterial()"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
-
-              <tr *ngFor="let material of woMaterials">
-                <td>{{ material.material.name }}</td>
-                <td>{{ material.material.unit }}</td>
-                <td>{{ material.quantity }} {{ material.material.unit }}</td>
-                <td>
-                  {{ (material.quantity / crop.area).toFixed(2) }}
-                  {{ material.material.unit }}/ha
-                </td>
-                <td *ngIf="!new">
-                  {{ material.spent || 0 }} {{ material.material.unit }}
-                </td>
-                <td *ngIf="!new">
-                  {{ material.spent / workOrder.area }}
-                  {{ material.material.unit }}/ha
-                </td>
-                <td>
-                  <button
-                    class="btn btn-primary btn-edit mr-2"
-                    (click)="editMaterial(material)"
-                    [disabled]="workOrder.status == 'Zatvoren'"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-              </tr>
+              <ng-container *ngIf="new; else elseBlockSpentMaterial">
+                <tr *ngFor="let material of woMaterials">
+                  <td>{{ material.material.name }}</td>
+                  <td>{{ material.quantity }} {{ material.material.unit }}</td>
+                  <td>
+                    {{ (material.quantity / crop.area).toFixed(2) }}
+                    {{ material.material.unit }}/ha
+                  </td>
+                  <td *ngIf="!new">
+                    {{ material.spent || 0 }} {{ material.material.unit }}
+                  </td>
+                  <td *ngIf="!new">
+                    {{ material.spent / workOrder.area }}
+                    {{ material.material.unit }}/ha
+                  </td>
+                  <td>{{ material.material.unit }}</td>
+                  <td>
+                    <button
+                      class="btn btn-primary btn-edit mr-2"
+                      (click)="editMaterial(material)"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #elseBlockSpentMaterial>
+                <tr *ngFor="let material of workOrder.materials">
+                  <td>{{ material.material.Name }}</td>
+                  <td>{{ material.quantity }} {{ material.material.Unit }}</td>
+                  <td>
+                    {{ material.quantityPerHectar }}
+                    {{ material.material.Unit }}/ha
+                  </td>
+                  <td *ngIf="!new">
+                    {{ material.spent || 0 }} {{ material.material.Unit }}
+                  </td>
+                  <td *ngIf="!new">
+                    {{ material.spent / workOrder.area || 0 }}
+                    {{ material.material.Unit }}/ha
+                  </td>
+                  <td>{{ material.material.Unit }}</td>
+                  <td>
+                    <button
+                      class="btn btn-primary btn-edit mr-2"
+                      (click)="editSpentMaterial(material)"
+                      [disabled]="workOrder.status == 'Zatvoren'"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
             </tbody>
           </table>
         </form>

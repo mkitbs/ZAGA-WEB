@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -79,8 +80,20 @@ public class WorkOrderService {
 			
 			WorkOrder workOrder = new WorkOrder();
 			
-			workOrder.setStartDate(workOrderDTO.getStart());
-			workOrder.setEndDate(workOrderDTO.getEnd());
+			LocalDate startDate = new LocalDate(
+					Integer.parseInt(workOrderDTO.getStart().getYear()),
+					Integer.parseInt(workOrderDTO.getStart().getMonth()),
+					Integer.parseInt(workOrderDTO.getStart().getDay()));
+			Date startDateToAdd = startDate.toDate();
+			workOrder.setStartDate(startDateToAdd);
+			
+			LocalDate endDate = new LocalDate(
+					Integer.parseInt(workOrderDTO.getEnd().getYear()),
+					Integer.parseInt(workOrderDTO.getEnd().getMonth()),
+					Integer.parseInt(workOrderDTO.getEnd().getDay()));
+			Date endDateToAdd = endDate.toDate();
+			workOrder.setEndDate(endDateToAdd);
+			
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			workOrder.setCreationDate(new Date());
 			
@@ -161,8 +174,8 @@ public class WorkOrderService {
 			
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
 			
-			workOrder.setStartDate(workOrderDTO.getStart());
-			workOrder.setEndDate(workOrderDTO.getEnd());
+			//workOrder.setStartDate(workOrderDTO.getStart());
+			//workOrder.setEndDate(workOrderDTO.getEnd());
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
