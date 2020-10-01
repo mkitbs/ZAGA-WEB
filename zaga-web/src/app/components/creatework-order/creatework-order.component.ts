@@ -157,15 +157,10 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "Zatvoren";
         }
 
-        this.workOrder.start = {
-          day: +this.workOrder.start.day,
-          month: +this.workOrder.start.month,
-          year: +this.workOrder.start.year,
-        };
-        this.workOrder.end = {
-          day: +this.workOrder.end.day,
-          month: +this.workOrder.end.month,
-          year: +this.workOrder.end.year,
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
         };
 
         this.cropService
@@ -383,6 +378,7 @@ export class CreateworkOrderComponent implements OnInit {
   editMaterial(material) {
     this.spentMaterial.spent = material.spent;
     this.spentMaterial.material.unit = material.material.unit;
+    this.unit = this.spentMaterial.material.unit;
     this.idOfEditingMaterial = this.material.smObjectId;
   }
 
@@ -406,12 +402,12 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkOrder(valid) {
     this.clickAddWorkOrder = true;
     if (valid) {
-      if (this.workOrder.start != undefined) {
-        if (this.workOrder.start.month < 10) {
-          this.workOrder.start.month = "0" + this.workOrder.start.month;
+      if (this.workOrder.date != undefined) {
+        if (this.workOrder.date.month < 10) {
+          this.workOrder.date.month = "0" + this.workOrder.date.month;
         }
-        if (this.workOrder.start.day < 10) {
-          this.workOrder.start.day = "0" + this.workOrder.start.day;
+        if (this.workOrder.date.day < 10) {
+          this.workOrder.date.day = "0" + this.workOrder.date.day;
         }
       }
 
@@ -419,7 +415,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrder.materials = this.woMaterials;
 
       this.workOrder.responsibleId = this.nameFC.value.userId;
-
+      /*
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
           this.toastr.success("Uspešno kreiran radni nalog.");
@@ -429,18 +425,18 @@ export class CreateworkOrderComponent implements OnInit {
           this.toastr.error("Radni nalog nije kreiran.");
         }
       );
-
+        */
       console.log(this.workOrder);
     }
   }
 
   updateWorkOrder() {
-    if (this.workOrder.start != undefined) {
-      if (this.workOrder.start.month < 10) {
-        this.workOrder.start.month = "0" + this.workOrder.start.month;
+    if (this.workOrder.date != undefined) {
+      if (this.workOrder.date.month < 10) {
+        this.workOrder.date.month = "0" + this.workOrder.date.month;
       }
-      if (this.workOrder.start.day < 10) {
-        this.workOrder.start.day = "0" + this.workOrder.start.day;
+      if (this.workOrder.date.day < 10) {
+        this.workOrder.date.day = "0" + this.workOrder.date.day;
       }
     }
 

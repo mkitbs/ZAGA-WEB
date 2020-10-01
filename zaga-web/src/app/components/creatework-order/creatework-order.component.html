@@ -106,7 +106,7 @@
             <div>
               <input
                 type="date"
-                [(ngModel)]="workOrder.start"
+                [(ngModel)]="workOrder.date"
                 name="poc"
                 id="od"
                 ngbDatepicker
@@ -2120,7 +2120,7 @@
               />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">{{
-                  selectedUnit
+                  unit
                 }}</span>
               </div>
             </div>
@@ -2144,7 +2144,7 @@
               />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2"
-                  >{{ selectedUnit }}/ha</span
+                  >{{ unit }}/ha</span
                 >
               </div>
             </div>
