@@ -402,6 +402,7 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkOrder(valid) {
     this.clickAddWorkOrder = true;
     if (valid) {
+      this.clickAddWorkOrder = false;
       if (this.workOrder.date != undefined) {
         if (this.workOrder.date.month < 10) {
           this.workOrder.date.month = "0" + this.workOrder.date.month;

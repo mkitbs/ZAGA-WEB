@@ -58,8 +58,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Operacija</th>
-        <th scope="col">Datum početka</th>
-        <th scope="col">Datum završetka</th>
+        <th scope="col">Datum</th>
         <th scope="col">Tabla</th>
         <th scope="col">Površina</th>
         <th scope="col">Usev</th>
@@ -75,8 +74,7 @@
       >
         <th scope="row">{{ j + 1 }}</th>
         <td>{{ workOrder.operationName }}</td>
-        <td>{{ workOrder.start }}</td>
-        <td>{{ workOrder.end }}</td>
+        <td>{{ workOrder.date }}</td>
         <td>{{ workOrder.table }}</td>
         <td>{{ workOrder.area }}ha</td>
         <td>{{ workOrder.cropName.split(",")[1] }}</td>
@@ -181,8 +179,7 @@
             style="font-size: 20px; vertical-align: bottom; color: #5c7495"
           ></i>
           <span style="padding-left: 3px; vertical-align: middle">
-            Period: {{ workOrder.start }} -
-            {{ workOrder.end }}
+            Datum: {{ workOrder.date }}
           </span>
         </li>
         <li class="list-group-item list-group-item">
