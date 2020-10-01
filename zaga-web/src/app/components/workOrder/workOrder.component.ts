@@ -43,21 +43,13 @@ export class WorkOrderComponent implements OnInit {
           var dateStart = "";
           var dateEnd = "";
           dateStart =
-            workOrder.start.day.split(" ")[0] +
+            workOrder.date.day.split(" ")[0] +
             "." +
-            workOrder.start.month +
+            workOrder.date.month +
             "." +
-            workOrder.start.year +
+            workOrder.date.year +
             ".";
-          dateEnd =
-            workOrder.end.day.split(" ")[0] +
-            "." +
-            workOrder.end.month +
-            "." +
-            workOrder.end.year +
-            ".";
-          workOrder.start = dateStart;
-          workOrder.end = dateEnd;
+          workOrder.date = dateStart;
           if (workOrder.status == "NEW") {
             workOrder.status = "Novi";
           } else if (workOrder.status == "IN_PROGRESS") {
