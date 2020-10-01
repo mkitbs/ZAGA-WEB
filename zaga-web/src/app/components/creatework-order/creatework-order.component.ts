@@ -31,6 +31,7 @@ import { WorkOrderWorkerService } from "src/app/service/work-order-worker.servic
 import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
 import { WorkOrderMachineService } from "src/app/service/work-order-machine.service";
 import { SpentMaterialService } from "src/app/service/spent-material.service";
+import { throwMatDialogContentAlreadyAttachedError } from "@angular/material";
 
 @Component({
   selector: "app-creatework-order",
@@ -79,7 +80,7 @@ export class CreateworkOrderComponent implements OnInit {
   query = "";
   material: SpentMaterial = new SpentMaterial();
   idOfEditingMaterial: any = 0;
-  idOfEditingWorker: any = 0;
+  idOfEditingWorkerMachine: any = 0;
   idOfEditingMachine: any = 0;
   new = false;
   inputFill = true;
@@ -106,6 +107,7 @@ export class CreateworkOrderComponent implements OnInit {
   machine: WorkOrderMachine = new WorkOrderMachine();
   woMachines: WorkOrderMachine[] = [];
   woMaterials: SpentMaterial[] = [];
+  wows: WorkOrderWorker[] = [];
   cultureId;
   selectedWorker;
   selectedMachine;
@@ -116,9 +118,10 @@ export class CreateworkOrderComponent implements OnInit {
   selectedTable;
   selectedYear = 2020;
   selectedCrop;
+  selectedCouplingMachine;
   clickAddMaterial = false;
   clickAddWorkOrder = false;
-  clickAddWorker = false;
+  clickAddWorkerMachine = false;
   clickAddMachine = false;
   //dodato zbog validacije, jer ngModel ne izmapira material.quantity i material.unit
   quantityEntered;
@@ -188,15 +191,12 @@ export class CreateworkOrderComponent implements OnInit {
       data = this.convertKeysToLowerCase(data);
       this.operations = data;
     });
-    /*
-    this.cropService.getAll().subscribe(data=>{
-      this.crops = data;
-    })
-    */
+
     this.cultureService.getAll().subscribe((data) => {
       this.cultures = data;
     });
     this.machineService.getAll().subscribe((data) => {
+      data = this.convertKeysToLowerCase(data);
       this.devices = data;
     });
 
@@ -229,10 +229,8 @@ export class CreateworkOrderComponent implements OnInit {
     });
   }
 
-  getUnitOfMaterial() {
-    this.unit = this.substances.find(
-      (x) => x.id == this.selectedMaterial.split("&")[0]
-    ).unit;
+  getUnitOfMaterial(id) {
+    this.unit = this.substances.find((x) => x.id == id).unit;
     console.log(this.unit);
   }
 
@@ -268,73 +266,72 @@ export class CreateworkOrderComponent implements OnInit {
     }
   }
 
-  addWorker(valid) {
-    this.clickAddWorker = true;
-    if (this.selectedWorker != null && this.selectedOperation != null) {
-      this.employee.id = this.selectedWorker.split("&")[0];
-      this.employee.name = this.selectedWorker.split("&")[1];
-      this.employee.operation = this.operations.find(
-        (x) => x.id == this.selectedOperation
-      ).name;
-      this.employee.operationId = this.selectedOperation;
-    }
+  addWorkerAndMachine(valid) {
+    this.clickAddWorkerMachine = true;
+    this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
+    this.wow.user.id = this.selectedWorker;
+    this.wow.operation.id = this.selectedOperation;
+    this.wow.machine.id = this.selectedMachine;
     if (valid) {
-      this.employees.forEach((emp) => {
+      this.wows.forEach((wow) => {
         if (
-          emp.id == this.employee.id &&
-          emp.operationId == this.employee.operationId
+          wow.user.id == this.wow.user.id &&
+          wow.operation.id == this.wow.operation.id &&
+          wow.machine.id == this.wow.machine.id
         ) {
-          this.toastr.error("Radnik i operacija su već dodati.");
+          this.toastr.error("Radnik, operacija i mašina su već dodati");
           this.exists = true;
         }
       });
       if (!this.exists) {
-        this.employees.push(this.employee);
+        this.wows.push(this.wow);
+        this.wow = new WorkOrderWorker();
         this.exists = false;
-        this.employee = new Employee();
       }
       this.exists = false;
       this.selectedWorker = null;
-      if (this.workOrder.operationId != null) {
-        this.selectedOperation = this.workOrder.operationId;
-      } else {
-        this.selectedOperation = null;
-      }
-      this.closeButtonWorkerModal.nativeElement.click();
-      this.clickAddWorker = false;
+      this.selectedOperation = null;
+      this.selectedMachine = null;
+      this.selectedCouplingMachine = null;
+      this.clickAddWorkerMachine = false;
     }
-    console.log(this.employees);
+
+    console.log(this.wows);
   }
 
-  editWorker(worker) {
-    this.employee.id = worker.id;
-    this.employee.name = worker.name;
-    this.editing = true;
-    this.idOfEditingWorker = worker.id;
-    this.selectedWorker = worker.id + "&" + worker.name;
-    this.selectedOperation = worker.operationId;
+  editWorkerAndMachine(wow) {
+    this.wow.dayWorkPeriod = wow.dayWorkPeriod;
+    this.wow.dayNightPeriod = wow.dayNightPeriod;
+    this.wow.initialState = wow.initialState;
+    this.wow.finalState = wow.finalState;
+    this.wow.fuel = wow.fuel;
+    this.idOfEditingWorkerMachine = this.wow.wowObjectId;
   }
 
-  editExistingWorker() {
-    this.employees.forEach((emp) => {
-      if (emp.id == this.idOfEditingWorker) {
-        emp.id = this.selectedWorker.split("&")[0];
-        emp.name = this.selectedWorker.split("&")[1];
-        emp.operation = this.operations.find(
-          (x) => x.id == this.selectedOperation
-        ).name;
-        emp.operationId = this.selectedOperation;
+  editExistingWorkerAndMachine(existing) {
+    this.idOfEditingWorkerMachine = existing.wowObjectId;
+    this.wows.forEach((wow) => {
+      if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
+        wow.user.id = this.allEmployees.find(
+          (x) => x.userId == wow.user.id
+        ).userId;
+        wow.machine.id = this.devices.find((x) => x.id == wow.machine.id).id;
+        wow.operation.id = this.operations.find(
+          (x) => x.id == wow.operation.id
+        ).id;
+        wow.dayWorkPeriod = this.wow.dayWorkPeriod;
+        wow.dayNightPeriod = this.wow.dayNightPeriod;
+        wow.initialState = this.wow.initialState;
+        wow.finalState = this.wow.finalState;
+        wow.fuel = this.wow.fuel;
+        this.toastr.success("Uspešno izvršena promena.");
       }
     });
-    this.employee = new Employee();
-    this.selectedWorker = null;
-    if (this.workOrder.operationId != null) {
-      this.selectedOperation = this.workOrder.operationId;
-    } else {
-      this.selectedOperation = null;
-    }
-    this.closeButtonWorkerModal.nativeElement.click();
-    this.editing = false;
+    console.log(this.wows);
+  }
+
+  addDetailWow() {
+    this.wow = new WorkOrderWorker();
   }
 
   addNewWorker() {
@@ -347,50 +344,61 @@ export class CreateworkOrderComponent implements OnInit {
     this.editingWorker = false;
   }
 
-  addMachine(valid) {
-    this.clickAddMachine = true;
-    if (this.selectedMachine != null && this.selectedWorkerForMachine != null) {
-      this.machine.machine.id = this.selectedMachine.split("&")[0];
-      this.machine.machine.name = this.selectedMachine.split("&")[1];
-      this.machine.user.id = this.selectedWorkerForMachine.split("&")[0];
-      this.machine.user.name = this.selectedWorkerForMachine.split("&")[1];
-    }
+  addMaterial(valid) {
+    this.clickAddMaterial = true;
+    this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
+    this.spentMaterial.material.id = this.selectedMaterial;
+    this.spentMaterial.quantity = this.quantityEntered;
+    this.spentMaterial.material.unit = this.unit;
     if (valid) {
-      this.woMachines.push(this.machine);
-      this.machine = new WorkOrderMachine();
-      this.selectedMachine = null;
-      this.selectedWorkerForMachine = null;
-      this.closeButtonMachineModal.nativeElement.click();
-      this.clickAddMachine = false;
+      this.woMaterials.forEach((material) => {
+        if (
+          material.material.id == this.spentMaterial.material.id &&
+          material.quantity == this.spentMaterial.quantity
+        ) {
+          this.toastr.error("Materijal sa izabranom količinom je već unet.");
+          this.exists = true;
+        }
+      });
+      if (!this.exists) {
+        this.woMaterials.push(this.spentMaterial);
+        this.spentMaterial = new SpentMaterial();
+        this.exists = false;
+      }
+      this.exists = false;
+      this.selectedMaterial = null;
+      this.quantityEntered = null;
+      this.unit = null;
+      this.clickAddMaterial = false;
     }
-    console.log(this.woMachines);
+
+    console.log(this.woMaterials);
   }
 
-  editMachine(machine) {
-    this.machine.machine.id = machine.machine.id;
-    this.machine.machine.name = machine.machine.name;
-    this.editingMachine = true;
-    this.idOfEditingMachine = machine.machine.id;
-    this.selectedMachine = machine.machine.id + "&" + machine.machine.name;
-    this.selectedWorkerForMachine = machine.user.id + "&" + machine.user.name;
+  editMaterial(material) {
+    this.spentMaterial.spent = material.spent;
+    this.spentMaterial.material.unit = material.material.unit;
+    this.idOfEditingMaterial = this.material.smObjectId;
   }
 
-  editExistingMachine() {
-    this.woMachines.forEach((machine) => {
-      if (machine.machine.id == this.idOfEditingMachine) {
-        machine.machine.name = this.selectedMachine.split("&")[1];
-        machine.machine.id = this.selectedMachine.split("&")[0];
-        machine.user.id = this.selectedWorkerForMachine.split("&")[0];
-        machine.user.name = this.selectedWorkerForMachine.split("&")[1];
+  editExistingMaterial(existing) {
+    this.idOfEditingMaterial = existing.smObjectId;
+    this.woMaterials.forEach((material) => {
+      if (material.smObjectId == this.idOfEditingMaterial) {
+        material.material.id = this.substances.find(
+          (x) => x.id == material.material.id
+        ).id;
+        material.quantity = this.spentMaterial.quantity;
       }
     });
-    this.machine = new WorkOrderMachine();
-    this.selectedMachine = null;
-    this.selectedWorkerForMachine = null;
-    this.editingMachine = false;
-    this.closeButtonMachineModal.nativeElement.click();
+    this.toastr.success("Uspešno izvršena promena.");
   }
 
+  addDetailMaterial() {
+    this.spentMaterial = new SpentMaterial();
+  }
+
+  /*
   addMaterial(valid) {
     this.clickAddMaterial = true;
     if (this.selectedMaterial != null) {
@@ -442,6 +450,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.editingMaterial = false;
     this.closebuttonMaterialModal.nativeElement.click();
   }
+  */
 
   addWorkOrder(valid) {
     this.clickAddWorkOrder = true;

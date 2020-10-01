@@ -103,47 +103,24 @@
             <i class="fa fa-calendar mr-2"></i>Datum:
           </td>
           <td class="right-col-header">
-            <div class="form-row">
-              <div class="col">
-                <input
-                  type="date"
-                  [(ngModel)]="workOrder.start"
-                  name="poc"
-                  id="od"
-                  ngbDatepicker
-                  #od="ngbDatepicker"
-                  (click)="od.toggle()"
-                  class="form-control"
-                  #dateFrom="ngModel"
-                  required
-                />
-                <div
-                  *ngIf="dateFrom.invalid && clickAddWorkOrder"
-                  style="color: red; font-weight: normal"
-                >
-                  Izaberite datum.
-                </div>
-              </div>
-              <div class="mt-2">-</div>
-              <div class="col">
-                <input
-                  type="date"
-                  [(ngModel)]="workOrder.end"
-                  name="kraj"
-                  class="form-control"
-                  id="do"
-                  ngbDatepicker
-                  #do="ngbDatepicker"
-                  (click)="do.toggle()"
-                  #dateTo="ngModel"
-                  required
-                />
-                <div
-                  *ngIf="dateTo.invalid && clickAddWorkOrder"
-                  style="color: red; font-weight: normal"
-                >
-                  Izaberite datum.
-                </div>
+            <div>
+              <input
+                type="date"
+                [(ngModel)]="workOrder.start"
+                name="poc"
+                id="od"
+                ngbDatepicker
+                #od="ngbDatepicker"
+                (click)="od.toggle()"
+                class="form-control"
+                #dateFrom="ngModel"
+                required
+              />
+              <div
+                *ngIf="dateFrom.invalid && clickAddWorkOrder"
+                style="color: red; font-weight: normal"
+              >
+                Izaberite datum.
               </div>
             </div>
           </td>
@@ -293,35 +270,39 @@
       </table>
     </form>
   </div>
-
-  <!--workers-->
-  <div class="workers">
+  <!--workers/machines-->
+  <div class="machines mt-4">
     <button
       class="btn btn-primary collapsing-button shadow-none"
-      (click)="expandWorkers()"
+      (click)="expandMachines()"
       type="button"
       data-toggle="collapse"
-      data-target="#collapseExample"
+      data-target="#collapseExampleMachines"
       aria-expanded="false"
-      aria-controls="collapseExample"
+      aria-controls="collapseExampleMachines"
     >
-      <i class="fa fa-user mr-2"></i>Radnici<i
-        *ngIf="!workers"
+      <i class="fa fa-user mr-2"></i>
+      <i class="fa fa-truck mr-2"></i>
+      Radnici/Mašine<i
+        *ngIf="!machines"
         class="fa fa-arrow-down mr-2 mt-1 arrows"
       ></i
-      ><i *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+      ><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
     </button>
-    <div class="collapse" id="collapseExample">
+    <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
-        <form #workerForm="ngForm">
+        <form #wowForm="ngForm">
           <table class="table table-input">
             <thead>
-              <th style="width: 190px">Radnik*</th>
-              <th *ngIf="!new">Datum*</th>
-              <th style="width: 230px">Operacija*</th>
-              <th *ngIf="!new" style="width: 130px">Redovan rad*</th>
-              <th *ngIf="!new" style="width: 130px">Noćni rad*</th>
-              <th *ngIf="!new" style="width: 130px">Ukupan rad*</th>
+              <th>Radnik*</th>
+              <th>Operacija*</th>
+              <th>Mašina</th>
+              <th>Priključna mašina</th>
+              <th *ngIf="!new" style="width: 150px">Početno stanje MČ</th>
+              <th *ngIf="!new" style="width: 150px">Krajnje stanje MČ</th>
+              <th *ngIf="!new" style="width: 150px">Utrošeni MČ</th>
+              <th *ngIf="!new" style="width: 150px">Utrošak goriva</th>
+              <th style="text-align: right !important">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
             </thead>
             <tbody>
@@ -329,65 +310,43 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="wow.user.id"
-                      name="worker"
+                      [(ngModel)]="wom.user.id"
+                      name="machineWorker"
                       id=""
                       class="form-control"
-                      *ngIf="!new; else elseBlockWorkers"
+                      *ngIf="!new; else elseBlockWorker"
                     >
-                      <option value="">Izaberite</option>
+                      <option value="-1"></option>
                       <option
-                        value="{{ assignedUser.id }}"
-                        *ngFor="let assignedUser of workOrder.assignedUsers"
+                        value="{{ m.user.id }}"
+                        *ngFor="let m of workOrder.machines"
                       >
-                        {{ assignedUser.Name }}
+                        {{ m.user.Name }}
                       </option>
                     </select>
-                    <ng-template #elseBlockWorkers>
+                    <ng-template #elseBlockWorker>
                       <select
-                        name="selectedWorker"
                         [(ngModel)]="selectedWorker"
+                        name="selectedMachineWorker"
                         id=""
                         class="form-control"
                         #worker="ngModel"
                         required
                       >
                         <option
-                          value="{{ emp.userId }}&{{ emp.name }}"
+                          value="{{ emp.userId }}"
                           *ngFor="let emp of allEmployees"
                         >
                           {{ emp.name }}
                         </option>
                       </select>
                       <div
-                        *ngIf="worker.invalid && clickAddWorker"
+                        *ngIf="worker.invalid && clickAddWorkerMachine"
                         style="color: red"
                       >
                         Izaberite radnika.
                       </div>
                     </ng-template>
-                  </div>
-                </td>
-                <td *ngIf="!new">
-                  <div class="input-group">
-                    <input
-                      name="date"
-                      [(ngModel)]="worker.date"
-                      (click)="od.toggle()"
-                      class="form-control"
-                      name="dateFrom"
-                      id="od"
-                      placeholder="yyyy-mm-dd"
-                      ngbDatepicker
-                      #od="ngbDatepicker"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        class="btn btn-outline-secondary calendar"
-                        (click)="od.toggle()"
-                        type="button"
-                      ></button>
-                    </div>
                   </div>
                 </td>
                 <td>
@@ -421,7 +380,7 @@
                         </option>
                       </select>
                       <div
-                        *ngIf="operation.invalid && clickAddWorker"
+                        *ngIf="operation.invalid && clickAddWorkerMachine"
                         style="color: red"
                       >
                         Izaberite operaciju.
@@ -429,148 +388,6 @@
                     </ng-template>
                   </div>
                 </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wow.dayPeriod"
-                        type="number"
-                        name="dayWorkPeriod"
-                        class="form-control"
-                        id=""
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >h</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wow.dayNightPeriod"
-                        type="number"
-                        name="nightWorkPeriod"
-                        class="form-control"
-                        id=""
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >h</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new" style="vertical-align: middle">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wow.workPeriod"
-                        type="number"
-                        name="workPeriod"
-                        class="form-control"
-                        id=""
-                        disabled
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >h</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div *ngIf="!editing && !editingWorker" class="form-group">
-                    <button
-                      class="btn btn-primary btn-add mr-2"
-                      (click)="addWorker(workerForm.valid)"
-                      [disabled]="workOrder.status == 'Zatvoren'"
-                    >
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                  <div *ngIf="editingWorker" class="form-group">
-                    <button
-                      class="btn btn-primary btn-add mr-2"
-                      (click)="addNewWorker()"
-                      [disabled]="workOrder.status == 'Zatvoren'"
-                    >
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </div>
-                  <div *ngIf="editing" class="form-group">
-                    <button
-                      class="btn btn-primary btn-add mr-2"
-                      (click)="editExistingWorker()"
-                      [disabled]="workOrder.status == 'Zatvoren'"
-                    >
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngFor="let worker of employees">
-                <td>{{ worker.name }}</td>
-                <td *ngIf="!new">{{ worker.date }}</td>
-                <td>{{ worker.operation }}</td>
-                <td *ngIf="!new">{{ worker.dayWorkPeriod || 0 }} h</td>
-                <td *ngIf="!new">{{ worker.nightWorkPeriod || 0 }} h</td>
-                <td *ngIf="!new">
-                  {{ worker.dayWorkPeriod * 1 + worker.nightWorkPeriod * 1 }} h
-                </td>
-                <td>
-                  <button
-                    class="btn btn-primary btn-edit mr-2"
-                    (click)="editWorker(worker)"
-                    [disabled]="workOrder.status == 'Zatvoren'"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!--machines-->
-  <div class="machines mt-4">
-    <button
-      class="btn btn-primary collapsing-button shadow-none"
-      (click)="expandMachines()"
-      type="button"
-      data-toggle="collapse"
-      data-target="#collapseExampleMachines"
-      aria-expanded="false"
-      aria-controls="collapseExampleMachines"
-    >
-      <i class="fa fa-truck mr-2"></i>Mašine<i
-        *ngIf="!machines"
-        class="fa fa-arrow-down mr-2 mt-1 arrows"
-      ></i
-      ><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
-    </button>
-    <div class="collapse" id="collapseExampleMachines">
-      <div class="card card-body collapse-card">
-        <form #machineForm="ngForm">
-          <table class="table table-input">
-            <thead>
-              <th>Mašina*</th>
-              <th>Radnik*</th>
-              <th *ngIf="!new" style="width: 150px">Početno stanje MČ</th>
-              <th *ngIf="!new" style="width: 150px">Krajnje stanje MČ</th>
-              <th *ngIf="!new" style="width: 150px">Utrošeni MČ</th>
-              <th *ngIf="!new" style="width: 150px">Utrošak goriva</th>
-              <th style="text-align: right !important">Dodaj</th>
-            </thead>
-            <tbody>
-              <tr>
                 <td>
                   <div class="form-group">
                     <select
@@ -598,14 +415,14 @@
                         required
                       >
                         <option
-                          value="{{ dev.id }}&{{ dev.Name }}"
+                          value="{{ dev.id }}"
                           *ngFor="let dev of devices"
                         >
-                          {{ dev.Name }}
+                          {{ dev.name }}
                         </option>
                       </select>
                       <div
-                        *ngIf="machine.invalid && clickAddMachine"
+                        *ngIf="machine.invalid && clickAddWorkerMachine"
                         style="color: red"
                       >
                         Izaberite mašinu.
@@ -616,120 +433,57 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="wom.user.id"
-                      name="machineWorker"
+                      [(ngModel)]="wom.machine.id"
+                      name="couplingMachine"
                       id=""
                       class="form-control"
-                      *ngIf="!new; else elseBlockWorkersMachine"
+                      *ngIf="!new; else elseBlocCouplingMachine"
                     >
                       <option value="-1"></option>
                       <option
-                        value="{{ m.user.id }}"
+                        value="{{ m.machine.id }}"
                         *ngFor="let m of workOrder.machines"
                       >
-                        {{ m.user.Name }}
+                        {{ m.machine.Name }}
                       </option>
                     </select>
-                    <ng-template #elseBlockWorkersMachine>
+                    <ng-template #elseBlocCouplingMachine>
                       <select
-                        [(ngModel)]="selectedWorkerForMachine"
-                        name="selectedMachineWorker"
+                        [(ngModel)]="selectedCouplingMachine"
+                        name="selectedCouplingMachine"
                         id=""
                         class="form-control"
-                        #machineWorker="ngModel"
+                        #couplingMachine="ngModel"
                         required
                       >
                         <option
-                          value="{{ emp.userId }}&{{ emp.name }}"
-                          *ngFor="let emp of allEmployees"
+                          value="{{ dev.id }}"
+                          *ngFor="let dev of devices"
                         >
-                          {{ emp.name }}
+                          {{ dev.name }}
                         </option>
                       </select>
                       <div
-                        *ngIf="machineWorker.invalid && clickAddMachine"
+                        *ngIf="couplingMachine.invalid && clickAddWorkerMachine"
                         style="color: red"
                       >
-                        Izaberite radnika.
+                        Izaberite priključnu mašinu.
                       </div>
                     </ng-template>
                   </div>
                 </td>
-
-                <td *ngIf="!new">
+                <td>
                   <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wom.initialState"
-                        type="number"
-                        name="initialState"
-                        id=""
-                        class="form-control"
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >mh</span
-                        >
-                      </div>
-                    </div>
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      data-toggle="modal"
+                      data-target="#workerMachineModal"
+                      (click)="addDetailWow()"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
                   </div>
                 </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wom.finalState"
-                        type="number"
-                        name="finalState"
-                        id=""
-                        class="form-control"
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >mh</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new" style="vertical-align: middle">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wom.finalState - wom.initialState"
-                        type="number"
-                        name="sumState"
-                        id=""
-                        class="form-control"
-                        disabled
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >mh</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="wom.fuel"
-                        type="number"
-                        name="fuel"
-                        id=""
-                        class="form-control"
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >l</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
                 <td>
                   <div
                     *ngIf="!editingMachine && !editingMachineState"
@@ -737,7 +491,7 @@
                   >
                     <button
                       class="btn btn-primary btn-add mr-2"
-                      (click)="addMachine(machineForm.valid)"
+                      (click)="addWorkerAndMachine(wowForm.valid)"
                       [disabled]="workOrder.status == 'Zatvoren'"
                     >
                       <i class="fa fa-plus"></i>
@@ -763,24 +517,83 @@
                   </div>
                 </td>
               </tr>
+              <!--editable table-->
               <ng-container *ngIf="new; else elseBlockMachineState">
-                <tr *ngFor="let machine of woMachines">
-                  <td>{{ machine.machine.name }}</td>
-                  <td>{{ machine.user.name }}</td>
-                  <td *ngIf="!new">{{ machine.initialState || 0 }} mh</td>
-                  <td *ngIf="!new">{{ machine.finalState || 0 }} mh</td>
-                  <td *ngIf="!new">
-                    {{ machine.finalState * 1 - machine.initialState * 1 || 0 }}
-                    mh
+                <tr *ngFor="let wow of wows">
+                  <td>
+                    <select
+                      [(ngModel)]="wow.user.id"
+                      [ngModelOptions]="{ standalone: true }"
+                      name="{{ wow.user.id }}"
+                      id=""
+                      class="form-control"
+                    >
+                      <option
+                        value="{{ emp.userId }}"
+                        *ngFor="let emp of allEmployees"
+                      >
+                        {{ emp.name }}
+                      </option>
+                    </select>
                   </td>
-                  <td *ngIf="!new">{{ machine.fuel || 0 }} l</td>
+                  <td>
+                    <select
+                      [(ngModel)]="wow.operation.id"
+                      [ngModelOptions]="{ standalone: true }"
+                      name="{{ wow.operation.id }}"
+                      id=""
+                      class="form-control"
+                    >
+                      <option value="{{ op.id }}" *ngFor="let op of operations">
+                        {{ op.name }}
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      [(ngModel)]="wow.machine.id"
+                      [ngModelOptions]="{ standalone: true }"
+                      name="{{ wow.machine.id }}"
+                      id=""
+                      class="form-control"
+                    >
+                      <option value="{{ dev.id }}" *ngFor="let dev of devices">
+                        {{ dev.name }}
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      [(ngModel)]="wow.machine.id"
+                      [ngModelOptions]="{ standalone: true }"
+                      name="{{ wow.machine.id }}"
+                      id=""
+                      class="form-control"
+                    >
+                      <option value="{{ dev.id }}" *ngFor="let dev of devices">
+                        {{ dev.name }}
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-add mr-2"
+                        data-toggle="modal"
+                        data-target="#workerMachineModal"
+                        (click)="editWorkerAndMachine(wow)"
+                      >
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                    </div>
+                  </td>
                   <td>
                     <button
-                      class="btn btn-primary btn-edit mr-2"
-                      (click)="editMachine(machine)"
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="editExistingWorkerAndMachine(wow)"
                       [disabled]="workOrder.status == 'Zatvoren'"
                     >
-                      <i class="fa fa-edit"></i>
+                      <i class="fa fa-check"></i>
                     </button>
                   </td>
                 </tr>
@@ -813,7 +626,6 @@
       </div>
     </div>
   </div>
-
   <!--materials-->
   <div class="machines mt-4">
     <button
@@ -839,9 +651,7 @@
               <th>Materijal*</th>
               <th style="width: 150px">Planirana količina*</th>
               <th style="width: 180px">Planirana količina / ha*</th>
-              <th *ngIf="!new" style="width: 150px">Utrošeno*</th>
-              <th *ngIf="!new" style="width: 150px">Utrošeno / ha*</th>
-              <th style="width: 100px">Jedinica mere*</th>
+              <th style="text-align: right !important">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
             </thead>
             <tbody>
@@ -869,12 +679,12 @@
                         name="selectedMaterial"
                         id=""
                         class="form-control"
+                        (change)="getUnitOfMaterial(selectedMaterial)"
                         #name="ngModel"
                         required
                       >
-                        <option value="-1"></option>
                         <option
-                          value="{{ sub.id }}&{{ sub.name }}"
+                          value="{{ sub.id }}"
                           *ngFor="let sub of substances"
                         >
                           {{ sub.name }}
@@ -957,84 +767,25 @@
                           class="form-control"
                           disabled
                         />
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2"
+                            >{{ spentMaterial.material.unit }}/ha</span
+                          >
+                        </div>
                       </ng-template>
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >{{ spentMaterial.material.unit }}/ha</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="spentMaterial.spent"
-                        type="number"
-                        name="spent"
-                        id=""
-                        class="form-control"
-                      />
-
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">{{
-                          spentMaterial.material.unit
-                        }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td *ngIf="!new">
-                  <div class="form-group">
-                    <div class="input-group mb-3">
-                      <input
-                        [(ngModel)]="spentMaterial.spent / workOrder.area"
-                        type="number"
-                        name="spentPerHectar"
-                        id=""
-                        class="form-control"
-                        disabled
-                      />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2"
-                          >{{ spentMaterial.material.unit }}/ha</span
-                        >
-                      </div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
-                    <input
-                      *ngIf="new; else elseBlockUnit"
-                      [(ngModel)]="unit"
-                      type="text"
-                      name="jm"
-                      id=""
-                      class="form-control"
-                      #matUnit="ngModel"
-                      required
-                      readonly
-                    />
-                    <ng-template #elseBlockUnit>
-                      <input
-                        [(ngModel)]="spentMaterial.material.unit"
-                        type="text"
-                        name="jm"
-                        id=""
-                        class="form-control"
-                        #matUnit="ngModel"
-                        required
-                        readonly
-                      />
-                    </ng-template>
-                    <div
-                      *ngIf="matUnit.invalid && clickAddMaterial"
-                      style="color: red"
+                    <button
+                      class="btn btn-primary btn-add mr-2"
+                      data-toggle="modal"
+                      data-target="#materialModal"
+                      (click)="addDetailMaterial()"
                     >
-                      Izaberite jed. mere.
-                    </div>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
                   </div>
                 </td>
                 <td>
@@ -1070,29 +821,84 @@
                   </div>
                 </td>
               </tr>
+              <!--editable table materials-->
               <ng-container *ngIf="new; else elseBlockSpentMaterial">
                 <tr *ngFor="let material of woMaterials">
-                  <td>{{ material.material.name }}</td>
-                  <td>{{ material.quantity }} {{ material.material.unit }}</td>
                   <td>
-                    {{ (material.quantity / crop.area).toFixed(2) }}
-                    {{ material.material.unit }}/ha
+                    <select
+                      [(ngModel)]="material.material.id"
+                      [ngModelOptions]="{ standalone: true }"
+                      name="{{ material.material.id }}"
+                      id=""
+                      class="form-control"
+                      (change)="getUnitOfMaterial(material.material.id)"
+                    >
+                      <option
+                        value="{{ sub.id }}"
+                        *ngFor="let sub of substances"
+                      >
+                        {{ sub.name }}
+                      </option>
+                    </select>
                   </td>
-                  <td *ngIf="!new">
-                    {{ material.spent || 0 }} {{ material.material.unit }}
+                  <td>
+                    <div class="form-group">
+                      <div class="input-group mb-3">
+                        <input
+                          [(ngModel)]="material.quantity"
+                          [ngModelOptions]="{ standalone: true }"
+                          type="number"
+                          name="{{ material.quantity }}"
+                          id=""
+                          class="form-control"
+                        />
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2">{{
+                            material.material.unit
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
                   </td>
-                  <td *ngIf="!new">
-                    {{ material.spent / workOrder.area }}
-                    {{ material.material.unit }}/ha
+                  <td>
+                    <div class="form-group">
+                      <div class="input-group mb-3">
+                        <input
+                          [(ngModel)]="material.quantity / crop.Area"
+                          [ngModelOptions]="{ standalone: true }"
+                          type="number"
+                          name="{{ material.quantity / crop.Area }}"
+                          id=""
+                          class="form-control"
+                          disabled
+                        />
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2"
+                            >{{ material.material.unit }}/ha</span
+                          >
+                        </div>
+                      </div>
+                    </div>
                   </td>
-                  <td>{{ material.material.unit }}</td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-add mr-2"
+                        data-toggle="modal"
+                        data-target="#materialModal"
+                        (click)="editMaterial(material)"
+                      >
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                    </div>
+                  </td>
                   <td>
                     <button
-                      class="btn btn-primary btn-edit mr-2"
-                      (click)="editMaterial(material)"
+                      class="btn btn-primary btn-add mr-2"
+                      (click)="editExistingMaterial(material)"
                       [disabled]="workOrder.status == 'Zatvoren'"
                     >
-                      <i class="fa fa-edit"></i>
+                      <i class="fa fa-check"></i>
                     </button>
                   </td>
                 </tr>
@@ -1600,7 +1406,7 @@
             class="btn btn-primary"
             style="float: right; margin-top: 5px; background-color: #5c7495"
             data-toggle="modal"
-            data-target="#materialModal"
+            data-target="#materialModalMob"
             (click)="addSubstance()"
           >
             <i class="fa fa-plus mr-2"></i>Novi materijal
@@ -1950,10 +1756,10 @@
     </div>
   </div>
 </div>
-<!--Material modal-->
+<!--Material modal mob-->
 <div
   class="modal fade"
-  id="materialModal"
+  id="materialModalMob"
   tabindex="-1"
   role="dialog"
   aria-labelledby="exampleModalLabel"
@@ -2080,6 +1886,310 @@
           class="btn btn-success"
           style="background-color: #33590b"
           (click)="addMaterial(materialModalForm.valid)"
+        >
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+        <button
+          *ngIf="editingMaterial"
+          type="button"
+          class="btn btn-success"
+          style="background-color: #33590b"
+          (click)="editExistingMaterial()"
+        >
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Worker/Machine -->
+<div
+  class="modal fade"
+  id="workerMachineModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fa fa-sticky-note-o"></i> Dodatna evidencija
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          #closeButtonWorkerModal
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #workerModalForm="ngForm">
+          <div class="row">
+            <div class="col">
+              <h5><i class="fa fa-user mr-2"></i> Radnik</h5>
+              <hr class="solid" />
+              <div class="form-group">
+                <label for="imePrz">Redovan rad</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.dayWorkPeriod"
+                    type="number"
+                    name="dayWP"
+                    class="form-control"
+                    id=""
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Noćni rad</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.dayNightPeriod"
+                    type="number"
+                    name="nightWP"
+                    class="form-control"
+                    id=""
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Ukupan rad</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.dayWorkPeriod + wow.dayNightPeriod"
+                    type="number"
+                    name="sumHours"
+                    class="form-control"
+                    id=""
+                    readonly
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <h5><i class="fa fa-truck mr-2"></i> Mašina</h5>
+              <hr class="solid" />
+              <div class="form-group">
+                <label for="imePrz">Početno stanje MČ</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.initialState"
+                    type="number"
+                    name="initialState"
+                    class="form-control"
+                    id=""
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Krajnje stanje MČ</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.finalState"
+                    type="number"
+                    name="finalState"
+                    class="form-control"
+                    id=""
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Utrošeno MČ</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.finalState - wow.initialState"
+                    type="number"
+                    name="sumState"
+                    class="form-control"
+                    id=""
+                    readonly
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Utoršeno goriva</label>
+                <div class="input-group mb-3">
+                  <input
+                    [(ngModel)]="wow.fuel"
+                    type="number"
+                    name="fuel"
+                    class="form-control"
+                    id=""
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">l</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          style="background-color: #f68901"
+        >
+          <i class="fa fa-window-close"></i> Odustani
+        </button>
+        <button
+          *ngIf="!editing"
+          type="button"
+          class="btn btn-success"
+          style="background-color: #33590b"
+          data-dismiss="modal"
+        >
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+        <button
+          *ngIf="editing"
+          type="button"
+          class="btn btn-success"
+          style="background-color: #33590b"
+          (click)="editExistingWorker()"
+        >
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Material modal-->
+<div
+  class="modal fade"
+  id="materialModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fa fa-sticky-note-o"></i> Dodatna evidencija
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          #closeButtonMaterialModal
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #materialModalForm="ngForm">
+          <div class="form-group">
+            <label for="quantity">Utrošena količina</label>
+            <div class="input-group mb-3">
+              <input
+                [(ngModel)]="spentMaterial.spent"
+                type="number"
+                name="quantity"
+                id="quantity"
+                class="form-control"
+                #quantity="ngModel"
+                required
+              />
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">{{
+                  selectedUnit
+                }}</span>
+              </div>
+            </div>
+            <div
+              *ngIf="quantity.invalid && clickAddMaterial"
+              style="color: red"
+            >
+              Unesite količinu.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="quantityPerHectar">Utoršena količina po ha</label>
+            <div class="input-group mb-3">
+              <input
+                [(ngModel)]="spentMaterial.spent / crop.area"
+                type="number"
+                name="quantityPerHectar"
+                id="quantityPerHectar"
+                class="form-control"
+                readonly
+              />
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2"
+                  >{{ selectedUnit }}/ha</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Jedinica mere</label>
+            <div class="input-group mb-3">
+              <input
+                *ngIf="new; else elseBlockUnit"
+                [(ngModel)]="unit"
+                type="text"
+                name="jm"
+                id=""
+                class="form-control"
+                readonly
+              />
+              <ng-template #elseBlockUnit>
+                <input
+                  [(ngModel)]="spentMaterial.material.unit"
+                  type="text"
+                  name="jm"
+                  id=""
+                  class="form-control"
+                  readonly
+                />
+              </ng-template>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          style="background-color: #f68901"
+        >
+          <i class="fa fa-window-close"></i> Odustani
+        </button>
+        <button
+          *ngIf="!editingMaterial"
+          type="button"
+          class="btn btn-success"
+          style="background-color: #33590b"
+          data-dismiss="modal"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>
