@@ -45,8 +45,9 @@ public class MachineDTO {
 	private Long machineGroup;
 	
 	public MachineDTO(Machine machine) {
-		id = machine.getId();
-		name = machine.getName();
+		this.id = machine.getId();
+		this.name = machine.getName();
+		this.type = machine.getType().toString();
 	}
 
 }

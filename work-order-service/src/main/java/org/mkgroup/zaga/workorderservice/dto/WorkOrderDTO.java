@@ -21,17 +21,14 @@ import lombok.NoArgsConstructor;
 public class WorkOrderDTO {
 	
 	private UUID id;
-	private DateDTO start;
-	private DateDTO end;
+	private DateDTO date;
 	private String status;
 	private UUID cropId;
 	private UUID operationId;
 	private UUID responsibleId;
 	private UUID tableId;
 	private UUID cultureId;
-	private List<EmployeeDTO> assignedUsers;
 	private List<SpentMaterialDTO> materials;
-	private List<WorkOrderMachineDTO> machines;
 	private List<WorkOrderWorkerDTO> workers;
 	private String operationName;
 	private String responsibleName;
@@ -42,8 +39,7 @@ public class WorkOrderDTO {
 	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
-		start = new DateDTO(wo);
-		end = new DateDTO(wo);
+		date = new DateDTO(wo);
 		status = wo.getStatus().toString();
 		cropId = wo.getCrop().getId();
 		cultureId = wo.getCrop().getCulture().getId();
@@ -63,11 +59,6 @@ public class WorkOrderDTO {
 			this.materials.add(smDTO);
 		}
 		
-		this.machines = new ArrayList<WorkOrderMachineDTO>();
-		for(WorkOrderMachine wom : wo.getMachines()) {
-			WorkOrderMachineDTO womDTO = new WorkOrderMachineDTO(wom);
-			this.machines.add(womDTO);
-		}
 		
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
 		for(WorkOrderWorker wow : wo.getWorkers()) {
@@ -75,10 +66,5 @@ public class WorkOrderDTO {
 			this.workers.add(wowDTO);
 		}
 		
-		this.assignedUsers = new ArrayList<EmployeeDTO>();
-		for(User user: wo.getAssignedUsers() ) {
-			EmployeeDTO emp = new EmployeeDTO(user);
-			this.assignedUsers.add(emp);
-		}
 	}	
 }

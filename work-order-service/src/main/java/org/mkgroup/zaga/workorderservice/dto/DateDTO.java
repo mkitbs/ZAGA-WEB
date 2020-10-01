@@ -16,9 +16,9 @@ public class DateDTO {
 	private String dayWithHours;
 	
 	public DateDTO(WorkOrder wo) {
-		dayWithHours = wo.getStartDate().toString().split("-")[2];
+		dayWithHours = wo.getDate().toString().split("-")[2];
 		day = dayWithHours.split(" ")[0];
-		month = wo.getStartDate().toString().split("-")[1];
-		year = wo.getStartDate().toString().split("-")[0];
+		month = wo.getDate().toString().split("-")[1];
+		year = wo.getDate().toString().split("-")[0];
 	}
 }

@@ -4,29 +4,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
-import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
-import org.mkgroup.zaga.workorderservice.dto.WorkOrderMachineDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
-import org.mkgroup.zaga.workorderservice.model.Machine;
-import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
-import org.mkgroup.zaga.workorderservice.model.WorkOrderMachine;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
-import org.mkgroup.zaga.workorderservice.model.Worker;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,18 +75,12 @@ public class WorkOrderService {
 			WorkOrder workOrder = new WorkOrder();
 			
 			LocalDate startDate = new LocalDate(
-					Integer.parseInt(workOrderDTO.getStart().getYear()),
-					Integer.parseInt(workOrderDTO.getStart().getMonth()),
-					Integer.parseInt(workOrderDTO.getStart().getDay()));
+					Integer.parseInt(workOrderDTO.getDate().getYear()),
+					Integer.parseInt(workOrderDTO.getDate().getMonth()),
+					Integer.parseInt(workOrderDTO.getDate().getDay()));
 			Date startDateToAdd = startDate.toDate();
-			workOrder.setStartDate(startDateToAdd);
+			workOrder.setDate(startDateToAdd);
 			
-			LocalDate endDate = new LocalDate(
-					Integer.parseInt(workOrderDTO.getEnd().getYear()),
-					Integer.parseInt(workOrderDTO.getEnd().getMonth()),
-					Integer.parseInt(workOrderDTO.getEnd().getDay()));
-			Date endDateToAdd = endDate.toDate();
-			workOrder.setEndDate(endDateToAdd);
 			
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			workOrder.setCreationDate(new Date());
@@ -107,15 +95,31 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			
-			for(EmployeeDTO employee : workOrderDTO.getAssignedUsers()) {
-				User user = employeeService.getOne(employee.getId());
-				workOrder.getAssignedUsers().add(user);
-			}
-			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
 			
-			for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
+			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
+				WorkOrderWorker wow = new WorkOrderWorker();
+				
+				wow.setDayNightPeriod(wowDTO.getDayNightPeriod());
+				wow.setDayWorkPeriod(wowDTO.getDayPeriod());
+				wow.setFinalState(wowDTO.getFinalState());
+				wow.setFuel(wowDTO.getFuel());
+				wow.setInitialState(wowDTO.getInitialState());
+				wow.setSumState(wowDTO.getSumState());
+				wow.setWorkOrder(workOrder);
+				wow.setWorkPeriod(wowDTO.getWorkPeriod());
+				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
+				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
+				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
+				
+				if(wowDTO.getConnectingMachine().getId() != null) {
+					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
+				}
+				wowRepo.save(wow);
+			}
+			
+			/*for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
 				WorkOrderMachine wom = new WorkOrderMachine();
 				
 				wom.setDate(new Date());
@@ -126,7 +130,7 @@ public class WorkOrderService {
 				wom.setWorkPeriod(0);
 				wom.setWorkOrder(workOrder);
 				womRepo.save(wom);
-			}
+			}*/
 		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
 				SpentMaterial material = new SpentMaterial();
@@ -134,8 +138,8 @@ public class WorkOrderService {
 				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
 				material.setQuantity(m.getQuantity());
 				material.setQuantityPerHectar(m.getQuantityPerHectar());
-				material.setSpent(0);
-				material.setSpentPerHectar(0);
+				material.setSpent(m.getSpent());
+				material.setSpentPerHectar(m.getSpentPerHectar());
 				material.setWorkOrder(workOrder);
 				spentMaterialRepo.save(material);
 			}
@@ -188,15 +192,11 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			
-			for(EmployeeDTO employee : workOrderDTO.getAssignedUsers()) {
-				User user = employeeService.getOne(employee.getId());
-				workOrder.getAssignedUsers().add(user);
-			}
 			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
 			
-			for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
+			/*for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
 				WorkOrderMachine wom = new WorkOrderMachine();
 				
 				wom.setDate(new Date());
@@ -207,7 +207,7 @@ public class WorkOrderService {
 				wom.setWorkPeriod(0);
 				wom.setWorkOrder(workOrder);
 				womRepo.save(wom);
-			}
+			}*/
 		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
 				SpentMaterial material = new SpentMaterial();

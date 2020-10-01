@@ -36,9 +36,7 @@ public class WorkOrder implements Serializable {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
-	private Date startDate;
-	
-	private Date endDate;
+	private Date date;
 	
 	private Date creationDate;
 	
@@ -60,15 +58,15 @@ public class WorkOrder implements Serializable {
 	@ManyToMany(mappedBy = "workOrder")
 	private List<WorkOrderWorker> workers;
 	
-	@OneToMany(mappedBy = "workOrder")
-	private List<WorkOrderMachine> machines;
+	/*@OneToMany(mappedBy = "workOrder")
+	private List<WorkOrderMachine> machines;*/
 	
-	@ManyToMany
+	/*@ManyToMany
 	@JoinTable(
 	  name = "assigned_users", 
 	  joinColumns = @JoinColumn(name = "work_order_id"), 
 	  inverseJoinColumns = @JoinColumn(name = "assigned_user_id"))
-	private List<User> assignedUsers = new ArrayList<User>();
+	private List<User> assignedUsers = new ArrayList<User>();*/
 	
 	@OneToMany(mappedBy = "workOrder")
 	private List<SpentMaterial> materials;

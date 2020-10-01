@@ -39,7 +39,6 @@ public class WorkOrderWorkerController {
 	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO){
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		WorkOrderWorker wow = new WorkOrderWorker();
-		wow.setDate(new Date()); //zakucano
 		wow.setDayNightPeriod(wowDTO.getDayNightPeriod());
 		wow.setDayWorkPeriod(wowDTO.getDayPeriod());
 		wow.setWorkPeriod(wowDTO.getDayNightPeriod() + wowDTO.getDayPeriod());
