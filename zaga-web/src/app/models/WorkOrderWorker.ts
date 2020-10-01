@@ -7,6 +7,7 @@ export class WorkOrderWorker {
   user: Employee = new Employee();
   operation: Operation = new Operation();
   machine: Machine = new Machine();
+  connectingMachine: Machine = new Machine();
   date;
   dayWorkPeriod;
   dayNightPeriod;

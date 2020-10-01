@@ -276,6 +276,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.user.id = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
+    this.wow.connectingMachine.id = this.selectedCouplingMachine;
     if (valid) {
       this.wows.forEach((wow) => {
         if (
