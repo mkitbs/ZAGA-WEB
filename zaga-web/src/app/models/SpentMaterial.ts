@@ -7,4 +7,5 @@ export class SpentMaterial {
   quantityPerHectar;
   spentPerHectar;
   material: Material = new Material();
+  smObjectId;
 }

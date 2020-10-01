@@ -15,8 +15,6 @@ export class WorkOrder {
   operationId: string;
   responsibleId: string;
   materials: SpentMaterial[] = [];
-  machines: WorkOrderMachine[] = new Array<WorkOrderMachine>();
   workers: WorkOrderWorker[] = [];
-  assignedUsers: Employee[] = [];
   operationName;
 }
