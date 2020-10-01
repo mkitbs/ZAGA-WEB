@@ -231,6 +231,11 @@ export class CreateworkOrderComponent implements OnInit {
 
   getUnitOfMaterial(id) {
     this.unit = this.substances.find((x) => x.id == id).unit;
+    this.woMaterials.forEach((material) => {
+      if (material.material.id == id) {
+        material.material.unit = this.unit;
+      }
+    });
     console.log(this.unit);
   }
 
