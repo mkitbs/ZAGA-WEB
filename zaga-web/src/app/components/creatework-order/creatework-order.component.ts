@@ -139,7 +139,6 @@ export class CreateworkOrderComponent implements OnInit {
       //new
       this.new = true;
       this.workOrder = new WorkOrder();
-      this.workOrder.machines = [];
       this.workOrder.workers = [];
       this.workOrder.materials = [];
       this.workOrder.status = "Novi";
@@ -403,60 +402,6 @@ export class CreateworkOrderComponent implements OnInit {
     this.spentMaterial = new SpentMaterial();
   }
 
-  /*
-  addMaterial(valid) {
-    this.clickAddMaterial = true;
-    if (this.selectedMaterial != null) {
-      this.material.material.id = this.selectedMaterial.split("&")[0];
-      this.material.material.name = this.selectedMaterial.split("&")[1];
-    }
-    if (valid) {
-      this.getArea();
-      this.material.quantity = this.quantityEntered;
-      this.material.material.unit = this.unit;
-      this.material.quantityPerHectar = this.material.quantity / this.crop.area;
-      this.woMaterials.push(this.material);
-      this.material = new SpentMaterial();
-      this.selectedMaterial = null;
-      this.quantityEntered = null;
-      this.unit = null;
-      this.clickAddMaterial = false;
-      this.closebuttonMaterialModal.nativeElement.click();
-    }
-    console.log(this.woMaterials);
-  }
-
-  editMaterial(material) {
-    this.material.material.id = material.material.id;
-    this.material.material.name = material.material.name;
-    this.editingMaterial = true;
-    this.idOfEditingMaterial = material.material.id;
-    this.selectedMaterial = material.material.id + "&" + material.material.name;
-    this.quantityEntered = material.quantity;
-    this.selectedUnit = material.material.unit;
-  }
-
-  editExistingMaterial() {
-    this.woMaterials.forEach((material) => {
-      if (material.material.id == this.idOfEditingMaterial) {
-        material.material.id = this.selectedMaterial.split("&")[0];
-        material.material.name = this.selectedMaterial.split("&")[1];
-        material.quantity = this.quantityEntered;
-        material.material.unit = this.selectedUnit;
-        this.getArea();
-        material.quantityPerHectar = this.quantityEntered / this.crop.area;
-        console.log(this.woMaterials);
-      }
-    });
-    this.material = new SpentMaterial();
-    this.selectedMaterial = null;
-    this.selectedUnit = null;
-    this.quantityEntered = null;
-    this.editingMaterial = false;
-    this.closebuttonMaterialModal.nativeElement.click();
-  }
-  */
-
   addWorkOrder(valid) {
     this.clickAddWorkOrder = true;
     if (valid) {
@@ -468,20 +413,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.start.day = "0" + this.workOrder.start.day;
         }
       }
-      if (this.workOrder.end != undefined) {
-        if (this.workOrder.end.month < 10) {
-          this.workOrder.end.month = "0" + this.workOrder.end.month;
-        }
-        if (this.workOrder.end.day < 10) {
-          this.workOrder.end.day = "0" + this.workOrder.end.day;
-        }
-      }
 
-      //this.workOrder.start = dateStartToAdd;
-      //this.workOrder.end = dateEndToAdd;
-
-      this.workOrder.machines = this.woMachines;
-      this.workOrder.assignedUsers = this.employees;
+      this.workOrder.workers = this.wows;
       this.workOrder.materials = this.woMaterials;
 
       this.workOrder.responsibleId = this.nameFC.value.userId;
@@ -501,8 +434,6 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateWorkOrder() {
-    var dateStartToAdd = "";
-    var dateEndToAdd = "";
     if (this.workOrder.start != undefined) {
       if (this.workOrder.start.month < 10) {
         this.workOrder.start.month = "0" + this.workOrder.start.month;
@@ -510,33 +441,9 @@ export class CreateworkOrderComponent implements OnInit {
       if (this.workOrder.start.day < 10) {
         this.workOrder.start.day = "0" + this.workOrder.start.day;
       }
-      dateStartToAdd =
-        this.workOrder.start.year +
-        "-" +
-        this.workOrder.start.month +
-        "-" +
-        this.workOrder.start.day;
-    }
-    if (this.workOrder.end != undefined) {
-      if (this.workOrder.end.month < 10) {
-        this.workOrder.end.month = "0" + this.workOrder.end.month;
-      }
-      if (this.workOrder.end.day < 10) {
-        this.workOrder.end.day = "0" + this.workOrder.end.day;
-      }
-      dateEndToAdd =
-        this.workOrder.end.year +
-        "-" +
-        this.workOrder.end.month +
-        "-" +
-        this.workOrder.end.day;
     }
 
-    this.workOrder.start = dateStartToAdd;
-    this.workOrder.end = dateEndToAdd;
-
-    this.workOrder.machines = this.woMachines;
-    this.workOrder.assignedUsers = this.employees;
+    this.workOrder.workers = this.wows;
     this.workOrder.materials = this.woMaterials;
 
     this.workOrder.responsibleId = this.nameFC.value.userId;
@@ -633,7 +540,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.womService.addMachineState(this.wom, this.workId).subscribe((res) => {
       console.log(res);
     });
-
+    /*
     this.workOrder.machines.forEach((machine) => {
       if (machine.machine.id == this.idOfEditingMachine) {
         machine.machine.name = this.wom.machine.name;
@@ -646,7 +553,7 @@ export class CreateworkOrderComponent implements OnInit {
         machine.fuel = this.wom.fuel;
       }
     });
-
+    */
     this.editingMachineState = false;
   }
 
