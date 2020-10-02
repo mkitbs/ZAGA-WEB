@@ -215,8 +215,8 @@ public class WorkOrderService {
 				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
 				material.setQuantity(m.getQuantity());
 				material.setQuantityPerHectar(m.getQuantityPerHectar());
-				material.setSpent(0);
-				material.setSpentPerHectar(0);
+				material.setSpent(m.getSpent());
+				material.setSpentPerHectar(m.getSpentPerHectar());
 				material.setWorkOrder(workOrder);
 				spentMaterialRepo.save(material);
 			}

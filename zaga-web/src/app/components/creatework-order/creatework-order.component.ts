@@ -416,7 +416,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrder.materials = this.woMaterials;
 
       this.workOrder.responsibleId = this.nameFC.value.userId;
-      /*
+
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
           this.toastr.success("Uspešno kreiran radni nalog.");
@@ -426,7 +426,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.toastr.error("Radni nalog nije kreiran.");
         }
       );
-        */
+
       console.log(this.workOrder);
     }
   }
