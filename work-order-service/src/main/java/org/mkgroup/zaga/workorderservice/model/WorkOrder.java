@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -60,7 +61,7 @@ public class WorkOrder implements Serializable {
 	@JoinColumn(name="crop_id", nullable=true)
 	private Crop crop;
 	
-	@ManyToMany(mappedBy = "workOrder")
+	@ManyToMany(mappedBy = "workOrder", fetch = FetchType.EAGER)
 	private List<WorkOrderWorker> workers;
 	
 	/*@OneToMany(mappedBy = "workOrder")

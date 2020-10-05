@@ -227,4 +227,42 @@ public class WorkOrderService {
 		}
 	}
 	
+	public WorkOrder createCopy(WorkOrder workOrder, Date date) {
+		WorkOrder copy = new WorkOrder();
+		List<WorkOrderWorker> workers = workOrder.getWorkers();
+		List<SpentMaterial> materials = workOrder.getMaterials();
+		copy.setCreationDate(new Date());
+		copy.setResponsible(workOrder.getResponsible());
+		copy.setCrop(workOrder.getCrop());
+		copy.setOperation(workOrder.getOperation());
+		copy.setTreated(0);
+		copy.setClosed(false);
+		copy.setWorkers(new ArrayList<WorkOrderWorker>());
+		copy.setMaterials(new ArrayList<SpentMaterial>());
+		copy.setDate(date);
+		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
+		copy = workOrderRepo.save(copy);
+		System.out.println(copy.getId());
+		
+		for(WorkOrderWorker worker : workers) {
+			WorkOrderWorker wow = new WorkOrderWorker();
+			wow.setWorkOrder(copy);
+			wow.setMachine(worker.getMachine());
+			wow.setUser(worker.getUser());
+			wow.setOperation(worker.getOperation());
+			wow.setConnectingMachine(worker.getConnectingMachine());
+			
+			wowRepo.save(wow);
+		}
+		
+		for(SpentMaterial material:materials) {
+			SpentMaterial spentMaterial = new SpentMaterial();
+			spentMaterial.setMaterial(material.getMaterial());
+			spentMaterial.setWorkOrder(workOrder);
+			
+			spentMaterialRepo.save(spentMaterial);
+		}
+		return copy;
+	}
+	
 }
