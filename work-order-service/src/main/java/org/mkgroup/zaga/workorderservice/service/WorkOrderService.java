@@ -101,14 +101,14 @@ public class WorkOrderService {
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
 				WorkOrderWorker wow = new WorkOrderWorker();
 				
-				wow.setDayNightPeriod(wowDTO.getDayNightPeriod());
-				wow.setDayWorkPeriod(wowDTO.getDayPeriod());
+				wow.setNightPeriod(wowDTO.getNightPeriod());
+				wow.setDayPeriod(wowDTO.getDayPeriod());
 				wow.setFinalState(wowDTO.getFinalState());
 				wow.setFuel(wowDTO.getFuel());
 				wow.setInitialState(wowDTO.getInitialState());
-				wow.setSumState(wowDTO.getSumState());
+				wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
 				wow.setWorkOrder(workOrder);
-				wow.setWorkPeriod(wowDTO.getWorkPeriod());
+				wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
 				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
@@ -137,9 +137,9 @@ public class WorkOrderService {
 
 				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
 				material.setQuantity(m.getQuantity());
-				material.setQuantityPerHectar(m.getQuantityPerHectar());
+				material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
 				material.setSpent(m.getSpent());
-				material.setSpentPerHectar(m.getSpentPerHectar());
+				material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
 				material.setWorkOrder(workOrder);
 				spentMaterialRepo.save(material);
 			}

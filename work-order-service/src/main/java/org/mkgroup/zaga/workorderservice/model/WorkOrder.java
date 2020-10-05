@@ -40,6 +40,11 @@ public class WorkOrder implements Serializable {
 	
 	private Date creationDate;
 	
+	private boolean closed = false;
+	
+	@Column(nullable = true)
+	private double treated;
+	
 	@Enumerated(EnumType.STRING)
 	private WorkOrderStatus status;
 	

@@ -9,8 +9,8 @@ export class WorkOrderWorker {
   machine: Machine = new Machine();
   connectingMachine: Machine = new Machine();
   date;
-  dayWorkPeriod;
-  dayNightPeriod;
+  dayPeriod;
+  nightPeriod;
   workPeriod;
   initialState;
   finalState;

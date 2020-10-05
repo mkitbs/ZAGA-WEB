@@ -26,10 +26,12 @@ public class SpentMaterial {
 	
 	private double quantity;
 	
+	@Column(nullable = true)
 	private double spent;
 	
 	private double quantityPerHectar;
 	
+	@Column(nullable = true)
 	private double spentPerHectar;
 	
 	@ManyToOne

@@ -88,7 +88,8 @@ export class CreateworkOrderComponent implements OnInit {
   allEmployees: Employee[] = [];
   operations: Operation[] = [];
   cultures: Culture[] = [];
-  devices: Machine[] = [];
+  devicesPropulsion: Machine[] = [];
+  devicesCoupling: Machine[] = [];
   substances: Material[] = [];
   fields: Field[] = [];
   crops: Crop[] = [];
@@ -109,12 +110,8 @@ export class CreateworkOrderComponent implements OnInit {
   woMaterials: SpentMaterial[] = [];
   wows: WorkOrderWorker[] = [];
   cultureId;
-  selectedWorker;
-  selectedMachine;
-  selectedMaterial;
   selectedWorkerForMachine;
   workerss: WorkOrderWorker[] = [];
-  selectedOperation;
   selectedTable;
   selectedYear = 2020;
   selectedCrop;
@@ -123,9 +120,8 @@ export class CreateworkOrderComponent implements OnInit {
   clickAddWorkOrder = false;
   clickAddWorkerMachine = false;
   clickAddMachine = false;
-  //dodato zbog validacije, jer ngModel ne izmapira material.quantity i material.unit
-  quantityEntered;
-  selectedUnit;
+  addNewWow = false;
+  addNewSpentMaterial = false;
 
   unit;
   exists = false;
@@ -189,9 +185,14 @@ export class CreateworkOrderComponent implements OnInit {
     this.cultureService.getAll().subscribe((data) => {
       this.cultures = data;
     });
-    this.machineService.getAll().subscribe((data) => {
+    this.machineService.getAllPropulsion().subscribe((data) => {
       data = this.convertKeysToLowerCase(data);
-      this.devices = data;
+      this.devicesPropulsion = data;
+    });
+
+    this.machineService.getAllCoupling().subscribe((data) => {
+      data = this.convertKeysToLowerCase(data);
+      this.devicesCoupling = data;
     });
 
     this.materialService.getAll().subscribe((data) => {
@@ -213,7 +214,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getOperation() {
-    this.selectedOperation = this.workOrder.operationId;
+    this.wow.operation.id = this.workOrder.operationId;
   }
 
   getWorker(id) {
@@ -268,10 +269,6 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkerAndMachine(valid) {
     this.clickAddWorkerMachine = true;
     this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
-    this.wow.user.id = this.selectedWorker;
-    this.wow.operation.id = this.selectedOperation;
-    this.wow.machine.id = this.selectedMachine;
-    this.wow.connectingMachine.id = this.selectedCouplingMachine;
     if (valid) {
       this.wows.forEach((wow) => {
         if (
@@ -289,10 +286,6 @@ export class CreateworkOrderComponent implements OnInit {
         this.exists = false;
       }
       this.exists = false;
-      this.selectedWorker = null;
-      this.selectedOperation = null;
-      this.selectedMachine = null;
-      this.selectedCouplingMachine = null;
       this.clickAddWorkerMachine = false;
     }
 
@@ -300,12 +293,16 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editWorkerAndMachine(wow) {
-    this.wow.dayWorkPeriod = wow.dayWorkPeriod;
-    this.wow.dayNightPeriod = wow.dayNightPeriod;
+    this.wow.dayPeriod = wow.dayPeriod;
+    this.wow.nightPeriod = wow.nightPeriod;
     this.wow.initialState = wow.initialState;
     this.wow.finalState = wow.finalState;
     this.wow.fuel = wow.fuel;
     this.idOfEditingWorkerMachine = this.wow.wowObjectId;
+    if (!this.new) {
+      this.wow.id = wow.id;
+      this.wow = wow;
+    }
   }
 
   editExistingWorkerAndMachine(existing) {
@@ -315,12 +312,17 @@ export class CreateworkOrderComponent implements OnInit {
         wow.user.id = this.allEmployees.find(
           (x) => x.userId == wow.user.id
         ).userId;
-        wow.machine.id = this.devices.find((x) => x.id == wow.machine.id).id;
+        wow.machine.id = this.devicesPropulsion.find(
+          (x) => x.id == wow.machine.id
+        ).id;
+        wow.connectingMachine.id = this.devicesCoupling.find(
+          (x) => x.id == wow.connectingMachine.id
+        ).id;
         wow.operation.id = this.operations.find(
           (x) => x.id == wow.operation.id
         ).id;
-        wow.dayWorkPeriod = this.wow.dayWorkPeriod;
-        wow.dayNightPeriod = this.wow.dayNightPeriod;
+        wow.dayPeriod = this.wow.dayPeriod;
+        wow.nightPeriod = this.wow.nightPeriod;
         wow.initialState = this.wow.initialState;
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
@@ -331,24 +333,37 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addDetailWow() {
-    this.wow = new WorkOrderWorker();
+    if (this.new) {
+      this.addNewWow = false;
+    } else {
+      this.addNewWow = true;
+    }
+    this.wow.dayPeriod = null;
+    this.wow.nightPeriod = null;
+    this.wow.initialState = null;
+    this.wow.finalState = null;
   }
 
-  addNewWorker() {
-    this.wow.user.name = "AAAAAAAA";
-    this.wow.operation.name = "BBBBBBBBBB";
-    console.log(this.wow);
+  addNewWorkerAndMachine() {
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
+      this.wow = new WorkOrderWorker();
+      this.workOrderService.getOne(this.workId).subscribe((data) => {
+        this.workOrder = data;
+      });
     });
-    this.editingWorker = false;
+  }
+
+  updateWow(wow) {
+    this.wowService.updateWorkOrderWorker(wow.id, wow).subscribe((res) => {
+      console.log(res);
+      this.toastr.success("Uspešno sačuvane promene.");
+    });
   }
 
   addMaterial(valid) {
     this.clickAddMaterial = true;
     this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
-    this.spentMaterial.material.id = this.selectedMaterial;
-    this.spentMaterial.quantity = this.quantityEntered;
     this.spentMaterial.material.unit = this.unit;
     if (valid) {
       this.woMaterials.forEach((material) => {
@@ -366,8 +381,6 @@ export class CreateworkOrderComponent implements OnInit {
         this.exists = false;
       }
       this.exists = false;
-      this.selectedMaterial = null;
-      this.quantityEntered = null;
       this.unit = null;
       this.clickAddMaterial = false;
     }
@@ -376,10 +389,19 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editMaterial(material) {
-    this.spentMaterial.spent = material.spent;
-    this.spentMaterial.material.unit = material.material.unit;
-    this.unit = this.spentMaterial.material.unit;
-    this.idOfEditingMaterial = this.material.smObjectId;
+    if (material.id == null) {
+      this.spentMaterial.spent = material.spent;
+      this.spentMaterial.material.unit = material.material.unit;
+      this.unit = this.spentMaterial.material.unit;
+      this.idOfEditingMaterial = this.material.smObjectId;
+    } else {
+      this.spentMaterial.spent = material.spent;
+      this.spentMaterial.material.unit = material.material.Unit;
+      console.log(this.spentMaterial.material.unit);
+      this.spentMaterial.spentPerHectar = material.spentPerHectar;
+      this.spentMaterial.id = material.id;
+      this.spentMaterial = material;
+    }
   }
 
   editExistingMaterial(existing) {
@@ -396,7 +418,34 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addDetailMaterial() {
-    this.spentMaterial = new SpentMaterial();
+    if (this.new) {
+      this.addNewSpentMaterial = false;
+    } else {
+      this.addNewSpentMaterial = true;
+      this.spentMaterial.material.unit = this.unit;
+    }
+    this.spentMaterial.spent = null;
+  }
+
+  addNewMaterial() {
+    this.spentMaterialService
+      .addSpentMaterial(this.workId, this.spentMaterial)
+      .subscribe((res) => {
+        console.log(res);
+        this.spentMaterial = new SpentMaterial();
+        this.workOrderService.getOne(this.workId).subscribe((data) => {
+          this.workOrder = data;
+        });
+      });
+  }
+
+  updateMaterial(spentMaterial) {
+    this.spentMaterialService
+      .updateSpentMaterial(spentMaterial.id, spentMaterial)
+      .subscribe((res) => {
+        console.log(res);
+        this.toastr.success("Uspešno sačuvane promene.");
+      });
   }
 
   addWorkOrder(valid) {
@@ -471,25 +520,14 @@ export class CreateworkOrderComponent implements OnInit {
   radnika i operacije bice selektovani prethodni, pa se ovom metodom to izbegava*/
   addEmployee() {
     this.worker = new WorkOrderWorker();
-    this.selectedWorker = null;
-    if (this.workOrder.operationId != null) {
-      this.selectedOperation = this.workOrder.operationId;
-    } else {
-      this.selectedOperation = null;
-    }
   }
 
   addDevice() {
     this.machine = new WorkOrderMachine();
-    this.selectedMachine = null;
-    this.selectedWorkerForMachine = null;
   }
 
   addSubstance() {
     this.material = new SpentMaterial();
-    this.selectedMaterial = null;
-    this.selectedUnit = null;
-    this.quantityEntered = null;
   }
 
   getCulture() {

@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.service;
 
+import java.util.UUID;
+
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
@@ -21,6 +23,16 @@ public class SpentMaterialService {
 			return sm;
 		} catch(Exception e) {
 			log.error("Insert spent material faild.", e);
+			return null;
+		}
+	}
+	
+	public SpentMaterial getOne(UUID id) {
+		try {
+			SpentMaterial spentMaterial = spentMaterialRepo.getOne(id);
+			return spentMaterial;
+		} catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

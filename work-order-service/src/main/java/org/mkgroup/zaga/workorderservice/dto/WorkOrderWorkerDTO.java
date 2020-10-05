@@ -18,7 +18,7 @@ public class WorkOrderWorkerDTO {
 	private MachineDTO machine;
 	private MachineDTO connectingMachine;
 	private double dayPeriod;
-	private double dayNightPeriod;
+	private double nightPeriod;
 	private double workPeriod;
 	private double initialState;
 	private double finalState;
@@ -29,11 +29,11 @@ public class WorkOrderWorkerDTO {
 		this.id = wow.getId();
 		this.user = new EmployeeDTO(wow.getUser());
 		this.operation = new OperationDTO(wow.getOperation());
-		this.dayNightPeriod = wow.getDayNightPeriod();
-		this.dayPeriod = wow.getDayWorkPeriod();
+		this.nightPeriod = wow.getNightPeriod();
+		this.dayPeriod = wow.getDayPeriod();
 		this.workPeriod = wow.getWorkPeriod();
 		this.machine = new MachineDTO(wow.getMachine());
-		this.machine = new MachineDTO(wow.getConnectingMachine());
+		this.connectingMachine = new MachineDTO(wow.getConnectingMachine());
 		this.initialState = wow.getInitialState();
 		this.finalState = wow.getFinalState();
 		this.sumState = wow.getSumState();

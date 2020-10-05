@@ -15,4 +15,5 @@ export class WorkOrder {
   materials: SpentMaterial[] = [];
   workers: WorkOrderWorker[] = [];
   operationName;
+  treated;
 }

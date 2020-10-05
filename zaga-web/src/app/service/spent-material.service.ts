@@ -15,4 +15,13 @@ export class SpentMaterialService {
       material
     );
   }
+
+  updateSpentMaterial(id, material): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL +
+        "api/spentMaterial/updateSpentMaterial/" +
+        id,
+      material
+    );
+  }
 }
