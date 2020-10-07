@@ -3,13 +3,10 @@ package org.mkgroup.zaga.workorderservice.dto;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.User;
-import org.mkgroup.zaga.workorderservice.model.Worker;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.json.JsonWriteFeature;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

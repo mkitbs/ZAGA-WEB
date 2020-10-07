@@ -1,7 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
-import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 
 import lombok.Data;
@@ -36,24 +36,24 @@ public class WorkOrderToSAP {
 
 
 	@SuppressWarnings("deprecation")
-	public WorkOrderToSAP(WorkOrder workOrder) {
+	public WorkOrderToSAP(WorkOrderDTO workOrder) {
 		this.Activity = "NEW";
 		this.CompanyCode = "1200";
 		this.OrganisationUnit = "BIPR";
-		this.WorkOrderDate = workOrder.getDate().toGMTString();
-		this.WorkOrderOpenDate = workOrder.getCreationDate().toGMTString();
+		//this.WorkOrderDate = workOrder.getDate().toGMTString();
+		//this.WorkOrderOpenDate = workOrder.getCreationDate().toGMTString();
 		this.WorkOrderCloseDate = null;
-		this.ResponsibleUserNumber = workOrder.getResponsible().getPerNumber().toString();
-		this.ReleasedUserNumber = workOrder.getResponsible().getPerNumber().toString();
-		this.CropId = workOrder.getCrop().getErpId().toString();
+		//this.ResponsibleUserNumber = workOrder.getResponsible().getPerNumber().toString();
+		//this.ReleasedUserNumber = workOrder.getResponsible().getPerNumber().toString();
+		//this.CropId = workOrder.getCrop().getErpId().toString();
 		this.CropVarietyId = null; //proveriti sta treba
-		this.OperationId = workOrder.getOperation().getErpId().toString();
+		//this.OperationId = workOrder.getOperation().getErpId().toString();
 		this.NoMaterial = "";
 		this.OnlyMaterial = "";
 		this.Note = "";
-		this.DataEntryUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
+		//this.DataEntryUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
 		this.Deleted = "";
-		
+		/*
 		for(SpentMaterial sp : workOrder.getMaterials()) {
 			MaterialToSAP mat = new MaterialToSAP();
 			mat.setMaterialId(sp.getMaterial().getErpId().toString());
@@ -87,6 +87,7 @@ public class WorkOrderToSAP {
 			woeSAP.setDeleted("");
 			this.WorkOrderToEmployeeNavigation.getResults().add(woeSAP);
 		}
+		*/
 	}
 
 }

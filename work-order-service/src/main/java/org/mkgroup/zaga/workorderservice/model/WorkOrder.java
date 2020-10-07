@@ -27,10 +27,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class WorkOrder implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
+public class WorkOrder {
+	
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
@@ -61,10 +59,10 @@ public class WorkOrder implements Serializable {
 	@JoinColumn(name="crop_id", nullable=true)
 	private Crop crop;
 	
-	@OneToMany(mappedBy = "workOrder")
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY)
 	private List<WorkOrderWorker> workers = new ArrayList<WorkOrderWorker>();
 	
-	@OneToMany(mappedBy = "workOrder")
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY)
 	private List<SpentMaterial> materials = new ArrayList<SpentMaterial>();
 
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.collection.internal.PersistentBag;
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
@@ -36,9 +37,6 @@ public class WorkOrderService {
 	
 	@Autowired
 	WorkOrderRepository workOrderRepo;
-	
-	@Autowired
-	WorkerService workerService;
 	
 	@Autowired 
 	OperationService operationService;
@@ -77,7 +75,7 @@ public class WorkOrderService {
 	SAP4HanaProxy sap4hana;
 	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
-		try {
+
 			log.info("Work order creation started");
 			
 			WorkOrder workOrder = new WorkOrder();
@@ -126,6 +124,8 @@ public class WorkOrderService {
 					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
 				}
 				wow = wowRepo.save(wow);
+				workOrder.getWorkers().add(wow);
+				workOrder = workOrderRepo.save(workOrder);
 			}
 		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
@@ -138,8 +138,10 @@ public class WorkOrderService {
 				material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
 				material.setWorkOrder(workOrder);
 				material = spentMaterialRepo.save(material);
+				workOrder.getMaterials().add(material);
+				workOrder = workOrderRepo.save(workOrder);
 			}
-			WorkOrder wo = workOrderRepo.findById(workOrderId).get();
+			WorkOrderDTO wo = getOne(workOrderId);
 			System.out.println(wo.getWorkers().size());
 			
 			String csrfToken;
@@ -167,9 +169,6 @@ public class WorkOrderService {
 			System.out.println(response.getStatusCodeValue());
 			log.info("Insert work order into db");
 			
-		}catch(Exception e) {
-			log.error("Insert work order faild", e);
-		}
 	}
 	
 	public List<WorkOrderDTO> getAll(){
@@ -185,7 +184,6 @@ public class WorkOrderService {
 	public WorkOrderDTO getOne(UUID id) {
 		try {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
-			System.out.println(workOrder.getWorkers().size());
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			return workOrderDTO;
 		}catch(Exception e) {
