@@ -1,9 +1,8 @@
 export class Worker {
-  id: string;
-  userId: string;
-  worker;
-  date;
-  operation;
-  dayWorkPeriod;
-  nightWorkPeriod;
+    id:string;
+    userId:string;
+    operation;
+    operationId;
+    name;
+
 }

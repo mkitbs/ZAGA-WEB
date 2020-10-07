@@ -56,4 +56,14 @@ public class CropController {
 		}
 		return new ResponseEntity<List<CropDTO>>(retValues, HttpStatus.OK);
 	}
+	
+	@GetMapping("getAllByFieldAndYear/{fieldId}/{year}")
+	public ResponseEntity<?> getAllByFieldAndYear(@PathVariable UUID fieldId, @PathVariable int year){
+		List<CropDTO> crops = cropService.getAllByFieldAndYear(fieldId, year);
+		if(crops != null) {
+			return new ResponseEntity<List<CropDTO>>(crops, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

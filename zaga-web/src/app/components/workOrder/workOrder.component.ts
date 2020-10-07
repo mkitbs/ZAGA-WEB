@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { WorkOrderService } from 'src/app/service/work-order.service';
-import { WorkOrder } from 'src/app/models/WorkOrder';
-import { Operation } from 'src/app/models/Operation';
-import { Crop } from 'src/app/models/Crop';
-import { CropService } from 'src/app/service/crop.service';
-import { OperationService } from 'src/app/service/operation.service';
-import { UserService } from 'src/app/service/user.service';
-import { Employee } from 'src/app/models/Employee';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { WorkOrderService } from "src/app/service/work-order.service";
+import { WorkOrder } from "src/app/models/WorkOrder";
+import { Operation } from "src/app/models/Operation";
+import { Crop } from "src/app/models/Crop";
+import { CropService } from "src/app/service/crop.service";
+import { OperationService } from "src/app/service/operation.service";
+import { UserService } from "src/app/service/user.service";
+import { Employee } from "src/app/models/Employee";
 
 @Component({
-  selector: 'app-workOrder',
-  templateUrl: './workOrder.component.html',
-  styleUrls: ['./workOrder.component.css']
+  selector: "app-workOrder",
+  templateUrl: "./workOrder.component.html",
+  styleUrls: ["./workOrder.component.css"],
 })
 export class WorkOrderComponent implements OnInit {
-
   click = false;
   collapseBool = true;
   workOrders: WorkOrder[] = [];
@@ -25,26 +24,45 @@ export class WorkOrderComponent implements OnInit {
   employee: Employee;
   operationId;
   cropId;
+  empty = false;
 
-  constructor(private router: Router, private workOrderService:WorkOrderService) { }
+  constructor(
+    private router: Router,
+    private workOrderService: WorkOrderService
+  ) {}
 
   ngOnInit() {
-    this.workOrderService.getAll().subscribe(data => {
+    this.workOrderService.getAll().subscribe((data) => {
       this.workOrders = data;
-      this.workOrders.forEach(workOrder => {
-        if(workOrder.status == "NEW"){
-          workOrder.status = "Novi";
-        } else if(workOrder.status == "IN_PROGRESS"){
-          workOrder.status = "U radu";
-        } else if(workOrder.status == "CLOSED"){
-          workOrder.status = "Zatvoren";
-        }
-      })
-    })
-   
+      console.log(this.workOrders);
+      if (this.workOrders.length == 0) {
+        this.empty = true;
+      } else {
+        this.empty = false;
+        this.workOrders.forEach((workOrder) => {
+          var dateStart = "";
+          var dateEnd = "";
+          dateStart =
+            workOrder.date.day.split(" ")[0] +
+            "." +
+            workOrder.date.month +
+            "." +
+            workOrder.date.year +
+            ".";
+          workOrder.date = dateStart;
+          if (workOrder.status == "NEW") {
+            workOrder.status = "Novi";
+          } else if (workOrder.status == "IN_PROGRESS") {
+            workOrder.status = "U radu";
+          } else if (workOrder.status == "CLOSED") {
+            workOrder.status = "Zatvoren";
+          }
+        });
+      }
+    });
   }
 
-  changeClick(){
+  changeClick() {
     this.click = true;
   }
 
@@ -52,8 +70,7 @@ export class WorkOrderComponent implements OnInit {
     this.collapseBool = !this.collapseBool;
   }
 
-  changeRoute(id){
-    this.router.navigateByUrl('/create/workOrder/'+id)
+  changeRoute(id) {
+    this.router.navigateByUrl("/create/workOrder/" + id);
   }
-
 }

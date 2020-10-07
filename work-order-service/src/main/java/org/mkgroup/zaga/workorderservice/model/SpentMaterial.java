@@ -1,19 +1,20 @@
 package org.mkgroup.zaga.workorderservice.model;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class SpentMaterial {
 
@@ -25,17 +26,19 @@ public class SpentMaterial {
 	
 	private double quantity;
 	
+	@Column(nullable = true)
 	private double spent;
 	
 	private double quantityPerHectar;
 	
+	@Column(nullable = true)
 	private double spentPerHectar;
 	
-	@Column(columnDefinition = "BINARY(16)")
-	private UUID materialId;
+	@ManyToOne
+	private Material material;
 	
-	@ManyToMany
-	private List<ClosedWorkOrder> closedWorkOrder;
+	@ManyToOne
+	private WorkOrder workOrder;
 	
 	
 	

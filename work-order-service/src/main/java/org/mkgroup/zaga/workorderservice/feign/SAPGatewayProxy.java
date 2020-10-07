@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -77,4 +78,9 @@ public interface SAPGatewayProxy {
 	public ResponseEntity<Object> fetchMachineGroups(
 			@RequestParam(name = "$format") String format,
 			@RequestHeader("Authorization") String token);
+	
+	@GetMapping(value = "/WorkOrderSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> getCSRFToken(
+			@RequestHeader("Authorization") String token,
+			@RequestHeader("X-CSRF-Token") String csrfToken);
 }

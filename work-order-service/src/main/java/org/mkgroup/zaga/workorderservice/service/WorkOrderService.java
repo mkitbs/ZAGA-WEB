@@ -1,29 +1,32 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
-import org.mkgroup.zaga.workorderservice.dto.MachineStateDTO;
+import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
-import org.mkgroup.zaga.workorderservice.dto.WorkerDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
-import org.mkgroup.zaga.workorderservice.model.Machine;
-import org.mkgroup.zaga.workorderservice.model.MachineState;
-import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
-import org.mkgroup.zaga.workorderservice.model.Worker;
-import org.mkgroup.zaga.workorderservice.model.WorkerHours;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
+import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
-import org.modelmapper.ModelMapper;
+import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,15 +64,34 @@ public class WorkOrderService {
 	@Autowired
 	SpentMaterialService spentMaterialService;
 	
+	@Autowired
+	WorkOrderWorkerRepository wowRepo;
+	
+	@Autowired
+	SpentMaterialRepository spentMaterialRepo;
+	
+	@Autowired
+	WorkOrderMachineRepository womRepo;
+	
+	@Autowired
+	SAP4HanaProxy sap4hana;
+	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
 			log.info("Work order creation started");
 			
 			WorkOrder workOrder = new WorkOrder();
 			
-			workOrder.setStartDate(workOrderDTO.getStart());
-			workOrder.setEndDate(workOrderDTO.getEnd());
+			LocalDate startDate = new LocalDate(
+					Integer.parseInt(workOrderDTO.getDate().getYear()),
+					Integer.parseInt(workOrderDTO.getDate().getMonth()),
+					Integer.parseInt(workOrderDTO.getDate().getDay()));
+			Date startDateToAdd = startDate.toDate();
+			workOrder.setDate(startDateToAdd);
+			
+			
 			workOrder.setStatus(WorkOrderStatus.NEW);
+			workOrder.setCreationDate(new Date());
 			
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
@@ -78,69 +100,80 @@ public class WorkOrderService {
 			workOrder.setCrop(crop);
 			
 			User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
+			
 			workOrder.setResponsible(responsible);
 			
-			List<Worker> workers = new ArrayList<Worker>();
-			for(WorkerDTO w : workOrderDTO.getWorkers()) {
-				Worker worker = new Worker();
-				worker.setUserId(w.getUserId());
-				worker.getWorkOrders().add(workOrder);
-				worker = workerService.addWorker(worker);
-				workers.add(worker);
-				
-				WorkerHours wh = new WorkerHours();
-				wh.setOperationId(w.getOperationId());
-				wh.setWorkerId(worker.getId());
-				wh = workerHoursService.addWorkerHours(wh);
-			}
-			workOrder.setWorkers(workers);
+			workOrder = workOrderRepo.save(workOrder);
+			System.out.println(workOrder.getId());//zbog testiranja
+			UUID workOrderId = workOrder.getId();
 			
-			List<Machine> machines = new ArrayList<Machine>();
-			for(MachineStateDTO m : workOrderDTO.getMachines()) {
-				Machine machine = machineService.getOne(m.getMachineId());
-				machines.add(machine);
+			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
+				WorkOrderWorker wow = new WorkOrderWorker();
 				
-				MachineState ms = new MachineState();
-				ms.setMachineId(m.getMachineId());
-				for(Worker w : workers) {
-					if(w.getUserId().equals(m.getWorkerId())) {
-						ms.setWorkerId(w.getId());
-					} else {
-						Worker worker = new Worker();
-						worker.setUserId(m.getWorkerId());
-						worker.getWorkOrders().add(workOrder);
-						worker = workerService.addWorker(worker);
-						ms.setWorkerId(worker.getId());
-					}
+				wow.setNightPeriod(wowDTO.getNightPeriod());
+				wow.setDayPeriod(wowDTO.getDayPeriod());
+				wow.setFinalState(wowDTO.getFinalState());
+				wow.setFuel(wowDTO.getFuel());
+				wow.setInitialState(wowDTO.getInitialState());
+				wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
+				wow.setWorkOrder(workOrder);
+				wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
+				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
+				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
+				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
+				
+				if(wowDTO.getConnectingMachine().getId() != null) {
+					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
 				}
-				ms = machineStateService.addMachineState(ms);
+				wow = wowRepo.save(wow);
 			}
-			workOrder.setMachines(machines);
-			
-			List<Material> materials = new ArrayList<Material>();
+		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
-				Material material = materialService.getOne(m.getMaterialId());
-				materials.add(material);
-				
-				SpentMaterial spentMaterial = new SpentMaterial();
-				spentMaterial.setMaterialId(m.getMaterialId());
-				spentMaterial.setQuantity(m.getQuantity());
-				spentMaterial.setQuantityPerHectar(m.getQuantityPerHectar());
-				spentMaterial = spentMaterialService.addSpentMaterial(spentMaterial);
+				SpentMaterial material = new SpentMaterial();
+
+				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
+				material.setQuantity(m.getQuantity());
+				material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
+				material.setSpent(m.getSpent());
+				material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
+				material.setWorkOrder(workOrder);
+				material = spentMaterialRepo.save(material);
 			}
-			workOrder.setMaterials(materials);
+			WorkOrder wo = workOrderRepo.findById(workOrderId).get();
+			System.out.println(wo.getWorkers().size());
 			
+			String csrfToken;
 			
+			StringBuilder authEncodingString = new StringBuilder()
+					.append("MKATIC")
+					.append(":")
+					.append("katicm0908");
+			//Encoding Authorization String
+			String authHeader = Base64.getEncoder().encodeToString(
+		    		authEncodingString.toString().getBytes());
 			
+			ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+			
+			HttpHeaders headers = resp.getHeaders();
+			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+					                                                 .findFirst()
+					                                                 .orElse("nema");
+			
+			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
+			System.out.println(workOrderSAP.toString());
+			ResponseEntity<Object> response = sap4hana.sendWorkOrder("Basic " + authHeader, 
+																	csrfToken, 
+																	workOrderSAP);
+			System.out.println(response.getStatusCodeValue());
 			log.info("Insert work order into db");
-			workOrderRepo.save(workOrder);
+			
 		}catch(Exception e) {
 			log.error("Insert work order faild", e);
 		}
 	}
 	
 	public List<WorkOrderDTO> getAll(){
-		List<WorkOrder> workOrders = workOrderRepo.findAll();
+		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 		for(WorkOrder workOrder : workOrders) {
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
@@ -152,6 +185,7 @@ public class WorkOrderService {
 	public WorkOrderDTO getOne(UUID id) {
 		try {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
+			System.out.println(workOrder.getWorkers().size());
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			return workOrderDTO;
 		}catch(Exception e) {
@@ -166,14 +200,9 @@ public class WorkOrderService {
 			
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
 			
-			workOrder.setStartDate(workOrderDTO.getStart());
-			workOrder.setEndDate(workOrderDTO.getEnd());
-			if(workOrderDTO.getStatus().equalsIgnoreCase("Novi"))
-				workOrder.setStatus(WorkOrderStatus.NEW);
-			else if(workOrderDTO.getStatus().equalsIgnoreCase("U radu"))
-				workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
-			else if(workOrderDTO.getStatus().equalsIgnoreCase("Zatvoren"))
-				workOrder.setStatus(WorkOrderStatus.CLOSED);
+			//workOrder.setStartDate(workOrderDTO.getStart());
+			//workOrder.setEndDate(workOrderDTO.getEnd());
+			workOrder.setStatus(WorkOrderStatus.NEW);
 			
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
@@ -182,41 +211,80 @@ public class WorkOrderService {
 			workOrder.setCrop(crop);
 			
 			User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
+			
 			workOrder.setResponsible(responsible);
 			
-			ModelMapper modelMapper = new ModelMapper();
 			
-			List<Machine> machines = workOrderDTO.getMachines()
-					  .stream()
-					  .map(machine -> modelMapper.map(machine, Machine.class))
-					  .collect(Collectors.toList());
-			workOrder.setMachines(machines);
+			workOrder = workOrderRepo.save(workOrder);
+			System.out.println(workOrder.getId());//zbog testiranja
 			
-			List<Material> materials = workOrderDTO.getMaterials()
-					.stream()
-					.map(material -> modelMapper.map(material, Material.class))
-					.collect(Collectors.toList());
-			workOrder.setMaterials(materials);
-			
-			List<User> users = workOrderDTO.getWorkers()
-					.stream()
-					.map(user -> modelMapper.map(user, User.class))
-					.collect(Collectors.toList());
-			List<Worker> workers = new ArrayList<Worker>();
-			for(User user : users) {
-				Worker worker = new Worker();
-				worker.setUserId(user.getId());
-				worker.getWorkOrders().add(workOrder);
-				worker = workerService.addWorker(worker);
-				workers.add(worker);
+			/*for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
+				WorkOrderMachine wom = new WorkOrderMachine();
+				
+				wom.setDate(new Date());
+				wom.setFinalState(0);
+				wom.setInitialState(0);
+				wom.setMachine(machineService.getOne(m.getMachine().getId()));
+				wom.setUser(employeeService.getOne(m.getUser().getId()));
+				wom.setWorkPeriod(0);
+				wom.setWorkOrder(workOrder);
+				womRepo.save(wom);
+			}*/
+		
+			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
+				SpentMaterial material = new SpentMaterial();
+
+				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
+				material.setQuantity(m.getQuantity());
+				material.setQuantityPerHectar(m.getQuantityPerHectar());
+				material.setSpent(m.getSpent());
+				material.setSpentPerHectar(m.getSpentPerHectar());
+				material.setWorkOrder(workOrder);
+				spentMaterialRepo.save(material);
 			}
-			workOrder.setWorkers(workers);
 			
 			log.info("Update a work order in the db");
-			workOrderRepo.save(workOrder);
 		}catch(Exception e) {
 			log.error("Update work order faild", e);
 		}
+	}
+	
+	public WorkOrder createCopy(WorkOrder workOrder, Date date) {
+		WorkOrder copy = new WorkOrder();
+		List<WorkOrderWorker> workers = workOrder.getWorkers();
+		List<SpentMaterial> materials = workOrder.getMaterials();
+		copy.setCreationDate(new Date());
+		copy.setResponsible(workOrder.getResponsible());
+		copy.setCrop(workOrder.getCrop());
+		copy.setOperation(workOrder.getOperation());
+		copy.setTreated(0);
+		copy.setClosed(false);
+		copy.setWorkers(new ArrayList<WorkOrderWorker>());
+		copy.setMaterials(new ArrayList<SpentMaterial>());
+		copy.setDate(date);
+		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
+		copy = workOrderRepo.save(copy);
+		System.out.println(copy.getId());
+		
+		for(WorkOrderWorker worker : workers) {
+			WorkOrderWorker wow = new WorkOrderWorker();
+			wow.setWorkOrder(copy);
+			wow.setMachine(worker.getMachine());
+			wow.setUser(worker.getUser());
+			wow.setOperation(worker.getOperation());
+			wow.setConnectingMachine(worker.getConnectingMachine());
+			
+			wowRepo.save(wow);
+		}
+		
+		for(SpentMaterial material:materials) {
+			SpentMaterial spentMaterial = new SpentMaterial();
+			spentMaterial.setMaterial(material.getMaterial());
+			spentMaterial.setWorkOrder(workOrder);
+			
+			spentMaterialRepo.save(spentMaterial);
+		}
+		return copy;
 	}
 	
 }

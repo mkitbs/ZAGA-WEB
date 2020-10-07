@@ -3,6 +3,7 @@ package org.mkgroup.zaga.workorderservice.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
@@ -115,13 +116,23 @@ public class FieldService {
 	}
 	
 	public List<FieldDTO> getAll() {
-		List<Field> fields = fieldRepo.findAll();
+		List<Field> fields = fieldRepo.findByOrderByNameAsc();
 		List<FieldDTO> retValues = new ArrayList<FieldDTO>();
 		for(Field field : fields) {
 			FieldDTO f = new FieldDTO(field);
 			retValues.add(f);
 		}
 		return retValues;
+	}
+	
+	public Field getOne(UUID id) {
+		try {
+			Field field = fieldRepo.getOne(id);
+			return field;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

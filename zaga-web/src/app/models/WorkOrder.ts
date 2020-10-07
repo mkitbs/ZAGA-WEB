@@ -1,24 +1,19 @@
-import { Material } from "./Material";
-import { Machine } from "./Machine";
 import { Employee } from "./Employee";
+import { SpentMaterial } from "./SpentMaterial";
+import { WorkOrderMachine } from "./WorkOrderMachine";
+import { WorkOrderWorker } from "./WorkOrderWorker";
 
 export class WorkOrder {
   id: string;
-  start;
-  end;
+  area;
+  date;
   status;
   cropId: string;
+  tableId;
   operationId: string;
   responsibleId: string;
-  materials: Material[] = [];
-  machines: Machine[] = [];
-  workers: Employee[] = [];
+  materials: SpentMaterial[] = [];
+  workers: WorkOrderWorker[] = [];
   operationName;
-  year;
   treated;
-  area;
-  name;
-  table;
-  culture;
-  category;
 }

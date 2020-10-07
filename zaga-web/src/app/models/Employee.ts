@@ -1,11 +1,12 @@
-import { WorkOrder } from './WorkOrder';
+import { WorkOrder } from "./WorkOrder";
 
-export class Employee{
-    id:string;
-    name:string;
-    department:string;
-    position:string;
-    perNumber:number;
-    workOrders: WorkOrder [] = [];
-    userId;
+export class Employee {
+  id = "";
+  name: string;
+  department: string;
+  position: string;
+  perNumber: number;
+  operation;
+  operationId;
+  userId;
 }
