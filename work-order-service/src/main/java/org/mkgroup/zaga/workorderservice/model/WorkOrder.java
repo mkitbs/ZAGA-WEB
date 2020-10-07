@@ -61,20 +61,10 @@ public class WorkOrder implements Serializable {
 	@JoinColumn(name="crop_id", nullable=true)
 	private Crop crop;
 	
-	@ManyToMany(mappedBy = "workOrder", fetch = FetchType.EAGER)
-	private List<WorkOrderWorker> workers;
-	
-	/*@OneToMany(mappedBy = "workOrder")
-	private List<WorkOrderMachine> machines;*/
-	
-	/*@ManyToMany
-	@JoinTable(
-	  name = "assigned_users", 
-	  joinColumns = @JoinColumn(name = "work_order_id"), 
-	  inverseJoinColumns = @JoinColumn(name = "assigned_user_id"))
-	private List<User> assignedUsers = new ArrayList<User>();*/
+	@OneToMany(mappedBy = "workOrder")
+	private List<WorkOrderWorker> workers = new ArrayList<WorkOrderWorker>();
 	
 	@OneToMany(mappedBy = "workOrder")
-	private List<SpentMaterial> materials;
+	private List<SpentMaterial> materials = new ArrayList<SpentMaterial>();
 
 }

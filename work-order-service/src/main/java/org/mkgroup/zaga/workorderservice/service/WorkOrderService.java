@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +11,8 @@ import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -22,6 +25,8 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -68,6 +73,9 @@ public class WorkOrderService {
 	@Autowired
 	WorkOrderMachineRepository womRepo;
 	
+	@Autowired
+	SAP4HanaProxy sap4hana;
+	
 	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
 			log.info("Work order creation started");
@@ -97,6 +105,7 @@ public class WorkOrderService {
 			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
+			UUID workOrderId = workOrder.getId();
 			
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
 				WorkOrderWorker wow = new WorkOrderWorker();
@@ -116,21 +125,8 @@ public class WorkOrderService {
 				if(wowDTO.getConnectingMachine().getId() != null) {
 					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
 				}
-				wowRepo.save(wow);
+				wow = wowRepo.save(wow);
 			}
-			
-			/*for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
-				WorkOrderMachine wom = new WorkOrderMachine();
-				
-				wom.setDate(new Date());
-				wom.setFinalState(0);
-				wom.setInitialState(0);
-				wom.setMachine(machineService.getOne(m.getMachine().getId()));
-				wom.setUser(employeeService.getOne(m.getUser().getId()));
-				wom.setWorkPeriod(0);
-				wom.setWorkOrder(workOrder);
-				womRepo.save(wom);
-			}*/
 		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
 				SpentMaterial material = new SpentMaterial();
@@ -141,9 +137,34 @@ public class WorkOrderService {
 				material.setSpent(m.getSpent());
 				material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
 				material.setWorkOrder(workOrder);
-				spentMaterialRepo.save(material);
+				material = spentMaterialRepo.save(material);
 			}
+			WorkOrder wo = workOrderRepo.findById(workOrderId).get();
+			System.out.println(wo.getWorkers().size());
 			
+			String csrfToken;
+			
+			StringBuilder authEncodingString = new StringBuilder()
+					.append("MKATIC")
+					.append(":")
+					.append("katicm0908");
+			//Encoding Authorization String
+			String authHeader = Base64.getEncoder().encodeToString(
+		    		authEncodingString.toString().getBytes());
+			
+			ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+			
+			HttpHeaders headers = resp.getHeaders();
+			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+					                                                 .findFirst()
+					                                                 .orElse("nema");
+			
+			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
+			System.out.println(workOrderSAP.toString());
+			ResponseEntity<Object> response = sap4hana.sendWorkOrder("Basic " + authHeader, 
+																	csrfToken, 
+																	workOrderSAP);
+			System.out.println(response.getStatusCodeValue());
 			log.info("Insert work order into db");
 			
 		}catch(Exception e) {
@@ -164,6 +185,7 @@ public class WorkOrderService {
 	public WorkOrderDTO getOne(UUID id) {
 		try {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
+			System.out.println(workOrder.getWorkers().size());
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			return workOrderDTO;
 		}catch(Exception e) {

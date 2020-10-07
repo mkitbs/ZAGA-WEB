@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
@@ -39,6 +40,9 @@ public class WorkOrderController {
 	
 	@Autowired
 	SAPGatewayProxy gwProxy;
+	
+	@Autowired
+	SAP4HanaProxy sap4hana;
 	
 	@Autowired
 	SAPAuthConfiguration authConfiguration;
@@ -119,20 +123,22 @@ public class WorkOrderController {
 		String csrfToken;
 		
 		StringBuilder authEncodingString = new StringBuilder()
-				.append(authConfiguration.getUsername())
+				.append("MKATIC")
 				.append(":")
-				.append(authConfiguration.getPassword());
+				.append("katicm0908");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
 		
-		ResponseEntity<Object> resp = gwProxy.getCSRFToken("Basic " + authHeader, "Fetch");
+		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
 		
+		System.out.println(resp.getStatusCodeValue());
 		HttpHeaders headers = resp.getHeaders();
 		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
 				                                                 .findFirst()
 				                                                 .orElse("nema");
 		
+		System.out.println(csrfToken);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
