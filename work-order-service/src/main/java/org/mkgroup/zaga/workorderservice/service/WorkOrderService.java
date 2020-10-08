@@ -30,6 +30,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 @Service
 public class WorkOrderService {
 	
@@ -141,8 +143,8 @@ public class WorkOrderService {
 				workOrder.getMaterials().add(material);
 				workOrder = workOrderRepo.save(workOrder);
 			}
-			WorkOrderDTO wo = getOne(workOrderId);
-			System.out.println(wo.getWorkers().size());
+			WorkOrder wo = getOneW(workOrderId);
+			System.out.println(wo.getWorkers().size()+"AAA");
 			
 			String csrfToken;
 			
@@ -162,11 +164,14 @@ public class WorkOrderService {
 					                                                 .orElse("nema");
 			
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
-			System.out.println(workOrderSAP.toString());
-			ResponseEntity<Object> response = sap4hana.sendWorkOrder("Basic " + authHeader, 
+			Gson gson = new Gson();
+			String str = gson.toJson(workOrderSAP);
+			System.out.println(str);
+			ResponseEntity<Object> response = sap4hana.sendWorkOrder("application/json",
+																	"Basic " + authHeader, 
 																	csrfToken, 
 																	workOrderSAP);
-			System.out.println(response.getStatusCodeValue());
+			System.out.println(response.toString());
 			log.info("Insert work order into db");
 			
 	}
@@ -186,6 +191,16 @@ public class WorkOrderService {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			return workOrderDTO;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public WorkOrder getOneW(UUID id) {
+		try {
+			WorkOrder workOrder = workOrderRepo.getOne(id);
+			return workOrder;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;

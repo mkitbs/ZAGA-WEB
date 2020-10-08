@@ -22,6 +22,7 @@ public interface SAP4HanaProxy {
 	
 	@PostMapping(value = "/WorkOrderSet", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> sendWorkOrder(
+			@RequestHeader("Content-Type") String type,
 			@RequestHeader("Authorization") String token,
 			@RequestHeader("X-CSRF-Token") String csrfToken,
 			@RequestBody WorkOrderToSAP workOrder);

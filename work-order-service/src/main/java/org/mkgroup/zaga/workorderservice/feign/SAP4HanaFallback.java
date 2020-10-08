@@ -14,7 +14,7 @@ public class SAP4HanaFallback implements SAP4HanaProxy{
 	}
 
 	@Override
-	public ResponseEntity<Object> sendWorkOrder(String token, String csrfToken, WorkOrderToSAP workOrder) {
+	public ResponseEntity<Object> sendWorkOrder(String type, String token, String csrfToken, WorkOrderToSAP workOrder) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -49,12 +49,14 @@ public class WorkOrderController {
 	
 	@PostMapping("/createWorkOrder")
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request){
-		try {
+		//try {
 			workOrderService.addWorkOrder(request);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<String>("Work order not created.", HttpStatus.BAD_REQUEST);
-		}
+	//	}catch(Exception e) {
+		//	System.out.println(e.getMessage());
+			//System.out.println(e.getCause());
+			//return new ResponseEntity<String>("Work order not created.", HttpStatus.BAD_REQUEST);
+		//}
 	}
 	
 	@GetMapping("/createCopy/{id}")
