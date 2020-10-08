@@ -48,7 +48,7 @@ public class WorkOrderController {
 	SAPAuthConfiguration authConfiguration;
 	
 	@PostMapping("/createWorkOrder")
-	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request){
+	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
 		//try {
 			workOrderService.addWorkOrder(request);
 			return new ResponseEntity<>(HttpStatus.OK);

@@ -1,4 +1,4 @@
-package org.mkgroup.zaga.workorderservice.feign;
+	package org.mkgroup.zaga.workorderservice.feign;
 
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,8 +22,9 @@ public interface SAP4HanaProxy {
 	
 	@PostMapping(value = "/WorkOrderSet", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> sendWorkOrder(
-			@RequestHeader("Content-Type") String type,
+			@RequestHeader("Cookie") String cookie,
 			@RequestHeader("Authorization") String token,
 			@RequestHeader("X-CSRF-Token") String csrfToken,
-			@RequestBody WorkOrderToSAP workOrder);
+			@RequestHeader("X-Requested-With") String xmlRequestWith,
+			@RequestBody WorkOrderToSAP workOrder) throws Exception;
 }

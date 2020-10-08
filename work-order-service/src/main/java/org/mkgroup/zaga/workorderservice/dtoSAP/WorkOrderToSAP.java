@@ -1,9 +1,10 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
-import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,27 +13,49 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkOrderToSAP {
 
+	@JsonProperty("Activity")
 	private String Activity;
+	@JsonProperty("CompanyCode")
 	private String CompanyCode;
+	@JsonProperty("WorkOrderNumber")
 	private String WorkOrderNumber;
+	@JsonProperty("WorkItemNumber")
 	private String WorkItemNumber;
+	@JsonProperty("OrganisationUnit")
 	private String OrganisationUnit;
+	@JsonProperty("WorkOrderDate")
 	private String WorkOrderDate;
+	@JsonProperty("WorkOrderOpenDate")
 	private String WorkOrderOpenDate;
+	@JsonProperty("WorkOrderCloseDate")
 	private String WorkOrderCloseDate;
+	@JsonProperty("ResponsibleUserNumber")
 	private String ResponsibleUserNumber;
+	@JsonProperty("ReleasedUserNumber")
 	private String ReleasedUserNumber;
+	@JsonProperty("CropId")
 	private String CropId;
+	@JsonProperty("CropVarietyId")
 	private String CropVarietyId;
+	@JsonProperty("OperationId")
 	private String OperationId;
+	@JsonProperty("NoMaterial")
 	private String NoMaterial;
+	@JsonProperty("OnlyMaterial")
 	private String OnlyMaterial;
+	@JsonProperty("Note")
 	private String Note;
+	@JsonProperty("DataEntryUserNumber")
 	private String DataEntryUserNumber;
+	@JsonProperty("DataChangeUserNumber")
 	private String DataChangeUserNumber;
+	@JsonProperty("Deleted")
 	private String Deleted;
+	@JsonProperty("WorkOrderToMaterialNavigation")
 	private WorkOrderToMaterialNavigation WorkOrderToMaterialNavigation = new WorkOrderToMaterialNavigation();;
+	@JsonProperty("WorkOrderToEmployeeNavigation")
 	private WorkOrderToEmployeeNavigation WorkOrderToEmployeeNavigation = new WorkOrderToEmployeeNavigation();
+	@JsonProperty("WorkOrderToReturnNavigation")
 	private WorkOrderToReturnNavigation WorkOrderToReturnNavigation = new WorkOrderToReturnNavigation();
 
 

@@ -5,8 +5,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import org.hibernate.collection.internal.PersistentBag;
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
@@ -29,8 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.google.gson.Gson;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WorkOrderService {
@@ -48,6 +47,9 @@ public class WorkOrderService {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	@Autowired
 	WorkerHoursService workerHoursService;
@@ -76,7 +78,7 @@ public class WorkOrderService {
 	@Autowired
 	SAP4HanaProxy sap4hana;
 	
-	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
+	public void addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
 			log.info("Work order creation started");
 			
@@ -158,21 +160,29 @@ public class WorkOrderService {
 			
 			ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
 			
-			HttpHeaders headers = resp.getHeaders();
-			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
-					                                                 .findFirst()
-					                                                 .orElse("nema");
 			
+			
+			HttpHeaders headers = resp.getHeaders();
+			
+			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+			                                                   .findFirst()
+			                                                   .orElse("nema");
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
-			Gson gson = new Gson();
-			String str = gson.toJson(workOrderSAP);
-			System.out.println(str);
-			ResponseEntity<Object> response = sap4hana.sendWorkOrder("application/json",
-																	"Basic " + authHeader, 
-																	csrfToken, 
-																	workOrderSAP);
-			System.out.println(response.toString());
-			log.info("Insert work order into db");
+
+
+		    String cookies = headers.getValuesAsList("Set-Cookie")
+		    						.stream()
+		    						.collect(Collectors.joining(";"));
+		    
+		    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+																"Basic " + authHeader, 
+																csrfToken,
+																"XMLHttpRequest",
+																workOrderSAP);
+		    
+		    System.out.println("Result: " + response.toString());
+		    
+		    log.info("Insert work order into db");
 			
 	}
 	
