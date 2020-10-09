@@ -36,4 +36,12 @@ public class SpentMaterialService {
 			return null;
 		}
 	}
+	
+	public void deleteSpentMaterial(UUID id) {
+		try {
+			spentMaterialRepo.deleteById(id);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

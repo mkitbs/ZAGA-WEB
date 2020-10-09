@@ -26,4 +26,14 @@ public class CultureGroupController {
 							HttpStatus.OK);
 	}
 	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		List<CultureGroupDTO> cultureGroups = cultureGroupService.getAll();
+		if(cultureGroups != null) {
+			return new ResponseEntity<List<CultureGroupDTO>>(cultureGroups, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }

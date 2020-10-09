@@ -9,7 +9,10 @@ import { CreateworkOrderComponent } from "./components/creatework-order/createwo
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { NalogComponent } from "./components/nalog/nalog.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NgbDatepickerModule } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbDateParserFormatter,
+  NgbDatepickerModule,
+} from "@ng-bootstrap/ng-bootstrap";
 import { WorkOrderComponent } from "./components/workOrder/workOrder.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
@@ -31,6 +34,9 @@ import "chartjs-plugin-labels";
 import { SearchEmployeesPipe } from "./pipes/search-employees.pipe";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { SearchEmployeesPhonePipe } from "./pipes/search-employees-phone.pipe";
+import { NgbDateParser } from "./config/NgbDateParser";
+import { FieldComponent } from "./components/field/field.component";
+import { CropComponent } from "./components/crop/crop.component";
 
 declare var require: any;
 var config = require("config");
@@ -41,6 +47,9 @@ const routes: Routes = [
   { path: "workOrder", component: WorkOrderComponent },
   { path: "close/workOrder/:workId", component: CloseWorkOrderComponent },
   { path: "yieldOverview", component: YieldComponent },
+  { path: "workOrder/:urlParam", component: WorkOrderComponent },
+  { path: "masterData/field", component: FieldComponent },
+  { path: "masterData/crop", component: CropComponent },
   { path: "", component: HomeComponent },
 ];
 
@@ -57,6 +66,8 @@ const routes: Routes = [
     YieldComponent,
     SearchEmployeesPipe,
     SearchEmployeesPhonePipe,
+    FieldComponent,
+    CropComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,11 +86,15 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: "${API_KEY}",
+      apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
       libraries: ["drawing"],
     }),
   ],
-  providers: [ThemeService, DeviceDetectorService],
+  providers: [
+    ThemeService,
+    DeviceDetectorService,
+    { provide: NgbDateParserFormatter, useClass: NgbDateParser },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

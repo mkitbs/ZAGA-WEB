@@ -100,7 +100,7 @@ public class FieldService {
 	
 	private void createField(FieldDTO field) {
 		Field f = new Field(field);
-		FieldGroup fg = fieldGroupRepo.findByErpId(field.getFieldGroup()).get();
+		FieldGroup fg = fieldGroupRepo.findByErpId(field.getFieldGroupId()).get();
 		f.setFieldGroup(fg);
 		fieldRepo.save(f);
 	}
@@ -110,7 +110,7 @@ public class FieldService {
 		oldField.setCompanyCode(updatedField.getCompanyCode());
 		oldField.setName(updatedField.getName());
 		oldField.setOrgUnit(updatedField.getOrgUnit());
-		FieldGroup fg = fieldGroupRepo.findByErpId(updatedField.getFieldGroup()).get();
+		FieldGroup fg = fieldGroupRepo.findByErpId(updatedField.getFieldGroupId()).get();
 		oldField.setFieldGroup(fg);
 		fieldRepo.save(oldField);
 	}
@@ -133,6 +133,15 @@ public class FieldService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void editField(FieldDTO fieldDTO) {
+		Field field = this.getOne(fieldDTO.getDbId());
+		field.setArea(fieldDTO.getArea());
+		field.setYear(fieldDTO.getYear());
+		FieldGroup fieldGroup = fieldGroupRepo.getOne(fieldDTO.getFieldGroup());
+		field.setFieldGroup(fieldGroup);
+		fieldRepo.save(field);
 	}
 	
 }

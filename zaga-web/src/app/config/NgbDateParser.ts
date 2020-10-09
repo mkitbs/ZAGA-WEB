@@ -1,26 +1,68 @@
 import { Injectable } from "@angular/core";
-import { MatMonthView, yearsPerPage } from "@angular/material";
 import {
   NgbDateParserFormatter,
   NgbDateStruct,
 } from "@ng-bootstrap/ng-bootstrap";
 
-function toInteger(value: any): number {
-  return parseInt(`${value}`, 10);
-}
-
 @Injectable()
 export class NgbDateParser extends NgbDateParserFormatter {
   parse(value: string): NgbDateStruct {
-    console.log(value);
-    const dateParts = value.split("/");
-    return {
-      year: toInteger(dateParts[2]),
-      month: toInteger(dateParts[0]),
-      day: toInteger(dateParts[1]),
-    };
+    if (value) {
+      const dateParts = value.trim().split("/");
+      if (dateParts.length === 1 && this.isNumber(dateParts[0])) {
+        return { year: this.toInteger(dateParts[0]), month: null, day: null };
+      } else if (
+        dateParts.length === 2 &&
+        this.isNumber(dateParts[0]) &&
+        this.isNumber(dateParts[1])
+      ) {
+        return {
+          year: this.toInteger(dateParts[1]),
+          month: this.toInteger(dateParts[0]),
+          day: null,
+        };
+      } else if (
+        dateParts.length === 3 &&
+        this.isNumber(dateParts[0]) &&
+        this.isNumber(dateParts[1]) &&
+        this.isNumber(dateParts[2])
+      ) {
+        return {
+          year: this.toInteger(dateParts[2]),
+          month: this.toInteger(dateParts[0]),
+          day: this.toInteger(dateParts[1]),
+        };
+      }
+    }
+    return null;
   }
   format(date: NgbDateStruct): string {
-    return date.day + "." + date.month + "." + date.year + ".";
+    let stringDate: string = "";
+    if (date) {
+      stringDate += this.isNumber(date.day)
+        ? this.padNumber(date.day) + "."
+        : "";
+      stringDate += this.isNumber(date.month)
+        ? this.padNumber(date.month) + "."
+        : "";
+      stringDate += date.year + ".";
+    }
+    return stringDate;
+  }
+
+  padNumber(value: number) {
+    if (this.isNumber(value)) {
+      return `0${value}`.slice(-2);
+    } else {
+      return "";
+    }
+  }
+
+  isNumber(value: any): boolean {
+    return !isNaN(this.toInteger(value));
+  }
+
+  toInteger(value: any): number {
+    return parseInt(`${value}`, 10);
   }
 }

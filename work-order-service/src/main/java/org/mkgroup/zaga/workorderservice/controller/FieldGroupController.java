@@ -26,4 +26,10 @@ public class FieldGroupController {
 				HttpStatus.OK);
 				
 	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAllFieldGroups(){
+		List<FieldGroupDTO> fieldGroups = fieldGroupService.getAll();
+		return new ResponseEntity<List<FieldGroupDTO>>(fieldGroups, HttpStatus.OK);
+	}
 }

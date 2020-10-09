@@ -17,13 +17,13 @@ public class WorkOrderWorkerDTO {
 	private OperationDTO operation;
 	private MachineDTO machine;
 	private MachineDTO connectingMachine;
-	private double dayPeriod;
-	private double nightPeriod;
-	private double workPeriod;
-	private double initialState;
-	private double finalState;
-	private double sumState;
-	private double fuel;
+	private Double dayPeriod;
+	private Double nightPeriod;
+	private Double workPeriod;
+	private Double initialState;
+	private Double finalState;
+	private Double sumState;
+	private Double fuel;
 	
 	public WorkOrderWorkerDTO(WorkOrderWorker wow) {
 		this.id = wow.getId();

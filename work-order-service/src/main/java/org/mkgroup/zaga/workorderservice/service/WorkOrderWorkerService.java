@@ -22,4 +22,12 @@ public class WorkOrderWorkerService {
 			return null;
 		}
 	}
+	
+	public void deleteWow(UUID id) {
+		try {
+			wowRepo.deleteById(id);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -100,7 +100,6 @@ public class WorkOrderService {
 			Date startDateToAdd = startDate.toDate();
 			workOrder.setDate(startDateToAdd);
 			
-			
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			workOrder.setCreationDate(new Date());
 			
@@ -121,14 +120,42 @@ public class WorkOrderService {
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
 				WorkOrderWorker wow = new WorkOrderWorker();
 				
-				wow.setNightPeriod(wowDTO.getNightPeriod());
-				wow.setDayPeriod(wowDTO.getDayPeriod());
-				wow.setFinalState(wowDTO.getFinalState());
-				wow.setFuel(wowDTO.getFuel());
-				wow.setInitialState(wowDTO.getInitialState());
-				wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
+				if(wowDTO.getNightPeriod() != null) {
+					wow.setNightPeriod(wowDTO.getNightPeriod());
+				} else {
+					wow.setNightPeriod(-1.0);
+				}
+				if(wowDTO.getDayPeriod() != null) {
+					wow.setDayPeriod(wowDTO.getDayPeriod());
+				} else {
+					wow.setDayPeriod(-1.0);
+				}
+				if(wowDTO.getFinalState() != null) {
+					wow.setFinalState(wowDTO.getFinalState());
+				} else {
+					wow.setFinalState(-1.0);
+				}
+				if(wowDTO.getFuel() != null) {
+					wow.setFuel(wowDTO.getFuel());
+				} else {
+					wow.setFuel(-1.0);
+				}
+				if(wowDTO.getInitialState() != null) {
+					wow.setInitialState(wowDTO.getInitialState());
+				} else {
+					wow.setInitialState(-1.0);
+				}
+				if(wowDTO.getInitialState() != null && wowDTO.getFinalState() != null) {
+					wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
+				} else {
+					wow.setSumState(-1.0);
+				}
 				wow.setWorkOrder(workOrder);
-				wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
+				if(wowDTO.getDayPeriod() != null && wowDTO.getNightPeriod() != null) {
+					wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
+				} else {
+					wow.setWorkPeriod(-1.0);
+				}
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
 				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
@@ -147,8 +174,13 @@ public class WorkOrderService {
 				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
 				material.setQuantity(m.getQuantity());
 				material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
-				material.setSpent(m.getSpent());
-				material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
+				if(m.getSpent() != null) {
+					material.setSpent(m.getSpent());
+					material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());
+				} else {
+					material.setSpent(-1.0);
+					material.setSpentPerHectar(-1.0);
+				}
 				material.setWorkOrder(workOrder);
 				material = spentMaterialRepo.save(material);
 				workOrder.getMaterials().add(material);
@@ -277,9 +309,22 @@ public class WorkOrderService {
 			
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
 			
-			//workOrder.setStartDate(workOrderDTO.getStart());
-			//workOrder.setEndDate(workOrderDTO.getEnd());
-			workOrder.setStatus(WorkOrderStatus.NEW);
+			LocalDate startDate = new LocalDate(
+					Integer.parseInt(workOrderDTO.getDate().getYear()),
+					Integer.parseInt(workOrderDTO.getDate().getMonth()),
+					Integer.parseInt(workOrderDTO.getDate().getDay()));
+			Date startDateToAdd = startDate.toDate();
+			workOrder.setDate(startDateToAdd);
+			
+			if(workOrderDTO.getStatus().equals("Novi")) {
+				workOrder.setStatus(WorkOrderStatus.NEW);
+			} else if(workOrderDTO.getStatus().equals("U radu")) {
+				workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
+			} else {
+				workOrder.setStatus(WorkOrderStatus.CLOSED);
+			}
+			
+			workOrder.setCreationDate(workOrderDTO.getCreationDate());
 			
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
@@ -291,36 +336,57 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			
-			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
 			
-			/*for(WorkOrderMachineDTO m : workOrderDTO.getMachines()) {
-				WorkOrderMachine wom = new WorkOrderMachine();
+			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
+				WorkOrderWorker wow = new WorkOrderWorker();
 				
-				wom.setDate(new Date());
-				wom.setFinalState(0);
-				wom.setInitialState(0);
-				wom.setMachine(machineService.getOne(m.getMachine().getId()));
-				wom.setUser(employeeService.getOne(m.getUser().getId()));
-				wom.setWorkPeriod(0);
-				wom.setWorkOrder(workOrder);
-				womRepo.save(wom);
-			}*/
-		
-			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
-				SpentMaterial material = new SpentMaterial();
-
-				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
-				material.setQuantity(m.getQuantity());
-				material.setQuantityPerHectar(m.getQuantityPerHectar());
-				material.setSpent(m.getSpent());
-				material.setSpentPerHectar(m.getSpentPerHectar());
-				material.setWorkOrder(workOrder);
-				spentMaterialRepo.save(material);
+				if(wowDTO.getNightPeriod() != null) {
+					wow.setNightPeriod(wowDTO.getNightPeriod());
+				} else {
+					wow.setNightPeriod(-1.0);
+				}
+				if(wowDTO.getDayPeriod() != null) {
+					wow.setDayPeriod(wowDTO.getDayPeriod());
+				} else {
+					wow.setDayPeriod(-1.0);
+				}
+				if(wowDTO.getFinalState() != null) {
+					wow.setFinalState(wowDTO.getFinalState());
+				} else {
+					wow.setFinalState(-1.0);
+				}
+				if(wowDTO.getFuel() != null) {
+					wow.setFuel(wowDTO.getFuel());
+				} else {
+					wow.setFuel(-1.0);
+				}
+				if(wowDTO.getInitialState() != null) {
+					wow.setInitialState(wowDTO.getInitialState());
+				} else {
+					wow.setInitialState(-1.0);
+				}
+				if(wowDTO.getInitialState() != null && wowDTO.getFinalState() != null) {
+					wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
+				} else {
+					wow.setSumState(-1.0);
+				}
+				wow.setWorkOrder(workOrder);
+				if(wowDTO.getDayPeriod() != null && wowDTO.getNightPeriod() != null) {
+					wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
+				} else {
+					wow.setWorkPeriod(-1.0);
+				}
+				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
+				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
+				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
+				
+				if(wowDTO.getConnectingMachine().getId() != null) {
+					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
+				}
+				wowRepo.save(wow);	
 			}
-			
-			log.info("Update a work order in the db");
 		}catch(Exception e) {
 			log.error("Update work order faild", e);
 		}
@@ -357,13 +423,37 @@ public class WorkOrderService {
 		for(SpentMaterial material:materials) {
 			SpentMaterial spentMaterial = new SpentMaterial();
 			spentMaterial.setMaterial(material.getMaterial());
-			spentMaterial.setWorkOrder(workOrder);
+			spentMaterial.setWorkOrder(copy);
 			
 			spentMaterialRepo.save(spentMaterial);
 		}
 		return copy;
 	}
 	
+
+	public void closeWorkOrder(WorkOrderDTO workOrderDTO) {
+		try {
+			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
+			//this.updateWorkOrder(workOrderDTO);
+			workOrder.setTreated(workOrderDTO.getTreated());
+			workOrder.setStatus(WorkOrderStatus.CLOSED);
+			workOrder.setClosed(true);
+			workOrderRepo.save(workOrder);
+		} catch(Exception e) {
+			log.error("Update work order faild", e);
+		}
+	}
+	
+	public List<WorkOrderDTO> getAllByStatus(WorkOrderStatus status){
+		List<WorkOrder> workOrders = workOrderRepo.findAllByStatus(status);
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		for(WorkOrder workOrder : workOrders) {
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			workOrdersDTO.add(workOrderDTO);
+		}
+		return workOrdersDTO;
+	}
+
 	public String formatJSON(String json) {
 		json = json.replace("=", ":");
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
@@ -375,6 +465,7 @@ public class WorkOrderService {
 		//System.out.println(json);
 		
 		return json;
+
 	}
 	
 }

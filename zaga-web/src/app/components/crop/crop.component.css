@@ -1,0 +1,22 @@
+h3 {
+  color: #5c7495;
+  margin-left: 80px;
+}
+
+.containerFilter {
+  margin-left: 80px;
+  width: 80%;
+}
+
+.buttonEdit {
+  top: 2px;
+  right: 2px;
+  position: absolute;
+}
+
+.btn-edit {
+  float: right;
+  background-color: #f68901;
+  border: none;
+  box-shadow: none;
+}

@@ -24,4 +24,12 @@ export class SpentMaterialService {
       material
     );
   }
+
+  deleteSpentMaterial(id): Observable<any> {
+    return this.http.delete(
+      environment.gatewayWorkOrderURL +
+        "api/spentMaterial/deleteSpentMaterial/" +
+        id
+    );
+  }
 }

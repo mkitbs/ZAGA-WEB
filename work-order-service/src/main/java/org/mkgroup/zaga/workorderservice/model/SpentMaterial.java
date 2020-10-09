@@ -24,15 +24,13 @@ public class SpentMaterial {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
-	private double quantity;
+	private Double quantity = -1.0;
 	
-	@Column(nullable = true)
-	private double spent;
+	private Double spent = -1.0;
 	
-	private double quantityPerHectar;
+	private Double quantityPerHectar = -1.0;
 	
-	@Column(nullable = true)
-	private double spentPerHectar;
+	private Double spentPerHectar = -1.0;
 	
 	@ManyToOne
 	private Material material;
