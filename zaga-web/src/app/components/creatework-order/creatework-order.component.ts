@@ -548,11 +548,18 @@ export class CreateworkOrderComponent implements OnInit {
 
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
-          this.toastr.success("Uspešno kreiran radni nalog.");
+          this.toastr.success(
+            "Uspešno kreiran radni nalog. SAP id je " + data.erpId
+          );
           this.router.navigate(["/workOrder"]);
         },
         (error) => {
-          this.toastr.error("Radni nalog nije kreiran.");
+          if (error.status === 500) {
+            this.toastr.error("Radni nalog nije kreiran.");
+          } else if (error.status === 400) {
+            let errorMessage = error.error.message;
+            this.toastr.error(errorMessage);
+          }
         }
       );
     }
