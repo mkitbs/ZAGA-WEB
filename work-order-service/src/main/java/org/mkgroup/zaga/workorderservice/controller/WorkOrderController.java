@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
@@ -49,14 +50,19 @@ public class WorkOrderController {
 	
 	@PostMapping("/createWorkOrder")
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
-		//try {
-			workOrderService.addWorkOrder(request);
-			return new ResponseEntity<>(HttpStatus.OK);
-	//	}catch(Exception e) {
-		//	System.out.println(e.getMessage());
-			//System.out.println(e.getCause());
-			//return new ResponseEntity<String>("Work order not created.", HttpStatus.BAD_REQUEST);
-		//}
+		try {
+			SAPResponse sapResponse = workOrderService.addWorkOrder(request);
+			
+			if(sapResponse.isSuccess()) {
+				return new ResponseEntity<SAPResponse>(sapResponse ,HttpStatus.OK);
+			}else {
+				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
+			}
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			return new ResponseEntity<String>("Work order not created.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@GetMapping("/createCopy/{id}")

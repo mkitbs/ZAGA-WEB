@@ -14,6 +14,7 @@ import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
@@ -85,8 +86,9 @@ public class WorkOrderService {
 	@Autowired
 	SAP4HanaProxy sap4hana;
 	
-	public void addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
+			SAPResponse sapResponse = new SAPResponse();
 			log.info("Work order creation started");
 			
 			WorkOrder workOrder = new WorkOrder();
@@ -204,12 +206,16 @@ public class WorkOrderService {
 		    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
 				Matcher matcherId = patternErpId.matcher(formatted);
 				Long erpId = 1L;
-				if (matcherId.find())
-				{
+				if (matcherId.find()){
 				    erpId = Long.parseLong(matcherId.group(1));
 				}
 		    	wo.setErpId(erpId);
 		    	workOrderRepo.save(wo);
+		    	
+		    	sapResponse.setSuccess(true);
+		    	sapResponse.setMessage("");
+		    	sapResponse.setErpId(erpId);
+		    	
 		    	log.info("Insert work order into db");
 		    }else if(status.equals("E")) {
 		    	System.out.println("ERROR");
@@ -225,9 +231,13 @@ public class WorkOrderService {
 		    
 		    	workOrderRepo.delete(wo);
 		    	
+		    	sapResponse.setSuccess(false);
+		    	sapResponse.setMessage(error);
+		    	
 		    	log.info("Insert work order into db failed");
 		
 		    }
+		    return sapResponse;
 		}
 	
 	public List<WorkOrderDTO> getAll(){
