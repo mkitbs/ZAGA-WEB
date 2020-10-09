@@ -1,69 +1,127 @@
 .forma-filteri {
-    width: 70%;
-    font-size: 12px;
+  width: 70%;
+  font-size: 12px;
 }
 
 .tabela-nalozi {
-    background: white;
-    width: 100%;
-    font-size: 12px;
+  background: white;
+  width: 100%;
+  font-size: 12px;
 }
 
 .break-class {
-    width: 100% !important;
-    border-top: 2px solid #33490b !important;
-    font-size: 12px;
+  width: 100% !important;
+  border-top: 2px solid #33490b !important;
+  font-size: 12px;
 }
 
 h3 {
-    color: #5C7495;
+  color: #5c7495;
 }
 
-table, td, tr, th {
-    text-align: center;
-    font-size: medium;
-    vertical-align: middle;
-    font-size: 12px;
+table,
+td,
+tr,
+th {
+  text-align: center;
+  font-size: medium;
+  vertical-align: middle;
+  font-size: 12px;
 }
 
-.info{
-    background-color: #33490b;
-    color: #f68901;
+.info {
+  background-color: #33490b;
+  color: #f68901;
 }
 
-.edit{
-    background-color: #ffc803;
-    color: white;
+.edit {
+  background-color: #ffc803;
+  color: white;
 }
 
 .collapsing-button {
-    width: fit-content;
-    text-align: center;
-    background-color: #73964a;
-    border: none;
-    box-shadow: none;
+  width: fit-content;
+  text-align: center;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
 }
 
-.btn:focus, .btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-    background-color: #33490b !important;
-    -webkit-box-shadow: none;
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #33490b !important;
+  -webkit-box-shadow: none;
 }
 
-.statusNovi{
-    color: #5C7495
+.statusNovi {
+  color: #5c7495;
 }
 
-.statusURadu{
-    color: #f68901;
+.statusURadu {
+  color: #f68901;
 }
 
-.statusZatvoren{
-    color: #73964a;
+.statusZatvoren {
+  color: #73964a;
 }
 
 .card-title {
-    font-weight:bold;
-    text-align: center;
+  font-weight: bold;
+  text-align: center;
+}
+
+.button-new {
+  width: fit-content;
+  text-align: center;
+  background-color: #5c7495;
+  border: none;
+  box-shadow: none;
+}
+
+.button-in-progress {
+  width: fit-content;
+  text-align: center;
+  background-color: #f68901;
+  border: none;
+  box-shadow: none;
+}
+
+.button-closed {
+  width: fit-content;
+  text-align: center;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-add {
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-date {
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
+  color: white;
+}
+
+[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[type="radio"] + .btn-date {
+  cursor: pointer;
+}
+
+[type="radio"]:checked + .btn-date {
+  background-color: #5c7495;
 }

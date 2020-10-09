@@ -45,24 +45,17 @@ public class WorkOrderWorker {
 	@JoinColumn(name="connecting_machine_id", nullable = true)
 	private Machine connectingMachine;
 	
-	@Column(nullable = true)
-	private double dayPeriod;
+	private Double dayPeriod = -1.0;
 	
-	@Column(nullable = true)
-	private double nightPeriod;
+	private Double nightPeriod = -1.0;
 	
-	@Column(nullable = true)
-	private double workPeriod;
+	private Double workPeriod = -1.0;
 	
-	@Column(nullable = true)
-	private double initialState;
+	private Double initialState = -1.0;
 	
-	@Column(nullable = true)
-	private double finalState;
+	private Double finalState = -1.0;
 	
-	@Column(nullable = true)
-	private double sumState;
+	private Double sumState = -1.0;
 	
-	@Column(nullable = true)
-	private double fuel;
+	private Double fuel = -1.0;
 }

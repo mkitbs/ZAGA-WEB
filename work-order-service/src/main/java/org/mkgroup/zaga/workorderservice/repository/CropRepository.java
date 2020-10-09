@@ -19,4 +19,13 @@ public interface CropRepository extends JpaRepository<Crop, UUID>{
 	
 	@Query(value = "SELECT * FROM crop c WHERE c.field_id=:fieldId AND c.year=:year", nativeQuery = true)
 	List<Crop> findByFieldAndYear(@Param("fieldId") UUID fieldId, @Param("year") int year);
+	
+	@Query(value = "SELECT * FROM crop c WHERE c.field_id=:fieldId AND c.culture_id=:cultureId", nativeQuery = true)
+	List<Crop> findByFieldAndCulture(@Param("fieldId") UUID fieldId, @Param("cultureId") UUID cultureId);
+	
+	@Query(value = "SELECT * FROM crop c WHERE c.field_id=:fieldId", nativeQuery = true)
+	List<Crop> findByField(UUID fieldId);
+	
+	@Query(value = "SELECT * FROM crop c WHERE c.culture_id=:cultureId", nativeQuery = true)
+	List<Crop> findByCulture(UUID cultureId);
 }

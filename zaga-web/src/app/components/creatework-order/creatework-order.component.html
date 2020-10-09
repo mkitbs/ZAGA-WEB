@@ -22,7 +22,7 @@
             *ngIf="!new"
             (click)="closeWorkOrder()"
           >
-            <i class="fa fa-window-close mr-2"></i>Zatvori
+            <i class="fa fa-check"></i> Zatvori radni nalog
           </button>
           <button
             class="btn btn-primary btn-add mr-2"
@@ -30,13 +30,13 @@
             *ngIf="!new"
             (click)="updateWorkOrder()"
           >
-            <i class="fa fa-save mr-2"></i>Sačuvaj
+            <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
           </button>
 
           <button
             class="btn btn-primary btn-add mr-2"
             *ngIf="new"
-            (click)="addWorkOrder(infoWorkOrderForm.valid)"
+            (click)="addWorkOrder(infoWorkOrderForm)"
           >
             <i class="fa fa-plus mr-2"></i>Kreiraj
           </button>
@@ -86,7 +86,7 @@
               #table="ngModel"
               required
             >
-              <option value="{{ table.id }}" *ngFor="let table of fields">
+              <option value="{{ table.dbId }}" *ngFor="let table of fields">
                 {{ table.Name }}
               </option>
             </select>
@@ -103,12 +103,10 @@
             <i class="fa fa-calendar mr-2"></i>Datum:
           </td>
           <td class="right-col-header">
-            <div>
+            <div class="input-group mb-3">
               <input
-                type="date"
                 [(ngModel)]="workOrder.date"
                 name="poc"
-                id="od"
                 ngbDatepicker
                 #od="ngbDatepicker"
                 (click)="od.toggle()"
@@ -116,12 +114,20 @@
                 #dateFrom="ngModel"
                 required
               />
-              <div
-                *ngIf="dateFrom.invalid && clickAddWorkOrder"
-                style="color: red; font-weight: normal"
-              >
-                Izaberite datum.
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary calendar"
+                  (click)="od.toggle()"
+                  type="button"
+                ></button>
               </div>
+            </div>
+
+            <div
+              *ngIf="dateFrom == null && clickAddWorkOrder"
+              style="color: red; font-weight: normal"
+            >
+              Izaberite datum.
             </div>
           </td>
           <td class="left-col-header">
@@ -155,7 +161,7 @@
                 </mat-autocomplete>
               </mat-form-field>
               <div
-                *ngIf="nameFC.invalid && clickAddWorkOrder"
+                *ngIf="nameFC.valid == false && clickAddWorkOrder"
                 style="color: red; font-weight: normal"
               >
                 Izaberite odgovornu osobu.
@@ -239,6 +245,7 @@
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
             </div>
+
             <div
               *ngIf="area.invalid && clickAddWorkOrder"
               style="color: red; font-weight: normal"
@@ -250,20 +257,24 @@
             <span> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
           </td>
           <td class="right-col-header">
-            <span>
-              <div class="input-group mb-3">
-                <input
-                  type="text"
-                  name="treated"
-                  [(ngModel)]="workOrder.treated"
-                  id=""
-                  class="form-control"
-                />
-                <div class="input-group-append">
-                  <span class="input-group-text" id="basic-addon2">ha</span>
-                </div>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                name="treated"
+                [(ngModel)]="workOrder.treated"
+                id=""
+                class="form-control"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
-            </span>
+            </div>
+            <div
+              *ngIf="validWoInfo == false && clickCloseWorkOrder"
+              style="color: red; font-weight: normal"
+            >
+              Unesite površinu.
+            </div>
           </td>
         </tr>
       </table>
@@ -285,8 +296,21 @@
       Radnici/Mašine<i
         *ngIf="!machines"
         class="fa fa-arrow-down mr-2 mt-1 arrows"
+        (click)="expandMachines()"
+        data-toggle="collapse"
+        data-target="#collapseExampleMachines"
+        aria-expanded="false"
+        aria-controls="collapseExampleMachines"
       ></i
-      ><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+      ><i
+        *ngIf="machines"
+        class="fa fa-arrow-up mr-2 mt-1 arrows"
+        (click)="expandMachines()"
+        data-toggle="collapse"
+        data-target="#collapseExampleMachines"
+        aria-expanded="false"
+        aria-controls="collapseExampleMachines"
+      ></i>
     </button>
     <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
@@ -299,13 +323,19 @@
               <th>Priključna mašina</th>
               <th style="text-align: right !important">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
+              <th
+                style="text-align: right !important"
+                *ngIf="wows.length > 0 || workOrder.workers.length > 0"
+              >
+                Obriši
+              </th>
             </thead>
             <tbody>
               <tr>
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="wow.user.id"
+                      [(ngModel)]="selectedWorker"
                       name="selectedMachineWorker"
                       id=""
                       class="form-control"
@@ -332,7 +362,7 @@
                     <select
                       name="selectedOperation"
                       id=""
-                      [(ngModel)]="wow.operation.id"
+                      [(ngModel)]="selectedOperation"
                       class="form-control"
                       #operation="ngModel"
                       required
@@ -352,7 +382,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="wow.machine.id"
+                      [(ngModel)]="selectedMachine"
                       name="selectedMachine"
                       id=""
                       class="form-control"
@@ -377,7 +407,7 @@
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="wow.connectingMachine.id"
+                      [(ngModel)]="selectedCouplingMachine"
                       name="selectedCouplingMachine"
                       id=""
                       class="form-control"
@@ -434,6 +464,9 @@
               </tr>
               <!--editable table worker/machine new wo-->
               <ng-container *ngIf="new; else elseBlockMachineState">
+                <span *ngIf="wows.length == 0"
+                  >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
+                ><i class="fa fa-plus" *ngIf="wows.length == 0"></i>
                 <tr *ngFor="let wow of wows">
                   <td>
                     <select
@@ -517,10 +550,26 @@
                       <i class="fa fa-check"></i>
                     </button>
                   </td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-delete mr-2"
+                        (click)="deleteWorkOrderWorker(wow)"
+                      >
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </ng-container>
               <!--editable table worker/machine existing wo-->
               <ng-template #elseBlockMachineState>
+                <span *ngIf="workOrder.workers.length == 0"
+                  >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
+                ><i
+                  class="fa fa-plus"
+                  *ngIf="workOrder.workers.length == 0"
+                ></i>
                 <tr *ngFor="let wow of workOrder.workers">
                   <td>
                     <select
@@ -590,6 +639,7 @@
                         data-toggle="modal"
                         data-target="#workerMachineModal"
                         (click)="editWorkerAndMachine(wow)"
+                        id="{{ wow.id }}"
                       >
                         <i class="fa fa-ellipsis-v"></i>
                       </button>
@@ -603,6 +653,17 @@
                     >
                       <i class="fa fa-check"></i>
                     </button>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-delete mr-2"
+                        (click)="deleteExistingWorkOrderWorker(wow.id)"
+                        [disabled]="workOrder.status == 'Zatvoren'"
+                      >
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               </ng-template>
@@ -626,8 +687,21 @@
       <i class="fa fa-leaf mr-2"></i>Materijali<i
         *ngIf="!materials"
         class="fa fa-arrow-down mr-2 mt-1 arrows"
+        (click)="expandMaterials()"
+        data-toggle="collapse"
+        data-target="#collapseExampleMaterials"
+        aria-expanded="false"
+        aria-controls="collapseExampleMachines"
       ></i
-      ><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+      ><i
+        *ngIf="materials"
+        class="fa fa-arrow-up mr-2 mt-1 arrows"
+        (click)="expandMaterials()"
+        data-toggle="collapse"
+        data-target="#collapseExampleMaterials"
+        aria-expanded="false"
+        aria-controls="collapseExampleMachines"
+      ></i>
     </button>
     <div class="collapse" id="collapseExampleMaterials">
       <div class="card card-body collapse-card">
@@ -639,17 +713,23 @@
               <th style="width: 180px">Planirana količina / ha*</th>
               <th style="text-align: right !important">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
+              <th
+                style="text-align: right !important"
+                *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0"
+              >
+                Obriši
+              </th>
             </thead>
             <tbody>
               <tr>
                 <td>
                   <div class="form-group">
                     <select
-                      [(ngModel)]="spentMaterial.material.id"
+                      [(ngModel)]="selectedMaterial"
                       name="selectedMaterial"
                       id=""
                       class="form-control"
-                      (change)="getUnitOfMaterial(spentMaterial.material.id)"
+                      (change)="getUnitOfMaterial(selectedMaterial)"
                       #name="ngModel"
                       required
                     >
@@ -672,7 +752,7 @@
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input
-                        [(ngModel)]="spentMaterial.quantity"
+                        [(ngModel)]="quantityEntered"
                         type="number"
                         name="quantity"
                         id=""
@@ -699,7 +779,7 @@
                     <div class="input-group mb-3">
                       <input
                         *ngIf="new; else elseBlockQuantity"
-                        [(ngModel)]="spentMaterial.quantity / crop.Area"
+                        [(ngModel)]="quantityEntered / crop.Area"
                         type="number"
                         name="quantityPerHectar"
                         id=""
@@ -713,7 +793,7 @@
                       </div>
                       <ng-template #elseBlockQuantity>
                         <input
-                          [(ngModel)]="spentMaterial.quantity / workOrder.area"
+                          [(ngModel)]="quantityEntered / workOrder.area"
                           type="number"
                           name="quantityPerHectar"
                           id=""
@@ -759,6 +839,9 @@
               </tr>
               <!--editable table materials new wo-->
               <ng-container *ngIf="new; else elseBlockSpentMaterial">
+                <span *ngIf="woMaterials.length == 0"
+                  >Nema dodatih materijala, dodajte klikom na dugme </span
+                ><i class="fa fa-plus" *ngIf="woMaterials.length == 0"></i>
                 <tr *ngFor="let material of woMaterials">
                   <td>
                     <select
@@ -837,10 +920,26 @@
                       <i class="fa fa-check"></i>
                     </button>
                   </td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-delete mr-2"
+                        (click)="deleteSpentMaterial(material)"
+                      >
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </ng-container>
               <!--editable table materials existing wo-->
               <ng-template #elseBlockSpentMaterial>
+                <span *ngIf="workOrder.materials.length == 0"
+                  >Nema dodatih materijala, dodajte klikom na dugme </span
+                ><i
+                  class="fa fa-plus"
+                  *ngIf="workOrder.materials.length == 0"
+                ></i>
                 <tr *ngFor="let material of workOrder.materials">
                   <td>
                     <select
@@ -905,6 +1004,7 @@
                         data-toggle="modal"
                         data-target="#materialModal"
                         (click)="editMaterial(material)"
+                        id="{{ material.id }}"
                       >
                         <i class="fa fa-ellipsis-v"></i>
                       </button>
@@ -919,6 +1019,17 @@
                       <i class="fa fa-check"></i>
                     </button>
                   </td>
+                  <td>
+                    <div class="form-group">
+                      <button
+                        class="btn btn-primary btn-delete mr-2"
+                        (click)="deleteExistingSpentMaterial(material.id)"
+                        [disabled]="workOrder.status == 'Zatvoren'"
+                      >
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </ng-template>
             </tbody>
@@ -927,6 +1038,34 @@
       </div>
     </div>
   </div>
+  <br />
+  <div class="col" style="float: right">
+    <button
+      class="btn btn-primary btn-edit"
+      [disabled]="workOrder.status == 'Zatvoren'"
+      *ngIf="!new && materials && machine"
+      (click)="closeWorkOrder()"
+    >
+      <i class="fa fa-check"></i> Zatvori radni nalog
+    </button>
+    <button
+      class="btn btn-primary btn-add mr-2"
+      [disabled]="workOrder.status == 'Zatvoren'"
+      *ngIf="!new && materials && machine"
+      (click)="updateWorkOrder()"
+    >
+      <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
+    </button>
+
+    <button
+      class="btn btn-primary btn-add mr-2"
+      *ngIf="new && materials && machine"
+      (click)="addWorkOrder(infoWorkOrderForm)"
+    >
+      <i class="fa fa-plus mr-2"></i>Kreiraj
+    </button>
+  </div>
+  <br />
 </div>
 
 <div class="container d-md-none">
@@ -1545,7 +1684,7 @@
             <label for="imePrz">Datum</label>
             <div class="input-group">
               <input
-                [(ngModel)]="workerMob.date"
+                [(ngModel)]="workOrder.date"
                 name="dat"
                 (click)="od.toggle()"
                 class="form-control"
@@ -1567,7 +1706,7 @@
             <label for="imePrz">Redovan rad</label>
             <div class="input-group mb-3">
               <input
-                [(ngModel)]="workerMob.dayPeriod"
+                [(ngModel)]="wow.dayPeriod"
                 type="number"
                 name="dayWP"
                 class="form-control"
@@ -1582,7 +1721,7 @@
             <label for="imePrz">Noćni rad</label>
             <div class="input-group mb-3">
               <input
-                [(ngModel)]="workerMob.dnightWorkPeriod"
+                [(ngModel)]="wow.nightPeriod"
                 type="number"
                 name="nightWP"
                 class="form-control"
@@ -1923,6 +2062,7 @@
           <div class="row">
             <div class="col">
               <h5><i class="fa fa-user mr-2"></i> Radnik</h5>
+              <h6>{{ wow.user.name }}</h6>
               <hr class="solid" />
               <div class="form-group">
                 <label for="imePrz">Redovan rad</label>
@@ -1973,6 +2113,7 @@
             </div>
             <div class="col">
               <h5><i class="fa fa-truck mr-2"></i> Mašina</h5>
+              <h6>{{ wow.machine.name }}</h6>
               <hr class="solid" />
               <div class="form-group">
                 <label for="imePrz">Početno stanje MČ</label>
@@ -2107,6 +2248,13 @@
       </div>
       <div class="modal-body">
         <form #materialModalForm="ngForm">
+          <h5><i class="fa fa-leaf mr-2"></i> Materijal</h5>
+          <h6>{{ spentMaterial.material.name }}</h6>
+          <h6>
+            Planirana količina: {{ spentMaterial.quantity }}
+            {{ spentMaterial.material.unit }}
+          </h6>
+          <hr class="solid" />
           <div class="form-group">
             <label for="quantity">Utrošena količina</label>
             <div class="input-group mb-3">
@@ -2142,7 +2290,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="quantityPerHectar">Utoršena količina po ha</label>
+            <label for="quantityPerHectar">Utrošena količina po ha</label>
             <div class="input-group mb-3">
               <input
                 *ngIf="new; else elseBlockSpentPerHectar"
@@ -2160,7 +2308,7 @@
               </div>
               <ng-template #elseBlockSpentPerHectar>
                 <input
-                  [(ngModel)]="spentMaterial.spentPerHectar"
+                  [(ngModel)]="spentMaterial.spent / workOrder.area"
                   type="number"
                   name="spentPerHectar"
                   id=""
@@ -2224,6 +2372,7 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
+          data-dismiss="modal"
           (click)="updateMaterial(spentMaterial)"
         >
           <i class="fa fa-save"></i> Sačuvaj

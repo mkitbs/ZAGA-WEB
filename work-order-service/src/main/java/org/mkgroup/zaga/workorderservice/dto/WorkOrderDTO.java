@@ -36,6 +36,9 @@ public class WorkOrderDTO {
 	private String table;
 	private String cropName;
 	private int year;
+	private Date creationDate;
+	private boolean closed;
+	private double treated;
 	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
@@ -52,6 +55,9 @@ public class WorkOrderDTO {
 		tableId = wo.getCrop().getField().getId();
 		cropName = wo.getCrop().getName();
 		year = wo.getCrop().getYear();
+		creationDate = wo.getCreationDate();
+		closed = wo.isClosed();
+		treated = wo.getTreated();
 		
 		this.materials = new ArrayList<SpentMaterialDTO>();
 		for(SpentMaterial sm : wo.getMaterials()) {

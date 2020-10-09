@@ -3,3 +3,4 @@ spring:
     name: eureka-service-discovery
   config:
     uri: http://localhost:8888
+  profiles:    active: dev

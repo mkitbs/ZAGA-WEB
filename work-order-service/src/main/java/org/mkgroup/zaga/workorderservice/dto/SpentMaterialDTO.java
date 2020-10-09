@@ -18,13 +18,13 @@ public class SpentMaterialDTO {
 	
 	private UUID id;
 	
-	private double quantity;
+	private Double quantity;
 	
-	private double spent;
+	private Double spent;
 	
-	private double quantityPerHectar;
+	private Double quantityPerHectar;
 	
-	private double spentPerHectar;
+	private Double spentPerHectar;
 	
 	private MaterialDTO material;
 	

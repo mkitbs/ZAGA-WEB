@@ -151,4 +151,61 @@ public class CropService {
 			return null;
 		}
 	}
+	
+	public List<CropDTO> getAllByFieldAndCulture(UUID fieldId, UUID cultureId){
+		try {
+			List<Crop> crops = cropRepo.findByFieldAndCulture(fieldId, cultureId);
+			List<CropDTO> cropsDTO = new ArrayList<CropDTO>();
+			for(Crop crop : crops) {
+				CropDTO cropDTO = new CropDTO(crop);
+				cropsDTO.add(cropDTO);
+			}
+			return cropsDTO;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<CropDTO> getAllByField(UUID fieldId){
+		try {
+			List<Crop> crops = cropRepo.findByField(fieldId);
+			List<CropDTO> cropsDTO = new ArrayList<CropDTO>();
+			for(Crop crop : crops) {
+				CropDTO cropDTO = new CropDTO(crop);
+				cropsDTO.add(cropDTO);
+			}
+			return cropsDTO;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<CropDTO> getAllByCulture(UUID cultureId){
+		try {
+			List<Crop> crops = cropRepo.findByCulture(cultureId);
+			List<CropDTO> cropsDTO = new ArrayList<CropDTO>();
+			for(Crop crop : crops) {
+				CropDTO cropDTO = new CropDTO(crop);
+				cropsDTO.add(cropDTO);
+			}
+			return cropsDTO;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public void editCrop(CropDTO cropDTO) {
+		Crop crop = cropRepo.getOne(cropDTO.getId());
+		crop.setArea(cropDTO.getArea());
+		crop.setYear(cropDTO.getYear());
+		Field field = fieldRepo.getOne(cropDTO.getFieldId());
+		crop.setField(field);
+		Culture culture = cultureRepo.getOne(cropDTO.getCultureId());
+		crop.setCulture(culture);
+		cropRepo.save(crop);
+	}
+	
 }

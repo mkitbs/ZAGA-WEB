@@ -53,7 +53,7 @@ public class WorkOrderController {
 		}
 	}
 	
-	@GetMapping("/createCopy/{id}")
+	@PostMapping("/createCopy/{id}")
 	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date){
 		WorkOrder workOrder = wrepo.getOne(id);
 		
@@ -104,12 +104,9 @@ public class WorkOrderController {
 		}
 	}
 	
-	@PutMapping("/closeWorkOrder/{id}")
-	public ResponseEntity<?> closeWorkOrder(@PathVariable UUID id){
-		WorkOrder workOrder = wrepo.getOne(id);
-		workOrder.setStatus(WorkOrderStatus.CLOSED);
-		wrepo.save(workOrder);
-		
+	@PostMapping("/closeWorkOrder")
+	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
+		workOrderService.closeWorkOrder(request);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -135,5 +132,11 @@ public class WorkOrderController {
 		
 		
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/getAllByStatus/{status}")
+	public ResponseEntity<?> getAllByStatus(@PathVariable WorkOrderStatus status){
+		List<WorkOrderDTO> workOrders = workOrderService.getAllByStatus(status);
+		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
 	}
 }

@@ -24,4 +24,12 @@ export class WorkOrderWorkerService {
       wow
     );
   }
+
+  deleteWorkOrderWorker(id): Observable<any> {
+    return this.http.delete(
+      environment.gatewayWorkOrderURL +
+        "api/workOrderWorker/deleteWorkOrderWorker/" +
+        id
+    );
+  }
 }
