@@ -34,7 +34,7 @@ public class WorkOrderWorker {
 	private Operation operation;
 	
 	@ManyToOne
-	@JoinColumn(name="worke_order_id", nullable=true)
+	@JoinColumn(name="work_order_id", nullable=true)
 	private WorkOrder workOrder;
 	
 	@ManyToOne

@@ -1,5 +1,6 @@
 <div class="container d-none d-md-block">
   <h3 class="mt-2 mb-2">Pregled naloga</h3>
+
   <button
     class="btn btn-primary collapsing-button mb-2 shadow-none"
     data-toggle="collapse"
@@ -170,8 +171,10 @@
         <label> Usev </label>
         <input type="text" class="form-control" />
       </div>
+
       <div class="col">
         <label> Status </label>
+
         <select class="form-control" id="exampleFormControlSelect1">
           <option value=""></option>
           <option value="novi">Novi</option>
@@ -181,6 +184,7 @@
       </div>
     </div>
   </form>
+
   <span *ngIf="empty" style="font-size: 15px; float: left"
     >Nema kreiranih naloga.</span
   >

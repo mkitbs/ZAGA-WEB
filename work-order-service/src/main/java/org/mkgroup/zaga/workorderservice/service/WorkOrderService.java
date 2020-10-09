@@ -1,15 +1,21 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -22,7 +28,15 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @Service
 public class WorkOrderService {
@@ -32,9 +46,6 @@ public class WorkOrderService {
 	@Autowired
 	WorkOrderRepository workOrderRepo;
 	
-	@Autowired
-	WorkerService workerService;
-	
 	@Autowired 
 	OperationService operationService;
 	
@@ -43,6 +54,9 @@ public class WorkOrderService {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	@Autowired
 	WorkerHoursService workerHoursService;
@@ -68,8 +82,11 @@ public class WorkOrderService {
 	@Autowired
 	WorkOrderMachineRepository womRepo;
 	
-	public void addWorkOrder(WorkOrderDTO workOrderDTO) {
-		try {
+	@Autowired
+	SAP4HanaProxy sap4hana;
+	
+	public void addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+
 			log.info("Work order creation started");
 			
 			WorkOrder workOrder = new WorkOrder();
@@ -96,6 +113,7 @@ public class WorkOrderService {
 			
 			workOrder = workOrderRepo.save(workOrder);
 			System.out.println(workOrder.getId());//zbog testiranja
+			UUID workOrderId = workOrder.getId();
 			
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
 				WorkOrderWorker wow = new WorkOrderWorker();
@@ -143,7 +161,9 @@ public class WorkOrderService {
 				if(wowDTO.getConnectingMachine().getId() != null) {
 					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
 				}
-				wowRepo.save(wow);
+				wow = wowRepo.save(wow);
+				workOrder.getWorkers().add(wow);
+				workOrder = workOrderRepo.save(workOrder);
 			}
 		
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
@@ -160,15 +180,87 @@ public class WorkOrderService {
 					material.setSpentPerHectar(-1.0);
 				}
 				material.setWorkOrder(workOrder);
-				spentMaterialRepo.save(material);
+				material = spentMaterialRepo.save(material);
+				workOrder.getMaterials().add(material);
+				workOrder = workOrderRepo.save(workOrder);
+			}
+			WorkOrder wo = getOneW(workOrderId);
+			//System.out.println(wo.getWorkers().size()+"AAA");
+			
+			String csrfToken;
+			
+			StringBuilder authEncodingString = new StringBuilder()
+					.append("MKATIC")
+					.append(":")
+					.append("katicm0908");
+			//Encoding Authorization String
+			String authHeader = Base64.getEncoder().encodeToString(
+		    		authEncodingString.toString().getBytes());
+			
+			ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+			
+			
+			
+			HttpHeaders headers = resp.getHeaders();
+			
+			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+			                                                   .findFirst()
+			                                                   .orElse("nema");
+			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
+
+
+		    String cookies = headers.getValuesAsList("Set-Cookie")
+		    						.stream()
+		    						.collect(Collectors.joining(";"));
+		    
+		    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+																"Basic " + authHeader, 
+																csrfToken,
+																"XMLHttpRequest",
+																workOrderSAP);
+		    String oDataString = response.toString().replace(":", "-");
+		    String formatted = formatJSON(oDataString);
+		    
+		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+			Matcher matcher = pattern.matcher(formatted);
+			String status = "";
+			if (matcher.find())
+			{
+			    status = matcher.group(1);
 			}
 			
-			log.info("Insert work order into db");
-			
-		}catch(Exception e) {
-			log.error("Insert work order faild", e);
+		    
+		    if(status.equals("S")) {
+		    	System.out.println("USPESNO");
+		    	//uspesno
+		    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
+				Matcher matcherId = patternErpId.matcher(formatted);
+				Long erpId = 1L;
+				if (matcherId.find())
+				{
+				    erpId = Long.parseLong(matcherId.group(1));
+				}
+		    	wo.setErpId(erpId);
+		    	workOrderRepo.save(wo);
+		    	log.info("Insert work order into db");
+		    }else if(status.equals("E")) {
+		    	System.out.println("ERROR");
+		    	String error = "";
+		    	//Fail
+		    	 Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
+					Matcher matcherMessage = patternMessage.matcher(formatted);
+					if (matcherMessage.find())
+					{
+					    error = matcherMessage.group(1);
+					}
+		    	System.out.println(error);
+		    
+		    	workOrderRepo.delete(wo);
+		    	
+		    	log.info("Insert work order into db failed");
+		
+		    }
 		}
-	}
 	
 	public List<WorkOrderDTO> getAll(){
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
@@ -185,6 +277,16 @@ public class WorkOrderService {
 			WorkOrder workOrder = workOrderRepo.getOne(id);
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			return workOrderDTO;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public WorkOrder getOneW(UUID id) {
+		try {
+			WorkOrder workOrder = workOrderRepo.getOne(id);
+			return workOrder;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;
@@ -318,6 +420,7 @@ public class WorkOrderService {
 		return copy;
 	}
 	
+
 	public void closeWorkOrder(WorkOrderDTO workOrderDTO) {
 		try {
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
@@ -339,6 +442,20 @@ public class WorkOrderService {
 			workOrdersDTO.add(workOrderDTO);
 		}
 		return workOrdersDTO;
+	}
+
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
+		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
+		//System.out.println(json);
+		
+		return json;
+
 	}
 	
 }
