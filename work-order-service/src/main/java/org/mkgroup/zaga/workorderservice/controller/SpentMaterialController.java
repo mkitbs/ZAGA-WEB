@@ -39,47 +39,13 @@ public class SpentMaterialController {
 	
 	@PostMapping("{id}")
 	public ResponseEntity<?> addSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		WorkOrder workOrder = workOrderRepo.getOne(id);
-		
-		SpentMaterial spentMaterial = new SpentMaterial();
-		spentMaterial.setWorkOrder(workOrder);
-		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
-		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
-		if(spentMaterialDTO.getSpent() != null) {
-			spentMaterial.setSpent(spentMaterialDTO.getSpent());
-			spentMaterial.setSpentPerHectar(spentMaterialDTO.getSpent() / workOrder.getCrop().getArea());
-		} else {
-			spentMaterial.setSpent(-1.0);
-			spentMaterial.setSpentPerHectar(-1.0);
-		}
-		
-		
-		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
-		spentMaterial.setMaterial(material);
-		
-		spentMaterialRepo.save(spentMaterial);
+		spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@PostMapping("updateSpentMaterial/{id}")
 	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		SpentMaterial spentMaterial = spentMaterialService.getOne(id);
-		WorkOrder workOrder = workOrderRepo.getOne(spentMaterial.getWorkOrder().getId());
-		
-		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
-		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
-		if(spentMaterialDTO.getSpent() != null) {
-			spentMaterial.setSpent(spentMaterialDTO.getSpent());
-			spentMaterial.setSpentPerHectar(spentMaterialDTO.getSpent() / workOrder.getCrop().getArea());
-		} else {
-			spentMaterial.setSpent(-1.0);
-			spentMaterial.setSpentPerHectar(-1.0);
-		}
-		
-		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
-		spentMaterial.setMaterial(material);
-		
-		spentMaterialRepo.save(spentMaterial);
+		spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

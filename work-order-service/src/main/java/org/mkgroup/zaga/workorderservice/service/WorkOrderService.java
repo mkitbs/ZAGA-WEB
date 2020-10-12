@@ -3,7 +3,9 @@ package org.mkgroup.zaga.workorderservice.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,12 +34,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.sun.tools.sjavac.Log;
 
 @Service
 public class WorkOrderService {
@@ -55,9 +53,6 @@ public class WorkOrderService {
 	
 	@Autowired
 	EmployeeService employeeService;
-	
-	@Autowired
-	RestTemplate restTemplate;
 	
 	@Autowired
 	WorkerHoursService workerHoursService;
@@ -188,33 +183,16 @@ public class WorkOrderService {
 			}
 			WorkOrder wo = getOneW(workOrderId);
 			//System.out.println(wo.getWorkers().size()+"AAA");
+			Log.info("Work order creation successfuly finished");
 			
-			String csrfToken;
-			
-			StringBuilder authEncodingString = new StringBuilder()
-					.append("MKATIC")
-					.append(":")
-					.append("katicm0908");
-			//Encoding Authorization String
-			String authHeader = Base64.getEncoder().encodeToString(
-		    		authEncodingString.toString().getBytes());
-			
-			ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
-			
-			
-			
-			HttpHeaders headers = resp.getHeaders();
-			
-			csrfToken = headers.getValuesAsList("x-csrf-token").stream()
-			                                                   .findFirst()
-			                                                   .orElse("nema");
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
 
-
-		    String cookies = headers.getValuesAsList("Set-Cookie")
-		    						.stream()
-		    						.collect(Collectors.joining(";"));
+			Map<String, String> headerValues = getHeaderValues();
+			String csrfToken = headerValues.get("csrf");
+			String authHeader = headerValues.get("authHeader");
+			String cookies = headerValues.get("cookies");
 		    
+		    Log.info("Sending work order to SAP started");
 		    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 																"Basic " + authHeader, 
 																csrfToken,
@@ -235,6 +213,7 @@ public class WorkOrderService {
 		    if(status.equals("S")) {
 		    	System.out.println("USPESNO");
 		    	//uspesno
+		    	Log.info("Sending work order to SAP successfuly finished");
 		    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
 				Matcher matcherId = patternErpId.matcher(formatted);
 				Long erpId = 1L;
@@ -251,6 +230,7 @@ public class WorkOrderService {
 		    	log.info("Insert work order into db");
 		    }else if(status.equals("E")) {
 		    	System.out.println("ERROR");
+		    	
 		    	String error = "";
 		    	//Fail
 		    	 Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
@@ -260,6 +240,7 @@ public class WorkOrderService {
 					    error = matcherMessage.group(1);
 					}
 		    	System.out.println(error);
+		    	Log.error("Sending work order to SAP failed. (" + error +")");
 		    
 		    	workOrderRepo.delete(wo);
 		    	
@@ -417,6 +398,37 @@ public class WorkOrderService {
 		
 		return json;
 
+	}
+	
+	public Map<String, String> getHeaderValues() {
+		Log.info("Getting X-CSRF-Token started");
+		StringBuilder authEncodingString = new StringBuilder()
+				.append("MKATIC")
+				.append(":")
+				.append("katicm0908");
+		//Encoding Authorization String
+		String authHeader = Base64.getEncoder().encodeToString(
+	    		authEncodingString.toString().getBytes());
+		
+		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		
+		Log.info("Getting X-CSRF-Token successfuly finished");
+		
+		HttpHeaders headers = resp.getHeaders();
+		String csrfToken;
+		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+		                                                   .findFirst()
+		                                                   .orElse("nema");
+		
+		String cookies = headers.getValuesAsList("Set-Cookie")
+				.stream()
+				.collect(Collectors.joining(";"));
+		
+		Map<String, String> results = new HashMap<String, String>();
+		results.put("csrf", csrfToken);
+		results.put("authHeader", authHeader);
+		results.put("cookies", cookies);
+		return results;
 	}
 	
 }
