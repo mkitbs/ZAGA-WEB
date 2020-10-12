@@ -1,128 +1,385 @@
-<div style="padding-top: 10px"></div>
-<h3 class="mt-2 mb-2">Pregled useva</h3>
-<div style="padding-top: 20px"></div>
-<div class="containerFilter">
-  <div class="form-row">
-    <div class="col-3">
-      <label><i class="fa fa-map-marker"></i> Tabla </label>
-      <div class="input-group mb-3">
-        <select
-          name="table"
-          class="form-control"
-          id=""
-          [(ngModel)]="selectedTable"
-          (change)="getCrops()"
-        >
-          <option value="-1"></option>
-          <option value="{{ table.dbid }}" *ngFor="let table of fields">
-            {{ table.name }}
-          </option>
-        </select>
-        <div class="input-group-append" *ngIf="selectedTable != undefined">
-          <span
-            *ngIf="selectedTable != -1"
-            class="input-group-text"
-            id="basic-addon2"
-            (click)="setValueForSelectedTable()"
-            style="cursor: pointer"
-            title="Poništi odabranu tablu"
-            >x</span
+<div class="d-none d-xl-block">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+  <h3 class="mt-2 mb-2" >Pregled useva</h3>
+  <div style="padding-top: 20px"></div>
+  
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <div class="input-group mb-3">
+          <select
+            name="table"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedTable"
+            (change)="getCrops()"
           >
+            <option value="-1"></option>
+            <option value="{{ table.dbid }}" *ngFor="let table of fields">
+              {{ table.name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedTable != undefined">
+            <span
+              *ngIf="selectedTable != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedTable()"
+              style="cursor: pointer"
+              title="Poništi odabranu tablu"
+              >x</span
+            >
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-3">
-      <label><i class="fa fa-cubes"></i> Kultura </label>
-      <div class="input-group mb-3">
-        <select
-          name="culture"
-          class="form-control"
-          id=""
-          [(ngModel)]="selectedCulture"
-          (change)="getCrops()"
-        >
-          <option value="-1"></option>
-          <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
-            {{ culture.name }} ({{ culture.culturegroup }})
-          </option>
-        </select>
-        <div class="input-group-append" *ngIf="selectedCulture != undefined">
-          <span
-            *ngIf="selectedCulture != -1"
-            class="input-group-text"
-            id="basic-addon2"
-            (click)="setValueForSelectedCulture()"
-            style="cursor: pointer"
-            title="Poništi odabranu kulturu"
-            >x</span
+      <div class="col-3">
+        <label><i class="fa fa-cubes"></i> Kultura </label>
+        <div class="input-group mb-3">
+          <select
+            name="culture"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedCulture"
+            (change)="getCrops()"
           >
+            <option value="-1"></option>
+            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
+              {{ culture.name }} ({{ culture.culturegroup }})
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedCulture != undefined">
+            <span
+              *ngIf="selectedCulture != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedCulture()"
+              style="cursor: pointer"
+              title="Poništi odabranu kulturu"
+              >x</span
+            >
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div style="padding-top: 20px"></div>
-<div class="container">
-  <div class="row card-group">
-    <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
-      Nema useva za prikazivanje.
-    </h5>
-    <div class="col-4" *ngFor="let crop of crops; let j = index">
-      <div class="card mb-3" style="width: 30.8rem; margin-left: 5px">
-        <div class="card-body">
-          <div class="row">
-            <div
-              class="col-md-auto"
-              style="width: fit-content; padding-top: 12px"
-            >
-              <img
-                class="card-img-right"
-                src="../../../assets/crop.png"
-                width="80px"
-                height="80px"
-              />
-            </div>
-            <div class="col">
-              <div class="card-text">
-                <h5 class="card-title">
-                  {{ crop.Name.split(",")[1] }}
-                </h5>
-                <table>
-                  <tr title="Parcela" style="cursor: help">
-                    <th><i class="fa fa-map-marker"></i></th>
-                    <td>{{ crop.field }}</td>
-                  </tr>
-                  <tr title="Površina" style="cursor: help">
-                    <th><i class="fa fa-clone"></i></th>
-                    <td>{{ crop.Area }} ha</td>
-                  </tr>
-                  <tr title="Godina" style="cursor: help">
-                    <th><i class="fa fa-calendar mr-2"></i></th>
-                    <td>{{ crop.Year }}</td>
-                  </tr>
-                  <tr title="Kultura" style="cursor: help">
-                    <th><i class="fa fa-cubes"></i></th>
-                    <td>{{ crop.cultureName }}</td>
-                  </tr>
-                </table>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
+        Nema useva za prikazivanje.
+      </h5>
+      <div class="col-4" *ngFor="let crop of crops; let j = index">
+        <div class="card mb-3" style="width: 30.8rem">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/crop.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ crop.Name.split(",")[1] }}
+                  </h5>
+                  <table>
+                    <tr title="Parcela" style="cursor: help">
+                      <th><i class="fa fa-map-marker"></i></th>
+                      <td>{{ crop.field }}</td>
+                    </tr>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td>{{ crop.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ crop.Year }}</td>
+                    </tr>
+                    <tr title="Kultura" style="cursor: help">
+                      <th><i class="fa fa-cubes"></i></th>
+                      <td>{{ crop.cultureName }}</td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getCropForEdit(crop.id)"
+            data-toggle="modal"
+            data-target="#editCropModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
-        <button
-          class="buttonEdit btn btn-primary btn-edit"
-          (click)="getCropForEdit(crop.id)"
-          data-toggle="modal"
-          data-target="#editCropModal"
-        >
-          <i class="fa fa-edit"></i>
-        </button>
       </div>
     </div>
   </div>
 </div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+  <h3 class="mt-2 mb-2">Pregled useva</h3>
+  <div style="padding-top: 20px"></div>
+  
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <div class="input-group mb-3">
+          <select
+            name="table"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedTable"
+            (change)="getCrops()"
+          >
+            <option value="-1"></option>
+            <option value="{{ table.dbid }}" *ngFor="let table of fields">
+              {{ table.name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedTable != undefined">
+            <span
+              *ngIf="selectedTable != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedTable()"
+              style="cursor: pointer"
+              title="Poništi odabranu tablu"
+              >x</span
+            >
+          </div>
+        </div>
+      </div>
 
+      <div class="col-3">
+        <label><i class="fa fa-cubes"></i> Kultura </label>
+        <div class="input-group mb-3">
+          <select
+            name="culture"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedCulture"
+            (change)="getCrops()"
+          >
+            <option value="-1"></option>
+            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
+              {{ culture.name }} ({{ culture.culturegroup }})
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedCulture != undefined">
+            <span
+              *ngIf="selectedCulture != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedCulture()"
+              style="cursor: pointer"
+              title="Poništi odabranu kulturu"
+              >x</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
+        Nema useva za prikazivanje.
+      </h5>
+      <div class="col-7" *ngFor="let crop of crops; let j = index">
+        <div class="card mb-3" style="width: 30.8rem">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/crop.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ crop.Name.split(",")[1] }}
+                  </h5>
+                  <table>
+                    <tr title="Parcela" style="cursor: help">
+                      <th><i class="fa fa-map-marker"></i></th>
+                      <td>{{ crop.field }}</td>
+                    </tr>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td>{{ crop.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ crop.Year }}</td>
+                    </tr>
+                    <tr title="Kultura" style="cursor: help">
+                      <th><i class="fa fa-cubes"></i></th>
+                      <td>{{ crop.cultureName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getCropForEdit(crop.id)"
+            data-toggle="modal"
+            data-target="#editCropModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+  <h3 class="mt-2 mb-2">Pregled useva</h3>
+  <div style="padding-top: 20px"></div>
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <div class="input-group mb-3">
+          <select
+            name="table"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedTable"
+            (change)="getCrops()"
+          >
+            <option value="-1"></option>
+            <option value="{{ table.dbid }}" *ngFor="let table of fields">
+              {{ table.name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedTable != undefined">
+            <span
+              *ngIf="selectedTable != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedTable()"
+              style="cursor: pointer"
+              title="Poništi odabranu tablu"
+              >x</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3">
+        <label><i class="fa fa-cubes"></i> Kultura </label>
+        <div class="input-group mb-3">
+          <select
+            name="culture"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedCulture"
+            (change)="getCrops()"
+          >
+            <option value="-1"></option>
+            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
+              {{ culture.name }} ({{ culture.culturegroup }})
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedCulture != undefined">
+            <span
+              *ngIf="selectedCulture != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedCulture()"
+              style="cursor: pointer"
+              title="Poništi odabranu kulturu"
+              >x</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
+        Nema useva za prikazivanje.
+      </h5>
+      <div class="col-5" *ngFor="let crop of crops; let j = index">
+        <div class="card mb-3" style="width: 30.8rem">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/crop.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ crop.Name.split(",")[1] }}
+                  </h5>
+                  <table>
+                    <tr title="Parcela" style="cursor: help">
+                      <th><i class="fa fa-map-marker"></i></th>
+                      <td>{{ crop.field }}</td>
+                    </tr>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td>{{ crop.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ crop.Year }}</td>
+                    </tr>
+                    <tr title="Kultura" style="cursor: help">
+                      <th><i class="fa fa-cubes"></i></th>
+                      <td>{{ crop.cultureName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getCropForEdit(crop.id)"
+            data-toggle="modal"
+            data-target="#editCropModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!--Edit crop modal-->
 <div
   class="modal fade"

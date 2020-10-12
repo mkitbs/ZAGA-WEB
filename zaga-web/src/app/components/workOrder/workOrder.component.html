@@ -48,13 +48,19 @@
         <i class="fa fa-plus"></i> Kreiraj novi nalog
       </button>
     </a>
-    <h5 style="float: left; margin-top: 5px">Prikaži:</h5>
+    <button
+    class="btn btn-primary button-all shadow-none"
+    style="margin-left: 10px; float: left"
+    (click)="getAll()"
+    >
+    <i class="fa fa-tasks"></i> Svi
+    </button>
     <button
       class="btn btn-primary button-new shadow-none"
       style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('NEW')"
     >
-      <i class="fa fa-tasks"></i> Nove
+      <i class="fa fa-tasks"></i> Novi
     </button>
     <button
       class="btn btn-primary button-in-progress shadow-none"
@@ -68,7 +74,7 @@
       style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('CLOSED')"
     >
-      <i class="fa fa-tasks"></i> Zatvorene
+      <i class="fa fa-tasks"></i> Zatvoreni
     </button>
   </div>
   <br />
@@ -79,6 +85,7 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">SAP ID</th>
         <th scope="col">Operacija</th>
         <th scope="col">Datum</th>
         <th scope="col">Tabla</th>
@@ -95,6 +102,7 @@
         style="cursor: pointer"
       >
         <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
+        <td>1000000010</td>
         <td (click)="changeRoute(workOrder.id)">
           {{ workOrder.operationName }}
         </td>

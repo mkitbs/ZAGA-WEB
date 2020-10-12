@@ -28,6 +28,7 @@ import { WorkOrderWorkerService } from "src/app/service/work-order-worker.servic
 import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
 import { SpentMaterialService } from "src/app/service/spent-material.service";
 import { Renderer2 } from "@angular/core";
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 
 @Component({
   selector: "app-creatework-order",
@@ -38,6 +39,7 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonMachineModal", null) closeButtonMachineModal;
   @ViewChild("closeButtonMaterialModal", null) closebuttonMaterialModal;
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
+  @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
 
   constructor(
     private route: ActivatedRoute,
@@ -107,10 +109,16 @@ export class CreateworkOrderComponent implements OnInit {
   addNewSpentMaterial = false;
   clickCloseWorkOrder = false;
   exists = false;
+  clickAddWowDetail = false;
+  clickAddNewWow = false;
 
   validWow;
   validWom;
   validWoInfo;
+  validDayPeriod;
+  validNightPeriod;
+  validWorkPeriod;
+  validFinalState;
 
   nameFC: FormControl = new FormControl("");
 
@@ -224,12 +232,22 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getCulture() {
-    this.cropService
+    if(this.new){
+      this.cropService
       .getAllByFieldAndYear(this.workOrder.tableId, this.selectedYear)
       .subscribe((data) => {
         console.log(data);
         this.crops = data;
       });
+    } else {
+      this.cropService
+      .getAllByFieldAndYear(this.workOrder.tableId, this.workOrder.year)
+      .subscribe((data) => {
+        console.log(data);
+        this.crops = data;
+      });
+    }
+    
   }
 
   //methods for autoscroll
@@ -381,7 +399,36 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.nightPeriod = null;
     this.wow.initialState = null;
     this.wow.finalState = null;
+    this.wow.user.name = null;
+    this.wow.machine.name = null;
   }
+
+  validDetailOfNewWow(){
+    this.clickAddNewWow = true;
+    if(this.wow.dayPeriod > 24){
+      this.validDayPeriod = false;
+    } else{
+      this.validDayPeriod = true;
+    }
+    if(this.wow.nightPeriod > 24){
+      this.validNightPeriod = false;
+    } else {
+      this.validNightPeriod = true;
+    }
+    if(this.wow.dayPeriod + this.wow.nightPeriod > 24){
+      this.validWorkPeriod = false;
+    } else {
+      this.validWorkPeriod = true;
+    }
+    if(this.wow.finalState < this.wow.initialState){
+      this.validFinalState = false;
+    } else {
+      this.validFinalState = true;
+    }
+    if(this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState){
+      this.closeButtonWowModal.nativeElement.click();
+    }
+}
 
   addNewWorkerAndMachine() {
     this.wow.user.id = this.selectedWorker;
@@ -397,19 +444,90 @@ export class CreateworkOrderComponent implements OnInit {
       this.selectedCouplingMachine = null;
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
+        if (this.workOrder.status == "NEW") {
+          this.workOrder.status = "Novi";
+        } else if (this.workOrder.status == "IN_PROGRESS") {
+          this.workOrder.status = "U radu";
+        } else if (this.workOrder.status == "CLOSED") {
+          this.workOrder.status = "Zatvoren";
+        }
+  
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
+        };
+  
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
+  
+        if (this.workOrder.treated == 0) {
+          this.workOrder.treated = null;
+        }
       });
     });
   }
 
   updateWow(wow) {
-    this.wowService.updateWorkOrderWorker(wow.id, wow).subscribe((res) => {
-      console.log(res);
-      this.toastr.success("Uspešno sačuvane promene.");
-
-      this.workOrderService.getOne(this.workId).subscribe((data) => {
-        this.workOrder = data;
+    this.clickAddWowDetail = true;
+    if(wow.dayPeriod > 24){
+      this.validDayPeriod = false;
+    } else{
+      this.validDayPeriod = true;
+    }
+    if(wow.nightPeriod > 24){
+      this.validNightPeriod = false;
+    } else {
+      this.validNightPeriod = true;
+    }
+    if(wow.dayPeriod + wow.nightPeriod > 24){
+      this.validWorkPeriod = false;
+    } else {
+      this.validWorkPeriod = true;
+    }
+    if(wow.finalState < wow.initialState){
+      this.validFinalState = false;
+    } else {
+      this.validFinalState = true;
+    }
+    if(this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState){
+      this.wowService.updateWorkOrderWorker(wow.id, wow).subscribe((res) => {
+        console.log(res);
+        this.toastr.success("Uspešno sačuvane promene.");
+  
+        this.workOrderService.getOne(this.workId).subscribe((data) => {
+          this.workOrder = data;
+          if (this.workOrder.status == "NEW") {
+            this.workOrder.status = "Novi";
+          } else if (this.workOrder.status == "IN_PROGRESS") {
+            this.workOrder.status = "U radu";
+          } else if (this.workOrder.status == "CLOSED") {
+            this.workOrder.status = "Zatvoren";
+          }
+  
+          this.workOrder.date = {
+            day: +this.workOrder.date.day,
+            month: +this.workOrder.date.month,
+            year: +this.workOrder.date.year,
+          };
+  
+          this.cropService
+            .getAllByFieldAndYear(data.tableId, data.year)
+            .subscribe((res) => {
+              this.crops = res;
+            });
+  
+          if (this.workOrder.treated == 0) {
+            this.workOrder.treated = null;
+          }
+        });
       });
-    });
+      this.closeButtonWowModal.nativeElement.click();
+    }
+    
   }
 
   //methods for work order materials
@@ -492,6 +610,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.addNewSpentMaterial = false;
     } else {
       this.addNewSpentMaterial = true;
+      this.spentMaterial = new SpentMaterial();
       this.spentMaterial.material.unit = this.unit;
     }
     this.spentMaterial.spent = null;
@@ -509,6 +628,29 @@ export class CreateworkOrderComponent implements OnInit {
         this.quantityEntered = null;
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
+          if (this.workOrder.status == "NEW") {
+            this.workOrder.status = "Novi";
+          } else if (this.workOrder.status == "IN_PROGRESS") {
+            this.workOrder.status = "U radu";
+          } else if (this.workOrder.status == "CLOSED") {
+            this.workOrder.status = "Zatvoren";
+          }
+  
+          this.workOrder.date = {
+            day: +this.workOrder.date.day,
+            month: +this.workOrder.date.month,
+            year: +this.workOrder.date.year,
+          };
+  
+          this.cropService
+            .getAllByFieldAndYear(data.tableId, data.year)
+            .subscribe((res) => {
+              this.crops = res;
+            });
+  
+          if (this.workOrder.treated == 0) {
+            this.workOrder.treated = null;
+          }
         });
       });
   }
@@ -522,6 +664,29 @@ export class CreateworkOrderComponent implements OnInit {
 
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
+          if (this.workOrder.status == "NEW") {
+            this.workOrder.status = "Novi";
+          } else if (this.workOrder.status == "IN_PROGRESS") {
+            this.workOrder.status = "U radu";
+          } else if (this.workOrder.status == "CLOSED") {
+            this.workOrder.status = "Zatvoren";
+          }
+  
+          this.workOrder.date = {
+            day: +this.workOrder.date.day,
+            month: +this.workOrder.date.month,
+            year: +this.workOrder.date.year,
+          };
+  
+          this.cropService
+            .getAllByFieldAndYear(data.tableId, data.year)
+            .subscribe((res) => {
+              this.crops = res;
+            });
+  
+          if (this.workOrder.treated == 0) {
+            this.workOrder.treated = null;
+          }
         });
       });
   }
@@ -575,14 +740,39 @@ export class CreateworkOrderComponent implements OnInit {
       }
     }
 
-    this.workOrder.workers = this.wows;
-    this.workOrder.materials = this.woMaterials;
-
     this.workOrder.responsibleId = this.nameFC.value.userId;
 
     this.workOrderService.updateWorkOrder(this.workOrder).subscribe(
       (data) => {
         this.toastr.success("Uspešno sačuvan radni nalog.");
+        this.workOrderService.getOne(this.workId).subscribe((data) => {
+          this.workOrder = data;
+  
+          console.log(this.workOrder);
+          if (this.workOrder.status == "NEW") {
+            this.workOrder.status = "Novi";
+          } else if (this.workOrder.status == "IN_PROGRESS") {
+            this.workOrder.status = "U radu";
+          } else if (this.workOrder.status == "CLOSED") {
+            this.workOrder.status = "Zatvoren";
+          }
+  
+          this.workOrder.date = {
+            day: +this.workOrder.date.day,
+            month: +this.workOrder.date.month,
+            year: +this.workOrder.date.year,
+          };
+  
+          this.cropService
+            .getAllByFieldAndYear(data.tableId, data.year)
+            .subscribe((res) => {
+              this.crops = res;
+            });
+  
+          if (this.workOrder.treated == 0) {
+            this.workOrder.treated = null;
+          }
+        })
       },
       (error) => {
         this.toastr.error("Radni nalog nije sačuvan.");
@@ -677,6 +867,29 @@ export class CreateworkOrderComponent implements OnInit {
       console.log(res);
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
+        if (this.workOrder.status == "NEW") {
+          this.workOrder.status = "Novi";
+        } else if (this.workOrder.status == "IN_PROGRESS") {
+          this.workOrder.status = "U radu";
+        } else if (this.workOrder.status == "CLOSED") {
+          this.workOrder.status = "Zatvoren";
+        }
+
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
+        };
+
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
+
+        if (this.workOrder.treated == 0) {
+          this.workOrder.treated = null;
+        }
       });
     });
   }
@@ -686,6 +899,29 @@ export class CreateworkOrderComponent implements OnInit {
       console.log(res);
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
+        if (this.workOrder.status == "NEW") {
+          this.workOrder.status = "Novi";
+        } else if (this.workOrder.status == "IN_PROGRESS") {
+          this.workOrder.status = "U radu";
+        } else if (this.workOrder.status == "CLOSED") {
+          this.workOrder.status = "Zatvoren";
+        }
+
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
+        };
+
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
+
+        if (this.workOrder.treated == 0) {
+          this.workOrder.treated = null;
+        }
       });
     });
   }

@@ -96,6 +96,14 @@ th {
   box-shadow: none;
 }
 
+.button-all {
+  width: fit-content;
+  text-align: center;
+  background-color: #ffc803;
+  border: none;
+  box-shadow: none;
+}
+
 .btn-add {
   float: right;
   background-color: #33590b;

@@ -16,4 +16,5 @@ export class WorkOrder {
   workers: WorkOrderWorker[] = [];
   operationName;
   treated;
+  year;
 }

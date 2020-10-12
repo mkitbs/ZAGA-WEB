@@ -1,54 +1,172 @@
-<div style="padding-top: 10px"></div>
-<h3 class="mt-2 mb-2">Pregled parcela</h3>
-<div style="padding-top: 20px"></div>
-<div class="containerFields">
-  <div class="rowCard">
-    <div class="columnCard" *ngFor="let field of fields; let j = index">
-      <div class="card mb-3" style="width: 22rem; margin-left: 5px">
-        <div class="card-body">
-          <div class="row">
-            <div
-              class="col-md-auto"
-              style="width: fit-content; padding-top: 12px"
-            >
-              <img
-                class="card-img-right"
-                src="../../../assets/field.png"
-                width="80px"
-                height="80px"
-              />
-            </div>
-            <div class="col">
-              <div class="card-text">
-                <h5 class="card-title">
-                  {{ field.Name }}
-                </h5>
-                <table>
-                  <tr title="Površina" style="cursor: help">
-                    <th><i class="fa fa-clone"></i></th>
-                    <td title="Površina">{{ field.Area }} ha</td>
-                  </tr>
-                  <tr title="Godina" style="cursor: help">
-                    <th><i class="fa fa-calendar mr-2"></i></th>
-                    <td>{{ field.Year }}</td>
-                  </tr>
-                  <tr title="Potez" style="cursor: help">
-                    <th><i class="fa fa-area-chart"></i></th>
-                    <td>{{ field.fieldGroupName }}</td>
-                  </tr>
-                </table>
+<div class="d-none d-xl-block">
+  <div style="padding-top: 10px"></div>
+  <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  <div style="padding-top: 20px"></div>
+  <div class="containerFields">
+    <div class="rowCard">
+      <div class="columnCard" *ngFor="let field of fields; let j = index">
+        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/field.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ field.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td title="Površina">{{ field.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ field.Year }}</td>
+                    </tr>
+                    <tr title="Potez" style="cursor: help">
+                      <th><i class="fa fa-area-chart"></i></th>
+                      <td>{{ field.fieldGroupName }}</td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getField(field.dbid)"
+            data-toggle="modal"
+            data-target="#editFieldModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
-        <button
-          class="buttonEdit btn btn-primary btn-edit"
-          (click)="getField(field.dbid)"
-          data-toggle="modal"
-          data-target="#editFieldModal"
-        >
-          <i class="fa fa-edit"></i>
-        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+  <h3 class="mt-2 mb-2" style="margin-left: 45px;">Pregled parcela</h3>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <div class="col-5" *ngFor="let field of fields; let j = index">
+        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/field.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ field.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td title="Površina">{{ field.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ field.Year }}</td>
+                    </tr>
+                    <tr title="Potez" style="cursor: help">
+                      <th><i class="fa fa-area-chart"></i></th>
+                      <td>{{ field.fieldGroupName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getField(field.dbid)"
+            data-toggle="modal"
+            data-target="#editFieldModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+  <h3 class="mt-2 mb-2" style="margin-left: 52px;">Pregled parcela</h3>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <div class="col-4" *ngFor="let field of fields; let j = index">
+        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/field.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ field.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td title="Površina">{{ field.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ field.Year }}</td>
+                    </tr>
+                    <tr title="Potez" style="cursor: help">
+                      <th><i class="fa fa-area-chart"></i></th>
+                      <td>{{ field.fieldGroupName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            (click)="getField(field.dbid)"
+            data-toggle="modal"
+            data-target="#editFieldModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

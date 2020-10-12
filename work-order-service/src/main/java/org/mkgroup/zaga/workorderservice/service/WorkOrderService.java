@@ -337,56 +337,7 @@ public class WorkOrderService {
 			workOrder.setResponsible(responsible);
 			
 			workOrder = workOrderRepo.save(workOrder);
-			System.out.println(workOrder.getId());//zbog testiranja
-			
-			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
-				WorkOrderWorker wow = new WorkOrderWorker();
-				
-				if(wowDTO.getNightPeriod() != null) {
-					wow.setNightPeriod(wowDTO.getNightPeriod());
-				} else {
-					wow.setNightPeriod(-1.0);
-				}
-				if(wowDTO.getDayPeriod() != null) {
-					wow.setDayPeriod(wowDTO.getDayPeriod());
-				} else {
-					wow.setDayPeriod(-1.0);
-				}
-				if(wowDTO.getFinalState() != null) {
-					wow.setFinalState(wowDTO.getFinalState());
-				} else {
-					wow.setFinalState(-1.0);
-				}
-				if(wowDTO.getFuel() != null) {
-					wow.setFuel(wowDTO.getFuel());
-				} else {
-					wow.setFuel(-1.0);
-				}
-				if(wowDTO.getInitialState() != null) {
-					wow.setInitialState(wowDTO.getInitialState());
-				} else {
-					wow.setInitialState(-1.0);
-				}
-				if(wowDTO.getInitialState() != null && wowDTO.getFinalState() != null) {
-					wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
-				} else {
-					wow.setSumState(-1.0);
-				}
-				wow.setWorkOrder(workOrder);
-				if(wowDTO.getDayPeriod() != null && wowDTO.getNightPeriod() != null) {
-					wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
-				} else {
-					wow.setWorkPeriod(-1.0);
-				}
-				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
-				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
-				
-				if(wowDTO.getConnectingMachine().getId() != null) {
-					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
-				}
-				wowRepo.save(wow);	
-			}
+	
 		}catch(Exception e) {
 			log.error("Update work order faild", e);
 		}

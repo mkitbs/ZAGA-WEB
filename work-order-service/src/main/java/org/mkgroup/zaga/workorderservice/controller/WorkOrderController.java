@@ -110,7 +110,7 @@ public class WorkOrderController {
 	public ResponseEntity<?> updateWorkOrder(@RequestBody WorkOrderDTO request){
 		try {
 			workOrderService.updateWorkOrder(request);
-			return new ResponseEntity<String>("Work order updated successfully.", HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<String>("Work order not updated. Error " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}

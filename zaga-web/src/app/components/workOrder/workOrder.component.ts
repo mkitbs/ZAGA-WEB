@@ -149,4 +149,34 @@ export class WorkOrderComponent implements OnInit {
       }
     });
   }
+
+  getAll(){
+    this.workOrderService.getAll().subscribe((data) => {
+      this.workOrders = data;
+      console.log(this.workOrders);
+      if (this.workOrders.length == 0) {
+        this.empty = true;
+      } else {
+        this.empty = false;
+        this.workOrders.forEach((workOrder) => {
+          var date = "";
+          date =
+            workOrder.date.day.split(" ")[0] +
+            "." +
+            workOrder.date.month +
+            "." +
+            workOrder.date.year +
+            ".";
+          workOrder.date = date;
+          if (workOrder.status == "NEW") {
+            workOrder.status = "Novi";
+          } else if (workOrder.status == "IN_PROGRESS") {
+            workOrder.status = "U radu";
+          } else if (workOrder.status == "CLOSED") {
+            workOrder.status = "Zatvoren";
+          }
+        });
+      }
+    });
+  }
 }

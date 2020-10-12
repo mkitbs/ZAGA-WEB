@@ -202,6 +202,7 @@
               id=""
               class="form-control"
               *ngIf="!new; else elseBlockYear"
+              (change)="getCulture()"
             >
               <option value="2020">2020</option>
               <option value="2019">2019</option>
@@ -253,11 +254,11 @@
               Unesite površinu.
             </div>
           </td>
-          <td class="left-col-header">
-            <span> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
+          <td class="left-col-header" >
+            <span *ngIf="!new"> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
           </td>
-          <td class="right-col-header">
-            <div class="input-group mb-3">
+          <td class="right-col-header" >
+            <div class="input-group mb-3" *ngIf="!new">
               <input
                 type="text"
                 name="treated"
@@ -321,7 +322,7 @@
               <th>Operacija*</th>
               <th>Mašina</th>
               <th>Priključna mašina</th>
-              <th style="text-align: right !important">Dodatno</th>
+              <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
               <th
                 style="text-align: right !important"
@@ -429,13 +430,14 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td  *ngIf="!new" >
                   <div class="form-group">
                     <button
                       class="btn btn-primary btn-add mr-2"
                       data-toggle="modal"
                       data-target="#workerMachineModal"
                       (click)="addDetailWow()"
+                      
                     >
                       <i class="fa fa-ellipsis-v"></i>
                     </button>
@@ -529,6 +531,7 @@
                       </option>
                     </select>
                   </td>
+                  <!--
                   <td>
                     <div class="form-group">
                       <button
@@ -541,6 +544,7 @@
                       </button>
                     </div>
                   </td>
+                  -->
                   <td>
                     <button
                       class="btn btn-primary btn-add mr-2"
@@ -711,7 +715,7 @@
               <th>Materijal*</th>
               <th style="width: 150px">Planirana količina*</th>
               <th style="width: 180px">Planirana količina / ha*</th>
-              <th style="text-align: right !important">Dodatno</th>
+              <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
               <th style="text-align: right !important">Dodaj</th>
               <th
                 style="text-align: right !important"
@@ -804,7 +808,7 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td *ngIf="!new">
                   <div class="form-group">
                     <button
                       class="btn btn-primary btn-add mr-2"
@@ -899,6 +903,7 @@
                       </div>
                     </div>
                   </td>
+                  <!--
                   <td>
                     <div class="form-group">
                       <button
@@ -911,6 +916,7 @@
                       </button>
                     </div>
                   </td>
+                  -->
                   <td>
                     <button
                       class="btn btn-primary btn-add mr-2"
@@ -1043,7 +1049,7 @@
     <button
       class="btn btn-primary btn-edit"
       [disabled]="workOrder.status == 'Zatvoren'"
-      *ngIf="!new && materials && machine"
+      *ngIf="!new && machine && materials"
       (click)="closeWorkOrder()"
     >
       <i class="fa fa-check"></i> Zatvori radni nalog
@@ -1051,7 +1057,7 @@
     <button
       class="btn btn-primary btn-add mr-2"
       [disabled]="workOrder.status == 'Zatvoren'"
-      *ngIf="!new && materials && machine"
+      *ngIf="!new && machine && materials"
       (click)="updateWorkOrder()"
     >
       <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
@@ -1059,7 +1065,7 @@
 
     <button
       class="btn btn-primary btn-add mr-2"
-      *ngIf="new && materials && machine"
+      *ngIf="new && machine && materials"
       (click)="addWorkOrder(infoWorkOrderForm)"
     >
       <i class="fa fa-plus mr-2"></i>Kreiraj
@@ -2045,14 +2051,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-sticky-note-o"></i> Dodatna evidencija
+          <i class="fa fa-sticky-note-o"></i> Učinci radnika i mašina
         </h4>
         <button
           type="button"
           class="close"
           data-dismiss="modal"
           aria-label="Close"
-          #closeButtonWorkerModal
+          #closeButtonWowModal
         >
           <span aria-hidden="true">&times;</span>
         </button>
@@ -2062,7 +2068,7 @@
           <div class="row">
             <div class="col">
               <h5><i class="fa fa-user mr-2"></i> Radnik</h5>
-              <h6>{{ wow.user.name }}</h6>
+              <h6 *ngIf="wow.id != undefined">{{ wow.user.name }}</h6>
               <hr class="solid" />
               <div class="form-group">
                 <label for="imePrz">Redovan rad</label>
@@ -2072,11 +2078,17 @@
                     type="number"
                     name="dayWP"
                     class="form-control"
-                    id=""
+                    id="dayWP"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
+                </div>
+                <div
+                  *ngIf="(validDayPeriod == false && clickAddWowDetail) || (validDayPeriod == false && clickAddNewWow)"
+                  style="color: red"
+                >
+                Maksimalan broj sati je 24.
                 </div>
               </div>
               <div class="form-group">
@@ -2088,10 +2100,17 @@
                     name="nightWP"
                     class="form-control"
                     id=""
+                    max="24"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
+                </div>
+                <div
+                  *ngIf="(validNightPeriod == false && clickAddWowDetail) || (validNightPeriod == false && clickAddNewWow)"
+                  style="color: red"
+                >
+                Maksimalan broj sati je 24.
                 </div>
               </div>
               <div class="form-group">
@@ -2104,10 +2123,17 @@
                     class="form-control"
                     id=""
                     readonly
+                    max="24"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
+                </div>
+                <div
+                  *ngIf="(validWorkPeriod == false && clickAddWowDetail) || (validWorkPeriod == false && clickAddNewWow)"
+                  style="color: red"
+                >
+                Maksimalan broj sati je 24.
                 </div>
               </div>
             </div>
@@ -2144,6 +2170,12 @@
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
                 </div>
+                <div
+                  *ngIf="(validFinalState == false && clickAddWowDetail) || (validFinalState == false && clickAddNewWow)"
+                  style="color: red"
+                >
+                Krajnje stanje ne može biti manje od početnog.
+                </div>
               </div>
               <div class="form-group">
                 <label for="imePrz">Utrošeno MČ</label>
@@ -2162,7 +2194,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="imePrz">Utoršeno goriva</label>
+                <label for="imePrz">Utrošeno goriva</label>
                 <div class="input-group mb-3">
                   <input
                     [(ngModel)]="wow.fuel"
@@ -2203,7 +2235,6 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          data-dismiss="modal"
           (click)="updateWow(wow)"
         >
           <i class="fa fa-save"></i> Sačuvaj
@@ -2213,7 +2244,7 @@
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          data-dismiss="modal"
+          (click)="validDetailOfNewWow()"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>
@@ -2234,7 +2265,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-sticky-note-o"></i> Dodatna evidencija
+          <i class="fa fa-sticky-note-o"></i> Učinci materijala
         </h4>
         <button
           type="button"
@@ -2250,7 +2281,7 @@
         <form #materialModalForm="ngForm">
           <h5><i class="fa fa-leaf mr-2"></i> Materijal</h5>
           <h6>{{ spentMaterial.material.name }}</h6>
-          <h6>
+          <h6 *ngIf="spentMaterial.id != undefined">
             Planirana količina: {{ spentMaterial.quantity }}
             {{ spentMaterial.material.unit }}
           </h6>
