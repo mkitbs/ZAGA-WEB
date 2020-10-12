@@ -1,13 +1,10 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.LocalDate;
-import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
@@ -24,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,9 +40,6 @@ public class WorkOrderController {
 	
 	@Autowired
 	SAP4HanaProxy sap4hana;
-	
-	@Autowired
-	SAPAuthConfiguration authConfiguration;
 	
 	@PostMapping("/createWorkOrder")
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
