@@ -1,16 +1,18 @@
 <div class="d-none d-xl-block">
   <div style="padding-top: 10px"></div>
-  <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  </div>
   <div style="padding-top: 20px"></div>
-  <div class="containerFields">
-    <div class="rowCard">
-      <div class="columnCard" *ngFor="let field of fields; let j = index">
-        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+  <div class="container">
+    <div class="row card-group">
+      <div class="col-4" *ngFor="let field of fields; let j = index">
+        <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
               <div
                 class="col-md-auto"
-                style="width: fit-content; padding-top: 12px"
+                style="width: fit-content; padding-bottom: 10px"
               >
                 <img
                   class="card-img-right"
@@ -58,12 +60,14 @@
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
   <div style="padding-top: 10px"></div>
-  <h3 class="mt-2 mb-2" style="margin-left: 45px;">Pregled parcela</h3>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
     <div class="row card-group">
       <div class="col-5" *ngFor="let field of fields; let j = index">
-        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+        <div class="card mb-3" style="width: 23rem;">
           <div class="card-body">
             <div class="row">
               <div
@@ -116,12 +120,14 @@
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
   <div style="padding-top: 10px"></div>
-  <h3 class="mt-2 mb-2" style="margin-left: 52px;">Pregled parcela</h3>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
     <div class="row card-group">
       <div class="col-4" *ngFor="let field of fields; let j = index">
-        <div class="card mb-3" style="width: 22rem; margin-left: 5px">
+        <div class="card mb-3" style="width: 25rem;">
           <div class="card-body">
             <div class="row">
               <div

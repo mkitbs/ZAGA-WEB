@@ -466,9 +466,19 @@
               </tr>
               <!--editable table worker/machine new wo-->
               <ng-container *ngIf="new; else elseBlockMachineState">
-                <span *ngIf="wows.length == 0"
-                  >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
-                ><i class="fa fa-plus" *ngIf="wows.length == 0"></i>
+                <div class="input-group">
+                  <span *ngIf="wows.length == 0"
+                    >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
+                  >
+                  <button
+                    *ngIf="wows.length == 0"
+                    class="btn btn-primary btn-add mr-2"
+                    disabled
+                    style="margin-left: 5px; margin-top: -5px;"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
                 <tr *ngFor="let wow of wows">
                   <td>
                     <select
@@ -568,12 +578,19 @@
               </ng-container>
               <!--editable table worker/machine existing wo-->
               <ng-template #elseBlockMachineState>
-                <span *ngIf="workOrder.workers.length == 0"
-                  >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
-                ><i
-                  class="fa fa-plus"
-                  *ngIf="workOrder.workers.length == 0"
-                ></i>
+                <div class="input-group">
+                  <span *ngIf="workOrders.workers.length == 0"
+                    >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
+                  >
+                  <button
+                    *ngIf="workOrder.workers.length == 0"
+                    class="btn btn-primary btn-add mr-2"
+                    disabled
+                    style="margin-left: 5px; margin-top: -5px;"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
                 <tr *ngFor="let wow of workOrder.workers">
                   <td>
                     <select
@@ -758,7 +775,7 @@
                       <input
                         [(ngModel)]="quantityEntered"
                         type="number"
-                        name="quantity"
+                        name="quantityEnter"
                         id=""
                         class="form-control"
                         #quantity="ngModel"
@@ -770,7 +787,7 @@
                         }}</span>
                       </div>
                       <div
-                        *ngIf="quantity.invalid && clickAddMaterial"
+                        *ngIf="(quantityEntered == null || quantityEntered == undefined) && clickAddMaterial"
                         style="color: red"
                       >
                         Unesite količinu.
@@ -843,9 +860,19 @@
               </tr>
               <!--editable table materials new wo-->
               <ng-container *ngIf="new; else elseBlockSpentMaterial">
-                <span *ngIf="woMaterials.length == 0"
-                  >Nema dodatih materijala, dodajte klikom na dugme </span
-                ><i class="fa fa-plus" *ngIf="woMaterials.length == 0"></i>
+                <div class="input-group">
+                  <span *ngIf="woMaterials.length == 0"
+                    >Nema dodatih materijala, dodajte klikom na dugme </span
+                  >
+                  <button
+                    *ngIf="woMaterials.length == 0"
+                    class="btn btn-primary btn-add mr-2"
+                    disabled
+                    style="margin-left: 5px; margin-top: -5px;"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
                 <tr *ngFor="let material of woMaterials">
                   <td>
                     <select
@@ -940,12 +967,19 @@
               </ng-container>
               <!--editable table materials existing wo-->
               <ng-template #elseBlockSpentMaterial>
-                <span *ngIf="workOrder.materials.length == 0"
-                  >Nema dodatih materijala, dodajte klikom na dugme </span
-                ><i
-                  class="fa fa-plus"
-                  *ngIf="workOrder.materials.length == 0"
-                ></i>
+                <div class="input-group">
+                  <span *ngIf="workOrder.materials.length == 0"
+                    >Nema dodatih materijala, dodajte klikom na dugme </span
+                  >
+                  <button
+                    *ngIf="workOrder.materials.length == 0"
+                    class="btn btn-primary btn-add mr-2"
+                    disabled
+                    style="margin-left: 5px; margin-top: -5px;"
+                  >
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
                 <tr *ngFor="let material of workOrder.materials">
                   <td>
                     <select

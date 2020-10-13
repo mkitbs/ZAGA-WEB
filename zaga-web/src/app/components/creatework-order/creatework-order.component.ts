@@ -534,11 +534,12 @@ export class CreateworkOrderComponent implements OnInit {
 
   addMaterial(valid) {
     this.clickAddMaterial = true;
-    this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
-    this.spentMaterial.material.id = this.selectedMaterial;
-    this.spentMaterial.quantity = this.quantityEntered;
-    this.spentMaterial.material.unit = this.unit;
+    console.log(this.quantityEntered);
     if (valid) {
+      this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
+      this.spentMaterial.material.id = this.selectedMaterial;
+      this.spentMaterial.quantity = this.quantityEntered;
+      this.spentMaterial.material.unit = this.unit;
       this.woMaterials.forEach((material) => {
         if (
           material.material.id == this.spentMaterial.material.id &&
@@ -553,11 +554,11 @@ export class CreateworkOrderComponent implements OnInit {
         this.spentMaterial = new SpentMaterial();
         this.exists = false;
       }
+      this.clickAddMaterial = false;
       this.exists = false;
       this.selectedMaterial = null;
       this.quantityEntered = null;
       this.unit = null;
-      this.clickAddMaterial = false;
     }
   }
 
