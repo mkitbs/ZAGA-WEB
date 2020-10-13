@@ -46,92 +46,13 @@ public class WorkOrderWorkerController {
 
 	@PostMapping("addWorker/{id}")
 	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO){
-		WorkOrder workOrder = workOrderRepo.getOne(id);
-		WorkOrderWorker wow = new WorkOrderWorker();
-		if(wowDTO.getNightPeriod() != null) {
-			wow.setNightPeriod(wowDTO.getNightPeriod());
-		} else {
-			wow.setNightPeriod(-1.0);
-		}
-		if(wowDTO.getDayPeriod() != null) {
-			wow.setDayPeriod(wowDTO.getDayPeriod());
-		} else {
-			wow.setDayPeriod(-1.0);
-		}
-		if(wowDTO.getDayPeriod() != null && wowDTO.getNightPeriod() != null) {
-			wow.setWorkPeriod(wowDTO.getNightPeriod() + wowDTO.getDayPeriod());
-		} else {
-			wow.setWorkPeriod(-1.0);
-		}
-		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setMachine(machineRepo.getOne(wowDTO.getMachine().getId()));
-		wow.setConnectingMachine(machineRepo.getOne(wowDTO.getConnectingMachine().getId()));
-		if(wowDTO.getInitialState() != null) {
-			wow.setInitialState(wowDTO.getInitialState());
-		} else {
-			wow.setInitialState(-1.0);
-		}
-		if(wowDTO.getFinalState() != null) {
-			wow.setFinalState(wowDTO.getFinalState());
-		} else {
-			wow.setFinalState(-1.0);
-		}
-		if(wowDTO.getInitialState() != null && wowDTO.getFinalState() != null) {
-			wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
-		} else {
-			wow.setSumState(-1.0);
-		}
-		wow.setWorkOrder(workOrder);
-		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
-
-		wowRepo.save(wow);
+		wowService.addWorker(id, wowDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@PostMapping("updateWorkOrderWorker/{id}")
 	public ResponseEntity<?> updateWorkOrderWorker(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO){
-		WorkOrderWorker wow = wowService.getOne(id);
-		if(wowDTO.getDayPeriod() != null) {
-			wow.setDayPeriod(wowDTO.getDayPeriod());
-		} else {
-			wow.setDayPeriod(-1.0);
-		}
-		if(wowDTO.getNightPeriod() != null) {
-			wow.setNightPeriod(wowDTO.getNightPeriod());
-		} else {
-			wow.setNightPeriod(-1.0);
-		}
-		if(wowDTO.getDayPeriod() != null && wowDTO.getNightPeriod() != null) {
-			wow.setWorkPeriod(wowDTO.getDayPeriod() + wowDTO.getNightPeriod());
-		} else {
-			wow.setWorkPeriod(-1.0);
-		}
-		if(wowDTO.getInitialState() != null) {
-			wow.setInitialState(wowDTO.getInitialState());
-		} else {
-			wow.setInitialState(-1.0);
-		}
-		if(wowDTO.getFinalState() != null) {
-			wow.setFinalState(wowDTO.getFinalState());
-		} else {
-			wow.setFinalState(-1.0);
-		}
-		if(wowDTO.getFinalState() != null && wowDTO.getInitialState() != null) {
-			wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
-		} else {
-			wow.setSumState(-1.0);
-		}
-		if(wowDTO.getFuel() != null) {
-			wow.setFuel(wowDTO.getFuel());
-		} else {
-			wow.setFuel(-1.0);
-		}
-		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
-		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setConnectingMachine(machineRepo.getOne(wowDTO.getConnectingMachine().getId()));
-		wow.setMachine(machineRepo.getOne(wowDTO.getMachine().getId()));
-		
-		wowRepo.save(wow);
+		wowService.updateWorkOrder(id, wowDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
