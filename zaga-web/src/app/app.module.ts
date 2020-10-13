@@ -31,6 +31,7 @@ import "chartjs-plugin-labels";
 import { SearchEmployeesPipe } from "./pipes/search-employees.pipe";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { SearchEmployeesPhonePipe } from "./pipes/search-employees-phone.pipe";
+import { MachineComponent } from './components/machine/machine.component';
 
 declare var require: any;
 var config = require("config");
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: "workOrder", component: WorkOrderComponent },
   { path: "close/workOrder/:workId", component: CloseWorkOrderComponent },
   { path: "yieldOverview", component: YieldComponent },
+  { path: "masterData/machine", component: MachineComponent},
   { path: "", component: HomeComponent },
 ];
 
@@ -57,6 +59,7 @@ const routes: Routes = [
     YieldComponent,
     SearchEmployeesPipe,
     SearchEmployeesPhonePipe,
+    MachineComponent,
   ],
   imports: [
     BrowserModule,
