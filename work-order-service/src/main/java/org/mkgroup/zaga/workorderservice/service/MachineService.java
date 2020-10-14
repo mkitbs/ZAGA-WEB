@@ -12,7 +12,9 @@ import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
 import org.mkgroup.zaga.workorderservice.model.FuelType;
 import org.mkgroup.zaga.workorderservice.model.Machine;
+import org.mkgroup.zaga.workorderservice.model.MachineGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.MachineGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,9 @@ public class MachineService {
 	
 	@Autowired
 	MachineRepository machineRepository;
+	
+	@Autowired
+	MachineGroupRepository machineGroupRepo;
 	
 	public List<MachineDTO> getMachinesFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -115,11 +120,15 @@ public class MachineService {
 		oldMachine.setFuelType(FuelType.values()[Integer.parseInt(newMachine.getFuelType())]);
 		oldMachine.setName(newMachine.getName());
 		oldMachine.setOrgUnit(newMachine.getOrgUnit());
+		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+		oldMachine.setMachineGroupId(machineGroup);
 		machineRepository.save(oldMachine);
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
 		Machine machine = new Machine(newMachine);
+		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+		machine.setMachineGroupId(machineGroup);
 		machineRepository.save(machine);
 	}
 }

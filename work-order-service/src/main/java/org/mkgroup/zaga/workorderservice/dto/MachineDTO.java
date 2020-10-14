@@ -42,11 +42,16 @@ public class MachineDTO {
 	private String ownershipType;
 	
 	@JsonProperty("MachineGroupId")
-	private Long machineGroup;
+	private Long machineGroupId;
+	
+	private UUID machineGroup;
 	
 	public MachineDTO(Machine machine) {
 		id = machine.getId();
 		name = machine.getName();
+		type = machine.getType().toString();
+		fuelType = machine.getFuelType().toString();
+		machineGroup = machine.getMachineGroupId().getId();
 	}
 
 }

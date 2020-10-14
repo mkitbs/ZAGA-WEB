@@ -13,9 +13,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.MachineGroupDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class MachineGroup {
 
 	@Id

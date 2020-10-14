@@ -15,17 +15,58 @@ export class MachineComponent implements OnInit {
 
   machines : Machine[] = [];
   machineGroups : MachineGroup[] = [];
+  machine : Machine = new Machine();
 
   ngOnInit() {
     this.machineGroupSerivce.getAll().subscribe(data => {
+      data = this.convertKeysToLowerCase(data);
       this.machineGroups = data;
+      this.machineService.getAll().subscribe(data => {
+        data = this.convertKeysToLowerCase(data);
+        this.machines = data;
+        this.machines.forEach(machine => {
+          if(machine.type == "PROPULSION"){
+            machine.type = "POGONSKA"
+          } else if(machine.type == "COUPLING"){
+            machine.type = "PRIKLJUČNA"
+          }
+          if(machine.fueltype == "NOT_SELECTED"){
+            machine.fueltype = "NIJE IZABRANO"
+          } else if(machine.fueltype == "GASOLINE"){
+            machine.fueltype = "BENZIN"
+          } else if(machine.fueltype == "GAS"){
+            machine.fueltype = "GAS"
+          } else if(machine.fueltype == "EURO_DIESEL"){
+            machine.fueltype = "EVRO DIZEL"
+          } else if(machine.fueltype == "BIO_DIESEL"){
+            machine.fueltype = "BIO DIZEL"
+          } else if(machine.fueltype == "DIESEL"){
+            machine.fueltype = "DIZEL"
+          }
+          machine.machineGroupName = this.machineGroups.find(x => x.dbid == machine.machinegroup).name
+        })
+      })
     })
-    this.machineService.getAll().subscribe(data => {
-      this.machines = data;
-      console.log(this.machines);
-    })
+  }
 
+  getMachine(id){
+    this.machine = this.machines.find((x) => x.id == id);
+  }
 
+  //method for convert json property names to lower case
+  convertKeysToLowerCase(obj) {
+    var output = [];
+    for (let i in obj) {
+      if (Object.prototype.toString.apply(obj[i]) === "[object Object]") {
+        output[i.toLowerCase()] = this.convertKeysToLowerCase(obj[i]);
+      } else if (Object.prototype.toString.apply(obj[i]) === "[object Array]") {
+        output[i.toLowerCase()] = [];
+        output[i.toLowerCase()].push(this.convertKeysToLowerCase(obj[i][0]));
+      } else {
+        output[i.toLowerCase()] = obj[i];
+      }
+    }
+    return output;
   }
 
 }
