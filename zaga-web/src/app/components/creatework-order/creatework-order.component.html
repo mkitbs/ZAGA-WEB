@@ -1205,10 +1205,9 @@
         <i class="fa fa-calendar mr-2" style="vertical-align: middle"></i>Datum:
       </div>
       <div class="col-6">
-        <label style="padding-top: 8px">Od</label
-        ><input
+        <input
           type="date"
-          [(ngModel)]="workOrder.start"
+          [(ngModel)]="workOrder.date"
           id="from"
           ngbDatepicker
           #from="ngbDatepicker"
@@ -1219,25 +1218,6 @@
           required
         />
         <div *ngIf="dateFrom.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite datum.
-        </div>
-      </div>
-      <div class="col-6">
-        <label style="padding-top: 8px">Do</label>
-        <input
-          type="date"
-          [(ngModel)]="workOrder.end"
-          name=""
-          class="form-control"
-          id="to"
-          ngbDatepicker
-          #to="ngbDatepicker"
-          (click)="to.toggle()"
-          name="dateTo"
-          #dateTo="ngModel"
-          required
-        />
-        <div *ngIf="dateTo.invalid && clickAddWorkOrder" style="color: red">
           Izaberite datum.
         </div>
       </div>
@@ -1357,7 +1337,6 @@
               type="text"
               name="treated"
               [(ngModel)]="workOrder.treated"
-              [ngClass]="!this.inputFill ? 'inputFillFalse' : null"
               id=""
               class="form-control"
             />
@@ -1394,7 +1373,6 @@
             style="float: right; margin-top: 5px; background-color: #5c7495"
             data-toggle="modal"
             data-target="#exampleModal"
-            (click)="addEmployee()"
           >
             <i class="fa fa-plus mr-2"></i>Novi radnik
           </button>
@@ -1402,16 +1380,15 @@
         <br />
         <div
           class="card mb-3"
-          *ngFor="let emp of employees; let i = index"
           style="border: 1px solid #5c7495; border-radius: 5px"
         >
-          <div *ngIf="i == 0" id="rad"></div>
+          <div id="rad"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ emp.name }}</h5>
+            <h5 class="card-title"></h5>
             <ul class="list-group">
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-table" style="font-size: 20px"></i>
-                <span style="padding-left: 2px"> Datum: {{ wor.date }}</span>
+                <span style="padding-left: 2px"> Datum: </span>
               </li>
               <li class="list-group-item list-group-item-info">
                 <i
@@ -1419,29 +1396,26 @@
                   style="font-size: 20px; vertical-align: bottom"
                 ></i>
                 <span style="padding-left: 2px; vertical-align: middle">
-                  Operacija: {{ emp.operation }}
+                  Operacija: 
                 </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-clock-o" style="font-size: 20px"></i>
                 <span style="padding-left: 3px">
-                  Redovan rad: {{ wor.dayPeriod || 0 }}
+                  Redovan rad:
                 </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-clock-o" style="font-size: 20px"></i>
                 <span style="padding-left: 3px">
-                  Noćni rad: {{ wor.nightWorkPeriod || 0 }}</span
+                  Noćni rad: </span
                 >
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-plus" style="font-size: 20px"></i>
                 <span style="padding-left: 6px"
-                  >Ukupan rad:
-                  {{
-                    wor.dayPeriod * 1 + worker.nightWorkPeriod * 1 || 0
-                  }}h</span
-                >
+                  >Ukupan rad: h
+                </span>
               </li>
             </ul>
           </div>
@@ -1451,7 +1425,6 @@
               style="float: right"
               data-toggle="modal"
               data-target="#exampleModal"
-              (click)="editWorker(emp)"
             >
               <i class="fa fa-edit mr-2"></i>Izmeni
             </button>
@@ -1484,7 +1457,6 @@
             style="float: right; margin-top: 5px; background-color: #5c7495"
             data-toggle="modal"
             data-target="#machineModal"
-            (click)="addDevice()"
           >
             <i class="fa fa-plus mr-2"></i>Nova mašina
           </button>
@@ -1492,12 +1464,11 @@
         <br />
         <div
           class="card mb-3"
-          *ngFor="let machine of woMachines; let i = index"
           style="border: 1px solid #5c7495; border-radius: 5px"
         >
-          <div *ngIf="i == 0" id="mas"></div>
+          <div id="mas"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ machine.machine.name }}</h5>
+            <h5 class="card-title"></h5>
             <ul class="list-group">
               <li class="list-group-item list-group-item-info">
                 <i
@@ -1505,35 +1476,31 @@
                   style="font-size: 20px; vertical-align: bottom"
                 ></i>
                 <span style="padding-left: 2px; vertical-align: middle">
-                  Radnik: {{ machine.user.name }}
+                  Radnik: 
                 </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-clock-o" style="font-size: 20px"></i>
                 <span style="padding-left: 3px">
-                  Početno stanje MČ:
-                  {{ machine.initialState || 0 }} mh</span
-                >
+                  Početno stanje MČ: mh
+                </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-clock-o" style="font-size: 20px"></i>
                 <span style="padding-left: 3px">
-                  Krajnje stanje MČ: {{ machine.finalState || 0 }} mh</span
+                  Krajnje stanje MČ:  mh</span
                 >
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-plus" style="font-size: 20px"></i>
                 <span style="padding-left: 6px"
-                  >Utrošeni MČ:
-                  {{
-                    machine.initialState * 1 - machine.finalState * 1 || 0
-                  }}h</span
-                >
+                  >Utrošeni MČ: h
+                </span>
               </li>
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-gas-pump" style="font-size: 20px"></i>
                 <span style="padding-left: 3px">
-                  Utrošak goriva: {{ machine.fuel || 0 }} l</span
+                  Utrošak goriva: l</span
                 >
               </li>
             </ul>
@@ -1544,7 +1511,6 @@
               style="float: right"
               data-toggle="modal"
               data-target="#machineModal"
-              (click)="editMachine(machine)"
             >
               <i class="fa fa-edit mr-2"></i>Izmeni
             </button>
@@ -1577,7 +1543,6 @@
             style="float: right; margin-top: 5px; background-color: #5c7495"
             data-toggle="modal"
             data-target="#materialModalMob"
-            (click)="addSubstance()"
           >
             <i class="fa fa-plus mr-2"></i>Novi materijal
           </button>
@@ -1698,7 +1663,7 @@
                 {{ emp.name }}
               </option>
             </select>
-            <div *ngIf="worker.invalid && clickAddWorker" style="color: red">
+            <div *ngIf="worker.invalid" style="color: red">
               Izaberite radnika.
             </div>
           </div>
@@ -1716,7 +1681,7 @@
                 {{ op.name }}
               </option>
             </select>
-            <div *ngIf="operation.invalid && clickAddWorker" style="color: red">
+            <div *ngIf="operation.invalid" style="color: red">
               Izaberite operaciju.
             </div>
           </div>
@@ -1799,20 +1764,9 @@
           <i class="fa fa-window-close"></i> Odustani
         </button>
         <button
-          *ngIf="!editing"
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          (click)="addWorker(workerModalForm.valid)"
-        >
-          <i class="fa fa-save"></i> Sačuvaj
-        </button>
-        <button
-          *ngIf="editing"
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          (click)="editExistingWorker()"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>
@@ -1858,11 +1812,8 @@
               #machine="ngModel"
               required
             >
-              <option
-                value="{{ dev.id }}&{{ dev.Name }}"
-                *ngFor="let dev of devices"
-              >
-                {{ dev.Name }}
+              <option value="-1">
+                //dodaj masine
               </option>
             </select>
             <div *ngIf="machine.invalid && clickAddMachine" style="color: red">
@@ -1905,20 +1856,9 @@
           <i class="fa fa-window-close"></i> Odustani
         </button>
         <button
-          *ngIf="!editingMachine"
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          (click)="addMachine(machineModalForm.valid)"
-        >
-          <i class="fa fa-save"></i> Sačuvaj
-        </button>
-        <button
-          *ngIf="editingMachine"
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          (click)="editExistingMachine()"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>
@@ -1962,7 +1902,6 @@
               [(ngModel)]="selectedMaterial"
               #material="ngModel"
               required
-              (change)="getUnitOfMaterial()"
             >
               <option
                 value="{{ sub.id }}&{{ sub.name }}"
@@ -2009,9 +1948,7 @@
                 required
               />
               <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">{{
-                  selectedUnit
-                }}</span>
+                <span class="input-group-text" id="basic-addon2"></span>
               </div>
             </div>
             <div
@@ -2025,7 +1962,7 @@
             <label for="quantityPerHectar">Planirana količina / ha</label>
             <div class="input-group mb-3">
               <input
-                [(ngModel)]="quantityEntered / crop.area"
+                [(ngModel)]="quantityEntered / crop.Area"
                 type="number"
                 name="quantityPerHectar"
                 id="quantityPerHectar"
@@ -2034,7 +1971,7 @@
               />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2"
-                  >{{ selectedUnit }}/ha</span
+                  >/ha</span
                 >
               </div>
             </div>
@@ -2051,20 +1988,9 @@
           <i class="fa fa-window-close"></i> Odustani
         </button>
         <button
-          *ngIf="!editingMaterial"
           type="button"
           class="btn btn-success"
           style="background-color: #33590b"
-          (click)="addMaterial(materialModalForm.valid)"
-        >
-          <i class="fa fa-save"></i> Sačuvaj
-        </button>
-        <button
-          *ngIf="editingMaterial"
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          (click)="editExistingMaterial()"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>
@@ -2359,7 +2285,7 @@
             <div class="input-group mb-3">
               <input
                 *ngIf="new; else elseBlockSpentPerHectar"
-                [(ngModel)]="spentMaterial.spent / crop.area"
+                [(ngModel)]="spentMaterial.spent / crop.Area"
                 type="number"
                 name="quantityPerHectar"
                 id="quantityPerHectar"

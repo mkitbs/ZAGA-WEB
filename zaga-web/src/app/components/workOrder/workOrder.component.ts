@@ -18,6 +18,7 @@ export class WorkOrderComponent implements OnInit {
 
   workOrderId;
   copyWorkOrderId;
+  model;
 
   urlParam = this.route.snapshot.params.urlParam;
 
@@ -83,7 +84,8 @@ export class WorkOrderComponent implements OnInit {
     } else if (value == "today") {
       this.copyDate = new Date();
     } else {
-      if (value != undefined) {
+      console.log(value)
+      if(value != undefined){
         const someDate = value.year + "-" + value.month + "-" + value.day;
         this.copyDate = new Date(someDate);
       }

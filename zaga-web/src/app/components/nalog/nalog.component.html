@@ -9,7 +9,6 @@
         <label for="dp">Naziv radnog naloga</label>
         <div class="input-group">
           <input
-            [(ngModel)]="workOrderInfo.name"
             class="form-control"
             type="text"
           />
@@ -21,7 +20,7 @@
         <label for="dp">Odgovorna osoba</label>
         <div class="input-group">
           <select
-            [(ngModel)]="workOrderInfo.responsible"
+            [(ngModel)]="workOrderInfo.responsibleId"
             class="form-control"
             id="exampleFormControlSelect1"
           >
@@ -38,9 +37,7 @@
     <div class="col-4">
       <div class="form-group">
         <label for="dp">Kategorija</label>
-
         <select
-          [(ngModel)]="workOrderInfo.category"
           class="form-control"
           id="exampleFormControlSelect1"
         >
@@ -54,9 +51,7 @@
     <div class="col-4">
       <div class="form-group">
         <label for="dp">Kultura</label>
-
         <input
-          [(ngModel)]="workOrderInfo.culture"
           type="text"
           name=""
           id=""
