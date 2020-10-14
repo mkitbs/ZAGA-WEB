@@ -579,7 +579,7 @@
               <!--editable table worker/machine existing wo-->
               <ng-template #elseBlockMachineState>
                 <div class="input-group">
-                  <span *ngIf="workOrders.workers.length == 0"
+                  <span *ngIf="workOrder.workers.length == 0"
                     >Nema dodatih radnika i mašina, dodajte klikom na dugme </span
                   >
                   <button
@@ -1021,7 +1021,7 @@
                     <div class="form-group">
                       <div class="input-group mb-3">
                         <input
-                          [(ngModel)]="material.quantityPerHectar"
+                          [(ngModel)]="material.quantity / workOrder.area"
                           [ngModelOptions]="{ standalone: true }"
                           type="number"
                           name="{{ material.quantityPerHectar }}"

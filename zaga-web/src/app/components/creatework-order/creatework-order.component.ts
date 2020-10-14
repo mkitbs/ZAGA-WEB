@@ -140,6 +140,7 @@ export class CreateworkOrderComponent implements OnInit {
       };
       this.userService.getAll().subscribe((data) => {
         this.allEmployees = data.content;
+        console.log(this.allEmployees)
       });
     } else {
       this.new = false;
@@ -154,6 +155,17 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
+        }
+
+        if(this.workOrder.materials.length != 0){
+          this.workOrder.materials.forEach(material => {
+            if(material.quantity == -1){
+              material.quantity = null;
+            }
+            if(material.quantityPerHectar == -1){
+              material.quantityPerHectar = null;
+            }
+          })
         }
 
         this.workOrder.date = {
@@ -657,6 +669,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateMaterial(spentMaterial) {
+    console.log(spentMaterial)
     this.spentMaterialService
       .updateSpentMaterial(spentMaterial.id, spentMaterial)
       .subscribe((res) => {

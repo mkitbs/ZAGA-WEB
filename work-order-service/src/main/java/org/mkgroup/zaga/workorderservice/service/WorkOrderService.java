@@ -35,7 +35,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.sun.tools.sjavac.Log;
 
 @Service
 public class WorkOrderService {
@@ -183,7 +182,7 @@ public class WorkOrderService {
 			}
 			WorkOrder wo = getOneW(workOrderId);
 			//System.out.println(wo.getWorkers().size()+"AAA");
-			Log.info("Work order creation successfuly finished");
+			log.info("Work order creation successfuly finished");
 			
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
 
@@ -192,7 +191,7 @@ public class WorkOrderService {
 			String authHeader = headerValues.get("authHeader");
 			String cookies = headerValues.get("cookies");
 		    
-		    Log.info("Sending work order to SAP started");
+		    log.info("Sending work order to SAP started");
 		    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 																"Basic " + authHeader, 
 																csrfToken,
@@ -213,7 +212,7 @@ public class WorkOrderService {
 		    if(status.equals("S")) {
 		    	System.out.println("USPESNO");
 		    	//uspesno
-		    	Log.info("Sending work order to SAP successfuly finished");
+		    	log.info("Sending work order to SAP successfuly finished");
 		    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
 				Matcher matcherId = patternErpId.matcher(formatted);
 				Long erpId = 1L;
@@ -240,7 +239,7 @@ public class WorkOrderService {
 					    error = matcherMessage.group(1);
 					}
 		    	System.out.println(error);
-		    	Log.error("Sending work order to SAP failed. (" + error +")");
+		    	log.error("Sending work order to SAP failed. (" + error +")");
 		    
 		    	workOrderRepo.delete(wo);
 		    	
@@ -304,6 +303,8 @@ public class WorkOrderService {
 			} else {
 				workOrder.setStatus(WorkOrderStatus.CLOSED);
 			}
+			
+			workOrder.setTreated(workOrderDTO.getTreated());
 			
 			workOrder.setCreationDate(workOrderDTO.getCreationDate());
 			
@@ -401,7 +402,7 @@ public class WorkOrderService {
 	}
 	
 	public Map<String, String> getHeaderValues() {
-		Log.info("Getting X-CSRF-Token started");
+		log.info("Getting X-CSRF-Token started");
 		StringBuilder authEncodingString = new StringBuilder()
 				.append("MKATIC")
 				.append(":")
@@ -412,7 +413,7 @@ public class WorkOrderService {
 		
 		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
 		
-		Log.info("Getting X-CSRF-Token successfuly finished");
+		log.info("Getting X-CSRF-Token successfuly finished");
 		
 		HttpHeaders headers = resp.getHeaders();
 		String csrfToken;

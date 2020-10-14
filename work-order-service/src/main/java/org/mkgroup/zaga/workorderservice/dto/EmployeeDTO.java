@@ -37,6 +37,7 @@ public class EmployeeDTO {
 	public EmployeeDTO(User user) {
 		id = user.getId();
 		name = user.getName();
+		perNumber = user.getPerNumber();
 	}
 
 }

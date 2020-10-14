@@ -45,7 +45,7 @@ public class SpentMaterialController {
 	
 	@PostMapping("updateSpentMaterial/{id}")
 	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
+		spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
