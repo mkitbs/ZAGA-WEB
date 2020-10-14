@@ -59,7 +59,11 @@ public class WorkOrderDTO {
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
 		treated = wo.getTreated();
-		sapId = wo.getErpId();
+		if(wo.getErpId() != null) {
+			sapId = wo.getErpId();
+		} else {
+			sapId = 0;
+		}
 		
 		this.materials = new ArrayList<SpentMaterialDTO>();
 		for(SpentMaterial sm : wo.getMaterials()) {

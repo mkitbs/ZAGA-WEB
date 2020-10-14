@@ -55,6 +55,9 @@ export class WorkOrderComponent implements OnInit {
             } else if (workOrder.status == "CLOSED") {
               workOrder.status = "Zatvoren";
             }
+            if(workOrder.sapId == 0){
+              workOrder.sapId = null;
+            }
           });
         }
       });
@@ -145,6 +148,9 @@ export class WorkOrderComponent implements OnInit {
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
           }
+          if(workOrder.sapId == 0){
+            workOrder.sapId = null;
+          }
         });
       }
     });
@@ -174,6 +180,9 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          }
+          if(workOrder.sapId == 0){
+            workOrder.sapId = null;
           }
         });
       }

@@ -1,10 +1,8 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
@@ -15,7 +13,6 @@ import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.service.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,21 +49,15 @@ public class WorkOrderController {
 				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.getCause());
-			return new ResponseEntity<String>("Work order not created.", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@PostMapping("/createCopy/{id}")
 	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date){
 		WorkOrder workOrder = wrepo.getOne(id);
-		
-		LocalDate newDate = new LocalDate(Integer.parseInt(date.getYear()),
-										  Integer.parseInt(date.getMonth()),
-										  Integer.parseInt(date.getDay()));
-		System.out.println(newDate.toString());
-		WorkOrder copy = workOrderService.createCopy(workOrder, newDate.toDate());
+	
+		WorkOrder copy = workOrderService.createCopy(workOrder, date);
 		
 		return new ResponseEntity<UUID>(copy.getId(), HttpStatus.CREATED);
 	}
@@ -112,32 +103,6 @@ public class WorkOrderController {
 	@PostMapping("/closeWorkOrder")
 	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
 		workOrderService.closeWorkOrder(request);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@GetMapping("/test")
-	public ResponseEntity<?> test(){
-		
-		String csrfToken;
-		
-		StringBuilder authEncodingString = new StringBuilder()
-				.append("MKATIC")
-				.append(":")
-				.append("katicm0908");
-		//Encoding Authorization String
-		String authHeader = Base64.getEncoder().encodeToString(
-	    		authEncodingString.toString().getBytes());
-		
-		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
-		
-		System.out.println(resp.getStatusCodeValue());
-		HttpHeaders headers = resp.getHeaders();
-		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
-				                                                 .findFirst()
-				                                                 .orElse("nema");
-		
-		System.out.println(csrfToken);
-		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

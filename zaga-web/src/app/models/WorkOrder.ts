@@ -17,4 +17,5 @@ export class WorkOrder {
   operationName;
   treated;
   year;
+  sapId;
 }

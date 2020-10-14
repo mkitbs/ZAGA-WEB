@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
+import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
@@ -186,7 +187,7 @@ public class WorkOrderService {
 			
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
 
-			Map<String, String> headerValues = getHeaderValues();
+			Map<String, String> headerValues = getHeaderValues(wo);
 			String csrfToken = headerValues.get("csrf");
 			String authHeader = headerValues.get("authHeader");
 			String cookies = headerValues.get("cookies");
@@ -197,6 +198,11 @@ public class WorkOrderService {
 																csrfToken,
 																"XMLHttpRequest",
 																workOrderSAP);
+		    if(response == null) {
+		    	workOrderRepo.delete(wo);
+				throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		    }
+		    
 		    String oDataString = response.toString().replace(":", "-");
 		    String formatted = formatJSON(oDataString);
 		    
@@ -325,7 +331,13 @@ public class WorkOrderService {
 		}
 	}
 	
-	public WorkOrder createCopy(WorkOrder workOrder, Date date) {
+	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate) {
+		
+		LocalDate newDate = new LocalDate(Integer.parseInt(copyDate.getYear()),
+				  Integer.parseInt(copyDate.getMonth()),
+				  Integer.parseInt(copyDate.getDay()));
+		Date date = newDate.toDate();
+		
 		WorkOrder copy = new WorkOrder();
 		List<WorkOrderWorker> workers = workOrder.getWorkers();
 		List<SpentMaterial> materials = workOrder.getMaterials();
@@ -338,7 +350,7 @@ public class WorkOrderService {
 		copy.setWorkers(new ArrayList<WorkOrderWorker>());
 		copy.setMaterials(new ArrayList<SpentMaterial>());
 		copy.setDate(date);
-		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
+		copy.setStatus(WorkOrderStatus.NEW);
 		copy = workOrderRepo.save(copy);
 		System.out.println(copy.getId());
 		
@@ -401,7 +413,7 @@ public class WorkOrderService {
 
 	}
 	
-	public Map<String, String> getHeaderValues() {
+	public Map<String, String> getHeaderValues(WorkOrder wo) throws Exception {
 		log.info("Getting X-CSRF-Token started");
 		StringBuilder authEncodingString = new StringBuilder()
 				.append("MKATIC")
@@ -412,6 +424,11 @@ public class WorkOrderService {
 	    		authEncodingString.toString().getBytes());
 		
 		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		
+		if(resp == null) {
+			workOrderRepo.delete(wo);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		}
 		
 		log.info("Getting X-CSRF-Token successfuly finished");
 		

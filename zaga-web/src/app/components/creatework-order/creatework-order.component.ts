@@ -100,6 +100,7 @@ export class CreateworkOrderComponent implements OnInit {
   selectedMaterial;
   quantityEntered;
   unit;
+  treatedEntered;
 
   clickAddMaterial = false;
   clickAddWorkOrder = false;
@@ -147,8 +148,8 @@ export class CreateworkOrderComponent implements OnInit {
 
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
-
-        console.log(this.workOrder);
+        console.log(this.workOrder)
+        this.treatedEntered = this.workOrder.treated;
         if (this.workOrder.status == "NEW") {
           this.workOrder.status = "Novi";
         } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -180,8 +181,8 @@ export class CreateworkOrderComponent implements OnInit {
             this.crops = res;
           });
 
-        if (this.workOrder.treated == 0) {
-          this.workOrder.treated = null;
+        if (this.treatedEntered == 0) {
+          this.treatedEntered = null;
         }
       });
       this.userService.getAll().subscribe((data) => {
@@ -512,12 +513,25 @@ export class CreateworkOrderComponent implements OnInit {
   
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
+
+          this.workOrder.treated = this.treatedEntered;
           if (this.workOrder.status == "NEW") {
             this.workOrder.status = "Novi";
           } else if (this.workOrder.status == "IN_PROGRESS") {
             this.workOrder.status = "U radu";
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
+          }
+
+          if(this.workOrder.materials.length != 0){
+            this.workOrder.materials.forEach(material => {
+              if(material.quantity == -1){
+                material.quantity = null;
+              }
+              if(material.quantityPerHectar < 0){
+                material.quantityPerHectar = null;
+              }
+            })
           }
   
           this.workOrder.date = {
@@ -669,7 +683,6 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateMaterial(spentMaterial) {
-    console.log(spentMaterial)
     this.spentMaterialService
       .updateSpentMaterial(spentMaterial.id, spentMaterial)
       .subscribe((res) => {
@@ -755,6 +768,7 @@ export class CreateworkOrderComponent implements OnInit {
     }
 
     this.workOrder.responsibleId = this.nameFC.value.userId;
+    this.workOrder.treated = this.treatedEntered;
 
     this.workOrderService.updateWorkOrder(this.workOrder).subscribe(
       (data) => {
@@ -796,7 +810,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   closeWorkOrder() {
     this.clickCloseWorkOrder = true;
-    if (this.workOrder.treated != null) {
+    if (this.treatedEntered != null) {
       this.validWoInfo = true;
     } else {
       this.validWoInfo = false;
@@ -850,6 +864,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWow == true &&
       this.validWoInfo == true
     ) {
+      this.workOrder.treated = this.treatedEntered;
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno zatvoren radni nalog.");
