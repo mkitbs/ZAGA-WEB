@@ -18,4 +18,8 @@ export class MachineService {
     return this.http.get(environment.gatewayWorkOrderURL + "api/machine/getMachine/" + id)
   }
 
+  editMachine(machine) : Observable<any>{
+    return this.http.post(environment.gatewayWorkOrderURL + "api/machine/editMachine", machine);
+  }
+
 }

@@ -4,9 +4,9 @@ export class Machine{
     name;
     compnayCode:string;
     orgUnit:string;
-    fueltype:string;
-    type:string;
+    FuelType:string;
+    Type;
     ownershipType:string;
     machineGroupName;
-    machinegroup;
+    machineGroup;
 }

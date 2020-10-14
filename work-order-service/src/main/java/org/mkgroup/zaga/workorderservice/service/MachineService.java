@@ -13,6 +13,7 @@ import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
 import org.mkgroup.zaga.workorderservice.model.FuelType;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.MachineGroup;
+import org.mkgroup.zaga.workorderservice.model.MachineType;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.MachineGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -128,6 +129,40 @@ public class MachineService {
 	public void createMachine(MachineDTO newMachine) {
 		Machine machine = new Machine(newMachine);
 		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+		machine.setMachineGroupId(machineGroup);
+		machineRepository.save(machine);
+	}
+	
+	public void editMachine(MachineDTO machineDTO) {
+		Machine machine = machineRepository.getOne(machineDTO.getId());
+		if(machineDTO.getType().equals("PRIKLJUČNA")) {
+			machine.setType(MachineType.COUPLING);
+		} else if (machineDTO.getType().equals("POGONSKA")) {
+			machine.setType(MachineType.PROPULSION);
+		}
+		switch(machineDTO.getFuelType()) {
+		case "NIJE IZABRANO":
+			machine.setFuelType(FuelType.NOT_SELECTED);
+			break;
+		case "BENZIN":
+			machine.setFuelType(FuelType.GASOLINE);
+			break;
+		case "GAS":
+			machine.setFuelType(FuelType.GAS);
+			break;
+		case "EVRO DIZEL":
+			machine.setFuelType(FuelType.EURO_DIESEL);
+			break;
+		case "BIO DIZEL":
+			machine.setFuelType(FuelType.BIO_DIESEL);
+			break;
+		case "DIZEL":
+			machine.setFuelType(FuelType.DIESEL);
+			break;
+		default:
+			break;
+		}
+		MachineGroup machineGroup = machineGroupRepo.getOne(machineDTO.getMachineGroup());
 		machine.setMachineGroupId(machineGroup);
 		machineRepository.save(machine);
 	}

@@ -15,25 +15,34 @@
                 style="width: fit-content; padding-top: 12px"
               >
                 <img
+                  *ngIf="machine.Type == 'POGONSKA'; else elseBlockMachineImage"
                   class="card-img-right"
                   src="../../../assets/machine.png"
                   width="80px"
                   height="80px"
                 />
+                <ng-template #elseBlockMachineImage>
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/trailer.png"
+                    width="80px"
+                    height="80px"
+                />
+                </ng-template>
               </div>
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title">
-                    {{ machine.name }}
+                    {{ machine.Name }}
                   </h5>
                   <table>
                     <tr title="Tip" style="cursor: help">
                       <th><i class="fas fa-cog"></i></th>
-                      <td>{{ machine.type }}</td>
+                      <td>{{ machine.Type }}</td>
                     </tr>
                     <tr title="Gorivo" style="cursor: help">
                       <th><i class="fas fa-gas-pump"></i></th>
-                      <td>{{ machine.fueltype }}</td>
+                      <td>{{ machine.FuelType }}</td>
                     </tr>
                     <tr title="Grupa" style="cursor: help">
                       <th><i class="fa fa-truck"></i></th>
@@ -70,7 +79,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-truck"></i> {{ machine.name }}
+          <i class="fa fa-truck"></i> {{ machine.Name }}
         </h4>
         <button
           type="button"
@@ -89,7 +98,7 @@
               id=""
               class="form-control"
               name="type"
-              [(ngModel)]="machine.type"
+              [(ngModel)]="machine.Type"
             >
               <option value="POGONSKA">
                 POGONSKA
@@ -105,7 +114,7 @@
             id=""
             class="form-control"
             name="fuel"
-            [(ngModel)]="machine.fueltype"
+            [(ngModel)]="machine.FuelType"
             >
               <option value="NIJE IZABRANO">
                 NIJE IZABRANO
@@ -133,7 +142,7 @@
               id=""
               class="form-control"
               name="group"
-              [(ngModel)]="machine.machinegroup"
+              [(ngModel)]="machine.machineGroup"
             >
               <option
                 value="{{ machineGroup.dbid }}"
@@ -159,7 +168,7 @@
           class="btn btn-success"
           style="background-color: #33590b"
           data-dismiss="modal"
-          (click)="editField()"
+          (click)="editMachine()"
         >
           <i class="fa fa-save"></i> Sačuvaj
         </button>

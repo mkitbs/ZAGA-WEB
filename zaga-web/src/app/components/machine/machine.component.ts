@@ -18,32 +18,38 @@ export class MachineComponent implements OnInit {
   machine : Machine = new Machine();
 
   ngOnInit() {
+   this.getAll();
+  }
+
+  getAll(){
     this.machineGroupSerivce.getAll().subscribe(data => {
       data = this.convertKeysToLowerCase(data);
       this.machineGroups = data;
+      console.log(this.machineGroups)
       this.machineService.getAll().subscribe(data => {
-        data = this.convertKeysToLowerCase(data);
+        //data = this.convertKeysToLowerCase(data);
         this.machines = data;
+        console.log(this.machines)
         this.machines.forEach(machine => {
-          if(machine.type == "PROPULSION"){
-            machine.type = "POGONSKA"
-          } else if(machine.type == "COUPLING"){
-            machine.type = "PRIKLJUČNA"
+          if(machine.Type == "PROPULSION"){
+            machine.Type = "POGONSKA"
+          } else if(machine.Type == "COUPLING"){
+            machine.Type = "PRIKLJUČNA"
           }
-          if(machine.fueltype == "NOT_SELECTED"){
-            machine.fueltype = "NIJE IZABRANO"
-          } else if(machine.fueltype == "GASOLINE"){
-            machine.fueltype = "BENZIN"
-          } else if(machine.fueltype == "GAS"){
-            machine.fueltype = "GAS"
-          } else if(machine.fueltype == "EURO_DIESEL"){
-            machine.fueltype = "EVRO DIZEL"
-          } else if(machine.fueltype == "BIO_DIESEL"){
-            machine.fueltype = "BIO DIZEL"
-          } else if(machine.fueltype == "DIESEL"){
-            machine.fueltype = "DIZEL"
+          if(machine.FuelType == "NOT_SELECTED"){
+            machine.FuelType = "NIJE IZABRANO"
+          } else if(machine.FuelType == "GASOLINE"){
+            machine.FuelType = "BENZIN"
+          } else if(machine.FuelType == "GAS"){
+            machine.FuelType = "GAS"
+          } else if(machine.FuelType == "EURO_DIESEL"){
+            machine.FuelType = "EVRO DIZEL"
+          } else if(machine.FuelType == "BIO_DIESEL"){
+            machine.FuelType = "BIO DIZEL"
+          } else if(machine.FuelType == "DIESEL"){
+            machine.FuelType = "DIZEL"
           }
-          machine.machineGroupName = this.machineGroups.find(x => x.dbid == machine.machinegroup).name
+          machine.machineGroupName = this.machineGroups.find(x => x.dbid == machine.machineGroup).name
         })
       })
     })
@@ -51,6 +57,14 @@ export class MachineComponent implements OnInit {
 
   getMachine(id){
     this.machine = this.machines.find((x) => x.id == id);
+  }
+
+  editMachine(){
+    console.log(this.machine)
+    this.machineService.editMachine(this.machine).subscribe(res => {
+      console.log(res);
+      this.getAll();
+    })
   }
 
   //method for convert json property names to lower case
