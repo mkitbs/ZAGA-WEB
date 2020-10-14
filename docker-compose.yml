@@ -1,0 +1,57 @@
+version: "3"
+services:
+  # MYSQL
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+  # ZAGA-WEB UI
+  zaga-web:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: ./zaga-web/
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - /usr/src/app/zaga-web/node_modules
+      - ./zaga-web:/usr/src/app/zaga-web/
+  # EUREKA-SERVICE-DISCOVERY
+  eureka-service-discovery:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: ./eureka-service-discovery/
+      dockerfile: Dockerfile.dev
+    networks:
+      - zaga-net
+    ports:
+      - "8761:8761"
+    links:
+      - config-server
+    depends_on:
+      - config-server
+    restart: on-failure
+  # CONFIG-SERVER
+  config-server:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: ./config-server/
+      dockerfile: Dockerfile.dev
+    networks:
+      - zaga-net
+    ports:
+      - "8888:8888"
+    restart: always
+networks:
+  zaga-net:
+    driver: bridge

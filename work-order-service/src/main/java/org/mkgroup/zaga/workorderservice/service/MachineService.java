@@ -127,10 +127,12 @@ public class MachineService {
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
-		Machine machine = new Machine(newMachine);
-		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
-		machine.setMachineGroupId(machineGroup);
-		machineRepository.save(machine);
+		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR")) {
+			Machine machine = new Machine(newMachine);
+			MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+			machine.setMachineGroupId(machineGroup);
+			machineRepository.save(machine);
+		}
 	}
 	
 	public void editMachine(MachineDTO machineDTO) {

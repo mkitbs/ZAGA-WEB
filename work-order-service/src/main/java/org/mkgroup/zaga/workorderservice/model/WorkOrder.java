@@ -6,10 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,21 +28,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-public class WorkOrder implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
+public class WorkOrder {
+	
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	private UUID id;
 	
-	private Date startDate;
-	
-	private Date endDate;
+	private Date date;
 	
 	private Date creationDate;
+	
+	private boolean closed = false;
+	
+	@Column(nullable = true)
+	private double treated;
+	
+	@Column(nullable = true)
+	private Long erpId;
 	
 	@Enumerated(EnumType.STRING)
 	private WorkOrderStatus status;
@@ -57,20 +63,10 @@ public class WorkOrder implements Serializable {
 	@JoinColumn(name="crop_id", nullable=true)
 	private Crop crop;
 	
-	@ManyToMany(mappedBy = "workOrder")
-	private List<WorkOrderWorker> workers;
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<WorkOrderWorker> workers = new ArrayList<WorkOrderWorker>();
 	
-	@OneToMany(mappedBy = "workOrder")
-	private List<WorkOrderMachine> machines;
-	
-	@ManyToMany
-	@JoinTable(
-	  name = "assigned_users", 
-	  joinColumns = @JoinColumn(name = "work_order_id"), 
-	  inverseJoinColumns = @JoinColumn(name = "assigned_user_id"))
-	private List<User> assignedUsers = new ArrayList<User>();
-	
-	@OneToMany(mappedBy = "workOrder")
-	private List<SpentMaterial> materials;
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SpentMaterial> materials = new ArrayList<SpentMaterial>();
 
 }

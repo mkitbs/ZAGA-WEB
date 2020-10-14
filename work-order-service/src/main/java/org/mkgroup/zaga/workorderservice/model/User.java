@@ -47,9 +47,6 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<WorkOrderMachine> workOrderMachines = new ArrayList<WorkOrderMachine>();
 	
-	@ManyToMany(mappedBy = "assignedUsers")
-	private List<WorkOrder> workOrdersWorkingOn;
-	
 	@OneToMany(mappedBy = "user")
 	private List<WorkOrderWorker> workOrderWorking = new ArrayList<WorkOrderWorker>();
 	

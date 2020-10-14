@@ -1,4 +1,3 @@
-
 export class Machine{
     id;
     name;

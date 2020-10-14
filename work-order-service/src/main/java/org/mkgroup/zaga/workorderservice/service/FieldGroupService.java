@@ -103,4 +103,14 @@ public class FieldGroupService {
 		oldFieldGroup.setOrgUnit(updatedFieldGroup.getOrgUnit());
 		fieldGroupRepo.save(oldFieldGroup);
 	}
+	
+	public List<FieldGroupDTO> getAll() {
+		List<FieldGroup> fields = fieldGroupRepo.findAll();
+		List<FieldGroupDTO> retValues = new ArrayList<FieldGroupDTO>();
+		for(FieldGroup field : fields) {
+			FieldGroupDTO f = new FieldGroupDTO(field);
+			retValues.add(f);
+		}
+		return retValues;
+	}
 }

@@ -10,9 +10,11 @@ import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
+import org.mkgroup.zaga.workorderservice.service.SpentMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,21 +34,24 @@ public class SpentMaterialController {
 	@Autowired
 	MaterialRepository materialRepo;
 	
+	@Autowired
+	SpentMaterialService spentMaterialService;
+	
 	@PostMapping("{id}")
 	public ResponseEntity<?> addSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		WorkOrder workOrder = workOrderRepo.getOne(id);
-		
-		SpentMaterial spentMaterial = spentMaterialRepo.getOne(spentMaterialDTO.getId());
-		spentMaterial.setWorkOrder(workOrder);
-		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
-		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
-		spentMaterial.setSpent(spentMaterialDTO.getSpent());
-		spentMaterial.setSpentPerHectar(spentMaterialDTO.getSpent() / workOrder.getCrop().getArea());
-		
-		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
-		spentMaterial.setMaterial(material);
-		
-		spentMaterialRepo.save(spentMaterial);
+		spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("updateSpentMaterial/{id}")
+	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
+		spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping("deleteSpentMaterial/{id}")
+	public ResponseEntity<?> deleteSpentMaterial(@PathVariable UUID id){
+		spentMaterialService.deleteSpentMaterial(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

@@ -6,13 +6,16 @@ import java.util.UUID;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
+import org.mkgroup.zaga.workorderservice.service.WorkOrderWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,20 +37,28 @@ public class WorkOrderWorkerController {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	WorkOrderWorkerService wowService;
+	
+	@Autowired
+	MachineRepository machineRepo;
 
 	@PostMapping("addWorker/{id}")
 	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO){
-		WorkOrder workOrder = workOrderRepo.getOne(id);
-		WorkOrderWorker wow = new WorkOrderWorker();
-		wow.setDate(new Date()); //zakucano
-		wow.setDayNightPeriod(wowDTO.getDayNightPeriod());
-		wow.setDayWorkPeriod(wowDTO.getDayPeriod());
-		wow.setWorkPeriod(wowDTO.getDayNightPeriod() + wowDTO.getDayPeriod());
-		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setWorkOrder(workOrder);
-		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
-
-		wowRepo.save(wow);
+		wowService.addWorker(id, wowDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("updateWorkOrderWorker/{id}")
+	public ResponseEntity<?> updateWorkOrderWorker(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO){
+		wowService.updateWorkOrder(id, wowDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping("deleteWorkOrderWorker/{id}")
+	public ResponseEntity<?> deleteWow(@PathVariable UUID id){
+		wowService.deleteWow(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

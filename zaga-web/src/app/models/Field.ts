@@ -1,4 +1,10 @@
-export class Field{
-    id;
-    name;
+export class Field {
+  id;
+  Name;
+  Year;
+  Area;
+  fieldGroupName;
+  fieldGroup;
+  dbid;
+  name;
 }

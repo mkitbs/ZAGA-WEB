@@ -3,7 +3,11 @@ package org.mkgroup.zaga.workorderservice.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
+import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
@@ -14,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,14 +32,34 @@ public class WorkOrderController {
 	@Autowired
 	WorkOrderRepository wrepo;
 	
+	@Autowired
+	SAPGatewayProxy gwProxy;
+	
+	@Autowired
+	SAP4HanaProxy sap4hana;
+	
 	@PostMapping("/createWorkOrder")
-	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request){
+	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
 		try {
-			workOrderService.addWorkOrder(request);
-			return new ResponseEntity<>(HttpStatus.OK);
+			SAPResponse sapResponse = workOrderService.addWorkOrder(request);
+			
+			if(sapResponse.isSuccess()) {
+				return new ResponseEntity<SAPResponse>(sapResponse ,HttpStatus.OK);
+			}else {
+				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
+			}
 		}catch(Exception e) {
-			return new ResponseEntity<String>("Work order not created.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@PostMapping("/createCopy/{id}")
+	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date){
+		WorkOrder workOrder = wrepo.getOne(id);
+	
+		WorkOrder copy = workOrderService.createCopy(workOrder, date);
+		
+		return new ResponseEntity<UUID>(copy.getId(), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/createTestWorkOrder")
@@ -71,19 +94,21 @@ public class WorkOrderController {
 	public ResponseEntity<?> updateWorkOrder(@RequestBody WorkOrderDTO request){
 		try {
 			workOrderService.updateWorkOrder(request);
-			return new ResponseEntity<String>("Work order updated successfully.", HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<String>("Work order not updated. Error " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PutMapping("/closeWorkOrder/{id}")
-	public ResponseEntity<?> closeWorkOrder(@PathVariable UUID id){
-		WorkOrder workOrder = wrepo.getOne(id);
-		workOrder.setStatus(WorkOrderStatus.CLOSED);
-		wrepo.save(workOrder);
-		
+	@PostMapping("/closeWorkOrder")
+	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
+		workOrderService.closeWorkOrder(request);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
+	
+	@GetMapping("/getAllByStatus/{status}")
+	public ResponseEntity<?> getAllByStatus(@PathVariable WorkOrderStatus status){
+		List<WorkOrderDTO> workOrders = workOrderService.getAllByStatus(status);
+		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+	}
 }
