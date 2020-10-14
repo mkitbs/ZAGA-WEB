@@ -6,17 +6,16 @@ import { WorkOrderWorker } from "./WorkOrderWorker";
 export class WorkOrder {
   id: string;
   area;
-  start;
-  end;
+  date;
   status;
   cropId: string;
   tableId;
-  cultureId;
   operationId: string;
   responsibleId: string;
   materials: SpentMaterial[] = [];
-  machines: WorkOrderMachine[] = new Array<WorkOrderMachine>();
   workers: WorkOrderWorker[] = [];
-  assignedUsers: Employee[] = [];
   operationName;
+  treated;
+  year;
+  sapId;
 }

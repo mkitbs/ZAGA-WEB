@@ -1,16 +1,13 @@
 package org.mkgroup.zaga.workorderservice.model;
 
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -37,14 +34,28 @@ public class WorkOrderWorker {
 	private Operation operation;
 	
 	@ManyToOne
-	@JoinColumn(name="worke_order_id", nullable=true)
+	@JoinColumn(name="work_order_id", nullable=true)
 	private WorkOrder workOrder;
 	
-	private Date date;
+	@ManyToOne
+	@JoinColumn(name="machine_id", nullable=true)
+	private Machine machine;
 	
-	private double dayWorkPeriod;
+	@ManyToOne
+	@JoinColumn(name="connecting_machine_id", nullable = true)
+	private Machine connectingMachine;
 	
-	private double dayNightPeriod;
+	private Double dayPeriod = -1.0;
 	
-	private double workPeriod;
+	private Double nightPeriod = -1.0;
+	
+	private Double workPeriod = -1.0;
+	
+	private Double initialState = -1.0;
+	
+	private Double finalState = -1.0;
+	
+	private Double sumState = -1.0;
+	
+	private Double fuel = -1.0;
 }

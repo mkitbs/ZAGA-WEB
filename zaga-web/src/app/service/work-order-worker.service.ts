@@ -15,4 +15,21 @@ export class WorkOrderWorkerService {
       worker
     );
   }
+
+  updateWorkOrderWorker(id, wow): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL +
+        "api/workOrderWorker/updateWorkOrderWorker/" +
+        id,
+      wow
+    );
+  }
+
+  deleteWorkOrderWorker(id): Observable<any> {
+    return this.http.delete(
+      environment.gatewayWorkOrderURL +
+        "api/workOrderWorker/deleteWorkOrderWorker/" +
+        id
+    );
+  }
 }

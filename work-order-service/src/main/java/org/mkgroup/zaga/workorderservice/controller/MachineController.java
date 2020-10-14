@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
 import org.mkgroup.zaga.workorderservice.model.Machine;
+import org.mkgroup.zaga.workorderservice.model.MachineType;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.service.MachineService;
 import org.modelmapper.ModelMapper;
@@ -42,6 +43,28 @@ public class MachineController {
 			retValues.add(m);
 		}
 		return new ResponseEntity<List<MachineDTO>>(retValues, HttpStatus.OK);
+	}
+	
+	@GetMapping("getAll/propulsion")
+	public ResponseEntity<?> getPropulsion(){
+		List<Machine> machines = machineRepo.getMachines(MachineType.PROPULSION.toString());
+		List<MachineDTO> retVal = new ArrayList<MachineDTO>();
+		for(Machine machine : machines) {
+			MachineDTO macDTO = new MachineDTO(machine);
+			retVal.add(macDTO);
+		}
+		return new ResponseEntity<List<MachineDTO>>(retVal, HttpStatus.OK);
+	}
+	
+	@GetMapping("getAll/coupling")
+	public ResponseEntity<?> getCoupling(){
+		List<Machine> machines = machineRepo.getMachines(MachineType.COUPLING.toString());
+		List<MachineDTO> retVal = new ArrayList<MachineDTO>();
+		for(Machine machine : machines) {
+			MachineDTO macDTO = new MachineDTO(machine);
+			retVal.add(macDTO);
+		}
+		return new ResponseEntity<List<MachineDTO>>(retVal, HttpStatus.OK);
 	}
 	
 	@GetMapping("getMachine/{id}")

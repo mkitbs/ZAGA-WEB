@@ -84,4 +84,11 @@ public class SAPGatewayFallback implements SAPGatewayProxy {
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<Object> getCSRFToken(String token, String csrfToken) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

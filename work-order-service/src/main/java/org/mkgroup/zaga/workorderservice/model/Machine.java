@@ -3,14 +3,12 @@ package org.mkgroup.zaga.workorderservice.model;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -55,7 +53,10 @@ public class Machine {
 	private MachineGroup machineGroupId;
 	
 	@OneToMany(mappedBy = "machine")
-	private List<WorkOrderMachine> workOrders;
+	private List<WorkOrderWorker> workOrderWorkers;
+	
+	@OneToMany(mappedBy = "connectingMachine")
+	private List<WorkOrderWorker> workOrderConnectingMachines;
 
 	public Machine(MachineDTO m) {
 		this.name = m.getName();

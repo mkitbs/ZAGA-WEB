@@ -119,7 +119,9 @@ public class MachineService {
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
-		Machine machine = new Machine(newMachine);
-		machineRepository.save(machine);
+		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR")) {
+			Machine machine = new Machine(newMachine);
+			machineRepository.save(machine);
+		}
 	}
 }

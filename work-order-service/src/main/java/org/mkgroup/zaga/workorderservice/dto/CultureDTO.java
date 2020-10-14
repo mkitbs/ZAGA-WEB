@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CultureDTO {
 	
-	private UUID id;
+	private UUID dbId;
 	
 	@JsonProperty("Id")
     Long erpId;
@@ -32,9 +32,12 @@ public class CultureDTO {
 	@JsonProperty("Type")
     String type;
 	
+	private UUID cultureGroup;
+	
 	public CultureDTO(Culture culture) {
-		id = culture.getId();
+		dbId = culture.getId();
 		name = culture.getName();
+		cultureGroup = culture.getCultureGroup().getId();
 	}
 
 }

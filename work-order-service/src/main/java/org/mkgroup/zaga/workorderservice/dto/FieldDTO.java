@@ -21,7 +21,7 @@ public class FieldDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private UUID id;
+	private UUID dbId;
 	
 	@JsonProperty("Id")
 	private Long erpId;
@@ -42,13 +42,16 @@ public class FieldDTO implements Serializable{
 	private double area;
 	
 	@JsonProperty("FieldGroupId")
-	private Long fieldGroup;
+	private Long fieldGroupId;
+	
+	private UUID fieldGroup;
 	
 	public FieldDTO(Field field) {
-		id = field.getId();
+		dbId = field.getId();
 		name = field.getName();
 		year = field.getYear();
 		area = field.getArea();
+		fieldGroup = field.getFieldGroup().getId();
 	}
 
 }

@@ -104,5 +104,20 @@ public class CultureGroupService {
 		oldCultureGroup.setName(updatedCultureGroup.getName());
 		cultureGroupRepo.save(oldCultureGroup);
 	}
+	
+	public List<CultureGroupDTO> getAll(){
+		try {
+			List<CultureGroup> cultureGroups = cultureGroupRepo.findAll();
+			List<CultureGroupDTO> retValues = new ArrayList<CultureGroupDTO>();
+			for(CultureGroup cultureGroup : cultureGroups) {
+				CultureGroupDTO retValue = new CultureGroupDTO(cultureGroup);
+				retValues.add(retValue);
+			}
+			return retValues;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }
