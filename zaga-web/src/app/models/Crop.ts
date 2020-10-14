@@ -1,12 +1,12 @@
 export class Crop {
-  id: string;
-  cultureId: string;
-  name: string;
-  organisationUnit: string;
-  companyCode: string;
-  area: number;
-  year: number;
-  fieldId: number;
+  id;
+  cultureId;
+  Name;
+  organisationUnit;
+  companyCode;
+  Area;
+  Year;
+  fieldId;
   cultureName;
   field;
 }

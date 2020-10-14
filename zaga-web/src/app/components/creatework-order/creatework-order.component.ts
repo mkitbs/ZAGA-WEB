@@ -226,7 +226,7 @@ export class CreateworkOrderComponent implements OnInit {
   getArea() {
     this.cropService.getOne(this.workOrder.cropId).subscribe((data) => {
       this.crop = data;
-      this.crop.area = data.Area;
+      this.crop.Area = data.Area;
       this.workOrder.area = data.Area;
     });
   }

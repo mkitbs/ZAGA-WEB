@@ -1,8 +1,10 @@
 export class Field {
   id;
-  name;
-  year;
+  Name;
+  Year;
+  Area;
   fieldGroupName;
   fieldGroup;
   dbid;
+  name;
 }
