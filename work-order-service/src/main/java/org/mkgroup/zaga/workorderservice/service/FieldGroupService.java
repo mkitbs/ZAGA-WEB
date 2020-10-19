@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.FieldGroupDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldGroupEditDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.FieldGroup;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
@@ -112,5 +113,12 @@ public class FieldGroupService {
 			retValues.add(f);
 		}
 		return retValues;
+	}
+	
+	public void editFieldGroup(FieldGroupEditDTO fieldGroupDTO) {
+		FieldGroup fieldGroup = fieldGroupRepo.getOne(fieldGroupDTO.getDbid());
+		fieldGroup.setCompanyCode(fieldGroupDTO.getCompanycode());
+		fieldGroup.setOrgUnit(fieldGroupDTO.getOrganisationunit());
+		fieldGroupRepo.save(fieldGroup);
 	}
 }

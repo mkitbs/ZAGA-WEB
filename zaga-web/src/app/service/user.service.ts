@@ -24,4 +24,8 @@ export class UserService {
     return this.http.get(environment.gatewayWorkOrderURL + "api/employee/getEmployee/" + id);
   }
 
+  editUser(user) : Observable<any>{
+    return this.http.post(environment.gatewayWorkOrderURL + "api/employee/editUser", user);
+  }
+
 }

@@ -1,6 +1,6 @@
 export class Machine{
     id;
-    name;
+    Name;
     compnayCode:string;
     orgUnit:string;
     FuelType:string;

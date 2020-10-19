@@ -5,6 +5,6 @@ export class Field {
   Area;
   fieldGroupName;
   fieldGroup;
-  dbid;
+  dbId;
   name;
 }

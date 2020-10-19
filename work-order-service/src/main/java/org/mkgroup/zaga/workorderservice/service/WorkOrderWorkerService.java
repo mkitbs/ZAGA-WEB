@@ -86,7 +86,7 @@ public class WorkOrderWorkerService {
 		} else {
 			wow.setFuel(-1.0);
 		}
-		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
+		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
 		wow.setConnectingMachine(machineRepo.getOne(wowDTO.getConnectingMachine().getId()));
 		wow.setMachine(machineRepo.getOne(wowDTO.getMachine().getId()));
@@ -131,7 +131,7 @@ public class WorkOrderWorkerService {
 			wow.setSumState(-1.0);
 		}
 		wow.setWorkOrder(workOrder);
-		wow.setUser(userRepo.getOne(wowDTO.getUser().getId()));
+		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
 
 		wowRepo.save(wow);
 	}

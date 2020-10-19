@@ -1,4 +1,6 @@
 export class FieldGroup {
-  dbid;
-  name;
+  dbId;
+  Name;
+  Companycode;
+  OrganisationUnit;
 }

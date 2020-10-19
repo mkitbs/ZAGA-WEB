@@ -24,5 +24,11 @@ public class OperationGroupController {
 		return new ResponseEntity<List<OperationGroupDTO>>(operationGroupService.getOperationGroupsFromSAP(),
 				HttpStatus.OK);
 	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		List<OperationGroupDTO> operationGroups = operationGroupService.getAll();
+		return new ResponseEntity<List<OperationGroupDTO>>(operationGroups, HttpStatus.OK);
+	}
 
 }

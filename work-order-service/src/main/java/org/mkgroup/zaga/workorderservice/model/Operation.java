@@ -55,5 +55,24 @@ public class Operation {
 		this.kind = op.getKind();
 		this.name = op.getName();
 		this.erpId = op.getErpId();
+		switch(op.getType()) {
+		case "R":
+			this.type = OperationType.CROP_FARMING;
+			break;
+		case "G":
+			this.type = OperationType.VITICULTURE;
+			break;
+		case "V":
+			this.type = OperationType.FRUIT_GROWING;
+			break;
+		case "P":
+			this.type = OperationType.VEGETABLE;
+			break;
+		case "S":
+			this.type = OperationType.ANIMAL_HUSBANDRY;
+			break;
+		default:
+			break;
+		}
 	}
 }

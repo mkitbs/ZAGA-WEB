@@ -151,7 +151,7 @@ public class WorkOrderService {
 				} else {
 					wow.setWorkPeriod(-1.0);
 				}
-				wow.setUser(employeeService.getOne(wowDTO.getUser().getId()));
+				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
 				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
 				

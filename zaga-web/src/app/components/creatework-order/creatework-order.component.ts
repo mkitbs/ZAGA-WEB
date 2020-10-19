@@ -345,9 +345,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.user.name = this.allEmployees.find(
       (x) => x.userId == wow.user.id
     ).name;
-    this.wow.machine.name = this.devicesPropulsion.find(
+    this.wow.machine.Name = this.devicesPropulsion.find(
       (x) => x.id == wow.machine.id
-    ).name;
+    ).Name;
     this.idOfEditingWorkerMachine = this.wow.wowObjectId;
     if (!this.new) {
       this.wow.id = wow.id;
@@ -355,9 +355,9 @@ export class CreateworkOrderComponent implements OnInit {
       this.wow.user.name = this.allEmployees.find(
         (x) => x.userId == this.wow.user.id
       ).name;
-      this.wow.machine.name = this.devicesPropulsion.find(
+      this.wow.machine.Name = this.devicesPropulsion.find(
         (x) => x.id == this.wow.machine.id
-      ).name;
+      ).Name;
       if (this.wow.dayPeriod == -1) {
         this.wow.dayPeriod = null;
       }
@@ -413,7 +413,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.initialState = null;
     this.wow.finalState = null;
     this.wow.user.name = null;
-    this.wow.machine.name = null;
+    this.wow.machine.Name = null;
   }
 
   validDetailOfNewWow(){

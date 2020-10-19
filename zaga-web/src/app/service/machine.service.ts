@@ -22,12 +22,20 @@ export class MachineService {
   }
 
   editMachine(machine) : Observable<any>{
-    return this.http.post(environment.gatewayWorkOrderURL + "api/machine/editMachine", machine);
+    return this.http.post(
+      environment.gatewayWorkOrderURL + "api/machine/editMachine", 
+      machine);
   }
 
   getOne(id): Observable<any> {
     return this.http.get(
       environment.gatewayWorkOrderURL + "api/machine/getMachine/" + id
+    );
+  }
+
+  getAll(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/getAll"
     );
   }
 }

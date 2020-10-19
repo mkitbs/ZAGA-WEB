@@ -1,0 +1,137 @@
+<div class="d-none d-xl-block">
+    <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2">Pregled grupa mašina</h3>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <div class="row card-group">
+        <div class="col-4" *ngFor="let machineGroup of machineGroups; let j = index">
+          <div class="card mb-4" style="width: 30.2rem;">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-bottom: 10px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/tractor.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title" style="margin-right: 30px;">
+                      {{ machineGroup.Name }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              data-toggle="modal"
+              data-target="#editFieldGroupModal"
+              (click)="getFieldGroup(fieldGroup.dbid)"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled grupa mašina</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <div class="col-5" *ngFor="let machineGroup of machineGroups; let j = index">
+        <div class="card mb-4" style="width: 30.2rem;">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-bottom: 10px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/tractor.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ machineGroup.Name }}
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            data-toggle="modal"
+            data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbid)"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled grupa mašina</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="row card-group">
+      <div class="col-7" *ngFor="let machineGroup of machineGroups; let j = index">
+        <div class="card mb-4" style="width: 30.2rem;">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-bottom: 10px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/tractor.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ machineGroup.Name }}
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="buttonEdit btn btn-primary btn-edit"
+            data-toggle="modal"
+            data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbid)"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

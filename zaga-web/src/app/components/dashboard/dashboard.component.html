@@ -95,7 +95,7 @@
          <agm-marker *ngFor="let machine of markers; let i = index"
            (markerClick)="clickedMarker(1*machine.latMachine, 1*machine.lngMachine, machine.id, i)"
            [latitude]="machine.latMachine" [longitude]="machine.lngMachine" [id]="machine.id" [iconUrl]="{
-                        url: './assets/machine.png',
+                        url: './assets/tractor.png',
                         scaledSize: {
                             width: 40,
                             height: 60

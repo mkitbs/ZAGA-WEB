@@ -1,4 +1,4 @@
 export class MachineGroup{
-    dbid;
-    name;
+    dbId;
+    Name;
 }

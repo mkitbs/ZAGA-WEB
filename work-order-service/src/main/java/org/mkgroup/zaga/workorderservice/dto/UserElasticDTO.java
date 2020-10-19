@@ -10,15 +10,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserElasticDTO {
-
-	private UUID id;
+	
+	private String id;
+	private UUID userId;
 	private String name;
 	private String department;
 	private String position;
 	private Long perNumber;
 	
 	public UserElasticDTO(User u) {
-		this.id =u.getId();
+		this.userId =u.getId();
 		this.department = u.getDepartment();
 		this.name = u.getName();
 		this.perNumber = u.getPerNumber();

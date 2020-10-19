@@ -17,13 +17,15 @@ export class MachineComponent implements OnInit {
   machineGroups : MachineGroup[] = [];
   machine : Machine = new Machine();
 
+  selectedMachineType;
+
   ngOnInit() {
    this.getAll();
   }
 
   getAll(){
     this.machineGroupSerivce.getAll().subscribe(data => {
-      data = this.convertKeysToLowerCase(data);
+      //data = this.convertKeysToLowerCase(data);
       this.machineGroups = data;
       console.log(this.machineGroups)
       this.machineService.getAll().subscribe(data => {
@@ -49,7 +51,7 @@ export class MachineComponent implements OnInit {
           } else if(machine.FuelType == "DIESEL"){
             machine.FuelType = "DIZEL"
           }
-          machine.machineGroupName = this.machineGroups.find(x => x.dbid == machine.machineGroup).name
+          machine.machineGroupName = this.machineGroups.find(machineGroup => machineGroup.dbId == machine.machineGroup).Name
         })
       })
     })
@@ -66,6 +68,67 @@ export class MachineComponent implements OnInit {
       this.getAll();
     })
   }
+
+  getMachinePerType(){
+    if(this.selectedMachineType == "PROPULSION"){
+      this.machineService.getAllPropulsion().subscribe(data => {
+        this.machines = data;
+        this.machines.forEach(machine => {
+          if(machine.Type == "PROPULSION"){
+            machine.Type = "POGONSKA"
+          } else if(machine.Type == "COUPLING"){
+            machine.Type = "PRIKLJUČNA"
+          }
+          if(machine.FuelType == "NOT_SELECTED"){
+            machine.FuelType = "NIJE IZABRANO"
+          } else if(machine.FuelType == "GASOLINE"){
+            machine.FuelType = "BENZIN"
+          } else if(machine.FuelType == "GAS"){
+            machine.FuelType = "GAS"
+          } else if(machine.FuelType == "EURO_DIESEL"){
+            machine.FuelType = "EVRO DIZEL"
+          } else if(machine.FuelType == "BIO_DIESEL"){
+            machine.FuelType = "BIO DIZEL"
+          } else if(machine.FuelType == "DIESEL"){
+            machine.FuelType = "DIZEL"
+          }
+          machine.machineGroupName = this.machineGroups.find(machineGroup => machineGroup.dbId == machine.machineGroup).Name
+        })
+      })
+    } else if(this.selectedMachineType == "COUPLING"){
+      this.machineService.getAllCoupling().subscribe(data => {
+        this.machines = data;
+        this.machines.forEach(machine => {
+          if(machine.Type == "PROPULSION"){
+            machine.Type = "POGONSKA"
+          } else if(machine.Type == "COUPLING"){
+            machine.Type = "PRIKLJUČNA"
+          }
+          if(machine.FuelType == "NOT_SELECTED"){
+            machine.FuelType = "NIJE IZABRANO"
+          } else if(machine.FuelType == "GASOLINE"){
+            machine.FuelType = "BENZIN"
+          } else if(machine.FuelType == "GAS"){
+            machine.FuelType = "GAS"
+          } else if(machine.FuelType == "EURO_DIESEL"){
+            machine.FuelType = "EVRO DIZEL"
+          } else if(machine.FuelType == "BIO_DIESEL"){
+            machine.FuelType = "BIO DIZEL"
+          } else if(machine.FuelType == "DIESEL"){
+            machine.FuelType = "DIZEL"
+          }
+          machine.machineGroupName = this.machineGroups.find(machineGroup => machineGroup.dbId == machine.machineGroup).Name
+        })
+      })
+    }
+  }
+
+  setValueForSelectedMachineType(){
+    this.selectedMachineType = -1;
+    this.getAll();
+    console.log(this.selectedMachineType)
+  }
+
 
   //method for convert json property names to lower case
   convertKeysToLowerCase(obj) {
