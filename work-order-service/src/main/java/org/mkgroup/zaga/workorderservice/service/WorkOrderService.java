@@ -422,9 +422,8 @@ public class WorkOrderService {
 		copy = workOrderRepo.save(copy);
 		UUID workOrderId = copy.getId();
 		
-		System.out.println(copy.getId());
-		
 		for(WorkOrderWorker worker : workers) {
+			
 			WorkOrderWorker wow = new WorkOrderWorker();
 			wow.setWorkOrder(copy);
 			wow.setMachine(worker.getMachine());
@@ -433,6 +432,8 @@ public class WorkOrderService {
 			wow.setConnectingMachine(worker.getConnectingMachine());
 			
 			wowRepo.save(wow);
+			copy.getWorkers().add(wow);
+			copy = workOrderRepo.save(copy);
 		}
 		
 		for(SpentMaterial material:materials) {
@@ -441,12 +442,14 @@ public class WorkOrderService {
 			spentMaterial.setWorkOrder(copy);
 			
 			spentMaterialRepo.save(spentMaterial);
+			copy.getMaterials().add(spentMaterial);
+			copy = workOrderRepo.save(copy);
 		}
 		
 		WorkOrder wo = getOneW(workOrderId);
 		//System.out.println(wo.getWorkers().size()+"AAA");
 		log.info("Work order creation successfuly finished");
-		
+		System.out.println("AAAA" + " " + wo.getWorkers().size());
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
 
 		Map<String, String> headerValues = getHeaderValues(wo);
