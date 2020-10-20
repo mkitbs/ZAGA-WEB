@@ -57,4 +57,9 @@ public class User {
 		this.perNumber = em.getPerNumber();
 	}
 	
+	@Override
+    public String toString() { 
+        return String.format(""); 
+    } 
+	
 }

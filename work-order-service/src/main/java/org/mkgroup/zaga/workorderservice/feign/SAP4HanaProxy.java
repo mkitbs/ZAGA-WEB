@@ -1,5 +1,6 @@
 	package org.mkgroup.zaga.workorderservice.feign;
 
+import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -27,4 +28,17 @@ public interface SAP4HanaProxy {
 			@RequestHeader("X-CSRF-Token") String csrfToken,
 			@RequestHeader("X-Requested-With") String xmlRequestWith,
 			@RequestBody WorkOrderToSAP workOrder) throws Exception;
+	
+	@GetMapping(value = "/WorkOrderCloseSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> getCSRFTokenClose(
+			@RequestHeader("Authorization") String token,
+			@RequestHeader("X-CSRF-Token") String csrfToken);
+	
+	@PostMapping(value = "/WorkOrderCloseSet", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> closeWorkOrder(
+			@RequestHeader("Cookie") String cookie,
+			@RequestHeader("Authorization") String token,
+			@RequestHeader("X-CSRF-Token") String csrfToken,
+			@RequestHeader("X-Requested-With") String xmlRequestWith,
+			@RequestBody CloseWorkOrderDTO closeWorkOrder) throws Exception;
 }

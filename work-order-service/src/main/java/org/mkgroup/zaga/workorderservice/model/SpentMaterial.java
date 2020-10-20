@@ -38,6 +38,6 @@ public class SpentMaterial {
 	@ManyToOne
 	private WorkOrder workOrder;
 	
-	
+	private int erpId = 0;
 	
 }

@@ -60,12 +60,12 @@ public class WorkOrderToSAP {
 
 
 	@SuppressWarnings("deprecation")
-	public WorkOrderToSAP(WorkOrder workOrder) {
-		this.Activity = "NEW";
+	public WorkOrderToSAP(WorkOrder workOrder, String action) {
+		this.Activity = action;
 		this.CompanyCode = "1200";
 		this.OrganisationUnit = "BIPR";
 		this.WorkItemNumber = "001";
-		this.WorkOrderNumber = "";
+		this.WorkOrderNumber = (action.equals("MOD") ? workOrder.getErpId().toString() : "");
 		this.CropVarietyId = "000000";
 		this.DataChangeUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
 		this.WorkOrderDate = "2020-09-24T00:00:00";
@@ -75,7 +75,7 @@ public class WorkOrderToSAP {
 		this.ReleasedUserNumber = workOrder.getResponsible().getPerNumber().toString();
 		this.CropId = workOrder.getCrop().getErpId().toString();
 		this.OperationId = workOrder.getOperation().getErpId().toString();
-		this.NoMaterial = "";
+		this.NoMaterial = (workOrder.getMaterials().size() == 0)? "X" : "";
 		this.OnlyMaterial = "";
 		this.Note = "";
 		this.DataEntryUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
@@ -88,34 +88,66 @@ public class WorkOrderToSAP {
 			mat.setMaterialUnit(sp.getMaterial().getUnit());
 			mat.setCharge("");
 			mat.setDeleted("");
-			mat.setSpentQuantity("0.0");
-			mat.setWorkOrderMaterialNumber("");
+			mat.setSpentQuantity(sp.getSpent().toString());
+			if(sp.getErpId() == 0) {
+				mat.setWorkOrderMaterialNumber("");
+			}else {
+				mat.setWorkOrderMaterialNumber(String.valueOf(sp.getErpId()));
+			}
+			mat.setWebBackendId(sp.getId());
 			
 			this.WorkOrderToMaterialNavigation.getResults().add(mat);	
 		}
 		
 		for(WorkOrderWorker wow : workOrder.getWorkers()) {
 			WorkOrderEmployeeSAP woeSAP = new WorkOrderEmployeeSAP();
-			woeSAP.setWorkOrderEmployeeNumber(wow.getUser().getPerNumber().toString());
+			if(wow.getErpId() != 0) {
+				woeSAP.setWorkOrderEmployeeNumber(String.valueOf(wow.getErpId()));
+			}else {
+				woeSAP.setWorkOrderEmployeeNumber("");
+			}
 			woeSAP.setEmployeeId(wow.getUser().getPerNumber().toString());
 			woeSAP.setOperationId(wow.getOperation().getErpId().toString());
-			woeSAP.setWorkEffectiveHours("0.00000");
+			if(wow.getWorkPeriod() != -1 || wow.getNightPeriod() != -1) {
+				Double sum = wow.getWorkPeriod() + wow.getNightPeriod();
+				woeSAP.setWorkEffectiveHours(sum.toString());
+			}else {
+				woeSAP.setWorkEffectiveHours("0.00000");
+			}
 			woeSAP.setWorkSundayHours("0.00000");
 			woeSAP.setWorkHolidayHours("0.00000");
 			woeSAP.setOvertimeWork("");
-			woeSAP.setOperationOutput("0.00000");
+			if(workOrder.getTreated() == 0) {
+				woeSAP.setOperationOutput("0.0");
+				woeSAP.setMachineAreaOutput("0.00000");
+			}else {
+				woeSAP.setMachineAreaOutput(Double.toString(workOrder.getTreated()));
+				woeSAP.setOperationOutput(Double.toString(workOrder.getTreated()));
+			}
+			woeSAP.setOperationOutput(Double.toString(workOrder.getTreated()));
 			woeSAP.setOperationOutputUnit("");
 			woeSAP.setNoOperationOutput("");
 			woeSAP.setMasterMachineId(wow.getMachine().getErpId().toString());
 			woeSAP.setSlaveMachineId(wow.getConnectingMachine().getErpId().toString());
-			woeSAP.setMachineTimeStart("0.0");
-			woeSAP.setMachineTimeEnd("0.0");
-			woeSAP.setMachineEffectiveHours("0.00000");
-			woeSAP.setMachineAreaOutput("0.00000");
-			woeSAP.setSpentFuel("0.00000");
-			woeSAP.setWorkNightHours("0.00000");
+			woeSAP.setMachineTimeStart(wow.getInitialState().toString());
+			woeSAP.setMachineTimeEnd(wow.getFinalState().toString());
+			woeSAP.setSpentFuel(wow.getFuel().toString());
+			if(wow.getNightPeriod() == -1) {
+				woeSAP.setWorkNightHours("0.00000");
+			}else {
+				woeSAP.setWorkNightHours(wow.getNightPeriod().toString());
+			}
+			if(wow.getFinalState() != -1 && wow.getInitialState() != -1) {
+				Double doub = wow.getFinalState() - wow.getInitialState();
+				woeSAP.setMachineTime(doub.toString());
+				woeSAP.setMachineEffectiveHours(doub.toString());
+			}else {
+				woeSAP.setMachineTime("0.00000");
+				woeSAP.setMachineEffectiveHours("0.00000");
+			}
 			woeSAP.setMachineTime("0.0");
 			woeSAP.setDeleted("");
+			woeSAP.setWebBackendId(wow.getId());
 			this.WorkOrderToEmployeeNavigation.getResults().add(woeSAP);
 		}
 		
