@@ -472,6 +472,7 @@ public class WorkOrderService {
 	    
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 	    System.out.println("REZ2" + array.toString());
 	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
 		Matcher matcher = pattern.matcher(formatted);
@@ -492,6 +493,14 @@ public class WorkOrderService {
 	    		System.out.println("NASAO" + wow.getMachine().getName());
 	    		wow.setErpId(array.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsInt());
 	    		wowRepo.save(wow);
+	    	}
+	    	
+	    	for(int i = 0; i <arrayMaterial.size(); i++) {
+	    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+	    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+	    		
+	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+	    		spentMaterialRepo.save(spentMat);
 	    	}
 	    	
 	    	log.info("Sending work order to SAP successfuly finished");
