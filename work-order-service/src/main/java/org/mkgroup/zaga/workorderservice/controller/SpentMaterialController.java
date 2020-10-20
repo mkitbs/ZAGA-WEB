@@ -39,14 +39,26 @@ public class SpentMaterialController {
 	
 	@PostMapping("{id}")
 	public ResponseEntity<?> addSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			spentMaterialService.addSpentMaterial(id, spentMaterialDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@PostMapping("updateSpentMaterial/{id}")
 	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@DeleteMapping("deleteSpentMaterial/{id}")

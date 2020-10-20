@@ -58,4 +58,6 @@ public class WorkOrderWorker {
 	private Double sumState = -1.0;
 	
 	private Double fuel = -1.0;
+	
+	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
 }

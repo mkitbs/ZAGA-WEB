@@ -24,6 +24,7 @@ public class WorkOrderWorkerDTO {
 	private Double finalState;
 	private Double sumState;
 	private Double fuel;
+	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
 	
 	public WorkOrderWorkerDTO(WorkOrderWorker wow) {
 		this.id = wow.getId();
@@ -38,5 +39,6 @@ public class WorkOrderWorkerDTO {
 		this.finalState = wow.getFinalState();
 		this.sumState = wow.getSumState();
 		this.fuel = wow.getFuel();
+		this.erpId = wow.getErpId();
 	}
 }

@@ -69,4 +69,8 @@ public class WorkOrder {
 	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SpentMaterial> materials = new ArrayList<SpentMaterial>();
 
+	@Override
+    public String toString() { 
+        return String.format(""); 
+    } 
 }

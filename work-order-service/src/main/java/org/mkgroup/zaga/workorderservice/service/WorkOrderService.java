@@ -17,6 +17,8 @@ import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
@@ -35,6 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 
 @Service
@@ -97,6 +103,7 @@ public class WorkOrderService {
 			
 			workOrder.setStatus(WorkOrderStatus.NEW);
 			workOrder.setCreationDate(new Date());
+			workOrder.setTreated(0);
 			
 			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
 			workOrder.setOperation(operation);
@@ -185,7 +192,7 @@ public class WorkOrderService {
 			//System.out.println(wo.getWorkers().size()+"AAA");
 			log.info("Work order creation successfuly finished");
 			
-			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo);
+			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
 
 			Map<String, String> headerValues = getHeaderValues(wo);
 			String csrfToken = headerValues.get("csrf");
@@ -206,6 +213,13 @@ public class WorkOrderService {
 		    String oDataString = response.toString().replace(":", "-");
 		    String formatted = formatJSON(oDataString);
 		    
+		    System.out.println("REZ "+formatted);
+		    
+		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+		    System.out.println("ADSADASDS");
+		    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
+		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+		    
 		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
 			Matcher matcher = pattern.matcher(formatted);
 			String status = "";
@@ -218,6 +232,23 @@ public class WorkOrderService {
 		    if(status.equals("S")) {
 		    	System.out.println("USPESNO");
 		    	//uspesno
+		    	
+		    	for(int i = 0; i <array.size(); i++) {
+		    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+		    		WorkOrderWorker wow = wowRepo.getOne(uid);
+		    		System.out.println("NASAO" + wow.getMachine().getName());
+		    		wow.setErpId(array.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsInt());
+		    		wowRepo.save(wow);
+		    	}
+		    	
+		    	for(int i = 0; i <arrayMaterial.size(); i++) {
+		    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+		    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+		    		
+		    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+		    		spentMaterialRepo.save(spentMat);
+		    	}
+		    	
 		    	log.info("Sending work order to SAP successfuly finished");
 		    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
 				Matcher matcherId = patternErpId.matcher(formatted);
@@ -289,49 +320,86 @@ public class WorkOrderService {
 		}
 	}
 	
-	public void updateWorkOrder(WorkOrderDTO workOrderDTO) {
-		try {
-			log.info("Work order update started");
-			
-			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
-			
-			LocalDate startDate = new LocalDate(
-					Integer.parseInt(workOrderDTO.getDate().getYear()),
-					Integer.parseInt(workOrderDTO.getDate().getMonth()),
-					Integer.parseInt(workOrderDTO.getDate().getDay()));
-			Date startDateToAdd = startDate.toDate();
-			workOrder.setDate(startDateToAdd);
-			
-			if(workOrderDTO.getStatus().equals("Novi")) {
-				workOrder.setStatus(WorkOrderStatus.NEW);
-			} else if(workOrderDTO.getStatus().equals("U radu")) {
-				workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
-			} else {
-				workOrder.setStatus(WorkOrderStatus.CLOSED);
-			}
-			
-			workOrder.setTreated(workOrderDTO.getTreated());
-			
-			workOrder.setCreationDate(workOrderDTO.getCreationDate());
-			
-			Operation operation = operationService.getOne(workOrderDTO.getOperationId());
-			workOrder.setOperation(operation);
-			
-			Crop crop = cropService.getOne(workOrderDTO.getCropId());
-			workOrder.setCrop(crop);
-			
-			User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
-			
-			workOrder.setResponsible(responsible);
-			
-			workOrder = workOrderRepo.save(workOrder);
-	
-		}catch(Exception e) {
-			log.error("Update work order faild", e);
+	public void updateWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+
+		log.info("Work order update started");
+		
+		WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
+		
+		LocalDate startDate = new LocalDate(
+				Integer.parseInt(workOrderDTO.getDate().getYear()),
+				Integer.parseInt(workOrderDTO.getDate().getMonth()),
+				Integer.parseInt(workOrderDTO.getDate().getDay()));
+		Date startDateToAdd = startDate.toDate();
+		workOrder.setDate(startDateToAdd);
+		
+		if(workOrderDTO.getStatus().equals("Novi")) {
+			workOrder.setStatus(WorkOrderStatus.NEW);
+		} else if(workOrderDTO.getStatus().equals("U radu")) {
+			workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
+		} else {
+			workOrder.setStatus(WorkOrderStatus.CLOSED);
 		}
+		
+		workOrder.setTreated(workOrderDTO.getTreated());
+		
+		workOrder.setCreationDate(workOrderDTO.getCreationDate());
+		
+		Operation operation = operationService.getOne(workOrderDTO.getOperationId());
+		workOrder.setOperation(operation);
+		
+		Crop crop = cropService.getOne(workOrderDTO.getCropId());
+		workOrder.setCrop(crop);
+		
+		User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
+		
+		workOrder.setResponsible(responsible);
+		
+		workOrder = workOrderRepo.save(workOrder);
+
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+		System.out.println(response);
+	    if(response == null) {
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    }
+	
 	}
 	
-	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate) {
+	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate) throws Exception {
+		
+		SAPResponse sapResponse = new SAPResponse();
 		
 		LocalDate newDate = new LocalDate(Integer.parseInt(copyDate.getYear()),
 				  Integer.parseInt(copyDate.getMonth()),
@@ -352,6 +420,8 @@ public class WorkOrderService {
 		copy.setDate(date);
 		copy.setStatus(WorkOrderStatus.NEW);
 		copy = workOrderRepo.save(copy);
+		UUID workOrderId = copy.getId();
+		
 		System.out.println(copy.getId());
 		
 		for(WorkOrderWorker worker : workers) {
@@ -372,21 +442,160 @@ public class WorkOrderService {
 			
 			spentMaterialRepo.save(spentMaterial);
 		}
+		
+		WorkOrder wo = getOneW(workOrderId);
+		//System.out.println(wo.getWorkers().size()+"AAA");
+		log.info("Work order creation successfuly finished");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
+
+		Map<String, String> headerValues = getHeaderValues(wo);
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+	    
+	    log.info("Sending work order to SAP started");
+	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+	    if(response == null) {
+	    	workOrderRepo.delete(wo);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    
+	    System.out.println("REZ "+formatted);
+	    
+	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    System.out.println("REZ2" + array.toString());
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO");
+	    	//uspesno
+	    	
+	    	for(int i = 0; i <array.size(); i++) {
+	    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+	    		WorkOrderWorker wow = wowRepo.getOne(uid);
+	    		System.out.println("NASAO" + wow.getMachine().getName());
+	    		wow.setErpId(array.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsInt());
+	    		wowRepo.save(wow);
+	    	}
+	    	
+	    	log.info("Sending work order to SAP successfuly finished");
+	    	Pattern patternErpId = Pattern.compile("WorkOrderNumber:(.*?),");
+			Matcher matcherId = patternErpId.matcher(formatted);
+			Long erpId = 1L;
+			if (matcherId.find()){
+			    erpId = Long.parseLong(matcherId.group(1));
+			}
+	    	wo.setErpId(erpId);
+	    	workOrderRepo.save(wo);
+	    	
+	    	sapResponse.setSuccess(true);
+	    	sapResponse.setMessage("");
+	    	sapResponse.setErpId(erpId);
+	    	
+	    	log.info("Insert work order into db");
+	    }else if(status.equals("E")) {
+	    	System.out.println("ERROR");
+	    	
+	    	String error = "";
+	    	//Fail
+	    	 Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
+				Matcher matcherMessage = patternMessage.matcher(formatted);
+				if (matcherMessage.find())
+				{
+				    error = matcherMessage.group(1);
+				}
+	    	System.out.println(error);
+	    	log.error("Sending work order to SAP failed. (" + error +")");
+	    
+	    	workOrderRepo.delete(wo);
+	    	
+	    	sapResponse.setSuccess(false);
+	    	sapResponse.setMessage(error);
+	    	
+	    	log.info("Insert work order into db failed");
+	
+	    }
+		
 		return copy;
 	}
 	
 
-	public void closeWorkOrder(WorkOrderDTO workOrderDTO) {
-		try {
+	public CloseWorkOrderResponse closeWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+			log.info("Work order closing started");
+			CloseWorkOrderResponse closeWorkOrder = new CloseWorkOrderResponse();
+			
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
+			CloseWorkOrderDTO closeWorkORder = new CloseWorkOrderDTO(workOrder);
+			
+			Map<String, String> headerValues = getHeaderValuesClose();
+			String csrfToken = headerValues.get("csrf");
+			String authHeader = headerValues.get("authHeader");
+			String cookies = headerValues.get("cookies");
+		    
+		    log.info("Sending work order to SAP started");
+		    ResponseEntity<?> response = sap4hana.closeWorkOrder(cookies,
+																"Basic " + authHeader, 
+																csrfToken,
+																"XMLHttpRequest",
+																closeWorkORder);
+		    if(response == null) {
+				throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		    }
+		    String json = formatJSON(response.toString());
+		    System.out.println(json + "AAA");
+			
+		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+			Matcher matcher = pattern.matcher(json);
+			if(matcher.matches()){
+				System.out.println("IMA GA");
+			}
+			
+			JsonObject jsonObj = new Gson().fromJson(json, JsonObject.class);
+			String flag = jsonObj.get("d").getAsJsonObject().get("ReturnStatus").getAsString();
+			if(flag.equals("E")){
+				
+				System.out.println("USAO U ERR");
+				Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
+				Matcher matcherMessage = patternMessage.matcher(json);
+				
+				matcherMessage.results().forEach(mat -> closeWorkOrder.getErrors().add((mat.group(1))));
+				closeWorkOrder.setStatus(false);
+				return closeWorkOrder;
+			}else if(flag.equals("S")) {
+				System.out.println("USAO U SUCES");
+				closeWorkOrder.setStatus(true);
+				this.updateWorkOrder(workOrderDTO);
+				workOrder.setTreated(workOrderDTO.getTreated());
+				workOrder.setStatus(WorkOrderStatus.CLOSED);
+				workOrder.setClosed(true);
+				workOrderRepo.save(workOrder);
+				
+				return closeWorkOrder;
+			}else {
+				throw new Exception("Greska prilikom zatvaranja naloga.");
+			}
+		    
 			//this.updateWorkOrder(workOrderDTO);
-			workOrder.setTreated(workOrderDTO.getTreated());
-			workOrder.setStatus(WorkOrderStatus.CLOSED);
-			workOrder.setClosed(true);
-			workOrderRepo.save(workOrder);
-		} catch(Exception e) {
-			log.error("Update work order faild", e);
-		}
+			//workOrder.setTreated(workOrderDTO.getTreated());
+			//workOrder.setStatus(WorkOrderStatus.CLOSED);
+			//workOrder.setClosed(true);
+			//workOrderRepo.save(workOrder);
 	}
 	
 	public List<WorkOrderDTO> getAllByStatus(WorkOrderStatus status){
@@ -427,6 +636,76 @@ public class WorkOrderService {
 		
 		if(resp == null) {
 			workOrderRepo.delete(wo);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		}
+		
+		log.info("Getting X-CSRF-Token successfuly finished");
+		
+		HttpHeaders headers = resp.getHeaders();
+		String csrfToken;
+		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+		                                                   .findFirst()
+		                                                   .orElse("nema");
+		
+		String cookies = headers.getValuesAsList("Set-Cookie")
+				.stream()
+				.collect(Collectors.joining(";"));
+		
+		Map<String, String> results = new HashMap<String, String>();
+		results.put("csrf", csrfToken);
+		results.put("authHeader", authHeader);
+		results.put("cookies", cookies);
+		return results;
+	}
+	
+	public Map<String, String> getHeaderValues() throws Exception {
+		log.info("Getting X-CSRF-Token started");
+		StringBuilder authEncodingString = new StringBuilder()
+				.append("MKATIC")
+				.append(":")
+				.append("katicm0908");
+		//Encoding Authorization String
+		String authHeader = Base64.getEncoder().encodeToString(
+	    		authEncodingString.toString().getBytes());
+		
+		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		
+		if(resp == null) {
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		}
+		
+		log.info("Getting X-CSRF-Token successfuly finished");
+		
+		HttpHeaders headers = resp.getHeaders();
+		String csrfToken;
+		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+		                                                   .findFirst()
+		                                                   .orElse("nema");
+		
+		String cookies = headers.getValuesAsList("Set-Cookie")
+				.stream()
+				.collect(Collectors.joining(";"));
+		
+		Map<String, String> results = new HashMap<String, String>();
+		results.put("csrf", csrfToken);
+		results.put("authHeader", authHeader);
+		results.put("cookies", cookies);
+		return results;
+	}
+	
+	public Map<String, String> getHeaderValuesClose() throws Exception {
+		log.info("Getting X-CSRF-Token started");
+		StringBuilder authEncodingString = new StringBuilder()
+				.append("MKATIC")
+				.append(":")
+				.append("katicm0908");
+		//Encoding Authorization String
+		String authHeader = Base64.getEncoder().encodeToString(
+	    		authEncodingString.toString().getBytes());
+		
+		ResponseEntity<Object> resp = sap4hana.getCSRFTokenClose("Basic " + authHeader, "Fetch");
+		
+		if(resp == null) {
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 		}
 		

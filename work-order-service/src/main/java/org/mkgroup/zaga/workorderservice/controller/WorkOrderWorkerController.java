@@ -46,14 +46,24 @@ public class WorkOrderWorkerController {
 
 	@PostMapping("addWorker/{id}")
 	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO){
-		wowService.addWorker(id, wowDTO);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			wowService.addWorker(id, wowDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@PostMapping("updateWorkOrderWorker/{id}")
 	public ResponseEntity<?> updateWorkOrderWorker(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO){
-		wowService.updateWorkOrder(id, wowDTO);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			wowService.updateWorkOrder(id, wowDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@DeleteMapping("deleteWorkOrderWorker/{id}")

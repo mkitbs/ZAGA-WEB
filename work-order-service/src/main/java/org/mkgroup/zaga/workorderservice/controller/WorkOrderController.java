@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
@@ -57,9 +58,16 @@ public class WorkOrderController {
 	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date){
 		WorkOrder workOrder = wrepo.getOne(id);
 	
-		WorkOrder copy = workOrderService.createCopy(workOrder, date);
+		WorkOrder copy;
+		try {
+			copy = workOrderService.createCopy(workOrder, date);
+			return new ResponseEntity<UUID>(copy.getId(), HttpStatus.CREATED);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 		
-		return new ResponseEntity<UUID>(copy.getId(), HttpStatus.CREATED);
+		
 	}
 	
 	@PostMapping("/createTestWorkOrder")
@@ -102,8 +110,18 @@ public class WorkOrderController {
 	
 	@PostMapping("/closeWorkOrder")
 	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
-		workOrderService.closeWorkOrder(request);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			CloseWorkOrderResponse closeWO =  workOrderService.closeWorkOrder(request);
+			if(closeWO.isStatus()) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}else {
+				return new ResponseEntity<List<String>>(closeWO.getErrors(),HttpStatus.BAD_REQUEST);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@GetMapping("/getAllByStatus/{status}")

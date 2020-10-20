@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -23,4 +25,6 @@ public class MaterialToSAP {
 	private String Charge;
 	@JsonProperty("Deleted")
 	private String Deleted;
+	@JsonProperty("WebBackendId")
+	private UUID WebBackendId;
 }

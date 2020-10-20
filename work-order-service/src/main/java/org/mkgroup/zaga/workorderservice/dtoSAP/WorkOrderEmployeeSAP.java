@@ -1,5 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -9,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkOrderEmployeeSAP {
 
-	@JsonProperty("WorkOrderEmployeeNumber")
-	private String WorkOrderEmployeeNumber;
+	
 	@JsonProperty("EmployeeId")
 	private String EmployeeId;
 	@JsonProperty("OperationId")
@@ -49,4 +50,8 @@ public class WorkOrderEmployeeSAP {
 	private String SpentFuel;
 	@JsonProperty("Deleted")
 	private String Deleted;
+	@JsonProperty("WebBackendId")
+	private UUID WebBackendId;
+	@JsonProperty("WorkOrderEmployeeNumber")
+	private String WorkOrderEmployeeNumber;
 }

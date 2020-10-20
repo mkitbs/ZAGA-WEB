@@ -1,9 +1,17 @@
 package org.mkgroup.zaga.workorderservice.service;
 
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
+import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
@@ -11,7 +19,13 @@ import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class SpentMaterialService {
@@ -26,6 +40,9 @@ public class SpentMaterialService {
 	
 	@Autowired
 	WorkOrderRepository workOrderRepo;
+	
+	@Autowired
+	SAP4HanaProxy sap4hana;
 	
 	public SpentMaterial addSpentMaterial(SpentMaterial sm) {
 		try {
@@ -56,7 +73,7 @@ public class SpentMaterialService {
 		}
 	}
 	
-	public void addSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) {
+	public void addSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		
 		SpentMaterial spentMaterial = new SpentMaterial();
@@ -75,10 +92,60 @@ public class SpentMaterialService {
 		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
 		spentMaterial.setMaterial(material);
 		
-		spentMaterialRepo.save(spentMaterial);
+		spentMaterial = spentMaterialRepo.save(spentMaterial);
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+		System.out.println(response);
+	    if(response == null) {
+	    	spentMaterialRepo.delete(spentMaterial);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    	for(int i = 0; i <arrayMaterial.size(); i++) {
+	    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+	    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+	    		
+	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+	    		spentMaterialRepo.save(spentMat);
+	    	}
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    }
+		
+		
 	}
 	
-	public void updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) {
+	public void updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		SpentMaterial spentMaterial = spentMaterialRepo.getOne(id);
 		WorkOrder workOrder = workOrderRepo.getOne(spentMaterial.getWorkOrder().getId());
 		
@@ -95,6 +162,105 @@ public class SpentMaterialService {
 		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
 		spentMaterial.setMaterial(material);
 		
-		spentMaterialRepo.save(spentMaterial);
+		spentMaterial = spentMaterialRepo.save(spentMaterial);
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+		System.out.println(response);
+	    if(response == null) {
+	    	spentMaterialRepo.delete(spentMaterial);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    	for(int i = 0; i <arrayMaterial.size(); i++) {
+	    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+	    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+	    		
+	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+	    		spentMaterialRepo.save(spentMat);
+	    	}
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    }
+		
+	}
+	
+	public Map<String, String> getHeaderValues() throws Exception {
+		log.info("Getting X-CSRF-Token started");
+		StringBuilder authEncodingString = new StringBuilder()
+				.append("MKATIC")
+				.append(":")
+				.append("katicm0908");
+		//Encoding Authorization String
+		String authHeader = Base64.getEncoder().encodeToString(
+	    		authEncodingString.toString().getBytes());
+		
+		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		
+		if(resp == null) {
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+		}
+		
+		log.info("Getting X-CSRF-Token successfuly finished");
+		
+		HttpHeaders headers = resp.getHeaders();
+		String csrfToken;
+		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
+		                                                   .findFirst()
+		                                                   .orElse("nema");
+		
+		String cookies = headers.getValuesAsList("Set-Cookie")
+				.stream()
+				.collect(Collectors.joining(";"));
+		
+		Map<String, String> results = new HashMap<String, String>();
+		results.put("csrf", csrfToken);
+		results.put("authHeader", authHeader);
+		results.put("cookies", cookies);
+		return results;
+	}
+	
+	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
+		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
+		//System.out.println(json);
+		
+		return json;
+
 	}
 }
