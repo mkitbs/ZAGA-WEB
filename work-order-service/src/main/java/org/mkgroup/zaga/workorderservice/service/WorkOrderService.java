@@ -447,9 +447,7 @@ public class WorkOrderService {
 		}
 		
 		WorkOrder wo = getOneW(workOrderId);
-		//System.out.println(wo.getWorkers().size()+"AAA");
 		log.info("Work order creation successfuly finished");
-		System.out.println("AAAA" + " " + wo.getWorkers().size());
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
 
 		Map<String, String> headerValues = getHeaderValues(wo);
@@ -471,8 +469,6 @@ public class WorkOrderService {
 	    String oDataString = response.toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
 	    
-	    System.out.println("REZ "+formatted);
-	    
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
@@ -489,7 +485,6 @@ public class WorkOrderService {
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO");
 	    	//uspesno
-	    	
 	    	for(int i = 0; i <array.size(); i++) {
 	    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
 	    		WorkOrderWorker wow = wowRepo.getOne(uid);
