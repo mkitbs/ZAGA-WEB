@@ -158,12 +158,12 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "Zatvoren";
         }
 
-        if(this.workOrder.materials.length != 0){
+        if (this.workOrder.materials.length != 0) {
           this.workOrder.materials.forEach(material => {
-            if(material.quantity == -1){
+            if (material.quantity == -1) {
               material.quantity = null;
             }
-            if(material.quantityPerHectar == -1){
+            if (material.quantityPerHectar == -1) {
               material.quantityPerHectar = null;
             }
           })
@@ -245,22 +245,22 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getCulture() {
-    if(this.new){
+    if (this.new) {
       this.cropService
-      .getAllByFieldAndYear(this.workOrder.tableId, this.selectedYear)
-      .subscribe((data) => {
-        console.log(data);
-        this.crops = data;
-      });
+        .getAllByFieldAndYear(this.workOrder.tableId, this.selectedYear)
+        .subscribe((data) => {
+          console.log(data);
+          this.crops = data;
+        });
     } else {
       this.cropService
-      .getAllByFieldAndYear(this.workOrder.tableId, this.workOrder.year)
-      .subscribe((data) => {
-        console.log(data);
-        this.crops = data;
-      });
+        .getAllByFieldAndYear(this.workOrder.tableId, this.workOrder.year)
+        .subscribe((data) => {
+          console.log(data);
+          this.crops = data;
+        });
     }
-    
+
   }
 
   //methods for autoscroll
@@ -307,7 +307,7 @@ export class CreateworkOrderComponent implements OnInit {
   addWorkerAndMachine(valid) {
     this.clickAddWorkerMachine = true;
     this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
-    this.wow.user.id = this.selectedWorker;
+    this.wow.user.userId = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
     this.wow.connectingMachine.id = this.selectedCouplingMachine;
@@ -416,32 +416,32 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.machine.Name = null;
   }
 
-  validDetailOfNewWow(){
+  validDetailOfNewWow() {
     this.clickAddNewWow = true;
-    if(this.wow.dayPeriod > 24){
+    if (this.wow.dayPeriod > 24) {
       this.validDayPeriod = false;
-    } else{
+    } else {
       this.validDayPeriod = true;
     }
-    if(this.wow.nightPeriod > 24){
+    if (this.wow.nightPeriod > 24) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
     }
-    if(this.wow.dayPeriod + this.wow.nightPeriod > 24){
+    if (this.wow.dayPeriod + this.wow.nightPeriod > 24) {
       this.validWorkPeriod = false;
     } else {
       this.validWorkPeriod = true;
     }
-    if(this.wow.finalState < this.wow.initialState){
+    if (this.wow.finalState < this.wow.initialState) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if(this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState){
+    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
       this.closeButtonWowModal.nativeElement.click();
     }
-}
+  }
 
   addNewWorkerAndMachine() {
     this.wow.user.id = this.selectedWorker;
@@ -464,19 +464,19 @@ export class CreateworkOrderComponent implements OnInit {
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
         }
-  
+
         this.workOrder.date = {
           day: +this.workOrder.date.day,
           month: +this.workOrder.date.month,
           year: +this.workOrder.date.year,
         };
-  
+
         this.cropService
           .getAllByFieldAndYear(data.tableId, data.year)
           .subscribe((res) => {
             this.crops = res;
           });
-  
+
         if (this.workOrder.treated == 0) {
           this.workOrder.treated = null;
         }
@@ -486,31 +486,31 @@ export class CreateworkOrderComponent implements OnInit {
 
   updateWow(wow) {
     this.clickAddWowDetail = true;
-    if(wow.dayPeriod > 24){
+    if (wow.dayPeriod > 24) {
       this.validDayPeriod = false;
-    } else{
+    } else {
       this.validDayPeriod = true;
     }
-    if(wow.nightPeriod > 24){
+    if (wow.nightPeriod > 24) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
     }
-    if(wow.dayPeriod + wow.nightPeriod > 24){
+    if (wow.dayPeriod + wow.nightPeriod > 24) {
       this.validWorkPeriod = false;
     } else {
       this.validWorkPeriod = true;
     }
-    if(wow.finalState < wow.initialState){
+    if (wow.finalState < wow.initialState) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if(this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState){
+    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
       this.wowService.updateWorkOrderWorker(wow.id, wow).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
-  
+
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
 
@@ -523,29 +523,29 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "Zatvoren";
           }
 
-          if(this.workOrder.materials.length != 0){
+          if (this.workOrder.materials.length != 0) {
             this.workOrder.materials.forEach(material => {
-              if(material.quantity == -1){
+              if (material.quantity == -1) {
                 material.quantity = null;
               }
-              if(material.quantityPerHectar < 0){
+              if (material.quantityPerHectar < 0) {
                 material.quantityPerHectar = null;
               }
             })
           }
-  
+
           this.workOrder.date = {
             day: +this.workOrder.date.day,
             month: +this.workOrder.date.month,
             year: +this.workOrder.date.year,
           };
-  
+
           this.cropService
             .getAllByFieldAndYear(data.tableId, data.year)
             .subscribe((res) => {
               this.crops = res;
             });
-  
+
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
           }
@@ -553,7 +553,7 @@ export class CreateworkOrderComponent implements OnInit {
       });
       this.closeButtonWowModal.nativeElement.click();
     }
-    
+
   }
 
   //methods for work order materials
@@ -662,19 +662,19 @@ export class CreateworkOrderComponent implements OnInit {
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
           }
-  
+
           this.workOrder.date = {
             day: +this.workOrder.date.day,
             month: +this.workOrder.date.month,
             year: +this.workOrder.date.year,
           };
-  
+
           this.cropService
             .getAllByFieldAndYear(data.tableId, data.year)
             .subscribe((res) => {
               this.crops = res;
             });
-  
+
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
           }
@@ -698,19 +698,19 @@ export class CreateworkOrderComponent implements OnInit {
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
           }
-  
+
           this.workOrder.date = {
             day: +this.workOrder.date.day,
             month: +this.workOrder.date.month,
             year: +this.workOrder.date.year,
           };
-  
+
           this.cropService
             .getAllByFieldAndYear(data.tableId, data.year)
             .subscribe((res) => {
               this.crops = res;
             });
-  
+
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
           }
@@ -775,7 +775,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.toastr.success("Uspešno sačuvan radni nalog.");
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
-  
+
           console.log(this.workOrder);
           if (this.workOrder.status == "NEW") {
             this.workOrder.status = "Novi";
@@ -784,19 +784,19 @@ export class CreateworkOrderComponent implements OnInit {
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
           }
-  
+
           this.workOrder.date = {
             day: +this.workOrder.date.day,
             month: +this.workOrder.date.month,
             year: +this.workOrder.date.year,
           };
-  
+
           this.cropService
             .getAllByFieldAndYear(data.tableId, data.year)
             .subscribe((res) => {
               this.crops = res;
             });
-  
+
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
           }
