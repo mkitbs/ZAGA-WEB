@@ -80,12 +80,8 @@ public class WorkOrderController {
 	
 	@GetMapping("/getAll")
 	public ResponseEntity<?> getAllWorkOrders(){
-		try {
-			List<WorkOrderDTO> workOrders = workOrderService.getAll();
-			return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<String>("Work orders were not found. Error " + e.getMessage(), HttpStatus.NOT_FOUND);
-		}
+		List<WorkOrderDTO> workOrders = workOrderService.getAll();
+		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getWorkOrder/{id}")
