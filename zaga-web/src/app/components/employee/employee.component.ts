@@ -20,6 +20,10 @@ export class EmployeeComponent implements OnInit {
 
   filteredOptions: Observable<string[]>;
 
+  auto; //zbog npm build
+  autoLaptop; //zbog npm build
+  autoTablet; //zbog npm build
+
   ngOnInit() {
     this.userService.getAll().subscribe((data) => {
       this.allEmployees = data.content;
