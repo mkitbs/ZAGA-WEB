@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value =  Include.NON_NULL)
 public class EmployeeDTO {
 	
-	private UUID id;
+	private String id;
 	
 	private UUID userId;
 	
@@ -35,9 +35,11 @@ public class EmployeeDTO {
 	Long perNumber;
 	
 	public EmployeeDTO(User user) {
-		id = user.getId();
+		userId = user.getId();
 		name = user.getName();
 		perNumber = user.getPerNumber();
+		department = user.getDepartment();
+		position = user.getPosition();
 	}
 
 }

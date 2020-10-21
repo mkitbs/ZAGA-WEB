@@ -12,7 +12,10 @@ import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
 import org.mkgroup.zaga.workorderservice.model.FuelType;
 import org.mkgroup.zaga.workorderservice.model.Machine;
+import org.mkgroup.zaga.workorderservice.model.MachineGroup;
+import org.mkgroup.zaga.workorderservice.model.MachineType;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
+import org.mkgroup.zaga.workorderservice.repository.MachineGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,9 @@ public class MachineService {
 	
 	@Autowired
 	MachineRepository machineRepository;
+	
+	@Autowired
+	MachineGroupRepository machineGroupRepo;
 	
 	public List<MachineDTO> getMachinesFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -115,13 +121,51 @@ public class MachineService {
 		oldMachine.setFuelType(FuelType.values()[Integer.parseInt(newMachine.getFuelType())]);
 		oldMachine.setName(newMachine.getName());
 		oldMachine.setOrgUnit(newMachine.getOrgUnit());
+		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+		oldMachine.setMachineGroupId(machineGroup);
 		machineRepository.save(oldMachine);
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
 		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR")) {
 			Machine machine = new Machine(newMachine);
+			MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+			machine.setMachineGroupId(machineGroup);
 			machineRepository.save(machine);
 		}
+	}
+	
+	public void editMachine(MachineDTO machineDTO) {
+		Machine machine = machineRepository.getOne(machineDTO.getId());
+		if(machineDTO.getType().equals("PRIKLJUČNA")) {
+			machine.setType(MachineType.COUPLING);
+		} else if (machineDTO.getType().equals("POGONSKA")) {
+			machine.setType(MachineType.PROPULSION);
+		}
+		switch(machineDTO.getFuelType()) {
+		case "NIJE IZABRANO":
+			machine.setFuelType(FuelType.NOT_SELECTED);
+			break;
+		case "BENZIN":
+			machine.setFuelType(FuelType.GASOLINE);
+			break;
+		case "GAS":
+			machine.setFuelType(FuelType.GAS);
+			break;
+		case "EVRO DIZEL":
+			machine.setFuelType(FuelType.EURO_DIESEL);
+			break;
+		case "BIO DIZEL":
+			machine.setFuelType(FuelType.BIO_DIESEL);
+			break;
+		case "DIZEL":
+			machine.setFuelType(FuelType.DIESEL);
+			break;
+		default:
+			break;
+		}
+		MachineGroup machineGroup = machineGroupRepo.getOne(machineDTO.getMachineGroup());
+		machine.setMachineGroupId(machineGroup);
+		machineRepository.save(machine);
 	}
 }

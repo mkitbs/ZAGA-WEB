@@ -49,7 +49,7 @@ public class WorkOrderMachineController {
 		wom.setWorkPeriod(wom.getWorkPeriod());
 		wom.setFuel(womDTO.getFuel());
 		
-		User user = userRepo.getOne(womDTO.getUser().getId());
+		User user = userRepo.getOne(womDTO.getUser().getUserId());
 		wom.setUser(user);
 		
 		Machine machine = machineRepo.getOne(womDTO.getMachine().getId());

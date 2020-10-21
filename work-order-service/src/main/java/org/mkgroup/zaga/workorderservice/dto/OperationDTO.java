@@ -37,8 +37,12 @@ public class OperationDTO {
 	@JsonProperty("Status")
 	private String status;
 	
+	private UUID operationGroupId;
+	
 	public OperationDTO(Operation operation) {
 		id = operation.getId();
 		name = operation.getName();
+		type = operation.getType().toString();
+		operationGroupId = operation.getOperationGroup().getId();
 	}
 }

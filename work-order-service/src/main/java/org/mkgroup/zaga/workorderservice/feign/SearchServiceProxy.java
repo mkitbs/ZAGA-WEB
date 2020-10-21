@@ -14,4 +14,7 @@ public interface SearchServiceProxy {
 
 	@PostMapping(value = "/api/users/")
 	public ResponseEntity<?> sendEmployees(List<UserElasticDTO> allUsers);
+	
+	@PostMapping(value = "/api/users/editUser")
+	public ResponseEntity<?> editEmployee(UserElasticDTO user);
 }

@@ -22,33 +22,31 @@ export class FieldComponent implements OnInit {
 
   ngOnInit() {
     this.fieldGroupService.getAll().subscribe((data) => {
-      data = this.convertKeysToLowerCase(data);
+      //data = this.convertKeysToLowerCase(data);
       this.fieldGroups = data;
       this.fieldService.getAll().subscribe((data) => {
         this.fields = data;
         this.fields.forEach((field) => {
           field.fieldGroupName = this.fieldGroups.find(
-            (x) => x.dbid == field.fieldGroup
-          ).name;
+            (fieldGroup) => fieldGroup.dbId == field.fieldGroup
+          ).Name;
         });
       });
     });
   }
 
   getField(id) {
-    this.field = this.fields.find((x) => x.dbid == id);
-    console.log(this.field);
+    this.field = this.fields.find((field) => field.dbId == id);
   }
 
   editField() {
     this.fieldService.editField(this.field).subscribe((data) => {
-      console.log(data);
       this.fieldService.getAll().subscribe((data) => {
         this.fields = data;
         this.fields.forEach((field) => {
           field.fieldGroupName = this.fieldGroups.find(
-            (x) => x.dbid == field.fieldGroup
-          ).name;
+            (fieldGroup) => fieldGroup.dbId == field.fieldGroup
+          ).Name;
         });
       });
     });

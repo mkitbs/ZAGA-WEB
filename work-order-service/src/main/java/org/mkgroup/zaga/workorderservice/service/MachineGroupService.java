@@ -102,4 +102,14 @@ public class MachineGroupService {
 		oldMachineGroup.setName(updatedMachineGroup.getName());
 		machineGroupRepo.save(oldMachineGroup);
 	}
+	
+	public List<MachineGroupDTO> getAll(){
+		List<MachineGroup> machineGroups = machineGroupRepo.findAll();
+		List<MachineGroupDTO> retValues = new ArrayList<MachineGroupDTO>();
+		for(MachineGroup machineGroup : machineGroups) {
+			MachineGroupDTO retValue = new MachineGroupDTO(machineGroup);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
 }

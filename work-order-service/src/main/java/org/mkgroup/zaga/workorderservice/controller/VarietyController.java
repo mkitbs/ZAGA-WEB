@@ -23,4 +23,10 @@ public class VarietyController {
 		return new ResponseEntity<List<VarietyDTO>>(
 				varietyService.getVarietiesFromSAP(), HttpStatus.OK);
 	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		List<VarietyDTO> varieties = varietyService.getAll();
+		return new ResponseEntity<List<VarietyDTO>>(varieties, HttpStatus.OK);
+	}
 }

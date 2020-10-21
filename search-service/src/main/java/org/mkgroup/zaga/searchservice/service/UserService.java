@@ -14,6 +14,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.mkgroup.zaga.searchservice.dto.NewUserDTO;
 import org.mkgroup.zaga.searchservice.model.UserElastic;
 import org.mkgroup.zaga.searchservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,13 @@ public class UserService {
 
 	public UserElastic saveUser(UserElastic user) {
 		return userRepo.save(user);
+	}
+	
+	public void editUser(NewUserDTO emp) {
+		UserElastic user = userRepo.findByUserId(emp.getUserId()).get();
+		user.setDepartment(emp.getDepartment());
+		user.setPosition(emp.getPosition());
+		userRepo.save(user);
 	}
 
 }

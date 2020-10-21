@@ -115,4 +115,14 @@ public class VarietyService {
 		varietyRepo.save(oldVariety);
 	}
 	
+	public List<VarietyDTO> getAll(){
+		List<VarietyDTO> retValues = new ArrayList<VarietyDTO>();
+		List<Variety> varieties = varietyRepo.findAll();
+		for(Variety variety : varieties) {
+			VarietyDTO retValue = new VarietyDTO(variety);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
 }

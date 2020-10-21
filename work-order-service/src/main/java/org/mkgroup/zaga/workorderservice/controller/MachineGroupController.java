@@ -25,4 +25,14 @@ public class MachineGroupController {
 						machineGroupService.getMachineGroupsFromSAP(),
 						HttpStatus.OK);
 	}
+	
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAll(){
+		List<MachineGroupDTO> machineGroups = machineGroupService.getAll();
+		if(machineGroups != null) {
+			return new ResponseEntity<List<MachineGroupDTO>>(machineGroups, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

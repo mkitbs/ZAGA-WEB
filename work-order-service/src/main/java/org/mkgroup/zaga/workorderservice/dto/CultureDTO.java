@@ -38,6 +38,8 @@ public class CultureDTO {
 		dbId = culture.getId();
 		name = culture.getName();
 		cultureGroup = culture.getCultureGroup().getId();
+		orgCon = culture.getOrgCon().toString();
+		type = culture.getType().toString();
 	}
 
 }

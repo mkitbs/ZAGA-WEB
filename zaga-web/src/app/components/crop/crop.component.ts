@@ -22,7 +22,7 @@ export class CropComponent implements OnInit {
   ) {}
 
   crops: Crop[] = [];
-  culutres: Culture[] = [];
+  cultures: Culture[] = [];
   fields: Field[] = [];
   crop: Crop = new Crop();
   cultureGroups: CultureGroup[] = [];
@@ -31,39 +31,30 @@ export class CropComponent implements OnInit {
   selectedCulture;
 
   ngOnInit() {
-    this.cultureService.getAll().subscribe((data) => {
-      data = this.convertKeysToLowerCase(data);
-      this.culutres = data;
-      this.cultureGroupService.getAll().subscribe((data) => {
-        data = this.convertKeysToLowerCase(data);
-        this.cultureGroups = data;
-        this.culutres.forEach((culture) => {
-          culture.culturegroup = this.cultureGroups.find(
-            (x) => x.dbid == culture.culturegroup
-          ).name;
-        });
-      });
-    });
-    this.fieldService.getAll().subscribe((data) => {
-      data = this.convertKeysToLowerCase(data);
-      this.fields = data;
-      console.log(this.fields);
-      this.cropService.getAll().subscribe((data) => {
-        this.crops = data;
-        console.log(this.crops);
-        this.crops.forEach((crop) => {
-          crop.cultureName = this.culutres.find(
-            (x) => x.dbid == crop.cultureId
-          ).name;
-          crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
-        });
+    this.cultureGroupService.getAll().subscribe(data => {
+      this.cultureGroups = data;
+      this.cultureService.getAll().subscribe((data) => {
+        this.cultures = data;
+        this.cultures.forEach(culture => {
+          culture.cultureGroupName = this.cultureGroups.find(cultureGroup => cultureGroup.dbId == culture.cultureGroup).Name;
+        })
+        console.log(this.cultures)
+        this.fieldService.getAll().subscribe(data => {
+          this.fields = data;
+          this.cropService.getAll().subscribe(data => {
+            this.crops = data;
+            this.crops.forEach(crop => {
+              crop.field = this.fields.find(field => field.dbId == crop.fieldId).Name;
+              crop.cultureName = this.cultures.find(culture => culture.dbId == crop.cultureId).Name;
+            });
+          });
+        })
       });
     });
   }
 
   //method for filters
   getCrops() {
-    console.log(this.selectedTable);
     if (
       //izabrani su i tabla i kultura
       this.selectedCulture != undefined &&
@@ -74,13 +65,12 @@ export class CropComponent implements OnInit {
       this.cropService
         .getAllByFieldAndCulture(this.selectedTable, this.selectedCulture)
         .subscribe((data) => {
-          console.log(data);
           this.crops = data;
           this.crops.forEach((crop) => {
-            crop.cultureName = this.culutres.find(
-              (x) => x.dbid == crop.cultureId
-            ).name;
-            crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
+            crop.cultureName = this.cultures.find(
+              (culture) => culture.dbId == crop.cultureId
+            ).Name;
+            crop.field = this.fields.find((field) => field.dbId == crop.fieldId).Name;
           });
         });
     } else if (
@@ -91,10 +81,10 @@ export class CropComponent implements OnInit {
       this.cropService.getAll().subscribe((data) => {
         this.crops = data;
         this.crops.forEach((crop) => {
-          crop.cultureName = this.culutres.find(
-            (x) => x.dbid == crop.cultureId
-          ).name;
-          crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
+          crop.cultureName = this.cultures.find(
+            (culture) => culture.dbId == crop.cultureId
+          ).Name;
+          crop.field = this.fields.find((field) => field.dbId == crop.fieldId).Name;
         });
       });
     } else if (
@@ -102,16 +92,15 @@ export class CropComponent implements OnInit {
       (this.selectedTable == undefined || this.selectedTable == -1) &&
       (this.selectedCulture != undefined || this.selectedCulture != -1)
     ) {
-      console.log(this.selectedTable);
       this.cropService
         .getAllByCulture(this.selectedCulture)
         .subscribe((data) => {
           this.crops = data;
           this.crops.forEach((crop) => {
-            crop.cultureName = this.culutres.find(
-              (x) => x.dbid == crop.cultureId
-            ).name;
-            crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
+            crop.cultureName = this.cultures.find(
+              (culture) => culture.dbId == crop.cultureId
+            ).Name;
+            crop.field = this.fields.find((field) => field.dbId == crop.fieldId).Name;
           });
         });
     } else if (
@@ -124,30 +113,29 @@ export class CropComponent implements OnInit {
         this.crops = data;
         console.log(this.crops);
         this.crops.forEach((crop) => {
-          crop.cultureName = this.culutres.find(
-            (x) => x.dbid == crop.cultureId
-          ).name;
-          crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
+          crop.cultureName = this.cultures.find(
+            (culture) => culture.dbId == crop.cultureId
+          ).Name;
+          crop.field = this.fields.find((field) => field.dbId == crop.fieldId).Name;
         });
       });
     }
   }
 
   getCropForEdit(id) {
-    this.crop = this.crops.find((x) => x.id == id);
+    this.crop = this.crops.find((crop) => crop.id == id);
   }
 
   editCrop() {
-    console.log(this.crop);
     this.cropService.updateCrop(this.crop).subscribe((res) => {
       console.log(res);
       this.cropService.getAll().subscribe((data) => {
         this.crops = data;
         this.crops.forEach((crop) => {
-          crop.cultureName = this.culutres.find(
-            (x) => x.dbid == crop.cultureId
-          ).name;
-          crop.field = this.fields.find((x) => x.dbid == crop.fieldId).name;
+          crop.cultureName = this.cultures.find(
+            (culture) => culture.dbId == crop.cultureId
+          ).Name;
+          crop.field = this.fields.find((field) => field.dbId == crop.fieldId).Name;
         });
       });
     });

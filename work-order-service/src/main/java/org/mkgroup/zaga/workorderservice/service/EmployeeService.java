@@ -127,4 +127,15 @@ public class EmployeeService {
 		User newUser = new User(employee);
 		userRepo.save(newUser);
 	}
+	
+	public void editUser(UserElasticDTO emp) {
+		User user = userRepo.getOne(emp.getUserId());
+		user.setDepartment(emp.getDepartment());
+		user.setPosition(emp.getPosition());
+		userRepo.save(user);
+		UserElasticDTO u = new UserElasticDTO(user);
+		ResponseEntity<?> response = ssProxy.editEmployee(u);
+		System.out.println(response);
+		//System.out.println(response.getStatusCodeValue() + " STATUS");
+	}
 }

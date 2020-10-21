@@ -102,5 +102,15 @@ public class OperationGroupService {
 		oldOperationGroup.setName(updatedOperationGroup.getName());
 		operationGroupRepo.save(oldOperationGroup);
 	}
+	
+	public List<OperationGroupDTO> getAll(){
+		List<OperationGroupDTO> retValues = new ArrayList<OperationGroupDTO>();
+		List<OperationGroup> operationGroups = operationGroupRepo.findAll();
+		for(OperationGroup operationGroup : operationGroups) {
+			OperationGroupDTO retValue = new OperationGroupDTO(operationGroup);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
 
 }
