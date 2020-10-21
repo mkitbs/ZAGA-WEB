@@ -1,4 +1,4 @@
 export class CultureGroup {
-  dbid;
-  name;
+  dbId;
+  Name;
 }

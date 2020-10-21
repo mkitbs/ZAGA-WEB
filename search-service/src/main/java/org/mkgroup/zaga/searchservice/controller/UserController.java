@@ -30,7 +30,7 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<?> saveUsers(@RequestBody List<NewUserDTO> users) {
 		users.forEach(user -> {
-			if(!userRepo.findByUserId(user.getId()).isPresent()) { //prevent duplicate persist
+			if(!userRepo.findByUserId(user.getUserId()).isPresent()) { //prevent duplicate persist
 				userService.saveUser(new UserElastic(user));
 			}
 		});
@@ -49,6 +49,12 @@ public class UserController {
 												      throws IOException {
 		List<UserElastic> list = userService.findUserByName(name);
 		return new ResponseEntity<List<UserElastic>>(list, HttpStatus.OK);
+	}
+	
+	@PostMapping("editUser")
+	public ResponseEntity<?> editUser(@RequestBody NewUserDTO user){
+		userService.editUser(user);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

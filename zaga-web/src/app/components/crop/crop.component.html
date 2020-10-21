@@ -16,8 +16,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ table.dbid }}" *ngFor="let table of fields">
-              {{ table.name }}
+            <option value="{{ table.dbId }}" *ngFor="let table of fields">
+              {{ table.Name }}
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedTable != undefined">
@@ -45,8 +45,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
-              {{ culture.name }} ({{ culture.culturegroup }})
+            <option value="{{ culture.dbId }}" *ngFor="let culture of cultures">
+              {{ culture.Name }} ({{ culture.cultureGroupName }})
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedCulture != undefined">
@@ -66,10 +66,10 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <h5 *ngIf="crops.length == 0">
+      Nema useva za prikazivanje.
+    </h5>
     <div class="row card-group">
-      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
-        Nema useva za prikazivanje.
-      </h5>
       <div class="col-4" *ngFor="let crop of crops; let j = index">
         <div class="card mb-3" style="width: 30.8rem">
           <div class="card-body">
@@ -129,8 +129,8 @@
 <div class="d-none d-md-block d-lg-none">
   <div style="padding-top: 10px"></div>
   <div class="container">
-  <h3 class="mt-2 mb-2">Pregled useva</h3>
-  <div style="padding-top: 20px"></div>
+    <h3 class="mt-2 mb-2" >Pregled useva</h3>
+    <div style="padding-top: 20px"></div>
   
     <div class="form-row">
       <div class="col-3">
@@ -144,8 +144,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ table.dbid }}" *ngFor="let table of fields">
-              {{ table.name }}
+            <option value="{{ table.dbId }}" *ngFor="let table of fields">
+              {{ table.Name }}
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedTable != undefined">
@@ -173,8 +173,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
-              {{ culture.name }} ({{ culture.culturegroup }})
+            <option value="{{ culture.dbId }}" *ngFor="let culture of cultures">
+              {{ culture.Name }} ({{ culture.cultureGroupName }})
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedCulture != undefined">
@@ -194,10 +194,10 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <h5 *ngIf="crops.length == 0">
+      Nema useva za prikazivanje.
+    </h5>
     <div class="row card-group">
-      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
-        Nema useva za prikazivanje.
-      </h5>
       <div class="col-7" *ngFor="let crop of crops; let j = index">
         <div class="card mb-3" style="width: 30.8rem">
           <div class="card-body">
@@ -257,8 +257,9 @@
 <div class="d-none d-lg-block d-xl-none">
   <div style="padding-top: 10px"></div>
   <div class="container">
-  <h3 class="mt-2 mb-2">Pregled useva</h3>
-  <div style="padding-top: 20px"></div>
+    <h3 class="mt-2 mb-2" >Pregled useva</h3>
+    <div style="padding-top: 20px"></div>
+  
     <div class="form-row">
       <div class="col-3">
         <label><i class="fa fa-map-marker"></i> Tabla </label>
@@ -271,8 +272,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ table.dbid }}" *ngFor="let table of fields">
-              {{ table.name }}
+            <option value="{{ table.dbId }}" *ngFor="let table of fields">
+              {{ table.Name }}
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedTable != undefined">
@@ -300,8 +301,8 @@
             (change)="getCrops()"
           >
             <option value="-1"></option>
-            <option value="{{ culture.dbid }}" *ngFor="let culture of culutres">
-              {{ culture.name }} ({{ culture.culturegroup }})
+            <option value="{{ culture.dbId }}" *ngFor="let culture of cultures">
+              {{ culture.Name }} ({{ culture.cultureGroupName }})
             </option>
           </select>
           <div class="input-group-append" *ngIf="selectedCulture != undefined">
@@ -321,10 +322,10 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <h5 *ngIf="crops.length == 0">
+      Nema useva za prikazivanje.
+    </h5>
     <div class="row card-group">
-      <h5 *ngIf="crops.length == 0" style="margin-left: 10px">
-        Nema useva za prikazivanje.
-      </h5>
       <div class="col-5" *ngFor="let crop of crops; let j = index">
         <div class="card mb-3" style="width: 30.8rem">
           <div class="card-body">
@@ -419,8 +420,8 @@
               name="table"
               [(ngModel)]="crop.fieldId"
             >
-              <option value="{{ field.dbid }}" *ngFor="let field of fields">
-                {{ field.name }}
+              <option value="{{ field.dbId }}" *ngFor="let field of fields">
+                {{ field.Name }}
               </option>
             </select>
           </div>
@@ -459,10 +460,10 @@
               [(ngModel)]="crop.cultureId"
             >
               <option
-                value="{{ culture.dbid }}"
-                *ngFor="let culture of culutres"
+                value="{{ culture.dbId }}"
+                *ngFor="let culture of cultures"
               >
-                {{ culture.name }}
+                {{ culture.Name }}
               </option>
             </select>
           </div>

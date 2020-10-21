@@ -15,4 +15,10 @@ public class SearchServiceFallback implements SearchServiceProxy{
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<?> editEmployee(UserElasticDTO user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -59,6 +59,21 @@ public class Culture {
 			this.orgCon = OrgCon.ORGANIC;
 		}
 		this.erpId = c.getErpId();
-		//dovrsiti
+		switch(c.getType()) {
+		case "V":
+			this.type = CultureType.FRUIT;
+			break;
+		case "P":
+			this.type = CultureType.VEGETABLE;
+			break;
+		case "R":
+			this.type = CultureType.CROP_FARMING;
+			break;
+		case "G": 
+			this.type = CultureType.VITICULTURE;
+			break;
+		default: 
+			break;
+		}
 	}
 }

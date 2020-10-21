@@ -34,9 +34,18 @@ import "chartjs-plugin-labels";
 import { SearchEmployeesPipe } from "./pipes/search-employees.pipe";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { SearchEmployeesPhonePipe } from "./pipes/search-employees-phone.pipe";
+import { MachineComponent } from './components/machine/machine.component';
 import { NgbDateParser } from "./config/NgbDateParser";
 import { FieldComponent } from "./components/field/field.component";
 import { CropComponent } from "./components/crop/crop.component";
+import { EmployeeComponent } from './components/employee/employee.component';
+import { FieldGroupComponent } from './components/field-group/field-group.component';
+import { MachineGroupComponent } from './components/machine-group/machine-group.component';
+import { OperationGroupComponent } from './components/operation-group/operation-group.component';
+import { OperationComponent } from './components/operation/operation.component';
+import { CultureGroupComponent } from './components/culture-group/culture-group.component';
+import { CultureComponent } from './components/culture/culture.component';
+import { VarietyComponent } from './components/variety/variety.component';
 
 declare var require: any;
 var config = require("config");
@@ -47,9 +56,18 @@ const routes: Routes = [
   { path: "workOrder", component: WorkOrderComponent },
   { path: "close/workOrder/:workId", component: CloseWorkOrderComponent },
   { path: "yieldOverview", component: YieldComponent },
+  { path: "masterData/machine", component: MachineComponent},
   { path: "workOrder/:urlParam", component: WorkOrderComponent },
   { path: "masterData/field", component: FieldComponent },
   { path: "masterData/crop", component: CropComponent },
+  { path: "masterData/employee", component: EmployeeComponent},
+  { path: "masterData/fieldGroup", component: FieldGroupComponent},
+  { path: "masterData/machineGroup", component: MachineGroupComponent},
+  { path: "masterData/operationGroup", component: OperationGroupComponent},
+  { path: "masterData/operation", component: OperationComponent},
+  { path: "masterData/cultureGroup", component: CultureGroupComponent},
+  { path: "masterData/culture", component: CultureComponent},
+  { path: "masterData/variety", component: VarietyComponent},
   { path: "", component: HomeComponent },
 ];
 
@@ -66,8 +84,17 @@ const routes: Routes = [
     YieldComponent,
     SearchEmployeesPipe,
     SearchEmployeesPhonePipe,
+    MachineComponent,
     FieldComponent,
     CropComponent,
+    EmployeeComponent,
+    FieldGroupComponent,
+    MachineGroupComponent,
+    OperationGroupComponent,
+    OperationComponent,
+    CultureGroupComponent,
+    CultureComponent,
+    VarietyComponent,
   ],
   imports: [
     BrowserModule,

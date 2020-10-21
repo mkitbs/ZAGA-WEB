@@ -11,6 +11,7 @@ import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.OperationGroup;
+import org.mkgroup.zaga.workorderservice.model.OperationType;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.OperationGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
@@ -128,13 +129,126 @@ public class OperationService {
 		oldOperation.setName(newOperation.getName());
 		OperationGroup operationGroup = operationGroupRepo.findByErpId(newOperation.getGroup()).get();
 		oldOperation.setOperationGroup(operationGroup);
+		switch(newOperation.getType()) {
+		case "R":
+			oldOperation.setType(OperationType.CROP_FARMING);
+			break;
+		case "G":
+			oldOperation.setType(OperationType.VITICULTURE);
+			break;
+		case "V":
+			oldOperation.setType(OperationType.FRUIT_GROWING);
+			break;
+		case "P":
+			oldOperation.setType(OperationType.VEGETABLE);
+			break;
+		case "S":
+			oldOperation.setType(OperationType.ANIMAL_HUSBANDRY);
+			break;
+		default:
+			break;
+		}
 		operationRepo.save(oldOperation);
-		//dovrsiti
 	}
+	
 	public void createOperation(OperationDTO newOperation) {
 		Operation operation = new Operation(newOperation);
 		OperationGroup operationGroup = operationGroupRepo.findByErpId(newOperation.getGroup()).get();
 		operation.setOperationGroup(operationGroup);
 		operationRepo.save(operation);
+	}
+	
+	public void editOperation(OperationDTO operationDTO) {
+		Operation operation = operationRepo.getOne(operationDTO.getId());
+		switch(operationDTO.getType()) {
+		case "RATARSTVO": 
+			operation.setType(OperationType.CROP_FARMING);
+			break;
+		case "VINOGRADARSTVO":
+			operation.setType(OperationType.VITICULTURE);
+			break;
+		case "VOĆARSTVO":
+			operation.setType(OperationType.FRUIT_GROWING);
+			break;
+		case "POVRTARSTVO":
+			operation.setType(OperationType.VEGETABLE);
+			break;
+		case "STOČARSTVO":
+			operation.setType(OperationType.ANIMAL_HUSBANDRY);
+			break;
+		default:
+			break;
+		}
+		OperationGroup operationGroup = operationGroupRepo.getOne(operationDTO.getOperationGroupId());
+		operation.setOperationGroup(operationGroup);
+		operationRepo.save(operation);
+	}
+	
+	public List<OperationDTO> getAllByTypeAndGroup(String type, UUID groupId){
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		switch(type) {
+		case "RATARSTVO": 
+			type = OperationType.CROP_FARMING.toString();
+			break;
+		case "VINOGRADARSTVO":
+			type = OperationType.VITICULTURE.toString();
+			break;
+		case "VOĆARSTVO":
+			type = OperationType.FRUIT_GROWING.toString();
+			break;
+		case "POVRTARSTVO":
+			type = OperationType.VEGETABLE.toString();
+			break;
+		case "STOČARSTVO":
+			type = OperationType.ANIMAL_HUSBANDRY.toString();
+			break;
+		default:
+			break;
+		}
+		List<Operation> operations = operationRepo.findAllByTypeAndGroup(type, groupId);
+		for(Operation operation : operations) {
+			OperationDTO retValue = new OperationDTO(operation);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<OperationDTO> getAllByType(String type){
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		switch(type) {
+		case "RATARSTVO": 
+			type = OperationType.CROP_FARMING.toString();
+			break;
+		case "VINOGRADARSTVO":
+			type = OperationType.VITICULTURE.toString();
+			break;
+		case "VOĆARSTVO":
+			type = OperationType.FRUIT_GROWING.toString();
+			break;
+		case "POVRTARSTVO":
+			type = OperationType.VEGETABLE.toString();
+			break;
+		case "STOČARSTVO":
+			type = OperationType.ANIMAL_HUSBANDRY.toString();
+			break;
+		default:
+			break;
+		}
+		List<Operation> operations = operationRepo.findByType(type);
+		for(Operation operation : operations) {
+			OperationDTO retValue = new OperationDTO(operation);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<OperationDTO> getAllByGroup(UUID groupId){
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		List<Operation> operations = operationRepo.findAllByGroup(groupId);
+		for(Operation operation : operations) {
+			OperationDTO retValue = new OperationDTO(operation);
+			retValues.add(retValue);
+		}
+		return retValues;
 	}
 }

@@ -5,6 +5,7 @@ export class Operation {
   kind;
   name;
   status;
-  type;
+  Type;
   operationGroup;
+  operationGroupId;
 }

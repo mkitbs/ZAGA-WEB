@@ -1,0 +1,608 @@
+<div class="d-none d-xl-block">
+    <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2" >Pregled kultura</h3>
+      <div style="padding-top: 20px"></div>
+    
+      <div class="form-row">
+        <div class="col-3">
+          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
+          <div class="input-group mb-3">
+            <select
+              name="table"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedOrgCon"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="ORGANIC">
+                ORGANSKA
+              </option>
+              <option value="CONVENTIONAL">
+                KONVENCIONALNA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
+              <span
+                *ngIf="selectedOrgCon != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedOrgCon()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip proizvodnje"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-3">
+          <label><i class="fas fa-seedling"></i> Tip kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCultureType"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="FRUIT">
+                VOĆE
+              </option>
+              <option value="VEGETABLE">
+                POVRĆE
+              </option>
+              <option value="CROP_FARMING">
+                RATARSKA
+              </option>
+              <option value="VITICULTURE">
+                VINOGRADARSKA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
+              <span
+                *ngIf="selectedCultureType != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCultureType()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip kulture"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCulture"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option
+                value="{{ cultureGroup.dbId }}"
+                *ngFor="let cultureGroup of cultureGroups"
+              >
+                {{ cultureGroup.Name }}
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCulture != undefined">
+              <span
+                *ngIf="selectedCulture != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCulture()"
+                style="cursor: pointer"
+                title="Poništi odabranu kulturu"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <h5 *ngIf="cultures.length == 0">
+        Nema kultura za prikazivanje.
+      </h5>
+      <div class="row card-group">
+        <div class="col-4" *ngFor="let culture of cultures; let j = index">
+          <div class="card mb-3" style="width: 30.8rem">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-top: 12px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/crop.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ culture.Name }}
+                    </h5>
+                    <table>
+                      <tr title="Tip proizvodnje" style="cursor: help">
+                        <th><i class="fa fa-industry"></i></th>
+                        <td>{{ culture.OrgKon }}</td>
+                      </tr>
+                      <tr title="Tip kulture" style="cursor: help">
+                        <th><i class="fas fa-seedling"></i></th>
+                        <td>{{ culture.Type }}</td>
+                      </tr>
+                      <tr title="Grupa kulture" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ culture.cultureGroupName }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              (click)="getCultureForEdit(culture.dbId)"
+              data-toggle="modal"
+              data-target="#editCultureModal"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2" >Pregled kultura</h3>
+      <div style="padding-top: 20px"></div>
+    
+      <div class="form-row">
+        <div class="col-3">
+          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
+          <div class="input-group mb-3">
+            <select
+              name="table"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedOrgCon"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="ORGANIC">
+                ORGANSKA
+              </option>
+              <option value="CONVENTIONAL">
+                KONVENCIONALNA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
+              <span
+                *ngIf="selectedOrgCon != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedOrgCon()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip proizvodnje"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-3">
+          <label><i class="fas fa-seedling"></i> Tip kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCultureType"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="FRUIT">
+                VOĆE
+              </option>
+              <option value="VEGETABLE">
+                POVRĆE
+              </option>
+              <option value="CROP_FARMING">
+                RATARSKA
+              </option>
+              <option value="VITICULTURE">
+                VINOGRADARSKA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
+              <span
+                *ngIf="selectedCultureType != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCultureType()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip kulture"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCulture"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option
+                value="{{ cultureGroup.dbId }}"
+                *ngFor="let cultureGroup of cultureGroups"
+              >
+                {{ cultureGroup.Name }}
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCulture != undefined">
+              <span
+                *ngIf="selectedCulture != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCulture()"
+                style="cursor: pointer"
+                title="Poništi odabranu kulturu"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <h5 *ngIf="cultures.length == 0">
+        Nema kultura za prikazivanje.
+      </h5>
+      <div class="row card-group">
+        <div class="col-7" *ngFor="let culture of cultures; let j = index">
+          <div class="card mb-3" style="width: 30.8rem">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-top: 12px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/crop.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ culture.Name }}
+                    </h5>
+                    <table>
+                      <tr title="Tip proizvodnje" style="cursor: help">
+                        <th><i class="fa fa-industry"></i></th>
+                        <td>{{ culture.OrgKon }}</td>
+                      </tr>
+                      <tr title="Tip kulture" style="cursor: help">
+                        <th><i class="fas fa-seedling"></i></th>
+                        <td>{{ culture.Type }}</td>
+                      </tr>
+                      <tr title="Grupa kulture" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ culture.cultureGroupName }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              (click)="getCultureForEdit(culture.dbId)"
+              data-toggle="modal"
+              data-target="#editCultureModal"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2" >Pregled kultura</h3>
+      <div style="padding-top: 20px"></div>
+    
+      <div class="form-row">
+        <div class="col-3">
+          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
+          <div class="input-group mb-3">
+            <select
+              name="table"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedOrgCon"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="ORGANIC">
+                ORGANSKA
+              </option>
+              <option value="CONVENTIONAL">
+                KONVENCIONALNA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
+              <span
+                *ngIf="selectedOrgCon != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedOrgCon()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip proizvodnje"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-3">
+          <label><i class="fas fa-seedling"></i> Tip kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCultureType"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option value="FRUIT">
+                VOĆE
+              </option>
+              <option value="VEGETABLE">
+                POVRĆE
+              </option>
+              <option value="CROP_FARMING">
+                RATARSKA
+              </option>
+              <option value="VITICULTURE">
+                VINOGRADARSKA
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
+              <span
+                *ngIf="selectedCultureType != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCultureType()"
+                style="cursor: pointer"
+                title="Poništi odabrani tip kulture"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
+          <div class="input-group mb-3">
+            <select
+              name="culture"
+              class="form-control"
+              id=""
+              [(ngModel)]="selectedCulture"
+              (change)="getCultures()"
+            >
+              <option value="-1"></option>
+              <option
+                value="{{ cultureGroup.dbId }}"
+                *ngFor="let cultureGroup of cultureGroups"
+              >
+                {{ cultureGroup.Name }}
+              </option>
+            </select>
+            <div class="input-group-append" *ngIf="selectedCulture != undefined">
+              <span
+                *ngIf="selectedCulture != -1"
+                class="input-group-text"
+                id="basic-addon2"
+                (click)="setValueForSelectedCulture()"
+                style="cursor: pointer"
+                title="Poništi odabranu kulturu"
+                >x</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <h5 *ngIf="cultures.length == 0">
+        Nema kultura za prikazivanje.
+      </h5>
+      <div class="row card-group">
+        <div class="col-5" *ngFor="let culture of cultures; let j = index">
+          <div class="card mb-3" style="width: 30.8rem">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-top: 12px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/crop.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ culture.Name }}
+                    </h5>
+                    <table>
+                      <tr title="Tip proizvodnje" style="cursor: help">
+                        <th><i class="fa fa-industry"></i></th>
+                        <td>{{ culture.OrgKon }}</td>
+                      </tr>
+                      <tr title="Tip kulture" style="cursor: help">
+                        <th><i class="fas fa-seedling"></i></th>
+                        <td>{{ culture.Type }}</td>
+                      </tr>
+                      <tr title="Grupa kulture" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ culture.cultureGroupName }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              (click)="getCultureForEdit(culture.dbId)"
+              data-toggle="modal"
+              data-target="#editCultureModal"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--Edit crop modal-->
+<div
+  class="modal fade"
+  id="editCultureModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4
+          class="modal-title"
+          id="exampleModalLabel"
+        >
+        <i class="fa fa-leaf mr-2"></i>
+         {{ culture.Name }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editCultureModalForm="ngForm">
+          <div class="form-group">
+            <label for="type"><i class="fa fa-industry"></i> Tip proizvodnje</label>
+            <select
+              id=""
+              class="form-control"
+              name="orgKon"
+              [(ngModel)]="culture.OrgKon"
+            >
+              <option value="ORGANSKA">
+                ORGANSKA
+              </option>
+              <option value="KONVENCIONALNA">
+                KONVENCIONALNA
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cultureType"><i class="fas fa-seedling"></i> Tip kulture</label>
+            <select
+              id=""
+              class="form-control"
+              name="cultureType"
+              [(ngModel)]="culture.Type"
+            >
+              <option value="VOĆE">
+                VOĆE
+              </option>
+              <option value="POVRĆE">
+                POVRĆE
+              </option>
+              <option value="RATARSKA">
+                RATARSKA
+              </option>
+              <option value="VINOGRADARSKA">
+                VINOGRADARSKA
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="culture"><i class="fa fa-cubes"></i> Grupa kulture</label>
+            <select
+              id=""
+              class="form-control"
+              name="culture"
+              [(ngModel)]="culture.cultureGroup"
+            >
+              <option
+                value="{{ cultureGroup.dbId }}"
+                *ngFor="let cultureGroup of cultureGroups"
+              >
+                {{ cultureGroup.Name }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          style="background-color: #f68901"
+        >
+          <i class="fa fa-window-close"></i> Odustani
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          style="background-color: #33590b"
+          data-dismiss="modal"
+          (click)="editCulture()"
+        >
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

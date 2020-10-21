@@ -1,10 +1,12 @@
 export class Culture {
   id;
-  name;
-  orgCon;
-  type;
+  Name;
+  OrgKon;
+  Type;
   varieties;
   crops;
-  dbid;
+  dbId;
   culturegroup;
+  cultureGroupName;
+  cultureGroup;
 }

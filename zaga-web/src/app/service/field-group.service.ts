@@ -14,4 +14,11 @@ export class FieldGroupService {
       environment.gatewayWorkOrderURL + "api/field/group/getAll"
     );
   }
+
+  editFieldGroup(fieldGroup): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL + "api/field/group/editFieldGroup",
+      fieldGroup
+    );
+  }
 }

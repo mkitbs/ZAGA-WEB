@@ -11,6 +11,8 @@ import org.mkgroup.zaga.workorderservice.dto.CultureDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Culture;
 import org.mkgroup.zaga.workorderservice.model.CultureGroup;
+import org.mkgroup.zaga.workorderservice.model.CultureType;
+import org.mkgroup.zaga.workorderservice.model.OrgCon;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.CultureGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.CultureRepository;
@@ -105,7 +107,22 @@ public class CultureService {
 		oldCulture.setName(newCulture.getName());
 		CultureGroup cultureGroup = cultureGroupRepo.findByErpId(newCulture.getCultureGroupId()).get();
 		oldCulture.setCultureGroup(cultureGroup);
-		//dovrsiti
+		switch(newCulture.getType()) {
+		case "V":
+			oldCulture.setType(CultureType.FRUIT);
+			break;
+		case "P":
+			oldCulture.setType(CultureType.VEGETABLE);
+			break;
+		case "R":
+			oldCulture.setType(CultureType.CROP_FARMING);
+			break;
+		case "G": 
+			oldCulture.setType(CultureType.VITICULTURE);
+			break;
+		default: 
+			break;
+		}
 		cultureRepo.save(oldCulture);
 	}
 	
@@ -115,4 +132,108 @@ public class CultureService {
 		culture.setCultureGroup(cultureGroup);
 		cultureRepo.save(culture);
 	}
+	
+	public void editCulture(CultureDTO cultureDTO) {
+		Culture culture = cultureRepo.getOne(cultureDTO.getDbId());
+		switch(cultureDTO.getOrgCon()) {
+		case "ORGANSKA":
+			culture.setOrgCon(OrgCon.ORGANIC);
+			break;
+		case "KONVENCIONALNA":
+			culture.setOrgCon(OrgCon.CONVENTIONAL);
+			break;
+		default:
+			break;
+		}
+		switch(cultureDTO.getType()) {
+		case "VOĆE":
+			culture.setType(CultureType.FRUIT);
+			break;
+		case "POVRĆE":
+			culture.setType(CultureType.VEGETABLE);
+			break;
+		case "RATARSKA":
+			culture.setType(CultureType.CROP_FARMING);
+			break;
+		case "VINOGRADARSKA":
+			culture.setType(CultureType.VITICULTURE);
+			break;
+		default:
+			break;
+		}
+		CultureGroup cultureGroup = cultureGroupRepo.getOne(cultureDTO.getCultureGroup());
+		culture.setCultureGroup(cultureGroup);
+		cultureRepo.save(culture);
+	}
+	
+	public List<CultureDTO> getAllByOrgCon(String orgCon){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByOrgCon(orgCon);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByCultureType(String type){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByType(type);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByCultureGroup(UUID id){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByCultureGroup(id);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByOrgConCultureTypeCultureGroup(String orgCon, String type, UUID id){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByOrgConCultureTypeCultureGroup(orgCon, type, id);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByOrgConAndCultureType(String orgCon, String type){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByOrgConAndCultureType(orgCon, type);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByOrgConAndCultureGroup(String orgCon, UUID id){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByOrgConAndCultureGroup(orgCon, id);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllByCultureTypeAndCultureGroup(String type, UUID id){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllByCultureTypeAndCultureGroup(type, id);
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
 }

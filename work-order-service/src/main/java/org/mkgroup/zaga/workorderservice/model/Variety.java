@@ -16,8 +16,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.mkgroup.zaga.workorderservice.dto.VarietyDTO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "variety", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
 public class Variety {

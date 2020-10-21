@@ -11,10 +11,41 @@ export class OperationService {
   constructor(private http:HttpClient) { }
 
   getOne(id) : Observable<any>{
-    return this.http.get(environment.gatewayWorkOrderURL + "api/operation/getOperation/" + id)
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getOperation/" 
+      + id)
   }
 
   getAll() : Observable<any>{
-    return this.http.get(environment.gatewayWorkOrderURL + "api/operation/getAll")
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAll")
+  }
+
+  editOperation(operation): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL + "api/operation/editOperation",
+      operation
+    );
+  }
+
+  getAllByTypeAndGroup(type, groupId): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAllByTypeAndGroup/" +
+      type + "/" + groupId
+    );
+  }
+
+  getAllByType(type): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAllByType/" +
+      type
+    );
+  }
+
+  getAllByGroup(groupId): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAllByGroup/" +
+      groupId
+    );
   }
 }

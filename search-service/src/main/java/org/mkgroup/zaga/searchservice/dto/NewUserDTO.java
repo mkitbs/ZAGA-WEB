@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class NewUserDTO {
 	
-	private UUID id;
+	private UUID userId;
 	
 	private String name;
 	

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class UserElastic implements Serializable {
 
 	public UserElastic(NewUserDTO user) {
-		this.userId = user.getId();
+		this.userId = user.getUserId();
 		this.name = user.getName();
 		this.perNumber = user.getPerNumber();
 		this.position = user.getPosition();
