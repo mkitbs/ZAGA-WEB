@@ -308,6 +308,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.clickAddWorkerMachine = true;
     this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
     this.wow.user.userId = this.selectedWorker;
+    this.wow.user.id = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
     this.wow.connectingMachine.id = this.selectedCouplingMachine;
