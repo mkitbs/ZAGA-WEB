@@ -45,13 +45,10 @@ public class WorkOrderWorkerController {
 	MachineRepository machineRepo;
 
 	@PostMapping("addWorker/{id}")
-	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO){
-		try {
+	public ResponseEntity<?> addWorker(@PathVariable UUID id,@RequestBody WorkOrderWorkerDTO wowDTO) throws Exception{
 			wowService.addWorker(id, wowDTO);
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
+		
 		
 	}
 	
