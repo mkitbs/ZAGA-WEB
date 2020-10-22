@@ -187,11 +187,11 @@ export class CreateworkOrderComponent implements OnInit {
       });
       this.userService.getAll().subscribe((data) => {
         this.allEmployees = data.content;
+        console.log(this.allEmployees)
         var comparableId = this.workOrder.responsibleId;
         var filterById = function (element) {
           return element.userId == comparableId;
         };
-
         this.nameFC.setValue(this.allEmployees.filter(filterById)[0]);
       });
     }
@@ -343,9 +343,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.initialState = wow.initialState;
     this.wow.finalState = wow.finalState;
     this.wow.fuel = wow.fuel;
-    this.wow.user.name = this.allEmployees.find(
+    this.wow.user.Name = this.allEmployees.find(
       (x) => x.userId == wow.user.id
-    ).name;
+    ).Name;
     this.wow.machine.Name = this.devicesPropulsion.find(
       (x) => x.id == wow.machine.id
     ).Name;
@@ -353,9 +353,9 @@ export class CreateworkOrderComponent implements OnInit {
     if (!this.new) {
       this.wow.id = wow.id;
       this.wow = wow;
-      this.wow.user.name = this.allEmployees.find(
+      this.wow.user.Name = this.allEmployees.find(
         (x) => x.userId == this.wow.user.id
-      ).name;
+      ).Name;
       this.wow.machine.Name = this.devicesPropulsion.find(
         (x) => x.id == this.wow.machine.id
       ).Name;
@@ -413,7 +413,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.nightPeriod = null;
     this.wow.initialState = null;
     this.wow.finalState = null;
-    this.wow.user.name = null;
+    this.wow.user.Name = null;
     this.wow.machine.Name = null;
   }
 

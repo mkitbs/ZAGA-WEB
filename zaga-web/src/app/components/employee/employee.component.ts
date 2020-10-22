@@ -31,12 +31,12 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  getEmployee(id){
+  getEmployee(id) {
     this.employee = this.allEmployees.find(x => x.userId == id);
     console.log(this.employee)
   }
 
-  editUser(){
+  editUser() {
     console.log(this.employee)
     this.userService.editUser(this.employee).subscribe(res => {
       console.log(res);
@@ -48,7 +48,7 @@ export class EmployeeComponent implements OnInit {
 
   //autocomplete
   displayFn(emp: Employee): string {
-    return emp && emp.name ? emp.name : "";
+    return emp && emp.Name ? emp.Name : "";
   }
 
 }
