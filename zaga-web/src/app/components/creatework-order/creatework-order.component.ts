@@ -308,7 +308,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.clickAddWorkerMachine = true;
     this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
     this.wow.user.userId = this.selectedWorker;
-    this.wow.user.id = this.selectedWorker;
+    //this.wow.user.userd = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
     this.wow.connectingMachine.id = this.selectedCouplingMachine;
@@ -338,43 +338,32 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editWorkerAndMachine(wow) {
-    this.wow.dayPeriod = wow.dayPeriod;
-    this.wow.nightPeriod = wow.nightPeriod;
-    this.wow.initialState = wow.initialState;
-    this.wow.finalState = wow.finalState;
-    this.wow.fuel = wow.fuel;
+    this.wow.id = wow.id;
+    this.wow = wow;
+    console.log(this.wow);
     this.wow.user.Name = this.allEmployees.find(
-      (x) => x.userId == wow.user.id
-    ).Name;
+      (x) => x.userId == this.wow.user.userId
+    ).name;
+    console.log(this.wow.user.Name);
     this.wow.machine.Name = this.devicesPropulsion.find(
-      (x) => x.id == wow.machine.id
-    ).Name;
-    this.idOfEditingWorkerMachine = this.wow.wowObjectId;
-    if (!this.new) {
-      this.wow.id = wow.id;
-      this.wow = wow;
-      this.wow.user.Name = this.allEmployees.find(
-        (x) => x.userId == this.wow.user.userId
-      ).name;
-      this.wow.machine.Name = this.devicesPropulsion.find(
-        (x) => x.id == this.wow.machine.id
-      ).name;
-      if (this.wow.dayPeriod == -1) {
-        this.wow.dayPeriod = null;
-      }
-      if (this.wow.nightPeriod == -1) {
-        this.wow.nightPeriod = null;
-      }
-      if (this.wow.initialState == -1) {
-        this.wow.initialState = null;
-      }
-      if (this.wow.finalState == -1) {
-        this.wow.finalState = null;
-      }
-      if (this.wow.fuel == -1) {
-        this.wow.fuel = null;
-      }
+      (x) => x.id == this.wow.machine.id
+    ).name;
+    if (this.wow.dayPeriod == -1) {
+      this.wow.dayPeriod = null;
     }
+    if (this.wow.nightPeriod == -1) {
+      this.wow.nightPeriod = null;
+    }
+    if (this.wow.initialState == -1) {
+      this.wow.initialState = null;
+    }
+    if (this.wow.finalState == -1) {
+      this.wow.finalState = null;
+    }
+    if (this.wow.fuel == -1) {
+      this.wow.fuel = null;
+    }
+
   }
 
   editExistingWorkerAndMachine(existing) {
@@ -445,7 +434,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addNewWorkerAndMachine() {
-    this.wow.user.id = this.selectedWorker;
+    this.wow.user.userId = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
     this.wow.connectingMachine.id = this.selectedCouplingMachine;
@@ -485,30 +474,31 @@ export class CreateworkOrderComponent implements OnInit {
     });
   }
 
-  updateWow(wow) {
+  updateWow() {
+    console.log(this.wow + "VBBBBBBBBBB");
     this.clickAddWowDetail = true;
-    if (wow.dayPeriod > 24) {
+    if (this.wow.dayPeriod > 24) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (wow.nightPeriod > 24) {
+    if (this.wow.nightPeriod > 24) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
     }
-    if (wow.dayPeriod + wow.nightPeriod > 24) {
+    if (this.wow.dayPeriod + this.wow.nightPeriod > 24) {
       this.validWorkPeriod = false;
     } else {
       this.validWorkPeriod = true;
     }
-    if (wow.finalState < wow.initialState) {
+    if (this.wow.finalState < this.wow.initialState) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
     if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
-      this.wowService.updateWorkOrderWorker(wow.id, wow).subscribe((res) => {
+      this.wowService.updateWorkOrderWorker(this.wow.id, this.wow).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
 
