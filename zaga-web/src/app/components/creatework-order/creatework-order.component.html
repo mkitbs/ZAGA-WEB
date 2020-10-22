@@ -276,17 +276,11 @@
               </tr>
               <!--editable table worker/machine new wo-->
               <ng-container *ngIf="new; else elseBlockMachineState">
-                <div class="input-group">
-                  <span *ngIf="wows.length == 0">Nema dodatih radnika i mašina, dodajte klikom na dugme </span>
-                  <button *ngIf="wows.length == 0" class="btn btn-primary btn-add mr-2" disabled
-                    style="margin-left: 5px; margin-top: -5px;">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
+
                 <tr *ngFor="let wow of wows">
                   <td>
-                    <select [(ngModel)]="wow.user.id" [ngModelOptions]="{ standalone: true }" name="{{ wow.user.id }}"
-                      id="" class="form-control">
+                    <select [(ngModel)]="wow.user.userId" [ngModelOptions]="{ standalone: true }"
+                      name="{{ wow.user.id }}" id="" class="form-control">
                       <option value="{{ emp.userId }}" *ngFor="let emp of allEmployees">
                         {{ emp.name }}
                       </option>
@@ -414,6 +408,15 @@
               </ng-template>
             </tbody>
           </table>
+          <div class="col-12">
+            <p *ngIf="wows.length == 0">Nema dodatih radnika i mašina, dodajte klikom na dugme
+              <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                <i class="fa fa-plus"></i>
+              </button>
+
+            </p>
+
+          </div>
         </form>
       </div>
     </div>
