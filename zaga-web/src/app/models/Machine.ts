@@ -1,11 +1,12 @@
-export class Machine{
+export class Machine {
     id;
     Name;
-    compnayCode:string;
-    orgUnit:string;
-    FuelType:string;
+    compnayCode: string;
+    orgUnit: string;
+    FuelType: string;
     Type;
-    ownershipType:string;
+    ownershipType: string;
     machineGroupName;
     machineGroup;
+    name;
 }
