@@ -354,11 +354,11 @@ export class CreateworkOrderComponent implements OnInit {
       this.wow.id = wow.id;
       this.wow = wow;
       this.wow.user.Name = this.allEmployees.find(
-        (x) => x.userId == this.wow.user.id
-      ).Name;
+        (x) => x.userId == this.wow.user.userId
+      ).name;
       this.wow.machine.Name = this.devicesPropulsion.find(
         (x) => x.id == this.wow.machine.id
-      ).Name;
+      ).name;
       if (this.wow.dayPeriod == -1) {
         this.wow.dayPeriod = null;
       }
