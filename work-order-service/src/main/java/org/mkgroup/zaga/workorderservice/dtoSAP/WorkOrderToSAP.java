@@ -1,5 +1,9 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
@@ -61,6 +65,11 @@ public class WorkOrderToSAP {
 
 	@SuppressWarnings("deprecation")
 	public WorkOrderToSAP(WorkOrder workOrder, String action) {
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        String workOpenDate = dateFormat.format(new Date());
+        String workDate = dateFormat.format(workOrder.getDate());
+		System.out.println(workOpenDate + " OPEN \n" + workDate + " WDATE");
 		this.Activity = action;
 		this.CompanyCode = "1200";
 		this.OrganisationUnit = "BIPR";
@@ -68,8 +77,8 @@ public class WorkOrderToSAP {
 		this.WorkOrderNumber = (action.equals("MOD") ? workOrder.getErpId().toString() : "");
 		this.CropVarietyId = "000000";
 		this.DataChangeUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
-		this.WorkOrderDate = "2020-09-24T00:00:00";
-		this.WorkOrderOpenDate = "2020-09-24T00:00:00";
+		this.WorkOrderDate = workDate;
+		this.WorkOrderOpenDate = workOpenDate;
 		this.WorkOrderCloseDate = null;
 		this.ResponsibleUserNumber = workOrder.getResponsible().getPerNumber().toString();
 		this.ReleasedUserNumber = workOrder.getResponsible().getPerNumber().toString();
@@ -84,11 +93,21 @@ public class WorkOrderToSAP {
 		for(SpentMaterial sp : workOrder.getMaterials()) {
 			MaterialToSAP mat = new MaterialToSAP();
 			mat.setMaterialId(sp.getMaterial().getErpId().toString());
-			mat.setPlannedQuantity(Double.toString(sp.getQuantity()));
+			if(sp.getQuantity() == -1) {
+				mat.setPlannedQuantity("0.000");
+			}else {
+				mat.setPlannedQuantity(Double.toString(sp.getQuantity()));
+			}
+			
 			mat.setMaterialUnit(sp.getMaterial().getUnit());
 			mat.setCharge("");
 			mat.setDeleted("");
-			mat.setSpentQuantity(sp.getSpent().toString());
+			if(sp.getSpent() == -1) {
+				mat.setSpentQuantity("0.000");
+			}else {
+				mat.setSpentQuantity(sp.getSpent().toString());
+			}
+			
 			if(sp.getErpId() == 0) {
 				mat.setWorkOrderMaterialNumber("");
 			}else {
@@ -118,7 +137,7 @@ public class WorkOrderToSAP {
 			woeSAP.setWorkHolidayHours("0.00000");
 			woeSAP.setOvertimeWork("");
 			if(workOrder.getTreated() == 0) {
-				woeSAP.setOperationOutput("0.0");
+				woeSAP.setOperationOutput("0.00000");
 				woeSAP.setMachineAreaOutput("0.00000");
 			}else {
 				woeSAP.setMachineAreaOutput(Double.toString(workOrder.getTreated()));
@@ -129,9 +148,22 @@ public class WorkOrderToSAP {
 			woeSAP.setNoOperationOutput("");
 			woeSAP.setMasterMachineId(wow.getMachine().getErpId().toString());
 			woeSAP.setSlaveMachineId(wow.getConnectingMachine().getErpId().toString());
-			woeSAP.setMachineTimeStart(wow.getInitialState().toString());
-			woeSAP.setMachineTimeEnd(wow.getFinalState().toString());
-			woeSAP.setSpentFuel(wow.getFuel().toString());
+			if(wow.getInitialState() == -1) {
+				woeSAP.setMachineTimeStart("0.0");
+			}else {
+				woeSAP.setMachineTimeStart(wow.getInitialState().toString());
+			}
+			if(wow.getFinalState() == -1) {
+				woeSAP.setMachineTimeEnd("0.0");
+			}else {
+				woeSAP.setMachineTimeEnd(wow.getFinalState().toString());
+			}
+			if(wow.getFuel() == -1) {
+				woeSAP.setSpentFuel("0.0");
+			}else {
+				woeSAP.setSpentFuel(wow.getFuel().toString());
+			}
+			
 			if(wow.getNightPeriod() == -1) {
 				woeSAP.setWorkNightHours("0.00000");
 			}else {
