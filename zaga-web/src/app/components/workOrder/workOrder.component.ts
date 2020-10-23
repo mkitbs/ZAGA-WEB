@@ -169,6 +169,7 @@ export class WorkOrderComponent implements OnInit {
           }
         });
       }
+      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
     });
   }
 
