@@ -41,7 +41,7 @@ public class WorkOrderController {
 	
 	@PostMapping("/createWorkOrder")
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
-		try {
+		//try {
 			SAPResponse sapResponse = workOrderService.addWorkOrder(request);
 			
 			if(sapResponse.isSuccess()) {
@@ -49,9 +49,9 @@ public class WorkOrderController {
 			}else {
 				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
 			}
-		}catch(Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		//}catch(Exception e) {
+		//	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//}
 	}
 	
 	@PostMapping("/createCopy/{id}")

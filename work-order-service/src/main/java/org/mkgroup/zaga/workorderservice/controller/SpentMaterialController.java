@@ -50,14 +50,10 @@ public class SpentMaterialController {
 	}
 	
 	@PostMapping("updateSpentMaterial/{id}")
-	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		try {
+	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO) throws Exception{
+		
 			spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
 		
 	}
 	

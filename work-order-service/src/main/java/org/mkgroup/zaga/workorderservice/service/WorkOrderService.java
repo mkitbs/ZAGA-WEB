@@ -101,7 +101,7 @@ public class WorkOrderService {
 			Date startDateToAdd = startDate.toDate();
 			workOrder.setDate(startDateToAdd);
 			
-			workOrder.setStatus(WorkOrderStatus.NEW);
+			workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
 			workOrder.setCreationDate(new Date());
 			workOrder.setTreated(0);
 			
@@ -160,10 +160,13 @@ public class WorkOrderService {
 				}
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
+				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getId())));
 				
-				if(wowDTO.getConnectingMachine().getId() != null) {
-					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
+				if(!wowDTO.getConnectingMachine().getId().equals("-1")) {
+					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+				}else {
+					System.out.println("NEMA PRIKLJUCNOG");
+					wow.setConnectingMachine(null);
 				}
 				wow = wowRepo.save(wow);
 				workOrder.getWorkers().add(wow);
@@ -587,7 +590,7 @@ public class WorkOrderService {
 			}else if(flag.equals("S")) {
 				System.out.println("USAO U SUCES");
 				closeWorkOrder.setStatus(true);
-				this.updateWorkOrder(workOrderDTO);
+				//this.updateWorkOrder(workOrderDTO);
 				workOrder.setTreated(workOrderDTO.getTreated());
 				workOrder.setStatus(WorkOrderStatus.CLOSED);
 				workOrder.setClosed(true);

@@ -48,7 +48,7 @@
             </div>
           </td>
           <td class="left-col-header">
-            <i class="fa fa-database mr-2"></i>Tabla:
+            <i class="fa fa-database mr-2"></i>Parcela:
           </td>
           <td class="right-col-header">
             <select name="selectedTable" class="form-control" id="" [(ngModel)]="workOrder.tableId"
@@ -64,7 +64,7 @@
         </tr>
         <tr>
           <td class="left-col-header">
-            <i class="fa fa-calendar mr-2"></i>Datum:
+            <i class="fa fa-calendar mr-2"></i>Datum radnog naloga:
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3">
@@ -88,7 +88,7 @@
                 <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="auto" #search style="width: 100%"
                   required />
 
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" place>
                   <mat-option *ngFor="
                       let emp of allEmployees | SearchEmployees: search.value
                     " [value]="emp">
@@ -141,7 +141,7 @@
           <td class="right-col-header">
             <div class="input-group mb-3">
               <input type="text" name="area" [(ngModel)]="workOrder.area" id="" class="form-control" #area="ngModel"
-                required />
+                required readonly />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
@@ -241,7 +241,10 @@
                 <td>
                   <div class="form-group">
                     <select [(ngModel)]="selectedCouplingMachine" name="selectedCouplingMachine" id=""
-                      class="form-control" #couplingMachine="ngModel" required>
+                      class="form-control" #couplingMachine="ngModel">
+                      <option value="-1" selected>
+
+                      </option>
                       <option value="{{ dev.id }}" *ngFor="let dev of devicesCoupling">
                         {{ dev.name }}
                       </option>

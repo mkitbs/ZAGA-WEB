@@ -52,7 +52,7 @@ public class WorkOrderMachineController {
 		User user = userRepo.getOne(womDTO.getUser().getUserId());
 		wom.setUser(user);
 		
-		Machine machine = machineRepo.getOne(womDTO.getMachine().getId());
+		Machine machine = machineRepo.getOne(UUID.fromString(womDTO.getMachine().getId()));
 		wom.setMachine(machine);
 		
 		womRepo.save(wom);
