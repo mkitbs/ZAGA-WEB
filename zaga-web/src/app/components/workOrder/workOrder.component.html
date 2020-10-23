@@ -1,14 +1,8 @@
 <div class="container d-none d-md-block">
   <h3 class="mt-2 mb-2">Pregled naloga</h3>
 
-  <button
-    class="btn btn-primary collapsing-button mb-2 shadow-none"
-    data-toggle="collapse"
-    data-target="#collapseExample"
-    aria-expanded="false"
-    aria-controls="collapseExample"
-    (click)="collapse()"
-  >
+  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
     Filteri
     <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
     <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
@@ -48,44 +42,30 @@
         <i class="fa fa-plus"></i> Kreiraj novi nalog
       </button>
     </a>
-    <button
-    class="btn btn-primary button-all shadow-none"
-    style="float: left; width: 68px;"
-    (click)="getAll()"
-    >
-    <i class="fa fa-tasks"></i> Svi
+    <button class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getAll()">
+      <i class="fa fa-tasks"></i> Svi
     </button>
-    <button
-      class="btn btn-primary button-new shadow-none"
-      style="margin-left: 10px; float: left; width: 68px;"
-      (click)="getAllWorkOrdersByStatus('NEW')"
-    >
+    <button class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
+      (click)="getAllWorkOrdersByStatus('NEW')">
       <i class="fa fa-tasks"></i> Novi
     </button>
-    <button
-      class="btn btn-primary button-in-progress shadow-none"
-      style="margin-left: 10px; float: left"
-      (click)="getAllWorkOrdersByStatus('IN_PROGRESS')"
-    >
+    <button class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
+      (click)="getAllWorkOrdersByStatus('IN_PROGRESS')">
       <i class="fa fa-tasks"></i> U radu
     </button>
-    <button
-      class="btn btn-primary button-closed shadow-none"
-      style="margin-left: 10px; float: left"
-      (click)="getAllWorkOrdersByStatus('CLOSED')"
-    >
+    <button class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
+      (click)="getAllWorkOrdersByStatus('CLOSED')">
       <i class="fa fa-tasks"></i> Zatvoreni
     </button>
   </div>
   <br />
-  <span *ngIf="empty" style="font-size: 15px; float: left"
-    >Nema kreiranih naloga.</span
-  >
+  <span *ngIf="empty" style="font-size: 15px; float: left">Nema kreiranih naloga.</span>
   <table class="table table-hover tabela-nalozi">
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">SAP ID</th>
+        <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
+              class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
         <th scope="col">Operacija</th>
         <th scope="col">Datum</th>
         <th scope="col">Tabla</th>
@@ -97,10 +77,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let workOrder of workOrders; let j = index"
-        style="cursor: pointer"
-      >
+      <tr *ngFor="let workOrder of workOrders; let j = index" style="cursor: pointer">
         <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
         <td>{{ workOrder.sapId }}</td>
         <td (click)="changeRoute(workOrder.id)">
@@ -115,25 +92,17 @@
         <td (click)="changeRoute(workOrder.id)">
           {{ workOrder.responsibleName }}
         </td>
-        <td
-          [ngClass]="{
+        <td [ngClass]="{
             statusNovi: workOrder.status == 'Novi',
             statusURadu: workOrder.status == 'U radu',
             statusZatvoren: workOrder.status == 'Zatvoren'
-          }"
-          (click)="changeRoute(workOrder.id)"
-        >
+          }" (click)="changeRoute(workOrder.id)">
           {{ workOrder.status }}
         </td>
         <td>
           <div class="form-group">
-            <button
-              class="btn btn-primary btn-add mr-2"
-              data-toggle="modal"
-              data-target="#copyModal"
-              style="float: center"
-              (click)="getWorkOrderId(workOrder.id)"
-            >
+            <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
+              style="float: center" (click)="getWorkOrderId(workOrder.id)">
               <i class="fa fa-copy"></i>
             </button>
           </div>
@@ -145,14 +114,8 @@
 
 <div class="container d-md-none">
   <h3 class="mt-2 mb-2">Pregled naloga</h3>
-  <button
-    class="btn btn-primary collapsing-button mb-2 shadow-none"
-    data-toggle="collapse"
-    data-target="#collapseExample"
-    aria-expanded="false"
-    aria-controls="collapseExample"
-    (click)="collapse()"
-  >
+  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
     Filteri
     <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
     <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
@@ -193,63 +156,40 @@
     </div>
   </form>
 
-  <span *ngIf="empty" style="font-size: 15px; float: left"
-    >Nema kreiranih naloga.</span
-  >
+  <span *ngIf="empty" style="font-size: 15px; float: left">Nema kreiranih naloga.</span>
   <div style="padding-top: 30px"></div>
-  <div
-    class="card mb-3"
-    *ngFor="let workOrder of workOrders; let j = index"
-    (click)="changeRoute(workOrder.id)"
-    style="border: 1px solid #5c7495; border-radius: 5px"
-  >
+  <div class="card mb-3" *ngFor="let workOrder of workOrders; let j = index" (click)="changeRoute(workOrder.id)"
+    style="border: 1px solid #5c7495; border-radius: 5px">
     <div class="card-body" style="background-color: #5c7495">
       <h5 class="card-title" style="color: white">
         {{ workOrder.operationName }}
       </h5>
       <ul class="list-group">
         <li class="list-group-item list-group-item">
-          <i
-            class="fa fa-user"
-            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
-          ></i>
+          <i class="fa fa-user" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
           <span style="padding-left: 6px; vertical-align: middle">
-            Odgovorna osoba: {{ workOrder.responsibleName }}</span
-          >
+            Odgovorna osoba: {{ workOrder.responsibleName }}</span>
         </li>
         <li class="list-group-item list-group-item">
-          <i
-            class="fa fa-map-marker"
-            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
-          ></i>
+          <i class="fa fa-map-marker" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
           <span style="padding-left: 9px; vertical-align: middle">
             Tabla i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
           </span>
         </li>
         <li class="list-group-item list-group-item">
-          <i
-            class="fa fa-clock-o"
-            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
-          ></i>
+          <i class="fa fa-clock-o" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
           <span style="padding-left: 3px; vertical-align: middle">
             Datum: {{ workOrder.date }}
           </span>
         </li>
         <li class="list-group-item list-group-item">
-          <i
-            class="fa fa-tasks"
-            style="font-size: 20px; vertical-align: bottom; color: #5c7495"
-          ></i>
-          <span
-            style="padding-left: 3px; vertical-align: middle"
-            [ngClass]="{
+          <i class="fa fa-tasks" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+          <span style="padding-left: 3px; vertical-align: middle" [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
-            }"
-          >
-            Status: <b>{{ workOrder.status }}</b></span
-          >
+            }">
+            Status: <b>{{ workOrder.status }}</b></span>
         </li>
       </ul>
     </div>
@@ -263,27 +203,15 @@
 </div>
 
 <!--Copy modal-->
-<div
-  class="modal fade"
-  id="copyModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
           <i class="fa fa-sticky-note-o"></i> Radni nalog
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-          #closeButtonMaterialModal
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeButtonMaterialModal>
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -292,57 +220,27 @@
           <h5>Napravi kopiju za {{ copyDate | date: "dd.MM.yyyy." }}</h5>
           <div class="form-group">
             <label>
-              <input
-                type="radio"
-                name="date"
-                value="today"
-                (change)="getDate($event.target.value)"
-                checked
-              />
+              <input type="radio" name="date" value="today" (change)="getDate($event.target.value)" checked />
               <span class="btn btn-primary btn-date mr-2">Danas</span>
             </label>
             <label>
-              <input
-                type="radio"
-                name="date"
-                value="tomorrow"
-                (change)="getDate($event.target.value)"
-              />
+              <input type="radio" name="date" value="tomorrow" (change)="getDate($event.target.value)" />
               <span class="btn btn-primary btn-date mr-2">Sutra</span>
             </label>
             <label>
-              <input
-                type="radio"
-                name="date"
-                value="some"
-                ngbDatepicker
-                #date="ngbDatepicker"
-                (click)="date.toggle()"
-                id="date"
-                [(ngModel)]="model"
-                (ngModelChange)="getDate(model)"
-              />
+              <input type="radio" name="date" value="some" ngbDatepicker #date="ngbDatepicker" (click)="date.toggle()"
+                id="date" [(ngModel)]="model" (ngModelChange)="getDate(model)" />
               <span class="btn btn-primary btn-date mr-2">Drugi datum</span>
             </label>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="createWorkOrderCopy()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="createWorkOrderCopy()">
           <i class="fa fa-copy"></i> Kopiraj
         </button>
       </div>
