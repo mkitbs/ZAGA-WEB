@@ -475,7 +475,8 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateWow() {
-    console.log(this.wow + "VBBBBBBBBBB");
+    //vratiti wow objekat koji se prosledjivao pre!!!
+    console.log(this.wow.id + "VBBBBBBBBBB");
     this.clickAddWowDetail = true;
     if (this.wow.dayPeriod > 24) {
       this.validDayPeriod = false;
@@ -807,6 +808,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = false;
     }
     this.workOrder.workers.forEach((wow) => {
+      console.log(wow)
       if (
         wow.dayPeriod == -1 &&
         wow.nightPeriod == -1 &&
@@ -827,9 +829,26 @@ export class CreateworkOrderComponent implements OnInit {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
+      } else if(
+        wow.initialState == -1 &&
+        wow.finalState == -1 &&
+        wow.sumState == -1
+      ){
+        this.validWow = false;
+        const element: HTMLElement = document.getElementById(wow.id);
+        this.renderer.setStyle(element, "background-color", "#BD362F");
+      } else if (
+        wow.connectingMachine.id == -1
+      ){
+        this.validWow = true;
+      } else if(
+        wow.machine.Name === "BEZ MASINE"
+      ){
+        this.validWow = true;
       } else {
         this.validWow = true;
       }
+      
     });
     if (this.workOrder.materials.length == 0) {
       this.validWom = true;
@@ -855,6 +874,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWow == true &&
       this.validWoInfo == true
     ) {
+      console.log(this.validWow)
       this.workOrder.treated = this.treatedEntered;
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
