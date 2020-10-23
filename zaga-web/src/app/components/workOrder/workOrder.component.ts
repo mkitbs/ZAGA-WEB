@@ -17,6 +17,7 @@ export class WorkOrderComponent implements OnInit {
   copyDate = new Date();
 
   workOrderId;
+  desc = false;
   copyWorkOrderId;
   model;
 
@@ -61,8 +62,10 @@ export class WorkOrderComponent implements OnInit {
             }
           });
         }
+        this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
       });
     }
+
   }
 
   changeClick() {
@@ -75,6 +78,17 @@ export class WorkOrderComponent implements OnInit {
 
   changeRoute(id) {
     this.router.navigateByUrl("/create/workOrder/" + id);
+  }
+
+  sortBySapId() {
+    this.desc = !this.desc;
+    if(this.desc) {
+      this.workOrders.sort((w1, w2) => w1.sapId - w2.sapId);
+    } else {
+      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }
+    
+
   }
 
   getDate(value) {
