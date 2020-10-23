@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name="sap-gateway", 
-			url="https://sapgw.mk-group.org:42080/sap/opu/odata/sap/ZAG2_SRV/", 
+			url="${sap.services.gateway}", 
 			contextId = "sap-gateway",
 			fallback = SAPGatewayFallback.class)
 public interface SAPGatewayProxy {

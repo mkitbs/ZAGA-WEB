@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name="sap4hana", 
-url="http://s4hdev.mk-group.org:8010/sap/opu/odata/sap/ZAG2_SRV/", 
+url="${sap.services.s4h}", 
 contextId = "sap4hana",
 fallback = SAP4HanaFallback.class)
 public interface SAP4HanaProxy {
