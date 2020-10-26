@@ -830,8 +830,9 @@ export class CreateworkOrderComponent implements OnInit {
       } else if(
         wow.initialState == -1 &&
         wow.finalState == -1 &&
-        wow.sumState == -1
+        wow.fuel == -1
       ){
+        console.log("AAAAAAA")
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
