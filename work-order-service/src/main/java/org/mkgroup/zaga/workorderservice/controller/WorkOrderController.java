@@ -105,8 +105,8 @@ public class WorkOrderController {
 	}
 	
 	@PostMapping("/closeWorkOrder")
-	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
-		try {
+	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
+		//try {
 			CloseWorkOrderResponse closeWO =  workOrderService.closeWorkOrder(request);
 			if(closeWO.isStatus()) {
 				return new ResponseEntity<>(HttpStatus.OK);
@@ -114,10 +114,10 @@ public class WorkOrderController {
 				return new ResponseEntity<List<String>>(closeWO.getErrors(),HttpStatus.BAD_REQUEST);
 			}
 			
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		//} catch (Exception e) {
+		//	System.out.println(e.getMessage());
+		//	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//}
 	}
 	
 	@GetMapping("/getAllByStatus/{status}")

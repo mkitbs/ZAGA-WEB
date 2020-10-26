@@ -70,6 +70,18 @@ label {
   box-shadow: none;
 }
 
+.centered {
+  position: fixed;
+  /* or absolute */
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  background-color: #5C7495;
+  margin-top: -32px;
+  margin-left: -32px;
+}
+
 .btn-delete {
   float: right;
   background-color: #bd362f;

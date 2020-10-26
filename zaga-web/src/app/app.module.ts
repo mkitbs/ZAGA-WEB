@@ -46,6 +46,7 @@ import { OperationComponent } from './components/operation/operation.component';
 import { CultureGroupComponent } from './components/culture-group/culture-group.component';
 import { CultureComponent } from './components/culture/culture.component';
 import { VarietyComponent } from './components/variety/variety.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 declare var require: any;
 var config = require("config");
@@ -56,18 +57,18 @@ const routes: Routes = [
   { path: "workOrder", component: WorkOrderComponent },
   { path: "close/workOrder/:workId", component: CloseWorkOrderComponent },
   { path: "yieldOverview", component: YieldComponent },
-  { path: "masterData/machine", component: MachineComponent},
+  { path: "masterData/machine", component: MachineComponent },
   { path: "workOrder/:urlParam", component: WorkOrderComponent },
   { path: "masterData/field", component: FieldComponent },
   { path: "masterData/crop", component: CropComponent },
-  { path: "masterData/employee", component: EmployeeComponent},
-  { path: "masterData/fieldGroup", component: FieldGroupComponent},
-  { path: "masterData/machineGroup", component: MachineGroupComponent},
-  { path: "masterData/operationGroup", component: OperationGroupComponent},
-  { path: "masterData/operation", component: OperationComponent},
-  { path: "masterData/cultureGroup", component: CultureGroupComponent},
-  { path: "masterData/culture", component: CultureComponent},
-  { path: "masterData/variety", component: VarietyComponent},
+  { path: "masterData/employee", component: EmployeeComponent },
+  { path: "masterData/fieldGroup", component: FieldGroupComponent },
+  { path: "masterData/machineGroup", component: MachineGroupComponent },
+  { path: "masterData/operationGroup", component: OperationGroupComponent },
+  { path: "masterData/operation", component: OperationComponent },
+  { path: "masterData/cultureGroup", component: CultureGroupComponent },
+  { path: "masterData/culture", component: CultureComponent },
+  { path: "masterData/variety", component: VarietyComponent },
   { path: "", component: HomeComponent },
 ];
 
@@ -99,6 +100,7 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgxSpinnerModule,
     RouterModule.forRoot(routes, { useHash: true }),
     BrowserAnimationsModule,
     ToastrModule.forRoot({
@@ -124,4 +126,4 @@ const routes: Routes = [
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

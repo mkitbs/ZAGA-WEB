@@ -567,27 +567,32 @@ public class WorkOrderService {
 		    if(response == null) {
 				throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 		    }
-		    String json = formatJSON(response.toString());
+		    String json = response.getBody().toString();
 		    System.out.println(json + "AAA");
 			
-		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
-			Matcher matcher = pattern.matcher(json);
+		    boolean flagErr = false;
+		    Pattern pattern = Pattern.compile("ReturnStatus=(E|S),");
+			if(json.contains("ReturnStatus=E")) {
+				System.out.println("ASDFASFASFASFASF");
+				flagErr = true;
+			}
+		    Matcher matcher = pattern.matcher(json);
+			String flag = "";
 			if(matcher.matches()){
 				System.out.println("IMA GA");
+				flag = matcher.group(1);
 			}
 			
-			JsonObject jsonObj = new Gson().fromJson(json, JsonObject.class);
-			String flag = jsonObj.get("d").getAsJsonObject().get("ReturnStatus").getAsString();
-			if(flag.equals("E")){
+			if(flagErr){
 				
 				System.out.println("USAO U ERR");
-				Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
+				Pattern patternMessage = Pattern.compile("MessageText=(.*?),");
 				Matcher matcherMessage = patternMessage.matcher(json);
 				
 				matcherMessage.results().forEach(mat -> closeWorkOrder.getErrors().add((mat.group(1))));
 				closeWorkOrder.setStatus(false);
 				return closeWorkOrder;
-			}else if(flag.equals("S")) {
+			}else if(!flagErr) {
 				System.out.println("USAO U SUCES");
 				closeWorkOrder.setStatus(true);
 				//this.updateWorkOrder(workOrderDTO);

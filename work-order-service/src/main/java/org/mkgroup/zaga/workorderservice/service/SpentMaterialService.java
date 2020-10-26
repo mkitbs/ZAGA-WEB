@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
@@ -77,7 +78,7 @@ public class SpentMaterialService {
 	
 	public void addSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
-		
+				
 		SpentMaterial spentMaterial = new SpentMaterial();
 		spentMaterial.setWorkOrder(workOrder);
 		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
@@ -147,9 +148,11 @@ public class SpentMaterialService {
 		
 	}
 	
-	public void updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
+	public Response updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		SpentMaterial spentMaterial = spentMaterialRepo.getOne(id);
 		WorkOrder workOrder = workOrderRepo.getOne(spentMaterial.getWorkOrder().getId());
+		
+		Response updateResponse = new Response();
 		
 		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
 		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
@@ -215,18 +218,21 @@ public class SpentMaterialService {
 	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
 	    		spentMaterialRepo.save(spentMat);
 	    	}
+	    	updateResponse.setSuccess(true);
+	    	return updateResponse;
 	    }else if(status.equals("E")){
 	    	Pattern patternError = Pattern.compile("MessageText=(.*?),");
 			Matcher matcherError = patternError.matcher(resp);
 			List<String> errors = new ArrayList<String>();
 			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
 	    	System.out.println("ERROR");
-	    	for(String str : errors) {
-	    		System.out.println(str);
-	    	}
-	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    	updateResponse.setErrors(errors);
+	    	updateResponse.setSuccess(false);
+	    	return updateResponse;
 	    }
 		
+		updateResponse.setSuccess(false);
+		return updateResponse;
 	}
 	
 	public Map<String, String> getHeaderValues() throws Exception {
