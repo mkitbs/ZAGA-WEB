@@ -29,6 +29,7 @@ import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
 import { SpentMaterialService } from "src/app/service/spent-material.service";
 import { Renderer2 } from "@angular/core";
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: "app-creatework-order",
@@ -55,7 +56,8 @@ export class CreateworkOrderComponent implements OnInit {
     private cropService: CropService,
     private deviceService: DeviceDetectorService,
     private wowService: WorkOrderWorkerService,
-    private spentMaterialService: SpentMaterialService
+    private spentMaterialService: SpentMaterialService,
+    private spinner: NgxSpinnerService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -68,11 +70,13 @@ export class CreateworkOrderComponent implements OnInit {
   machines = false;
   materials = false;
   new = false;
+  error = false;
   workId = this.route.snapshot.params.workId;
 
   idOfEditingMaterial: any = 0;
   idOfEditingWorkerMachine: any = 0;
 
+  errors: string[] = [];
   allEmployees: Employee[] = [];
   operations: Operation[] = [];
   devicesPropulsion: Machine[] = [];
@@ -437,11 +441,13 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.user.userId = this.selectedWorker;
     this.wow.operation.id = this.selectedOperation;
     this.wow.machine.id = this.selectedMachine;
+    this.spinner.show();
     this.wow.connectingMachine.id = this.selectedCouplingMachine;
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
       this.wow = new WorkOrderWorker();
       this.selectedWorker = null;
+      this.spinner.hide();
       this.selectedOperation = null;
       this.selectedMachine = null;
       this.selectedCouplingMachine = null;
@@ -474,34 +480,36 @@ export class CreateworkOrderComponent implements OnInit {
     });
   }
 
-  updateWow() {
+
+  updateWow(workOrderWorker) {
     console.log(this.wow + "VBBBBBBBBBB");
+    this.spinner.show();
     this.clickAddWowDetail = true;
-    if (this.wow.dayPeriod > 24) {
+    if (workOrderWorker.dayPeriod > 24) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (this.wow.nightPeriod > 24) {
+    if (workOrderWorker.nightPeriod > 24) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
     }
-    if (this.wow.dayPeriod + this.wow.nightPeriod > 24) {
+    if (workOrderWorker.dayPeriod + this.wow.nightPeriod > 24) {
       this.validWorkPeriod = false;
     } else {
       this.validWorkPeriod = true;
     }
-    if (this.wow.finalState < this.wow.initialState) {
+    if (workOrderWorker.finalState < this.wow.initialState) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
     if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
-      this.wowService.updateWorkOrderWorker(this.wow.id, this.wow).subscribe((res) => {
+      this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
-
+        this.spinner.hide();
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
 
@@ -635,11 +643,13 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addNewMaterial() {
+    this.spinner.show();
     this.spentMaterial.material.id = this.selectedMaterial;
     this.spentMaterial.quantity = this.quantityEntered;
     this.spentMaterialService
       .addSpentMaterial(this.workId, this.spentMaterial)
       .subscribe((res) => {
+        this.spinner.hide();
         console.log(res);
         this.spentMaterial = new SpentMaterial();
         this.selectedMaterial = null;
@@ -674,12 +684,15 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateMaterial(spentMaterial) {
+    this.error = false;
+    this.errors = [];
+    this.spinner.show();
     this.spentMaterialService
       .updateSpentMaterial(spentMaterial.id, spentMaterial)
       .subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
-
+        this.spinner.hide();
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
           if (this.workOrder.status == "NEW") {
@@ -706,6 +719,12 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.treated = null;
           }
         });
+      }, err => {
+        this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+        this.spinner.hide();
+        console.log(err);
+        this.error = true;
+        this.errors = err.error.errors;
       });
   }
 
@@ -715,6 +734,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.clickAddWorkOrder = true;
     console.log(valid.status);
     if (valid.status == "VALID" && this.nameFC.valid) {
+      this.spinner.show();
       if (this.workOrder.date != undefined) {
         if (this.workOrder.date.month < 10) {
           this.workOrder.date.month = "0" + this.workOrder.date.month;
@@ -731,12 +751,14 @@ export class CreateworkOrderComponent implements OnInit {
 
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
+          this.spinner.hide();
           this.toastr.success(
             "Uspešno kreiran radni nalog. SAP id je " + data.erpId
           );
           this.router.navigate(["/workOrder"]);
         },
         (error) => {
+          this.spinner.hide();
           if (error.status === 500) {
             this.toastr.error("Radni nalog nije kreiran.");
           } else if (error.status === 400) {
@@ -757,12 +779,13 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.date.day = "0" + this.workOrder.date.day;
       }
     }
-
+    this.spinner.show();
     this.workOrder.responsibleId = this.nameFC.value.userId;
     this.workOrder.treated = this.treatedEntered;
 
     this.workOrderService.updateWorkOrder(this.workOrder).subscribe(
       (data) => {
+        this.spinner.hide();
         this.toastr.success("Uspešno sačuvan radni nalog.");
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
@@ -794,6 +817,7 @@ export class CreateworkOrderComponent implements OnInit {
         })
       },
       (error) => {
+        this.spinner.hide();
         this.toastr.error("Radni nalog nije sačuvan.");
       }
     );
@@ -807,6 +831,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = false;
     }
     this.workOrder.workers.forEach((wow) => {
+      console.log(wow)
       if (
         wow.dayPeriod == -1 &&
         wow.nightPeriod == -1 &&
@@ -827,9 +852,26 @@ export class CreateworkOrderComponent implements OnInit {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
+      } else if (
+        wow.initialState == -1 &&
+        wow.finalState == -1 &&
+        wow.sumState == -1
+      ) {
+        this.validWow = false;
+        const element: HTMLElement = document.getElementById(wow.id);
+        this.renderer.setStyle(element, "background-color", "#BD362F");
+      } else if (
+        wow.connectingMachine.id == -1
+      ) {
+        this.validWow = true;
+      } else if (
+        wow.machine.Name === "BEZ MASINE"
+      ) {
+        this.validWow = true;
       } else {
         this.validWow = true;
       }
+
     });
     if (this.workOrder.materials.length == 0) {
       this.validWom = true;
@@ -855,12 +897,27 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWow == true &&
       this.validWoInfo == true
     ) {
+      console.log(this.validWow)
+      this.spinner.show();
       this.workOrder.treated = this.treatedEntered;
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
+        this.spinner.hide();
+        this.error = true;
         this.toastr.success("Uspešno zatvoren radni nalog.");
         this.router.navigate(["/workOrder"]);
-      });
+      },
+        err => {
+          console.log(err);
+          this.spinner.hide();
+          if (err.status == 400) {
+            this.toastr.error("Došlo je do greške prilikom zatvaranja.");
+            this.errors = err.error;
+          } else {
+            this.toastr.error("Radni nalog nije zatvoren.");
+          }
+          this.error = true;
+        });
     }
   }
 

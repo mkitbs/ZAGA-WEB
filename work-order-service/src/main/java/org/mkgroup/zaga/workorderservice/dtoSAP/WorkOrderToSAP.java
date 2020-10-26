@@ -127,9 +127,8 @@ public class WorkOrderToSAP {
 			}
 			woeSAP.setEmployeeId(wow.getUser().getPerNumber().toString());
 			woeSAP.setOperationId(wow.getOperation().getErpId().toString());
-			if(wow.getWorkPeriod() != -1 || wow.getNightPeriod() != -1) {
-				Double sum = wow.getWorkPeriod() + wow.getNightPeriod();
-				woeSAP.setWorkEffectiveHours(sum.toString());
+			if(wow.getDayPeriod() != -1) {
+				woeSAP.setWorkEffectiveHours(wow.getDayPeriod().toString());
 			}else {
 				woeSAP.setWorkEffectiveHours("0.00000");
 			}
@@ -147,7 +146,12 @@ public class WorkOrderToSAP {
 			woeSAP.setOperationOutputUnit("");
 			woeSAP.setNoOperationOutput("");
 			woeSAP.setMasterMachineId(wow.getMachine().getErpId().toString());
-			woeSAP.setSlaveMachineId(wow.getConnectingMachine().getErpId().toString());
+			if(wow.getConnectingMachine() == null) {
+				woeSAP.setSlaveMachineId("");
+			}else {
+				woeSAP.setSlaveMachineId(wow.getConnectingMachine().getErpId().toString());
+			}
+			
 			if(wow.getInitialState() == -1) {
 				woeSAP.setMachineTimeStart("0.0");
 			}else {

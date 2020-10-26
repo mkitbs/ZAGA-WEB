@@ -101,7 +101,7 @@ public class WorkOrderService {
 			Date startDateToAdd = startDate.toDate();
 			workOrder.setDate(startDateToAdd);
 			
-			workOrder.setStatus(WorkOrderStatus.NEW);
+			workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
 			workOrder.setCreationDate(new Date());
 			workOrder.setTreated(0);
 			
@@ -160,10 +160,13 @@ public class WorkOrderService {
 				}
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wow.setMachine(machineService.getOne(wowDTO.getMachine().getId()));
+				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getId())));
 				
-				if(wowDTO.getConnectingMachine().getId() != null) {
-					wow.setConnectingMachine(machineService.getOne(wowDTO.getConnectingMachine().getId()));
+				if(!wowDTO.getConnectingMachine().getId().equals("-1")) {
+					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+				}else {
+					System.out.println("NEMA PRIKLJUCNOG");
+					wow.setConnectingMachine(null);
 				}
 				wow = wowRepo.save(wow);
 				workOrder.getWorkers().add(wow);
@@ -564,30 +567,35 @@ public class WorkOrderService {
 		    if(response == null) {
 				throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 		    }
-		    String json = formatJSON(response.toString());
+		    String json = response.getBody().toString();
 		    System.out.println(json + "AAA");
 			
-		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
-			Matcher matcher = pattern.matcher(json);
+		    boolean flagErr = false;
+		    Pattern pattern = Pattern.compile("ReturnStatus=(E|S),");
+			if(json.contains("ReturnStatus=E")) {
+				System.out.println("ASDFASFASFASFASF");
+				flagErr = true;
+			}
+		    Matcher matcher = pattern.matcher(json);
+			String flag = "";
 			if(matcher.matches()){
 				System.out.println("IMA GA");
+				flag = matcher.group(1);
 			}
 			
-			JsonObject jsonObj = new Gson().fromJson(json, JsonObject.class);
-			String flag = jsonObj.get("d").getAsJsonObject().get("ReturnStatus").getAsString();
-			if(flag.equals("E")){
+			if(flagErr){
 				
 				System.out.println("USAO U ERR");
-				Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
+				Pattern patternMessage = Pattern.compile("MessageText=(.*?),");
 				Matcher matcherMessage = patternMessage.matcher(json);
 				
 				matcherMessage.results().forEach(mat -> closeWorkOrder.getErrors().add((mat.group(1))));
 				closeWorkOrder.setStatus(false);
 				return closeWorkOrder;
-			}else if(flag.equals("S")) {
+			}else if(!flagErr) {
 				System.out.println("USAO U SUCES");
 				closeWorkOrder.setStatus(true);
-				this.updateWorkOrder(workOrderDTO);
+				//this.updateWorkOrder(workOrderDTO);
 				workOrder.setTreated(workOrderDTO.getTreated());
 				workOrder.setStatus(WorkOrderStatus.CLOSED);
 				workOrder.setClosed(true);

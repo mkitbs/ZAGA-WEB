@@ -1,7 +1,9 @@
 package org.mkgroup.zaga.workorderservice.service;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -9,6 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
@@ -75,7 +78,7 @@ public class SpentMaterialService {
 	
 	public void addSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
-		
+				
 		SpentMaterial spentMaterial = new SpentMaterial();
 		spentMaterial.setWorkOrder(workOrder);
 		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
@@ -145,9 +148,11 @@ public class SpentMaterialService {
 		
 	}
 	
-	public void updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
+	public Response updateSpentMaterial(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
 		SpentMaterial spentMaterial = spentMaterialRepo.getOne(id);
 		WorkOrder workOrder = workOrderRepo.getOne(spentMaterial.getWorkOrder().getId());
+		
+		Response updateResponse = new Response();
 		
 		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
 		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
@@ -184,22 +189,28 @@ public class SpentMaterialService {
 	    }
 	    System.out.println("REZZ" + response.getBody());
 	    
-	    String oDataString = response.toString().replace(":", "-");
+	    /*String oDataString = response.toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
-	    System.out.println(formatted + "ASASA");
-	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
-		Matcher matcher = pattern.matcher(formatted);
+	    System.out.println(formatted + "ASASA");*/
+	    String resp = response.getBody().toString();
+	    Pattern pattern = Pattern.compile("ReturnStatus=(.*?),");
+		Matcher matcher = pattern.matcher(resp);
 		String status = "";
 		if (matcher.find())
 		{
 		    status = matcher.group(1);
+		    System.out.println("NASAO STATUS " + status);
 		}
 		
 	    
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO DODAT");
+	    	String oDataString = response.toString().replace(":", "-");
+	    	String formatted = formatJSON(oDataString);
+		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 	    	for(int i = 0; i <arrayMaterial.size(); i++) {
 	    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
 	    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
@@ -207,11 +218,21 @@ public class SpentMaterialService {
 	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
 	    		spentMaterialRepo.save(spentMat);
 	    	}
+	    	updateResponse.setSuccess(true);
+	    	return updateResponse;
 	    }else if(status.equals("E")){
+	    	Pattern patternError = Pattern.compile("MessageText=(.*?),");
+			Matcher matcherError = patternError.matcher(resp);
+			List<String> errors = new ArrayList<String>();
+			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
 	    	System.out.println("ERROR");
-	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    	updateResponse.setErrors(errors);
+	    	updateResponse.setSuccess(false);
+	    	return updateResponse;
 	    }
 		
+		updateResponse.setSuccess(false);
+		return updateResponse;
 	}
 	
 	public Map<String, String> getHeaderValues() throws Exception {

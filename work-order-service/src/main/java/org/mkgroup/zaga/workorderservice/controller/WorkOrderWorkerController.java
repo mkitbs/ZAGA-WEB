@@ -53,14 +53,14 @@ public class WorkOrderWorkerController {
 	}
 	
 	@PostMapping("updateWorkOrderWorker/{id}")
-	public ResponseEntity<?> updateWorkOrderWorker(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO){
-		try {
+	public ResponseEntity<?> updateWorkOrderWorker(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO) throws Exception{
+		//try {
 			wowService.updateWorkOrder(id, wowDTO);
 			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
+		//} catch (Exception e) {
 			// TODO Auto-generated catch block
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
+		//	return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		//}
 	}
 	
 	@DeleteMapping("deleteWorkOrderWorker/{id}")

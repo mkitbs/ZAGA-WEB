@@ -12,6 +12,10 @@
             }">{{ workOrder.status }}</span>
         </div>
         <div class="col" style="float: right">
+          <button class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg"
+            style="margin-left: 6px; float: right; border: none;" *ngIf="error">
+            <i class="fa fa-exclamation-triangle"></i>
+          </button>
           <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
             (click)="closeWorkOrder()">
             <i class="fa fa-check"></i> Zatvori radni nalog
@@ -48,7 +52,7 @@
             </div>
           </td>
           <td class="left-col-header">
-            <i class="fa fa-database mr-2"></i>Tabla:
+            <i class="fa fa-database mr-2"></i>Parcela:
           </td>
           <td class="right-col-header">
             <select name="selectedTable" class="form-control" id="" [(ngModel)]="workOrder.tableId"
@@ -64,7 +68,7 @@
         </tr>
         <tr>
           <td class="left-col-header">
-            <i class="fa fa-calendar mr-2"></i>Datum:
+            <i class="fa fa-calendar mr-2"></i>Datum radnog naloga:
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3">
@@ -88,7 +92,7 @@
                 <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="auto" #search style="width: 100%"
                   required />
 
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" place>
                   <mat-option *ngFor="
                       let emp of allEmployees | SearchEmployees: search.value
                     " [value]="emp">
@@ -141,7 +145,7 @@
           <td class="right-col-header">
             <div class="input-group mb-3">
               <input type="text" name="area" [(ngModel)]="workOrder.area" id="" class="form-control" #area="ngModel"
-                required />
+                required readonly />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
@@ -241,7 +245,10 @@
                 <td>
                   <div class="form-group">
                     <select [(ngModel)]="selectedCouplingMachine" name="selectedCouplingMachine" id=""
-                      class="form-control" #couplingMachine="ngModel" required>
+                      class="form-control" #couplingMachine="ngModel">
+                      <option value="-1" selected>
+
+                      </option>
                       <option value="{{ dev.id }}" *ngFor="let dev of devicesCoupling">
                         {{ dev.name }}
                       </option>
@@ -391,7 +398,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateWow()"
+                    <button class="btn btn-primary btn-add mr-2" (click)="updateWow(wow)"
                       [disabled]="workOrder.status == 'Zatvoren'">
                       <i class="fa fa-check"></i>
                     </button>
@@ -679,6 +686,7 @@
     </button>
   </div>
   <br />
+  <ngx-spinner></ngx-spinner>
 </div>
 
 <div class="container d-md-none">
@@ -1358,7 +1366,7 @@
           <i class="fa fa-save"></i> Sačuvaj
         </button>
         <button *ngIf="!new && !addNewWow" type="button" class="btn btn-success" style="background-color: #33590b"
-          (click)="updateWow()">
+          (click)="updateWow(wow)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
         <button *ngIf="!new && addNewWow" type="button" class="btn btn-success" style="background-color: #33590b"
@@ -1457,6 +1465,28 @@
           style="background-color: #33590b" data-dismiss="modal">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Greške</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li *ngFor="let err of errors">{{err}}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
       </div>
     </div>
   </div>

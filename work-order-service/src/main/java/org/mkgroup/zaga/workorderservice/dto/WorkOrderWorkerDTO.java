@@ -34,7 +34,12 @@ public class WorkOrderWorkerDTO {
 		this.dayPeriod = wow.getDayPeriod();
 		this.workPeriod = wow.getWorkPeriod();
 		this.machine = new MachineDTO(wow.getMachine());
-		this.connectingMachine = new MachineDTO(wow.getConnectingMachine());
+		if(wow.getConnectingMachine() != null) {
+			this.connectingMachine = new MachineDTO(wow.getConnectingMachine());
+		}else {
+			this.connectingMachine = new MachineDTO();
+			this.connectingMachine.setId("-1");
+		}
 		this.initialState = wow.getInitialState();
 		this.finalState = wow.getFinalState();
 		this.sumState = wow.getSumState();

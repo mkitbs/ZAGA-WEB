@@ -2,7 +2,7 @@
   text-align: left;
 }
 
-.table-input > tr > td {
+.table-input>tr>td {
   border-top: none !important;
   border-bottom: 1px solid #73964a;
 }
@@ -70,6 +70,18 @@ label {
   box-shadow: none;
 }
 
+.centered {
+  position: fixed;
+  /* or absolute */
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  background-color: #5C7495;
+  margin-top: -32px;
+  margin-left: -32px;
+}
+
 .btn-delete {
   float: right;
   background-color: #bd362f;
@@ -103,8 +115,7 @@ button.calendar {
   border-radius: 4px;
 }
 
-.inputAuto,
-.mat-form-field-infix {
+.inputAuto, .mat-form-field-infix {
   font-size: 12px !important;
   font-family: "Montserrat" !important;
   width: 100% !important;
@@ -116,8 +127,7 @@ button.calendar {
   /* cursor color on autocomplete input */
 }
 
-::ng-deep .mat-form-field-underline,
-::ng-deep .mat-form-field-ripple {
+::ng-deep .mat-form-field-underline, ::ng-deep .mat-form-field-ripple {
   background-color: #5c7495 !important;
   color: #5c7495 !important;
 }
@@ -127,11 +137,9 @@ button.calendar {
 }
 
 @media only screen and (max-width: 600px) {
-  .btn-add,
-  .btn-edit {
+  .btn-add, .btn-edit {
     max-width: 110px;
   }
-
   hr.solid {
     border-top: 3px solid #5c7495;
   }

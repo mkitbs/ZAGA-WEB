@@ -41,7 +41,7 @@ public class WorkOrderController {
 	
 	@PostMapping("/createWorkOrder")
 	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
-		try {
+		//try {
 			SAPResponse sapResponse = workOrderService.addWorkOrder(request);
 			
 			if(sapResponse.isSuccess()) {
@@ -49,9 +49,9 @@ public class WorkOrderController {
 			}else {
 				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
 			}
-		}catch(Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		//}catch(Exception e) {
+		//	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//}
 	}
 	
 	@PostMapping("/createCopy/{id}")
@@ -105,8 +105,8 @@ public class WorkOrderController {
 	}
 	
 	@PostMapping("/closeWorkOrder")
-	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request){
-		try {
+	public ResponseEntity<?> closeWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
+		//try {
 			CloseWorkOrderResponse closeWO =  workOrderService.closeWorkOrder(request);
 			if(closeWO.isStatus()) {
 				return new ResponseEntity<>(HttpStatus.OK);
@@ -114,10 +114,10 @@ public class WorkOrderController {
 				return new ResponseEntity<List<String>>(closeWO.getErrors(),HttpStatus.BAD_REQUEST);
 			}
 			
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		//} catch (Exception e) {
+		//	System.out.println(e.getMessage());
+		//	return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		//}
 	}
 	
 	@GetMapping("/getAllByStatus/{status}")

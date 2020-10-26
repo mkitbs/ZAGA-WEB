@@ -2,6 +2,7 @@ package org.mkgroup.zaga.workorderservice.controller;
 
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -50,15 +51,14 @@ public class SpentMaterialController {
 	}
 	
 	@PostMapping("updateSpentMaterial/{id}")
-	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO){
-		try {
-			spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<?> updateSpentMaterial(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO) throws Exception{
 		
+		Response resp = spentMaterialService.updateSpentMaterial(id, spentMaterialDTO);
+		if(resp.isSuccess()) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Response>(resp, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@DeleteMapping("deleteSpentMaterial/{id}")

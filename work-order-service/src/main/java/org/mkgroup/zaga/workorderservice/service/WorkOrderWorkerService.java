@@ -71,6 +71,7 @@ public class WorkOrderWorkerService {
 	}
 	
 	public void updateWorkOrder(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
+		System.out.println(id);
 		WorkOrderWorker wow = wowRepo.getOne(id);
 		WorkOrder workOrder = wow.getWorkOrder();
 		if(wowDTO.getDayPeriod() != null) {
@@ -110,8 +111,13 @@ public class WorkOrderWorkerService {
 		}
 		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setConnectingMachine(machineRepo.getOne(wowDTO.getConnectingMachine().getId()));
-		wow.setMachine(machineRepo.getOne(wowDTO.getMachine().getId()));
+		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+			wow.setConnectingMachine(null);
+		}else {
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+		}
+		
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
 		
 		wow = wowRepo.save(wow);
 		
@@ -175,8 +181,12 @@ public class WorkOrderWorkerService {
 			wow.setWorkPeriod(-1.0);
 		}
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setMachine(machineRepo.getOne(wowDTO.getMachine().getId()));
-		wow.setConnectingMachine(machineRepo.getOne(wowDTO.getConnectingMachine().getId()));
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
+		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+			wow.setConnectingMachine(null);
+		}else {
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+		}
 		if(wowDTO.getInitialState() != null) {
 			wow.setInitialState(wowDTO.getInitialState());
 		} else {
