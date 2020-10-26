@@ -474,32 +474,30 @@ export class CreateworkOrderComponent implements OnInit {
     });
   }
 
-  updateWow() {
-    //vratiti wow objekat koji se prosledjivao pre!!!
-    console.log(this.wow.id + "VBBBBBBBBBB");
+  updateWow(workOrderWorker) {
     this.clickAddWowDetail = true;
-    if (this.wow.dayPeriod > 24) {
+    if (workOrderWorker.dayPeriod > 24) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (this.wow.nightPeriod > 24) {
+    if (workOrderWorker.nightPeriod > 24) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
     }
-    if (this.wow.dayPeriod + this.wow.nightPeriod > 24) {
+    if (workOrderWorker.dayPeriod + this.wow.nightPeriod > 24) {
       this.validWorkPeriod = false;
     } else {
       this.validWorkPeriod = true;
     }
-    if (this.wow.finalState < this.wow.initialState) {
+    if (workOrderWorker.finalState < this.wow.initialState) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
     if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
-      this.wowService.updateWorkOrderWorker(this.wow.id, this.wow).subscribe((res) => {
+      this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
 

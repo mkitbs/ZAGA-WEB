@@ -394,7 +394,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateWow()"
+                    <button class="btn btn-primary btn-add mr-2" (click)="updateWow(wow)"
                       [disabled]="workOrder.status == 'Zatvoren'">
                       <i class="fa fa-check"></i>
                     </button>
@@ -1361,7 +1361,7 @@
           <i class="fa fa-save"></i> Sačuvaj
         </button>
         <button *ngIf="!new && !addNewWow" type="button" class="btn btn-success" style="background-color: #33590b"
-          (click)="updateWow()">
+          (click)="updateWow(wow)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
         <button *ngIf="!new && addNewWow" type="button" class="btn btn-success" style="background-color: #33590b"

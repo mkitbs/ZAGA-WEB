@@ -49,6 +49,110 @@
       </div>
     </div>
 </div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2">Pregled sorti</h3>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <div class="row card-group">
+        <div class="col-5" *ngFor="let variety of varieties; let j = index">
+          <div class="card mb-4" style="width: 30rem;">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-bottom: 10px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/seeds.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ variety.Name }}
+                    </h5>
+                    <table>
+                      <tr title="Kultura" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ variety.cultureName }} </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              (click)="getVariety(variety.dbId)"
+              data-toggle="modal"
+              data-target="#editVarietydModal"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2">Pregled sorti</h3>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <div class="row card-group">
+        <div class="col-7" *ngFor="let variety of varieties; let j = index">
+          <div class="card mb-4" style="width: 30rem;">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-bottom: 10px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/seeds.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ variety.Name }}
+                    </h5>
+                    <table>
+                      <tr title="Kultura" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ variety.cultureName }} </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              class="buttonEdit btn btn-primary btn-edit"
+              (click)="getVariety(variety.dbId)"
+              data-toggle="modal"
+              data-target="#editVarietydModal"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 <!--Edit field modal-->
 <div
 class="modal fade"
@@ -62,7 +166,7 @@ aria-hidden="true"
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title" id="exampleModalLabel">
-        <i class="fa fa-database mr-2"></i> 
+        <i class="fas fa-seedling mr-2"></i> {{ variety.Name }}
       </h4>
       <button
         type="button"
