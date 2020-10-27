@@ -476,6 +476,9 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.treated == 0) {
           this.workOrder.treated = null;
         }
+        this.spinner.hide();
+      }, err => {
+        this.spinner.hide();
       });
     });
   }
