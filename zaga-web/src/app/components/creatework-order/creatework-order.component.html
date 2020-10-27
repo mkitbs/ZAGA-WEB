@@ -538,7 +538,7 @@
                       name="{{ material.material.dbid }}" id="" class="form-control"
                       (change)="getUnitOfMaterial(material.material.dbid)">
                       <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
-                        {{ sub.name }}
+                        {{ sub.name }} - {{ sub.id }}
                       </option>
                     </select>
                   </td>
@@ -611,7 +611,7 @@
                       name="{{ material.material.dbid }}" id="" class="form-control"
                       (change)="getUnitOfMaterial(material.material.dbid)">
                       <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
-                        {{ sub.name }}
+                        {{ sub.name }} - {{ sub.id }}
                       </option>
                     </select>
                   </td>
