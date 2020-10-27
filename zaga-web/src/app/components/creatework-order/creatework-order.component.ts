@@ -916,11 +916,11 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
           if (err.status == 400) {
             this.toastr.error("Došlo je do greške prilikom zatvaranja.");
+            this.error = true;
             this.errors = err.error;
           } else {
             this.toastr.error("Radni nalog nije zatvoren.");
           }
-          this.error = true;
         });
     }
   }

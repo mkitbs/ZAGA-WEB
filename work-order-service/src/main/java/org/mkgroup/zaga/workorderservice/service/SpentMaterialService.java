@@ -22,9 +22,13 @@ import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -46,6 +50,12 @@ public class SpentMaterialService {
 	
 	@Autowired
 	SAP4HanaProxy sap4hana;
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@Value("${sap.services.s4h}")
+	String sapS4Hurl;
 	
 	public SpentMaterial addSpentMaterial(SpentMaterial sm) {
 		try {
@@ -105,11 +115,24 @@ public class SpentMaterialService {
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
 		
 		log.info("Updating work order with employee to SAP started");
-	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 															"Basic " + authHeader, 
 															csrfToken,
 															"XMLHttpRequest",
 															workOrderSAP);
+		*/
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+  		ResponseEntity<Object> response = restTemplate.exchange(
+  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+
+		
 		System.out.println(response);
 	    if(response == null) {
 	    	spentMaterialRepo.delete(spentMaterial);
@@ -177,11 +200,24 @@ public class SpentMaterialService {
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
 		
 		log.info("Updating work order with employee to SAP started");
-	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 															"Basic " + authHeader, 
 															csrfToken,
 															"XMLHttpRequest",
 															workOrderSAP);
+		*/
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+  		ResponseEntity<Object> response = restTemplate.exchange(
+  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+
+		
 		System.out.println(response);
 	    if(response == null) {
 	    	spentMaterialRepo.delete(spentMaterial);
@@ -245,7 +281,17 @@ public class SpentMaterialService {
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
 		
-		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+		headersRestTemplate.set("X-CSRF-Token", "Fetch");
+		
+		HttpEntity entity = new HttpEntity(headersRestTemplate);
+
+		ResponseEntity<Object> resp = restTemplate.exchange(
+		    sapS4Hurl, HttpMethod.GET, entity, Object.class);
+
+		
+		//ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
 		
 		if(resp == null) {
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
