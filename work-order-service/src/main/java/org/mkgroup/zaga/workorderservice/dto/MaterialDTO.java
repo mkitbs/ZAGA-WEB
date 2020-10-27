@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value =  Include.NON_NULL)
 public class MaterialDTO {
 
-	private UUID id;
+	private UUID dbid;
 	
 	@JsonProperty("Id")
 	Long erpId;
@@ -34,9 +34,10 @@ public class MaterialDTO {
 	String group;
 	
 	public MaterialDTO(Material material) {
-		id = material.getId();
+		dbid = material.getId();
 		name = material.getName();
 		unit = material.getUnit();
+		erpId = material.getErpId();
 	}
 
 }

@@ -100,7 +100,7 @@ export class CreateworkOrderComponent implements OnInit {
   selectedWorker;
   selectedOperation;
   selectedMachine;
-  selectedCouplingMachine;
+  selectedCouplingMachine = -1;
   selectedMaterial;
   quantityEntered;
   unit;
@@ -218,6 +218,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.materialService.getAll().subscribe((data) => {
       data = this.convertKeysToLowerCase(data);
       this.substances = data;
+      console.log(this.substances)
     });
 
     this.fieldService.getAll().subscribe((data) => {
@@ -240,9 +241,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getUnitOfMaterial(id) {
-    this.unit = this.substances.find((x) => x.id == id).unit;
+    this.unit = this.substances.find((x) => x.dbid == id).unit;
     this.woMaterials.forEach((material) => {
-      if (material.material.id == id) {
+      if (material.material.dbid == id) {
         material.material.unit = this.unit;
       }
     });
@@ -329,6 +330,7 @@ export class CreateworkOrderComponent implements OnInit {
       });
       if (!this.exists) {
         this.wows.push(this.wow);
+        console.log(this.wows)
         this.wow = new WorkOrderWorker();
         this.exists = false;
       }
@@ -374,8 +376,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingWorkerMachine = existing.wowObjectId;
     this.wows.forEach((wow) => {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
-        wow.user.id = this.allEmployees.find(
-          (x) => x.userId == wow.user.id
+        wow.user.userId = this.allEmployees.find(
+          (x) => x.userId == wow.user.userId
         ).userId;
         wow.machine.id = this.devicesPropulsion.find(
           (x) => x.id == wow.machine.id
@@ -392,6 +394,7 @@ export class CreateworkOrderComponent implements OnInit {
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
         this.toastr.success("Uspešno izvršena promena.");
+        console.log(this.wows)
       }
     });
   }
@@ -565,12 +568,12 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(this.quantityEntered);
     if (valid) {
       this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
-      this.spentMaterial.material.id = this.selectedMaterial;
+      this.spentMaterial.material.dbid = this.selectedMaterial;
       this.spentMaterial.quantity = this.quantityEntered;
       this.spentMaterial.material.unit = this.unit;
       this.woMaterials.forEach((material) => {
         if (
-          material.material.id == this.spentMaterial.material.id &&
+          material.material.dbid == this.spentMaterial.material.dbid &&
           material.quantity == this.spentMaterial.quantity
         ) {
           this.toastr.error("Materijal sa izabranom količinom je već unet.");
@@ -596,7 +599,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.spentMaterial.material.unit = material.material.unit;
       this.unit = this.spentMaterial.material.unit;
       this.spentMaterial.material.name = this.substances.find(
-        (x) => x.id == material.material.id
+        (x) => x.dbid == material.material.id
       ).name;
       this.spentMaterial.quantity = material.quantity;
       this.idOfEditingMaterial = material.smObjectId;
@@ -605,10 +608,10 @@ export class CreateworkOrderComponent implements OnInit {
       this.spentMaterial.id = material.id;
       this.spentMaterial = material;
       this.spentMaterial.material.unit = this.substances.find(
-        (x) => x.id == this.spentMaterial.material.id
+        (x) => x.dbid == this.spentMaterial.material.dbid
       ).unit;
       this.spentMaterial.material.name = this.substances.find(
-        (x) => x.id == this.spentMaterial.material.id
+        (x) => x.dbid == this.spentMaterial.material.dbid
       ).name;
       if (material.spent == -1) {
         this.spentMaterial.spent = null;
@@ -624,9 +627,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingMaterial = existing.smObjectId;
     this.woMaterials.forEach((material) => {
       if (material.smObjectId == this.idOfEditingMaterial) {
-        material.material.id = this.substances.find(
-          (x) => x.id == material.material.id
-        ).id;
+        material.material.dbid = this.substances.find(
+          (x) => x.dbid == material.material.dbid
+        ).dbid;
         material.quantity = existing.quantity;
       }
     });
@@ -647,7 +650,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   addNewMaterial() {
     this.spinner.show();
-    this.spentMaterial.material.id = this.selectedMaterial;
+    this.spentMaterial.material.dbid = this.selectedMaterial;
     this.spentMaterial.quantity = this.quantityEntered;
     this.spentMaterialService
       .addSpentMaterial(this.workId, this.spentMaterial)

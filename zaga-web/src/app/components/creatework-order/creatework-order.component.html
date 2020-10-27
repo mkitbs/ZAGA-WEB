@@ -459,8 +459,8 @@
                   <div class="form-group">
                     <select [(ngModel)]="selectedMaterial" name="selectedMaterial" id="" class="form-control"
                       (change)="getUnitOfMaterial(selectedMaterial)" #name="ngModel" required>
-                      <option value="{{ sub.id }}" *ngFor="let sub of substances">
-                        {{ sub.name }}
+                      <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
+                        {{ sub.name }} - {{ sub.id }}
                       </option>
                     </select>
                     <div *ngIf="name.invalid && clickAddMaterial" style="color: red">
@@ -534,10 +534,10 @@
                 </div>
                 <tr *ngFor="let material of woMaterials">
                   <td>
-                    <select [(ngModel)]="material.material.id" [ngModelOptions]="{ standalone: true }"
-                      name="{{ material.material.id }}" id="" class="form-control"
-                      (change)="getUnitOfMaterial(material.material.id)">
-                      <option value="{{ sub.id }}" *ngFor="let sub of substances">
+                    <select [(ngModel)]="material.material.dbid" [ngModelOptions]="{ standalone: true }"
+                      name="{{ material.material.dbid }}" id="" class="form-control"
+                      (change)="getUnitOfMaterial(material.material.dbid)">
+                      <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
                         {{ sub.name }}
                       </option>
                     </select>
@@ -607,10 +607,10 @@
                 </div>
                 <tr *ngFor="let material of workOrder.materials">
                   <td>
-                    <select [(ngModel)]="material.material.id" [ngModelOptions]="{ standalone: true }"
-                      name="{{ material.material.id }}" id="" class="form-control"
-                      (change)="getUnitOfMaterial(material.material.id)">
-                      <option value="{{ sub.id }}" *ngFor="let sub of substances">
+                    <select [(ngModel)]="material.material.dbid" [ngModelOptions]="{ standalone: true }"
+                      name="{{ material.material.dbid }}" id="" class="form-control"
+                      (change)="getUnitOfMaterial(material.material.dbid)">
+                      <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
                         {{ sub.name }}
                       </option>
                     </select>
@@ -1187,7 +1187,7 @@
             <label for="materijal">Materijal</label>
             <select id="materijal" class="form-control" name="materijal" [(ngModel)]="selectedMaterial"
               #material="ngModel" required>
-              <option value="{{ sub.id }}&{{ sub.name }}" *ngFor="let sub of substances">
+              <option value="{{ sub.dbid }}&{{ sub.name }}" *ngFor="let sub of substances">
                 {{ sub.name }}
               </option>
             </select>

@@ -102,7 +102,7 @@ public class SpentMaterialService {
 		}
 		
 		
-		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
+		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getDbid());
 		spentMaterial.setMaterial(material);
 		
 		spentMaterial = spentMaterialRepo.save(spentMaterial);
@@ -187,7 +187,7 @@ public class SpentMaterialService {
 			spentMaterial.setSpentPerHectar(-1.0);
 		}
 		
-		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getId());
+		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getDbid());
 		spentMaterial.setMaterial(material);
 		
 		spentMaterial = spentMaterialRepo.save(spentMaterial);

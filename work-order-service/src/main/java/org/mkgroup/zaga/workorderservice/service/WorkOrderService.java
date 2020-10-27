@@ -188,7 +188,7 @@ public class WorkOrderService {
 			for(SpentMaterialDTO m : workOrderDTO.getMaterials()) {
 				SpentMaterial material = new SpentMaterial();
 
-				material.setMaterial(materialService.getOne(m.getMaterial().getId()));
+				material.setMaterial(materialService.getOne(m.getMaterial().getDbid()));
 				material.setQuantity(m.getQuantity());
 				material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
 				if(m.getSpent() != null) {
