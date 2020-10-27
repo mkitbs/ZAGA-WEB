@@ -34,9 +34,13 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -87,6 +91,12 @@ public class WorkOrderService {
 	@Autowired
 	SAP4HanaProxy sap4hana;
 	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@Value("${sap.services.s4h}")
+	String sapS4Hurl;
+	
 	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
 			SAPResponse sapResponse = new SAPResponse();
@@ -116,7 +126,7 @@ public class WorkOrderService {
 			workOrder.setResponsible(responsible);
 			
 			workOrder = workOrderRepo.save(workOrder);
-			System.out.println(workOrder.getId());//zbog testiranja
+			
 			UUID workOrderId = workOrder.getId();
 			
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
@@ -165,7 +175,6 @@ public class WorkOrderService {
 				if(!wowDTO.getConnectingMachine().getId().equals("-1")) {
 					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
 				}else {
-					System.out.println("NEMA PRIKLJUCNOG");
 					wow.setConnectingMachine(null);
 				}
 				wow = wowRepo.save(wow);
@@ -192,7 +201,7 @@ public class WorkOrderService {
 				workOrder = workOrderRepo.save(workOrder);
 			}
 			WorkOrder wo = getOneW(workOrderId);
-			//System.out.println(wo.getWorkers().size()+"AAA");
+			
 			log.info("Work order creation successfuly finished");
 			
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
@@ -203,11 +212,28 @@ public class WorkOrderService {
 			String cookies = headerValues.get("cookies");
 		    
 		    log.info("Sending work order to SAP started");
+		    
+		    /*
 		    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 																"Basic " + authHeader, 
 																csrfToken,
 																"XMLHttpRequest",
 																workOrderSAP);
+			*/
+		    HttpHeaders headersRestTemplate = new HttpHeaders();
+	  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+	  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+	  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+	  		headersRestTemplate.set("Cookie", cookies);
+	  		System.out.println("Token:" + csrfToken);
+	  		System.out.println(headersRestTemplate.toString());
+	  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+	  		ResponseEntity<Object> response = restTemplate.exchange(
+	  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+		  	
+	  		System.out.println("Rest Template Testing SAP WO: " + response.getBody().toString());
+		    
 		    if(response == null) {
 		    	workOrderRepo.delete(wo);
 				throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
@@ -216,10 +242,10 @@ public class WorkOrderService {
 		    String oDataString = response.toString().replace(":", "-");
 		    String formatted = formatJSON(oDataString);
 		    
-		    System.out.println("REZ "+formatted);
+		    
 		    
 		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
-		    System.out.println("ADSADASDS");
+		    
 		    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 		    
@@ -459,12 +485,29 @@ public class WorkOrderService {
 		String cookies = headerValues.get("cookies");
 	    
 	    log.info("Sending work order to SAP started");
+	    /*
 	    ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
 															"Basic " + authHeader, 
 															csrfToken,
 															"XMLHttpRequest",
 															workOrderSAP);
-	    if(response == null) {
+		*/
+	    //Testing HTTPS with RestTemplate
+  		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSTF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		
+  		
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+  		ResponseEntity<Object> response = restTemplate.postForEntity(
+  		    sapS4Hurl, entity, Object.class);
+	  	
+  		System.out.println("Rest Template Testing SAP WO: " + response.getBody().toString());
+	    
+  		if(response == null) {
 	    	workOrderRepo.delete(wo);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 	    }
@@ -647,16 +690,26 @@ public class WorkOrderService {
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
 		
-		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		//Testing HTTPS with RestTemplate
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+		headersRestTemplate.set("X-CSRF-Token", "Fetch");
 		
-		if(resp == null) {
+		HttpEntity entity = new HttpEntity(headersRestTemplate);
+
+		ResponseEntity<Object> response = restTemplate.exchange(
+		    sapS4Hurl, HttpMethod.GET, entity, Object.class);
+		
+		//ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
+		
+		if(response == null) {
 			workOrderRepo.delete(wo);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 		}
 		
 		log.info("Getting X-CSRF-Token successfuly finished");
 		
-		HttpHeaders headers = resp.getHeaders();
+		HttpHeaders headers = response.getHeaders();
 		String csrfToken;
 		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
 		                                                   .findFirst()
@@ -682,16 +735,18 @@ public class WorkOrderService {
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
+		//Testing HTTPS with RestTemplate
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+		headersRestTemplate.set("X-CSRF-Token", "Fetch");
 		
-		ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
-		
-		if(resp == null) {
-			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
-		}
-		
+		HttpEntity entity = new HttpEntity(headersRestTemplate);
+
+		ResponseEntity<Object> response = restTemplate.exchange(
+		    sapS4Hurl, HttpMethod.GET, entity, Object.class);
 		log.info("Getting X-CSRF-Token successfuly finished");
 		
-		HttpHeaders headers = resp.getHeaders();
+		HttpHeaders headers = response.getHeaders();
 		String csrfToken;
 		csrfToken = headers.getValuesAsList("x-csrf-token").stream()
 		                                                   .findFirst()
