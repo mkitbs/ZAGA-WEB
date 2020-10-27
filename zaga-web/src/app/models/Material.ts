@@ -1,6 +1,7 @@
 export class Material {
-  id: string;
+  dbid: string;
   name: string;
   unit: string;
   group: string;
+  id;
 }
