@@ -218,10 +218,8 @@ public class WorkOrderService {
 		    
 		    System.out.println("REZ "+formatted);
 		    
-		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+		    
 		    System.out.println("ADSADASDS");
-		    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
-		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 		    
 		    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
 			Matcher matcher = pattern.matcher(formatted);
@@ -235,6 +233,10 @@ public class WorkOrderService {
 		    if(status.equals("S")) {
 		    	System.out.println("USPESNO");
 		    	//uspesno
+		    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+		    	JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
+			    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+			    
 		    	
 		    	for(int i = 0; i <array.size(); i++) {
 		    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
@@ -263,28 +265,23 @@ public class WorkOrderService {
 		    	workOrderRepo.save(wo);
 		    	
 		    	sapResponse.setSuccess(true);
-		    	sapResponse.setMessage("");
 		    	sapResponse.setErpId(erpId);
 		    	
 		    	log.info("Insert work order into db");
 		    }else if(status.equals("E")) {
 		    	System.out.println("ERROR");
 		    	
-		    	String error = "";
+		    	
 		    	//Fail
-		    	 Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
-					Matcher matcherMessage = patternMessage.matcher(formatted);
-					if (matcherMessage.find())
-					{
-					    error = matcherMessage.group(1);
-					}
-		    	System.out.println(error);
-		    	log.error("Sending work order to SAP failed. (" + error +")");
-		    
+		    	 Pattern patternError = Pattern.compile("MessageText:(.*?),");
+		    	 Matcher matcherError = patternError.matcher(formatted);
+				List<String> errors = new ArrayList<String>();
+				matcherError.results().forEach(mat -> errors.add((mat.group(1))));
+		   
 		    	workOrderRepo.delete(wo);
 		    	
 		    	sapResponse.setSuccess(false);
-		    	sapResponse.setMessage(error);
+		    	sapResponse.setMessage(errors);
 		    	
 		    	log.info("Insert work order into db failed");
 		
@@ -515,7 +512,6 @@ public class WorkOrderService {
 	    	workOrderRepo.save(wo);
 	    	
 	    	sapResponse.setSuccess(true);
-	    	sapResponse.setMessage("");
 	    	sapResponse.setErpId(erpId);
 	    	
 	    	log.info("Insert work order into db");
@@ -524,19 +520,17 @@ public class WorkOrderService {
 	    	
 	    	String error = "";
 	    	//Fail
-	    	 Pattern patternMessage = Pattern.compile("MessageText:(.*?),");
-				Matcher matcherMessage = patternMessage.matcher(formatted);
-				if (matcherMessage.find())
-				{
-				    error = matcherMessage.group(1);
-				}
+	    	Pattern patternError = Pattern.compile("MessageText:(.*?),");
+	    	 Matcher matcherError = patternError.matcher(formatted);
+			List<String> errors = new ArrayList<String>();
+			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
 	    	System.out.println(error);
 	    	log.error("Sending work order to SAP failed. (" + error +")");
 	    
 	    	workOrderRepo.delete(wo);
 	    	
 	    	sapResponse.setSuccess(false);
-	    	sapResponse.setMessage(error);
+	    	sapResponse.setMessage(errors);
 	    	
 	    	log.info("Insert work order into db failed");
 	
