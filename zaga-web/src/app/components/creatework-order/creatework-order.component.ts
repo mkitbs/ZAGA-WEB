@@ -731,6 +731,8 @@ export class CreateworkOrderComponent implements OnInit {
   //methods for work order
 
   addWorkOrder(valid) {
+    this.error = false;
+    this.errors = [];
     this.clickAddWorkOrder = true;
     console.log(valid.status);
     if (valid.status == "VALID" && this.nameFC.valid) {
@@ -762,8 +764,10 @@ export class CreateworkOrderComponent implements OnInit {
           if (error.status === 500) {
             this.toastr.error("Radni nalog nije kreiran.");
           } else if (error.status === 400) {
-            let errorMessage = error.error.message;
-            this.toastr.error(errorMessage);
+            //let errorMessage = error.error.message;
+            //this.toastr.error(errorMessage);
+            this.error = true;
+            this.errors = error.error.message;
           }
         }
       );
@@ -912,11 +916,11 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
           if (err.status == 400) {
             this.toastr.error("Došlo je do greške prilikom zatvaranja.");
+            this.error = true;
             this.errors = err.error;
           } else {
             this.toastr.error("Radni nalog nije zatvoren.");
           }
-          this.error = true;
         });
     }
   }
