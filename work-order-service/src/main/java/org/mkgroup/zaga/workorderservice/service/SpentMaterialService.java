@@ -140,7 +140,7 @@ public class SpentMaterialService {
 	    }
 	    System.out.println("REZZ" + response.getBody());
 	    
-	    String oDataString = response.toString().replace(":", "-");
+	    String oDataString = response.getBody().toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
@@ -243,7 +243,7 @@ public class SpentMaterialService {
 	    
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO DODAT");
-	    	String oDataString = response.toString().replace(":", "-");
+	    	String oDataString = response.getBody().toString().replace(":", "-");
 	    	String formatted = formatJSON(oDataString);
 		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
