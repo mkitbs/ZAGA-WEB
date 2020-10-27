@@ -163,7 +163,7 @@ public class WorkOrderWorkerService {
 	    }
 	    System.out.println("REZZ" + response.getBody());
 	    
-	    String oDataString = response.toString().replace(":", "-");
+	    String oDataString = response.getBody().toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
 	    
 	    System.out.println(formatted + "ASASA");
@@ -262,7 +262,7 @@ public class WorkOrderWorkerService {
 	    }
 	    System.out.println("REZZ" + response.getBody());
 	    
-	    String oDataString = response.toString().replace(":", "-");
+	    String oDataString = response.getBody().toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
