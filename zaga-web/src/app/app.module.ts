@@ -47,6 +47,7 @@ import { CultureGroupComponent } from './components/culture-group/culture-group.
 import { CultureComponent } from './components/culture/culture.component';
 import { VarietyComponent } from './components/variety/variety.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SearchEmployeesPositionPipe } from './pipes/search-employees-position.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -96,6 +97,7 @@ const routes: Routes = [
     CultureGroupComponent,
     CultureComponent,
     VarietyComponent,
+    SearchEmployeesPositionPipe,
   ],
   imports: [
     BrowserModule,

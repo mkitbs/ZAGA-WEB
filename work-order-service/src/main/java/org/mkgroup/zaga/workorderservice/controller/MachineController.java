@@ -87,4 +87,10 @@ public class MachineController {
 		machineService.editMachine(machineDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@GetMapping("getMachinesByMachineGroup/{id}")
+	public ResponseEntity<?> getMachinesByMachineGroup(@PathVariable UUID id){
+		List<MachineDTO> machines = machineService.getAllByGroup(id);
+		return new ResponseEntity<List<MachineDTO>>(machines, HttpStatus.OK);
+	}
 }

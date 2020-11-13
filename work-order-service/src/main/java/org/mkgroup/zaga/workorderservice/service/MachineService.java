@@ -168,4 +168,14 @@ public class MachineService {
 		machine.setMachineGroupId(machineGroup);
 		machineRepository.save(machine);
 	}
+	
+	public List<MachineDTO> getAllByGroup(UUID id) {
+		List<Machine> machines = machineRepository.getAllByMachineGroup(id);
+		List<MachineDTO> retVals = new ArrayList<MachineDTO>();
+		for(Machine machine : machines) {
+			MachineDTO retVal = new MachineDTO(machine);
+			retVals.add(retVal);
+		}
+		return retVals;
+	}
 }

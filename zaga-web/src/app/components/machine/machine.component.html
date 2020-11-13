@@ -3,8 +3,9 @@
   <div class="container">
     <h3 class="mt-2 mb-2">Pregled mašina</h3>
     <div style="padding-top: 20px"></div>
-    <div style="width: 250px;">
-      <label><i class="fa fa-truck"></i> Tip mašine </label>
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fas fa-cog"></i> Tip mašine </label>
         <div class="input-group mb-3">
           <select
             name="table"
@@ -29,6 +30,38 @@
             >
           </div>
         </div>
+      </div>
+      <div class="col-3">
+        <label><i class="fa fa-truck"></i> Grupa mašine </label>
+        <div class="input-group mb-3">
+          <select
+            name="table"
+            class="form-control"
+            id=""
+            [(ngModel)]="selectedMachineGroup"
+            (change)="getMachinePerGroup()"
+          >
+            <option value="-1"></option>
+            <option
+              value="{{ machineGroup.dbId }}"
+              *ngFor="let machineGroup of machineGroups"
+            >
+              {{ machineGroup.Name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedMachineGroup != undefined">
+            <span
+              *ngIf="selectedMachineGroup != -1"
+              class="input-group-text"
+              id="basic-addon2"
+              (click)="setValueForSelectedMachineGroup()"
+              style="cursor: pointer"
+              title="Poništi odabranu grupu"
+              >x</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div style="padding-top: 20px"></div>

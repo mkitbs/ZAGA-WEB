@@ -38,9 +38,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonMachineModal", null) closeButtonMachineModal;
-  @ViewChild("closeButtonMaterialModal", null) closebuttonMaterialModal;
+  @ViewChild("closeButtonMaterialModal", null) closeButtonMaterialModal;
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -116,6 +117,10 @@ export class CreateworkOrderComponent implements OnInit {
   exists = false;
   clickAddWowDetail = false;
   clickAddNewWow = false;
+  clickUpdateWo = false;
+  clickAddNewMaterial = false;
+  clickUpdateMaterial = false;
+  clickSaveNewModalMaterial = false;
 
   validWow;
   validWom;
@@ -124,6 +129,12 @@ export class CreateworkOrderComponent implements OnInit {
   validNightPeriod;
   validWorkPeriod;
   validFinalState;
+  validTreated;
+  validInitialState;
+  validFuel;
+  validMaterialQuantity;
+  validSpentQuantity;
+  validNewSpentQuantity;
 
   nameFC: FormControl = new FormControl("");
 
@@ -415,12 +426,12 @@ export class CreateworkOrderComponent implements OnInit {
 
   validDetailOfNewWow() {
     this.clickAddNewWow = true;
-    if (this.wow.dayPeriod > 24) {
+    if (this.wow.dayPeriod > 24 || this.wow.dayPeriod < 0) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (this.wow.nightPeriod > 24) {
+    if (this.wow.nightPeriod > 24 || this.wow.nightPeriod < 0) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
@@ -430,12 +441,22 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validWorkPeriod = true;
     }
-    if (this.wow.finalState < this.wow.initialState) {
+    if (this.wow.initialState < 0) {
+      this.validInitialState = false;
+    } else {
+      this.validInitialState = true;
+    }
+    if (this.wow.finalState < this.wow.initialState  || this.wow.finalState < 0) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
+    if (this.wow.fuel < 0){
+      this.validFuel = false;
+    } else {
+      this.validFuel = true;
+    }
+    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel) {
       this.closeButtonWowModal.nativeElement.click();
     }
   }
@@ -491,12 +512,12 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(this.wow + "VBBBBBBBBBB");
     this.spinner.show();
     this.clickAddWowDetail = true;
-    if (workOrderWorker.dayPeriod > 24) {
+    if (workOrderWorker.dayPeriod > 24 || workOrderWorker.dayPeriod < 0) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (workOrderWorker.nightPeriod > 24) {
+    if (workOrderWorker.nightPeriod > 24 || workOrderWorker.nightPeriod < 0) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
@@ -506,12 +527,22 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validWorkPeriod = true;
     }
-    if (workOrderWorker.finalState < this.wow.initialState) {
+    if (workOrderWorker.initialState < 0){
+      this.validInitialState = false;
+    } else {
+      this.validInitialState = true;
+    }
+    if (workOrderWorker.finalState < this.wow.initialState || workOrderWorker.finalState < 0) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState) {
+    if (workOrderWorker.fuel < 0){
+      this.validFuel = false;
+    } else {
+      this.validFuel = true;
+    }
+    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel) {
       this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.toastr.success("Uspešno sačuvane promene.");
@@ -555,8 +586,12 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.treated = null;
           }
         });
+      }, error => {
+        this.spinner.hide();
       });
       this.closeButtonWowModal.nativeElement.click();
+    } else {
+      this.spinner.hide();
     }
 
   }
@@ -566,7 +601,13 @@ export class CreateworkOrderComponent implements OnInit {
   addMaterial(valid) {
     this.clickAddMaterial = true;
     console.log(this.quantityEntered);
-    if (valid) {
+    if (this.quantityEntered < 0){
+      this.validMaterialQuantity = false;
+      console.log(this.validMaterialQuantity)
+    } else {
+      this.validMaterialQuantity = true;
+    }
+    if (valid && this.validMaterialQuantity == true) {
       this.spentMaterial.smObjectId = Math.floor(Math.random() * 100 + 1);
       this.spentMaterial.material.dbid = this.selectedMaterial;
       this.spentMaterial.quantity = this.quantityEntered;
@@ -590,6 +631,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.selectedMaterial = null;
       this.quantityEntered = null;
       this.unit = null;
+      this.closeButtonMaterialModal.nativeElement.click();
     }
   }
 
@@ -648,11 +690,30 @@ export class CreateworkOrderComponent implements OnInit {
     this.spentMaterial.spent = null;
   }
 
+  validSpentMaterial(){
+    this.clickSaveNewModalMaterial = true;
+    if(this.spentMaterial.spent < 0){
+      this.validNewSpentQuantity = false;
+    } else {
+      this.validNewSpentQuantity = true;
+      this.closeButtonMaterialModal.nativeElement.click();
+    }
+  }
+
   addNewMaterial() {
+    this.clickAddNewMaterial = true;
     this.spinner.show();
     this.spentMaterial.material.dbid = this.selectedMaterial;
-    this.spentMaterial.quantity = this.quantityEntered;
-    this.spentMaterialService
+    if(this.quantityEntered < 0){
+      this.validMaterialQuantity = false;
+      this.spinner.hide();
+    } else {
+      this.validMaterialQuantity = true;
+      this.spentMaterial.quantity = this.quantityEntered;
+    }
+    if(this.validMaterialQuantity == true){
+      this.clickAddNewMaterial = false;
+      this.spentMaterialService
       .addSpentMaterial(this.workId, this.spentMaterial)
       .subscribe((res) => {
         this.spinner.hide();
@@ -687,13 +748,27 @@ export class CreateworkOrderComponent implements OnInit {
           }
         });
       });
+    }
+    
   }
 
   updateMaterial(spentMaterial) {
+    
+    console.log(spentMaterial.spent)
+    this.clickUpdateMaterial = true;
     this.error = false;
     this.errors = [];
     this.spinner.show();
-    this.spentMaterialService
+    if(spentMaterial.spent < 0){
+      this.validSpentQuantity = false;
+      console.log("AAAAAAAAAA")
+      this.spinner.hide();
+    } else {
+      this.validSpentQuantity = true;
+    }
+    if(this.validSpentQuantity == true){
+      this.clickUpdateMaterial = false;
+      this.spentMaterialService
       .updateSpentMaterial(spentMaterial.id, spentMaterial)
       .subscribe((res) => {
         console.log(res);
@@ -732,6 +807,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.error = true;
         this.errors = err.error.errors;
       });
+    }
+    
   }
 
   //methods for work order
@@ -781,6 +858,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateWorkOrder() {
+    this.clickUpdateWo = true;
     if (this.workOrder.date != undefined) {
       if (this.workOrder.date.month < 10) {
         this.workOrder.date.month = "0" + this.workOrder.date.month;
@@ -791,10 +869,18 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.spinner.show();
     this.workOrder.responsibleId = this.nameFC.value.userId;
-    this.workOrder.treated = this.treatedEntered;
+    if(this.treatedEntered >= 0){
+      this.workOrder.treated = this.treatedEntered;
+    } else{
+      this.validTreated = false;
+      this.spinner.hide();
+      return;
+    }
+    
 
     this.workOrderService.updateWorkOrder(this.workOrder).subscribe(
       (data) => {
+        this.clickUpdateWo = false;
         this.spinner.hide();
         this.toastr.success("Uspešno sačuvan radni nalog.");
         this.workOrderService.getOne(this.workId).subscribe((data) => {
@@ -843,28 +929,28 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
       if (
-        wow.dayPeriod == -1 &&
-        wow.nightPeriod == -1 &&
-        wow.initialState == -1 &&
-        wow.finalState == -1 &&
+        wow.dayPeriod == -1 ||
+        wow.nightPeriod == -1 ||
+        wow.initialState == -1 ||
+        wow.finalState == -1 ||
         wow.fuel == -1
       ) {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
-        wow.dayPeriod == null &&
-        wow.nightPeriod == null &&
-        wow.initialState == null &&
-        wow.finalState == null &&
+        wow.dayPeriod == null ||
+        wow.nightPeriod == null ||
+        wow.initialState == null ||
+        wow.finalState == null ||
         wow.fuel == null
       ) {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
-        wow.initialState == -1 &&
-        wow.finalState == -1 &&
+        wow.initialState == -1 ||
+        wow.finalState == -1 ||
         wow.sumState == -1
       ) {
         this.validWow = false;

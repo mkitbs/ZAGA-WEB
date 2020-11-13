@@ -5,6 +5,8 @@ import * as Chart from 'chart.js';
 import { stringify } from 'querystring';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { config } from 'rxjs';
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +15,8 @@ import { config } from 'rxjs';
 })
 
 export class DashboardComponent implements OnInit {
+
+  @ViewChild('scroll', null) private scroll: ElementRef<any>;
 
   constructor(private renderer: Renderer2) { }
   //ucitava se ovde da bi se na pregledu naloga videle promene postojecih i dodele novih
@@ -451,7 +455,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "19.987478",
       "lat4Table": "45.583342",
       "lng4Table": "19.987478",
-      "animation": "null"
+      "animation": "null",
+      "operation": "ŽETVA"
     },
     {
       "id": "2",
@@ -470,7 +475,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "19.990335",
       "lat4Table": "45.583443",
       "lng4Table": "19.987652",
-      "animation": "null"
+      "animation": "null",
+      "operation": "ŽETVA"
     },
     {
       "id": "3",
@@ -489,7 +495,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "19.994150",
       "lat4Table": "45.598620",
       "lng4Table": "19.989914",
-      "animation": "null"
+      "animation": "null",
+      "operation": "TARUPIRANJE"
     },
     {
       "id": "4",
@@ -508,7 +515,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "19.998650",
       "lat4Table": "45.597509",
       "lng4Table": "19.994481",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "5",
@@ -527,7 +535,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.000867",
       "lat4Table": "45.602232",
       "lng4Table": "19.996598",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "6",
@@ -546,7 +555,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.009642",
       "lat4Table": "45.595491", 
       "lng4Table": "20.003251",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "7",
@@ -565,7 +575,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.016417",
       "lat4Table": "45.573074",
       "lng4Table": "20.017973",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "8",
@@ -584,7 +595,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.002144",
       "lat4Table": "45.573906",
       "lng4Table": "19.998074",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "9",
@@ -603,7 +615,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.008266",
       "lat4Table": "45.576385",
       "lng4Table": "20.003997",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "10",
@@ -622,7 +635,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.020903",
       "lat4Table": "45.578020",
       "lng4Table": "20.020395",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "11",
@@ -641,7 +655,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.020407",
       "lat4Table": "45.593470",
       "lng4Table": "20.011968",
-      "animation": "null"
+      "animation": "null",
+      "operation": "OPŠTI POSLOVI"
     },
     {
       "id": "12",
@@ -660,7 +675,8 @@ export class DashboardComponent implements OnInit {
       "lng3Table": "20.025657",
       "lat4Table": "45.599656",
       "lng4Table": "20.025088",
-      "animation": "null"
+      "animation": "null",
+      "operation": "MULČIRANJE"
     }
   ]
 
@@ -680,6 +696,10 @@ export class DashboardComponent implements OnInit {
   clickedMarker(latitude, longitude, workerId, index) {
     this.lat = latitude;    
     this.lng = longitude;
+
+    console.log(this.scroll.nativeElement.scrollHeight);
+    this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight
+
     
     if(this.markers[index].animation != 'BOUNCE'){
       this.markers[index].animation = 'BOUNCE';

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Form, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/models/Employee';
 import { UserService } from 'src/app/service/user.service';
@@ -17,6 +17,7 @@ export class EmployeeComponent implements OnInit {
   employee: Employee = new Employee();
 
   nameFC: FormControl = new FormControl("");
+  positionFC: FormControl = new FormControl("");
 
   filteredOptions: Observable<string[]>;
 

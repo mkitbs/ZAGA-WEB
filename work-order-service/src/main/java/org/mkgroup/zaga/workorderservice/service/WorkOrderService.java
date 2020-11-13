@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -232,10 +233,16 @@ public class WorkOrderService {
 	  		System.out.println(headersRestTemplate.toString());
 	  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
 
-	  		ResponseEntity<Object> response = restTemplate.exchange(
-	  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+	  		ResponseEntity<Object> response = null;
+	  		try {
+	  			response = restTemplate.exchange(
+	  		  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+	  		} catch(Exception e) {
+	  			workOrderRepo.delete(wo);
+	  		}
+	  		
 		  	
-	  		System.out.println("Rest Template Testing SAP WO: " + response.getBody().toString());
+	  		//System.out.println("Rest Template Testing SAP WO: " + response.getBody().toString());
 		    
 		    if(response == null) {
 		    	workOrderRepo.delete(wo);
