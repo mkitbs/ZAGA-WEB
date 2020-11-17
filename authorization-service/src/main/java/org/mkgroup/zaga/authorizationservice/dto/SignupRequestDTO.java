@@ -1,9 +1,11 @@
 package org.mkgroup.zaga.authorizationservice.dto;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -36,4 +38,7 @@ public class SignupRequestDTO {
 
 	@NotBlank
 	private String confirmPassword;
+	
+	@PastOrPresent
+	private Date dateOfBirth;
 }

@@ -110,6 +110,7 @@ public class User {
 		this.telephone = sr.getTelephone();
 		this.enabled = true;
 		this.nonLocked = true;
+		this.dateOfBirth = sr.getDateOfBirth();
 	}
 	
 }
