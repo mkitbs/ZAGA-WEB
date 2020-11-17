@@ -32,4 +32,13 @@ export class SpentMaterialService {
         id
     );
   }
+
+  updateSpentMaterialBasicInfo(id, material): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL +
+        "api/spentMaterial/updateSpentMaterialBasicInfo/" +
+        id,
+      material
+    );
+  }
 }

@@ -160,7 +160,7 @@
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3" *ngIf="!new">
-              <input type="number" name="treated" [(ngModel)]="treatedEntered" id="" class="form-control" />
+              <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated" [(ngModel)]="treatedEntered" id="" class="form-control" />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
@@ -406,7 +406,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateWow(wow)"
+                    <button class="btn btn-primary btn-add mr-2" (click)="updateWOWBasicInfo(wow)"
                       [disabled]="workOrder.status == 'Zatvoren'">
                       <i class="fa fa-check"></i>
                     </button>
@@ -479,8 +479,8 @@
                 <td>
                   <div class="form-group">
                     <div class="input-group mb-3">
-                      <input [(ngModel)]="quantityEntered" type="number" name="quantityEnter" id="" class="form-control"
-                        #quantity="ngModel" required />
+                      <input [(ngModel)]="quantityEntered" onKeyPress="if(this.value.length==7) return false;" type="number" name="quantityEnter" id="" class="form-control"
+                        #quantity="ngModel" required  />
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
                           unit
@@ -493,7 +493,11 @@
                       <div *ngIf="(validMaterialQuantity == false && clickAddNewMaterial) || (validMaterialQuantity == false && clickAddMaterial)"
                       style="color: red">
                       Uneta količina mora biti veća od nule.
-                    </div>
+                      </div>
+                      <div *ngIf="quantity.errors && clickAddNewMaterial"
+                      style="color: red">
+                      Uneta količina ne sme biti duža od 7 cifara.
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -631,12 +635,16 @@
                     <div class="form-group">
                       <div class="input-group mb-3">
                         <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
-                          name="{{ material.quantity }}" id="" class="form-control" />
+                          name="{{ material.quantity }}" id="" class="form-control" onKeyPress="if(this.value.length==7) return false;"/>
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">{{
                             material.material.Unit
                           }}</span>
                         </div>
+                      </div>
+                      <div *ngIf="validQuantity == false && clickUpdateMaterial && idForValidQuantity == material.id"
+                      style="color: red">
+                      Uneta količina mora biti 0 ili veća od nule.
                       </div>
                     </div>
                   </td>
@@ -661,7 +669,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateMaterial(material)"
+                    <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
                       [disabled]="workOrder.status == 'Zatvoren'">
                       <i class="fa fa-check"></i>
                     </button>
@@ -1278,7 +1286,8 @@
               <div class="form-group">
                 <label for="imePrz">Redovan rad</label>
                 <div class="input-group mb-3">
-                  <input [(ngModel)]="wow.dayPeriod" type="number" name="dayWP" class="form-control" id="dayWP" />
+                  <input [(ngModel)]="wow.dayPeriod" type="number" name="dayWP" class="form-control" id="dayWP"
+                  onKeyPress="if(this.value.length==2) return false;" />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
@@ -1293,7 +1302,7 @@
                 <label for="imePrz">Noćni rad</label>
                 <div class="input-group mb-3">
                   <input [(ngModel)]="wow.nightPeriod" type="number" name="nightWP" class="form-control" id=""
-                    max="24" />
+                    max="24" onKeyPress="if(this.value.length==2) return false;" />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
@@ -1327,7 +1336,8 @@
               <div class="form-group">
                 <label for="imePrz">Početno stanje MČ</label>
                 <div class="input-group mb-3">
-                  <input [(ngModel)]="wow.initialState" type="number" name="initialState" class="form-control" id="" />
+                  <input [(ngModel)]="wow.initialState" type="number" name="initialState" class="form-control" id="" 
+                  onKeyPress="if(this.value.length==7) return false;"/>
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
@@ -1335,13 +1345,14 @@
                 <div
                 *ngIf="(validInitialState == false && clickAddWowDetail) || (validInitialState == false && clickAddNewWow)"
                 style="color: red">
-                Početno stanje ne može biti manje od nule.
+                Početno stanje može biti nula ili veće od nule.
               </div>
               </div>
               <div class="form-group">
                 <label for="imePrz">Krajnje stanje MČ</label>
                 <div class="input-group mb-3">
-                  <input [(ngModel)]="wow.finalState" type="number" name="finalState" class="form-control" id="" />
+                  <input [(ngModel)]="wow.finalState" type="number" name="finalState" class="form-control" id="" 
+                  onKeyPress="if(this.value.length==7) return false;"/>
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">h</span>
                   </div>
@@ -1349,7 +1360,7 @@
                 <div
                   *ngIf="(validFinalState == false && clickAddWowDetail) || (validFinalState == false && clickAddNewWow)"
                   style="color: red">
-                  Krajnje stanje ne može biti manje od početnog ili nule.
+                  Krajnje stanje može biti nula ili veće od nule i početnog stanja.
                 </div>
               </div>
               <div class="form-group">
@@ -1365,7 +1376,8 @@
               <div class="form-group">
                 <label for="imePrz">Utrošeno goriva</label>
                 <div class="input-group mb-3">
-                  <input [(ngModel)]="wow.fuel" type="number" name="fuel" class="form-control" id="" />
+                  <input [(ngModel)]="wow.fuel" type="number" name="fuel" class="form-control" id=""
+                  onKeyPress="if(this.value.length==7) return false;" />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">l</span>
                   </div>
@@ -1373,7 +1385,7 @@
                 <div
                   *ngIf="(validFuel == false && clickAddWowDetail) || (validFuel == false && clickAddNewWow)"
                   style="color: red">
-                  Utrošak goriva ne sme biti manji od nule.
+                  Utrošak goriva može biti nula ili veći od nule.
                 </div>
               </div>
             </div>
@@ -1426,7 +1438,7 @@
             <label for="quantity">Utrošena količina</label>
             <div class="input-group mb-3">
               <input [(ngModel)]="spentMaterial.spent" type="number" name="quantity" id="quantity" class="form-control"
-                #quantity="ngModel" required />
+                #quantity="ngModel" required onKeyPress="if(this.value.length==7) return false;"/>
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2"
                   *ngIf="new; else elseBlockSpentMaterialModal">{{ unit }}</span>

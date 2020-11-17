@@ -264,6 +264,104 @@ public class SpentMaterialService {
 	    	System.out.println("ERROR");
 	    	updateResponse.setErrors(errors);
 	    	updateResponse.setSuccess(false);
+	    	spentMaterial.setSpent(-1.0);
+	    	spentMaterialRepo.save(spentMaterial);
+	    	return updateResponse;
+	    }
+		
+		updateResponse.setSuccess(false);
+		return updateResponse;
+	}
+	
+	public Response updateMaterialBasicInfo(UUID id, SpentMaterialDTO spentMaterialDTO) throws Exception {
+		SpentMaterial spentMaterial = spentMaterialRepo.getOne(id);
+		WorkOrder workOrder = workOrderRepo.getOne(spentMaterial.getWorkOrder().getId());
+		
+		Response updateResponse = new Response();
+		
+		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
+		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
+		
+		Material material = materialRepo.getOne(spentMaterialDTO.getMaterial().getDbid());
+		spentMaterial.setMaterial(material);
+		
+		spentMaterial = spentMaterialRepo.save(spentMaterial);
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+		*/
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+  		ResponseEntity<Object> response = restTemplate.exchange(
+  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+
+		
+		System.out.println(response);
+	    if(response == null) {
+	    	spentMaterialRepo.delete(spentMaterial);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    /*String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    System.out.println(formatted + "ASASA");*/
+	    String resp = response.getBody().toString();
+	    Pattern pattern = Pattern.compile("ReturnStatus=(.*?),");
+		Matcher matcher = pattern.matcher(resp);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		    System.out.println("NASAO STATUS " + status);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    	String oDataString = response.getBody().toString().replace(":", "-");
+	    	String formatted = formatJSON(oDataString);
+		    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+		    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+	    	for(int i = 0; i <arrayMaterial.size(); i++) {
+	    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+	    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+	    		
+	    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+	    		spentMaterialRepo.save(spentMat);
+	    	}
+	    	updateResponse.setSuccess(true);
+	    	return updateResponse;
+	    }else if(status.equals("E")){
+	    	Pattern patternError = Pattern.compile("MessageText=(.*?),");
+			Matcher matcherError = patternError.matcher(resp);
+			List<String> errors = new ArrayList<String>();
+			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
+	    	System.out.println("ERROR");
+	    	updateResponse.setErrors(errors);
+	    	updateResponse.setSuccess(false);
+	    	spentMaterial.setQuantity(-1.0);
+	    	spentMaterial.setQuantityPerHectar(-1.0);
+	    	spentMaterialRepo.save(spentMaterial);
 	    	return updateResponse;
 	    }
 		

@@ -48,6 +48,10 @@ import { CultureComponent } from './components/culture/culture.component';
 import { VarietyComponent } from './components/variety/variety.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SearchEmployeesPositionPipe } from './pipes/search-employees-position.pipe';
+import { SearchWorkOrdersTablePipe } from './pipes/search-work-orders-table.pipe';
+import { SearchWorkOrdersDatePipe } from './pipes/search-work-orders-date.pipe';
+import { SearchWorkOrdersCropPipe } from './pipes/search-work-orders-crop.pipe';
+import { SearchWorkOrdersOperationPipe } from './pipes/search-work-orders-operation.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -98,6 +102,10 @@ const routes: Routes = [
     CultureComponent,
     VarietyComponent,
     SearchEmployeesPositionPipe,
+    SearchWorkOrdersTablePipe,
+    SearchWorkOrdersDatePipe,
+    SearchWorkOrdersCropPipe,
+    SearchWorkOrdersOperationPipe,
   ],
   imports: [
     BrowserModule,

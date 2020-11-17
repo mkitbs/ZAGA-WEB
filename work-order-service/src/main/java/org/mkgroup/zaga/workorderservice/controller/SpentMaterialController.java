@@ -66,4 +66,15 @@ public class SpentMaterialController {
 		spentMaterialService.deleteSpentMaterial(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@PostMapping("updateSpentMaterialBasicInfo/{id}")
+	public ResponseEntity<?> updateSpentMaterialBasicInfo(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO) throws Exception{
+		
+		Response resp = spentMaterialService.updateMaterialBasicInfo(id, spentMaterialDTO);
+		if(resp.isSuccess()) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Response>(resp, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

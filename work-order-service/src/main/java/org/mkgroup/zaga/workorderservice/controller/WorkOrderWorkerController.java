@@ -68,4 +68,15 @@ public class WorkOrderWorkerController {
 		wowService.deleteWow(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@PostMapping("updateWorkOrderWorkerBasicInfo/{id}")
+	public ResponseEntity<?> updateWorkOrderWorkerBasicInfo(@PathVariable UUID id, @RequestBody WorkOrderWorkerDTO wowDTO) throws Exception{
+		//try {
+			wowService.updateWOWBasicInfo(id, wowDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
+		//} catch (Exception e) {
+			// TODO Auto-generated catch block
+		//	return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		//}
+	}
 }

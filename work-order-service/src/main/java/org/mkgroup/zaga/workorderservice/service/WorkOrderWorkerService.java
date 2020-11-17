@@ -184,6 +184,74 @@ public class WorkOrderWorkerService {
 	    }
 	}
 	
+	public void updateWOWBasicInfo(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
+		WorkOrderWorker wow = wowRepo.getOne(id);
+		WorkOrder workOrder = wow.getWorkOrder();
+		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
+		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
+		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+			wow.setConnectingMachine(null);
+		}else {
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+		}
+		
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
+		
+		wow = wowRepo.save(wow);
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
+															"Basic " + authHeader, 
+															csrfToken,
+															"XMLHttpRequest",
+															workOrderSAP);
+		*/
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+
+  		ResponseEntity<Object> response = restTemplate.exchange(
+  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+	
+		System.out.println(response);
+	    if(response == null) {
+	    	wowRepo.delete(wow);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.getBody().toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    }
+	}
+	
 	public void addWorker(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		WorkOrderWorker wow = new WorkOrderWorker();

@@ -135,6 +135,8 @@ export class CreateworkOrderComponent implements OnInit {
   validMaterialQuantity;
   validSpentQuantity;
   validNewSpentQuantity;
+  validQuantity;
+  idForValidQuantity;
 
   nameFC: FormControl = new FormControl("");
 
@@ -500,10 +502,10 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.treated == 0) {
           this.workOrder.treated = null;
         }
-        this.spinner.hide();
-      }, err => {
-        this.spinner.hide();
+        
       });
+    }, err => {
+      this.spinner.hide();
     });
   }
 
@@ -512,12 +514,12 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(this.wow + "VBBBBBBBBBB");
     this.spinner.show();
     this.clickAddWowDetail = true;
-    if (workOrderWorker.dayPeriod > 24 || workOrderWorker.dayPeriod < 0) {
+    if (workOrderWorker.dayPeriod > 24 || workOrderWorker.dayPeriod < 0 || workOrderWorker.dayPeriod == null) {
       this.validDayPeriod = false;
     } else {
       this.validDayPeriod = true;
     }
-    if (workOrderWorker.nightPeriod > 24 || workOrderWorker.nightPeriod < 0) {
+    if (workOrderWorker.nightPeriod > 24 || workOrderWorker.nightPeriod < 0 || workOrderWorker.nightPeriod == null) {
       this.validNightPeriod = false;
     } else {
       this.validNightPeriod = true;
@@ -527,17 +529,17 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validWorkPeriod = true;
     }
-    if (workOrderWorker.initialState < 0){
+    if (workOrderWorker.initialState < 0 || workOrderWorker.initialState == null){
       this.validInitialState = false;
     } else {
       this.validInitialState = true;
     }
-    if (workOrderWorker.finalState < this.wow.initialState || workOrderWorker.finalState < 0) {
+    if (workOrderWorker.finalState < this.wow.initialState || workOrderWorker.finalState < 0 || workOrderWorker.finalState == null) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if (workOrderWorker.fuel < 0){
+    if (workOrderWorker.fuel < 0 || workOrderWorker.fuel == null){
       this.validFuel = false;
     } else {
       this.validFuel = true;
@@ -594,6 +596,55 @@ export class CreateworkOrderComponent implements OnInit {
       this.spinner.hide();
     }
 
+  }
+
+  updateWOWBasicInfo(workOrderWorker){
+    this.wowService.updateWorkOrderWorkerBasicInfo(workOrderWorker.id, workOrderWorker).subscribe((res) => {
+      console.log(res);
+      this.toastr.success("Uspešno sačuvane promene.");
+      this.spinner.hide();
+      this.workOrderService.getOne(this.workId).subscribe((data) => {
+        this.workOrder = data;
+
+        this.workOrder.treated = this.treatedEntered;
+        if (this.workOrder.status == "NEW") {
+          this.workOrder.status = "Novi";
+        } else if (this.workOrder.status == "IN_PROGRESS") {
+          this.workOrder.status = "U radu";
+        } else if (this.workOrder.status == "CLOSED") {
+          this.workOrder.status = "Zatvoren";
+        }
+
+        if (this.workOrder.materials.length != 0) {
+          this.workOrder.materials.forEach(material => {
+            if (material.quantity == -1) {
+              material.quantity = null;
+            }
+            if (material.quantityPerHectar < 0) {
+              material.quantityPerHectar = null;
+            }
+          })
+        }
+
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
+        };
+
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
+
+        if (this.workOrder.treated == 0) {
+          this.workOrder.treated = null;
+        }
+      });
+    }, error => {
+      this.spinner.hide();
+    });
   }
 
   //methods for work order materials
@@ -753,15 +804,13 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateMaterial(spentMaterial) {
-    
     console.log(spentMaterial.spent)
     this.clickUpdateMaterial = true;
     this.error = false;
     this.errors = [];
     this.spinner.show();
-    if(spentMaterial.spent < 0){
+    if(spentMaterial.spent < 0 || spentMaterial.spent == null){
       this.validSpentQuantity = false;
-      console.log("AAAAAAAAAA")
       this.spinner.hide();
     } else {
       this.validSpentQuantity = true;
@@ -802,11 +851,66 @@ export class CreateworkOrderComponent implements OnInit {
         });
       }, err => {
         this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+        spentMaterial.spent = null;
         this.spinner.hide();
         console.log(err);
         this.error = true;
         this.errors = err.error.errors;
       });
+    }
+    
+  }
+
+  updateMaterialBasicInfo(spentMaterial){
+    this.idForValidQuantity = spentMaterial.id;
+    this.clickUpdateMaterial = true;
+    if(spentMaterial.quantity < 0 || spentMaterial.quantity == null){
+      this.validQuantity = false;
+    } else {
+      this.validQuantity = true;
+    }
+    if(this.validQuantity == true){
+      this.spentMaterialService
+    .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)
+    .subscribe((res) => {
+      console.log(res);
+      this.toastr.success("Uspešno sačuvane promene.");
+      this.clickUpdateMaterial = false;
+      this.spinner.hide();
+      this.workOrderService.getOne(this.workId).subscribe((data) => {
+        this.workOrder = data;
+        if (this.workOrder.status == "NEW") {
+          this.workOrder.status = "Novi";
+        } else if (this.workOrder.status == "IN_PROGRESS") {
+          this.workOrder.status = "U radu";
+        } else if (this.workOrder.status == "CLOSED") {
+          this.workOrder.status = "Zatvoren";
+        }
+
+        this.workOrder.date = {
+          day: +this.workOrder.date.day,
+          month: +this.workOrder.date.month,
+          year: +this.workOrder.date.year,
+        };
+
+        this.cropService
+          .getAllByFieldAndYear(data.tableId, data.year)
+          .subscribe((res) => {
+            this.crops = res;
+          });
+
+        if (this.workOrder.treated == 0) {
+          this.workOrder.treated = null;
+        }
+      });
+    }, err => {
+      this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+      spentMaterial.spent = null;
+      this.spinner.hide();
+      console.log(err);
+      this.error = true;
+      this.errors = err.error.errors;
+    });
     }
     
   }
