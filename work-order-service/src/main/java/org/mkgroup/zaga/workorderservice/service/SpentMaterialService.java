@@ -2,17 +2,24 @@ package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Material;
@@ -428,4 +435,32 @@ public class SpentMaterialService {
 		return json;
 
 	}
+	
+	public List<List<MaterialReportHelperDTO>> getMaterialsForReport(){
+		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAll();
+		List<MaterialReportHelperDTO> helper = new ArrayList<MaterialReportHelperDTO>();
+		for(SpentMaterial sm : spentMaterials) {
+			MaterialReportHelperDTO dto = new MaterialReportHelperDTO();
+			dto.setMaterial(sm.getMaterial().getId());
+			dto.setWorkOrder(sm.getWorkOrder().getId());
+			dto.setName(sm.getMaterial().getName());
+			helper.add(dto);
+		}
+		
+		Map<UUID, List<MaterialReportHelperDTO>> materialsGrouped =
+			    helper
+			    .stream()
+			    .sorted(Comparator.comparing(MaterialReportHelperDTO::getName)
+			    		.thenComparing(MaterialReportHelperDTO::getWorkOrder))
+			    .collect(Collectors.groupingBy(e -> e.getMaterial()));
+		
+		System.out.println(materialsGrouped);
+		
+		List<List<MaterialReportHelperDTO>> retValues = new ArrayList<List<MaterialReportHelperDTO>>();
+		retValues = materialsGrouped.values().stream().collect(Collectors.toList());
+		
+		
+		return retValues;
+	}
+	
 }

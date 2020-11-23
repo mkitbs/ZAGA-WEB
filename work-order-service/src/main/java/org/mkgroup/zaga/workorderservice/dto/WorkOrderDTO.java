@@ -41,6 +41,7 @@ public class WorkOrderDTO {
 	private double treated;
 	private long sapId;
 	
+	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
 		date = new DateDTO(wo);

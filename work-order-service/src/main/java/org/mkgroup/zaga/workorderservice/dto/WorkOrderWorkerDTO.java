@@ -38,7 +38,7 @@ public class WorkOrderWorkerDTO {
 			this.connectingMachine = new MachineDTO(wow.getConnectingMachine());
 		}else {
 			this.connectingMachine = new MachineDTO();
-			this.connectingMachine.setId("-1");
+			this.connectingMachine.setDbid("-1");
 		}
 		this.initialState = wow.getInitialState();
 		this.finalState = wow.getFinalState();

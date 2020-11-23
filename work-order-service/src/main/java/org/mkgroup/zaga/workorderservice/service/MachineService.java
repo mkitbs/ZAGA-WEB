@@ -136,7 +136,7 @@ public class MachineService {
 	}
 	
 	public void editMachine(MachineDTO machineDTO) {
-		Machine machine = machineRepository.getOne(UUID.fromString(machineDTO.getId()));
+		Machine machine = machineRepository.getOne(UUID.fromString(machineDTO.getDbid()));
 		if(machineDTO.getType().equals("PRIKLJUČNA")) {
 			machine.setType(MachineType.COUPLING);
 		} else if (machineDTO.getType().equals("POGONSKA")) {

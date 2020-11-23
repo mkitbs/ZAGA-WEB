@@ -10,17 +10,19 @@
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
             }">{{ workOrder.status }}</span>
+            <br>
+            <span>Br. radnog naloga (SAP): {{workOrder.sapId}}</span>
         </div>
         <div class="col" style="float: right">
           <button class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg"
             style="margin-left: 6px; float: right; border: none;" *ngIf="error">
             <i class="fa fa-exclamation-triangle"></i>
           </button>
-          <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
-            (click)="closeWorkOrder()">
-            <i class="fa fa-check"></i> Zatvori radni nalog
+          <button class="btn btn-primary btn-edit" *ngIf="!new && workOrder.status != 'Zatvoren'"
+            data-toggle="modal" data-target="#closeWOModal">
+            <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
           </button>
-          <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
+          <button class="btn btn-primary btn-add mr-2" *ngIf="!new && workOrder.status != 'Zatvoren'"
             (click)="updateWorkOrder()">
             <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
           </button>
@@ -41,30 +43,72 @@
             <i class="fa fa-file mr-2"></i>Operacija:
           </td>
           <td class="right-col-header">
+            <form>
+              <mat-form-field class="inputAuto">
+                <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp
+                  required placeholder="Izaberite operaciju"/>
+
+                <mat-autocomplete #autoOp="matAutocomplete" [displayWith]="displayFnOperation" place>
+                  <mat-option *ngFor="
+                      let op of operations | SearchOperations: searchOp.value
+                    " [value]="op" (click)="getOperation(op)">
+                    {{op.Id}} - {{ op.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <div *ngIf="operationFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite operaciju.
+              </div>
+            </form>
+          </td>
+          <!--
+          <td class="right-col-header">
             <select [(ngModel)]="workOrder.operationId" class="form-control" id="" (change)="getOperation()"
               name="operation" #operation="ngModel" required>
-              <option value="{{ op.id }}" *ngFor="let op of operations">
-                {{ op.name }}
+              <option value="{{ op.dbid }}" *ngFor="let op of operations">
+                {{op.id}} - {{ op.name }}
               </option>
             </select>
             <div *ngIf="operation.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
               Izaberite operaciju.
             </div>
           </td>
+          -->
           <td class="left-col-header">
             <i class="fa fa-database mr-2"></i>Parcela:
           </td>
           <td class="right-col-header">
+            <form>
+              <mat-form-field class="inputAuto" >
+                <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoField" #searchField
+                  required placeholder="Izaberite parcelu"/>
+
+                <mat-autocomplete #autoField="matAutocomplete" [displayWith]="displayFnField" place>
+                  <mat-option *ngFor="
+                      let field of fields | SearchFields: searchField.value
+                    " [value]="field" (click)="getCulture(field.dbId)">
+                    {{field.Id}} - {{ field.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <div *ngIf="fieldFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite parcelu.
+              </div>
+            </form>
+          </td>
+          <!--
+          <td class="right-col-header">
             <select name="selectedTable" class="form-control" id="" [(ngModel)]="workOrder.tableId"
               (change)="getCulture()" #table="ngModel" required>
               <option value="{{ table.dbId }}" *ngFor="let table of fields">
-                {{ table.Name }}
+                {{table.Id}} - {{ table.Name }}
               </option>
             </select>
             <div *ngIf="table.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
               Izaberite tablu.
             </div>
           </td>
+          -->
         </tr>
         <tr>
           <td class="left-col-header">
@@ -90,13 +134,13 @@
             <form>
               <mat-form-field class="inputAuto">
                 <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="auto" #search style="width: 100%"
-                  required />
+                  required placeholder="Izaberite odgovornu osobu"/>
 
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" place>
                   <mat-option *ngFor="
                       let emp of allEmployees | SearchEmployees: search.value
                     " [value]="emp">
-                    {{ emp.name }}
+                   {{emp.perNumber}} - {{ emp.name }}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -109,27 +153,48 @@
         <tr>
           <td class="left-col-header"><i class="fa fa-cubes"></i> Kultura:</td>
           <td class="right-col-header">
+            <form>
+              <mat-form-field class="inputAuto">
+                <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
+                  required placeholder="Izaberite kulturu, nakon što izaberete parcelu"/>
+
+                <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
+                  <mat-option *ngFor="
+                    let crop of crops | SearchCultures: searchCulture.value
+                    " [value]="crop" (click)="getArea(crop.id)">
+                    {{crop.Id}} - {{ crop.Name.split(",")[1] }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <div *ngIf="cultureFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite kulturu.
+              </div>
+            </form>
+          </td>
+          <!--
+          <td class="right-col-header">
             <select name="culture" [(ngModel)]="workOrder.cropId" class="form-control" id="" (change)="getArea()"
               #culture="ngModel" required>
               <option value="{{ crop.id }}" *ngFor="let crop of crops">
-                {{ crop.Name.split(",")[1] }}
+               {{crop.Id}} - {{ crop.Name.split(",")[1] }}
               </option>
             </select>
             <div *ngIf="culture.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
               Izaberite kulturu.
             </div>
           </td>
+          -->
           <td class="left-col-header">
             <i class="fa fa-tasks mr-2"></i>Godina:
           </td>
           <td class="right-col-header">
             <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control" *ngIf="!new; else elseBlockYear"
-              (change)="getCulture()">
+              >
               <option value="2020">2020</option>
               <option value="2019">2019</option>
             </select>
             <ng-template #elseBlockYear>
-              <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control" (change)="getCulture()"
+              <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control"
                 #year="ngModel" required>
                 <option value="2020">2020</option>
                 <option value="2019">2019</option>
@@ -160,7 +225,11 @@
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3" *ngIf="!new">
-              <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated" [(ngModel)]="treatedEntered" id="" class="form-control" />
+              <input 
+                type="number" onKeyPress="if(this.value.length==6) return false;" 
+                name="treated" [(ngModel)]="treatedEntered" id="" class="form-control" 
+                (change)="calculateQuantityPerHectar()"
+              />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">ha</span>
               </div>
@@ -199,7 +268,7 @@
               <th>Mašina</th>
               <th>Priključna mašina</th>
               <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
-              <th style="text-align: right !important">Dodaj</th>
+              <th style="text-align: right !important">Dodaj/Potvrdi</th>
               <th style="text-align: right !important" *ngIf="wows.length > 0 || workOrder.workers.length > 0">
                 Obriši
               </th>
@@ -208,57 +277,136 @@
               <tr>
                 <td>
                   <div class="form-group">
+                    <!--
                     <select [(ngModel)]="selectedWorker" name="selectedMachineWorker" id="" class="form-control"
                       #worker="ngModel" required>
                       <option value="{{ emp.userId }}" *ngFor="let emp of allEmployees">
-                        {{ emp.name }}
+                        {{emp.perNumber}} - {{ emp.name }}
                       </option>
                     </select>
                     <div *ngIf="worker.invalid && clickAddWorkerMachine" style="color: red">
                       Izaberite radnika.
                     </div>
+                  -->
+                  <form>
+                    <mat-form-field class="inputAuto">
+                      <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorker" #searchWorker
+                        required placeholder="Izaberite radnika"/>
+      
+                      <mat-autocomplete #autoWorker="matAutocomplete" [displayWith]="displayFn" place>
+                        <mat-option *ngFor="
+                            let emp of allEmployees | SearchEmployees: searchWorker.value
+                          " [value]="emp">
+                         {{emp.perNumber}} - {{ emp.name }}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <div *ngIf="workerFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
+                      Izaberite radnika.
+                    </div>
+                  </form>
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp" #searchWorkerOp
+                          required placeholder="Izaberite operaciju"/>
+        
+                        <mat-autocomplete #autoWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
+                          <mat-option *ngFor="
+                              let op of operations | SearchOperations: searchWorkerOp.value
+                            " [value]="op">
+                            {{ op.Id }} - {{ op.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
+                        Izaberite operaciju.
+                      </div>
+                    </form>
+                    <!--
                     <select name="selectedOperation" id="" [(ngModel)]="selectedOperation" class="form-control"
                       #operation="ngModel" required>
-                      <option value="{{ op.id }}" *ngFor="let op of operations">
-                        {{ op.name }}
+                      <option value="{{ op.dbid }}" *ngFor="let op of operations">
+                       {{ op.id }} - {{ op.name }}
                       </option>
                     </select>
                     <div *ngIf="operation.invalid && clickAddWorkerMachine" style="color: red">
                       Izaberite operaciju.
                     </div>
+                  -->
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [formControl]="workerMachineFC" [matAutocomplete]="autoWorkerMachine" #searchWorkerMachine
+                          required placeholder="Izaberite mašinu"/>
+        
+                        <mat-autocomplete #autoWorkerMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option *ngFor="
+                          let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div *ngIf="workerMachineFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
+                        Izaberite mašinu.
+                      </div>
+                    </form>
+                    <!--
                     <select [(ngModel)]="selectedMachine" name="selectedMachine" id="" class="form-control"
                       #machine="ngModel" required>
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesPropulsion">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesPropulsion">
+                        {{dev.id}} - {{ dev.name }}
                       </option>
                     </select>
                     <div *ngIf="machine.invalid && clickAddWorkerMachine" style="color: red">
                       Izaberite mašinu.
                     </div>
+                    -->
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [formControl]="workerCoMachineFC" [matAutocomplete]="autoWorkerCoMachine" #searchWorkerCoMachine
+                          required placeholder="Izaberite priključnu mašinu"/>
+        
+                        <mat-autocomplete #autoWorkerCoMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option [value]="-1">
+                            BEZ PRIKLJUČNE MAŠINE
+                          </mat-option>
+                          <mat-option *ngFor="
+                          let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div *ngIf="workerCoMachineFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
+                        Izaberite priključnu mašinu.
+                      </div>
+                    </form>
+                    <!--
                     <select [(ngModel)]="selectedCouplingMachine" name="selectedCouplingMachine" id=""
                       class="form-control" #couplingMachine="ngModel">
                       <option value="-1" selected>
 
                       </option>
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesCoupling">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesCoupling">
+                        {{dev.id}} - {{ dev.name }}
                       </option>
                     </select>
                     <div *ngIf="couplingMachine.invalid && clickAddWorkerMachine" style="color: red">
                       Izaberite priključnu mašinu.
                     </div>
+                  -->
                   </div>
                 </td>
                 <td *ngIf="!new">
@@ -289,36 +437,103 @@
 
                 <tr *ngFor="let wow of wows">
                   <td>
+                    <!--
                     <select [(ngModel)]="wow.user.userId" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.user.id }}" id="" class="form-control">
                       <option value="{{ emp.userId }}" *ngFor="let emp of allEmployees">
-                        {{ emp.name }}
+                       {{emp.perNumber}} = {{ emp.name }}
                       </option>
                     </select>
+                  -->
+                  <form>
+                    <mat-form-field class="inputAuto">
+                      <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorker" #searchWorker
+                        required />
+      
+                      <mat-autocomplete #autoExWorker="matAutocomplete" [displayWith]="displayFn" place>
+                        <mat-option *ngFor="
+                            let emp of allEmployees | SearchEmployees: searchWorker.value
+                          " [value]="emp">
+                         {{emp.perNumber}} - {{ emp.name }}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </form>
                   </td>
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.operation" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorkerOp" #searchWorkerOp
+                          required/>
+        
+                        <mat-autocomplete #autoExWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
+                          <mat-option *ngFor="
+                              let op of operations | SearchOperations: searchWorkerOp.value
+                            " [value]="op">
+                            {{ op.Id }} - {{ op.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="wow.operation.id" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.operation.id }}" id="" class="form-control">
-                      <option value="{{ op.id }}" *ngFor="let op of operations">
-                        {{ op.name }}
+                      <option value="{{ op.dbid }}" *ngFor="let op of operations">
+                        {{op.Id}} - {{ op.Name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorkerMachine" #searchWorkerMachine
+                          required/>
+        
+                        <mat-autocomplete #autoExWorkerMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option *ngFor="
+                          let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="wow.machine.id" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.machine.id }}" id="" class="form-control">
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesPropulsion">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesPropulsion">
+                        {{dev.Id}} - {{ dev.Name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.connectingMachine" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorkerCoMachine" #searchWorkerCoMachine
+                          required/>
+        
+                        <mat-autocomplete #autoExWorkerCoMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option [value]="-1">
+                            BEZ PRIKLJUČNE MAŠINE
+                          </mat-option>
+                          <mat-option *ngFor="
+                          let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="wow.connectingMachine.id" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.machine.id }}" id="" class="form-control">
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesCoupling">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesCoupling">
+                        {{dev.Id}} - {{ dev.Name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <!--
                   <td>
@@ -348,50 +563,111 @@
                     </div>
                   </td>
                 </tr>
+               
               </ng-container>
               <!--editable table worker/machine existing wo-->
               <ng-template #elseBlockMachineState>
-                <div class="input-group">
-                  <span *ngIf="workOrder.workers.length == 0">Nema dodatih radnika i mašina, dodajte klikom na dugme
-                  </span>
-                  <button *ngIf="workOrder.workers.length == 0" class="btn btn-primary btn-add mr-2" disabled
-                    style="margin-left: 5px; margin-top: -5px;">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
+               
                 <tr *ngFor="let wow of workOrder.workers">
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorker" #searchExDbWorker
+                          required />
+        
+                        <mat-autocomplete #autoExDbWorker="matAutocomplete" [displayWith]="displayFn" place>
+                          <mat-option *ngFor="
+                              let emp of allEmployees | SearchEmployees: searchExDbWorker.value
+                            " [value]="emp">
+                           {{emp.perNumber}} - {{ emp.name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="wow.user.userId" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.user.id }}" id="" class="form-control">
                       <option value="{{ emp.userId }}" *ngFor="let emp of allEmployees">
-                        {{ emp.name }}
+                       {{emp.perNumber}} - {{ emp.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
-                    <select [(ngModel)]="wow.operation.id" [ngModelOptions]="{ standalone: true }"
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.operation" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerOp" #searchExDbWorkerOp
+                          required/>
+        
+                        <mat-autocomplete #autoExDbWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
+                          <mat-option *ngFor="
+                              let op of operations | SearchOperations: searchExDbWorkerOp.value
+                            " [value]="op">
+                            {{ op.Id }} - {{ op.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
+                    <select [(ngModel)]="wow.operation.dbid" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.operation.id }}" id="" class="form-control">
-                      <option value="{{ op.id }}" *ngFor="let op of operations">
-                        {{ op.name }}
+                      <option value="{{ op.dbid }}" *ngFor="let op of operations">
+                       {{op.id}} - {{ op.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
-                    <select [(ngModel)]="wow.machine.id" [ngModelOptions]="{ standalone: true }"
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerMachine" #searchExDbWorkerMachine
+                          required/>
+        
+                        <mat-autocomplete #autoExDbWorkerMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option *ngFor="
+                          let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
+                    <select [(ngModel)]="wow.machine.dbid" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.machine.id }}" id="" class="form-control">
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesPropulsion">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesPropulsion">
+                        {{ dev.id }} - {{ dev.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
-                    <select [(ngModel)]="wow.connectingMachine.id" [ngModelOptions]="{ standalone: true }"
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="wow.connectingMachine" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerCoMachine" #searchExDbWorkerCoMachine
+                          required/>
+        
+                        <mat-autocomplete #autoExDbWorkerCoMachine="matAutocomplete" [displayWith]="displayFnMachine" place>
+                          <mat-option [value]="-1">
+                            BEZ PRIKLJUČNE MAŠINE
+                          </mat-option>
+                          <mat-option *ngFor="
+                          let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachine.value
+                            " [value]="dev">
+                            {{dev.Id}} - {{ dev.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
+                    <select [(ngModel)]="wow.connectingMachine.dbid" [ngModelOptions]="{ standalone: true }"
                       name="{{ wow.machine.id }}" id="" class="form-control">
                       <option value="-1"></option>
-                      <option value="{{ dev.id }}" *ngFor="let dev of devicesCoupling">
-                        {{ dev.name }}
+                      <option value="{{ dev.dbid }}" *ngFor="let dev of devicesCoupling">
+                        {{ dev.id }} - {{ dev.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
                     <div class="form-group">
@@ -424,13 +700,28 @@
             </tbody>
           </table>
           <div class="col-12">
-            <p *ngIf="wows.length == 0 && new">Nema dodatih radnika i mašina, dodajte klikom na dugme
-              <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
-                <i class="fa fa-plus"></i>
-              </button>
-
-            </p>
-
+            <div class="input-group">
+              <p *ngIf="wows.length == 0 && new">Nema dodatih radnika i mašina, dodajte nove i potvrdite klikom na dugme
+                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                  <i class="fa fa-plus"></i>
+                </button>
+              </p>
+              <p *ngIf="wows.length > 0 && new">Dodajte nove i potvrdite klikom na dugme
+                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                  <i class="fa fa-plus"></i>
+                </button>
+              </p>
+              <p *ngIf="workOrder.workers.length == 0 && !new">Nema dodatih radnika i mašina, dodajte nove i potvrdite klikom na dugme
+                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                  <i class="fa fa-plus"></i>
+                </button>
+              </p>
+              <p *ngIf="workOrder.workers.length > 0 && !new">Dodajte nove i potvrdite klikom na dugme
+                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                  <i class="fa fa-plus"></i>
+                </button>
+              </p>
+            </div>
           </div>
         </form>
       </div>
@@ -454,9 +745,9 @@
             <thead>
               <th>Materijal*</th>
               <th style="width: 150px">Planirana količina*</th>
-              <th style="width: 180px">Planirana količina / ha*</th>
+              <th *ngIf="!new" style="width: 180px">Planirana količina / ha*</th>
               <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
-              <th style="text-align: right !important">Dodaj</th>
+              <th style="text-align: right !important">Dodaj/Potrvdi</th>
               <th style="text-align: right !important" *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0">
                 Obriši
               </th>
@@ -465,16 +756,36 @@
               <tr>
                 <td>
                   <div class="form-group">
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [formControl]="materialFC" [matAutocomplete]="autoMaterial" #searchMaterial
+                          required placeholder="Izaberite materijal"/>
+        
+                        <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
+                          <mat-option *ngFor="
+                          let sub of substances | SearchMaterials: searchMaterial.value
+                            " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
+                            {{sub.Id}} - {{ sub.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div *ngIf="materialFC.invalid && clickAddMaterial" style="color: red">
+                        Izaberite materijal.
+                      </div>
+                    </form>
+                    <!--
                     <select [(ngModel)]="selectedMaterial" name="selectedMaterial" id="" class="form-control"
                       (change)="getUnitOfMaterial(selectedMaterial)" #name="ngModel" required>
                       <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
-                        {{ sub.name }} - {{ sub.id }}
+                        {{ sub.id }} - {{ sub.name }}
                       </option>
                     </select>
                     <div *ngIf="name.invalid && clickAddMaterial" style="color: red">
                       Izaberite materijal.
                     </div>
+                    -->
                   </div>
+  
                 </td>
                 <td>
                   <div class="form-group">
@@ -501,7 +812,7 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td *ngIf="!new">
                   <div class="form-group">
                     <div class="input-group mb-3">
                       <input *ngIf="new; else elseBlockQuantity" [(ngModel)]="quantityEntered / crop.Area" type="number"
@@ -524,10 +835,10 @@
                     </button>
                   </div>
                 </td>
-                <td>
+                <td >
                   <div *ngIf="new" class="form-group">
                     <button class="btn btn-primary btn-add mr-2" (click)="addMaterial(materialForm.valid)"
-                      [disabled]="workOrder.status == 'Zatvoren'">
+                      [disabled]="workOrder.status == 'Zatvoren'" >
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
@@ -541,22 +852,32 @@
               </tr>
               <!--editable table materials new wo-->
               <ng-container *ngIf="new; else elseBlockSpentMaterial">
-                <div class="input-group">
-                  <span *ngIf="woMaterials.length == 0">Nema dodatih materijala, dodajte klikom na dugme </span>
-                  <button *ngIf="woMaterials.length == 0" class="btn btn-primary btn-add mr-2" disabled
-                    style="margin-left: 5px; margin-top: -5px;">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
+                
                 <tr *ngFor="let material of woMaterials">
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="material.material" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoWoMaterial" #searchWoMaterial
+                          required/>
+        
+                        <mat-autocomplete #autoWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
+                          <mat-option *ngFor="
+                          let sub of substances | SearchMaterials: searchWoMaterial.value
+                            " [value]="sub">
+                            {{sub.Id}} - {{ sub.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="material.material.dbid" [ngModelOptions]="{ standalone: true }"
                       name="{{ material.material.dbid }}" id="" class="form-control"
                       (change)="getUnitOfMaterial(material.material.dbid)">
                       <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
-                        {{ sub.name }} - {{ sub.id }}
+                        {{ sub.id }} - {{ sub.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
                     <div class="form-group">
@@ -565,12 +886,13 @@
                           name="{{ material.quantity }}" id="" class="form-control" />
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">{{
-                            material.material.unit
+                            material.material.Unit
                           }}</span>
                         </div>
                       </div>
                     </div>
                   </td>
+                  <!--
                   <td>
                     <div class="form-group">
                       <div class="input-group mb-3">
@@ -583,6 +905,7 @@
                       </div>
                     </div>
                   </td>
+                -->
                   <!--
                   <td>
                     <div class="form-group">
@@ -611,25 +934,46 @@
                     </div>
                   </td>
                 </tr>
+                <div class="input-group">
+                  <p *ngIf="woMaterials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na dugme
+                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </p>
+                  <p *ngIf="woMaterials.length > 0">Dodajte novi i potvrdite klikom na dugme
+                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </p>
+                </div>
               </ng-container>
               <!--editable table materials existing wo-->
               <ng-template #elseBlockSpentMaterial>
-                <div class="input-group">
-                  <span *ngIf="workOrder.materials.length == 0">Nema dodatih materijala, dodajte klikom na dugme </span>
-                  <button *ngIf="workOrder.materials.length == 0" class="btn btn-primary btn-add mr-2" disabled
-                    style="margin-left: 5px; margin-top: -5px;">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
                 <tr *ngFor="let material of workOrder.materials">
                   <td>
+                    <form>
+                      <mat-form-field class="inputAuto">
+                        <input type="text" matInput [(ngModel)]="material.material" [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterial" #searchExDbWoMaterial
+                          required/>
+        
+                        <mat-autocomplete #autoExDbWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
+                          <mat-option *ngFor="
+                          let sub of substances | SearchMaterials: searchExDbWoMaterial.value
+                            " [value]="sub">
+                            {{sub.Id}} - {{ sub.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </form>
+                    <!--
                     <select [(ngModel)]="material.material.dbid" [ngModelOptions]="{ standalone: true }"
                       name="{{ material.material.dbid }}" id="" class="form-control"
                       (change)="getUnitOfMaterial(material.material.dbid)">
                       <option value="{{ sub.dbid }}" *ngFor="let sub of substances">
-                        {{ sub.name }} - {{ sub.id }}
+                        {{ sub.id }} - {{ sub.name }}
                       </option>
                     </select>
+                    -->
                   </td>
                   <td>
                     <div class="form-group">
@@ -651,7 +995,7 @@
                   <td>
                     <div class="form-group">
                       <div class="input-group mb-3">
-                        <input [(ngModel)]="material.quantity / workOrder.area" [ngModelOptions]="{ standalone: true }"
+                        <input [(ngModel)]="quantityPerHectar" [ngModelOptions]="{ standalone: true }"
                           type="number" name="{{ material.quantityPerHectar }}" id="" class="form-control" disabled />
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">{{ material.material.Unit }}/ha</span>
@@ -683,6 +1027,18 @@
                     </div>
                   </td>
                 </tr>
+                <div class="input-group">
+                  <p *ngIf="workOrder.materials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na dugme
+                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </p>
+                  <p *ngIf="workOrder.materials.length > 0">Dodajte novi i potvrdite klikom na dugme
+                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </p>
+                </div>
               </ng-template>
             </tbody>
           </table>
@@ -692,12 +1048,12 @@
   </div>
   <br />
   <div class="col" style="float: right">
-    <button class="btn btn-primary btn-edit" [disabled]="workOrder.status == 'Zatvoren'"
-      *ngIf="!new && machine && materials" (click)="closeWorkOrder()">
-      <i class="fa fa-check"></i> Zatvori radni nalog
+    <button class="btn btn-primary btn-edit"  *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren'"
+      data-toggle="modal" data-target="#closeWOModal">
+      <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
     </button>
-    <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'"
-      *ngIf="!new && machine && materials" (click)="updateWorkOrder()">
+    <button class="btn btn-primary btn-add mr-2"
+      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren'" (click)="updateWorkOrder()">
       <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
     </button>
 
@@ -745,8 +1101,8 @@
       </div>
       <div class="col-8">
         <select name="operation" [(ngModel)]="workOrder.operationId" class="form-control" id=""
-          (change)="getOperation()" #operation="ngModel" required>
-          <option value="{{ op.id }}" *ngFor="let op of operations">
+           #operation="ngModel" required>
+          <option value="{{ op.dbid }}" *ngFor="let op of operations">
             {{ op.name }}
           </option>
         </select>
@@ -760,7 +1116,7 @@
         <i class="fa fa-database mr-2" style="vertical-align: middle"></i>Tabla:
       </div>
       <div class="col-4">
-        <select name="selectedTable" [(ngModel)]="workOrder.tableId" (change)="getCulture()" class="form-control" id=""
+        <select name="selectedTable" [(ngModel)]="workOrder.tableId" class="form-control" id=""
           #table="ngModel" required>
           <option value="{{ table.id }}" *ngFor="let table of fields">
             {{ table.Name }}
@@ -812,7 +1168,7 @@
     <div class="row mt-2">
       <div class="col-6"><i class="fa fa-cubes"></i> Kultura:</div>
       <div class="col-6">
-        <select name="culture" [(ngModel)]="workOrder.cropId" (change)="getArea()" class="form-control" id=""
+        <select name="culture" [(ngModel)]="workOrder.cropId" class="form-control" id=""
           #culture="ngModel" required>
           <option value="{{ crop.id }}" *ngFor="let crop of crops">
             {{ crop.Name.split(",")[1] }}
@@ -826,7 +1182,7 @@
     <div class="row mt-2">
       <div class="col-6"><i class="fa fa-tasks mr-2"></i>Godina:</div>
       <div class="col-6">
-        <select name="year" [(ngModel)]="selectedYear" (change)="getCulture()" id="" class="form-control"
+        <select name="year" [(ngModel)]="selectedYear" id="" class="form-control"
           #year="ngModel" required>
           <option value="2020">2020</option>
           <option value="2019">2019</option>
@@ -1078,7 +1434,7 @@
           <div class="form-group">
             <label for="imePrz">Operacija</label>
             <select name="ope" [(ngModel)]="selectedOperation" class="form-control" id="" #operation="ngModel" required>
-              <option value="{{ op.id }}" *ngFor="let op of operations">
+              <option value="{{ op.dbid }}" *ngFor="let op of operations">
                 {{ op.name }}
               </option>
             </select>
@@ -1329,7 +1685,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col" *ngIf="withoutMachine == false">
               <h5><i class="fa fa-truck mr-2"></i> Mašina</h5>
               <h6>{{ wow.machine.Name }}</h6>
               <hr class="solid" />
@@ -1428,23 +1784,24 @@
       <div class="modal-body">
         <form #materialModalForm="ngForm">
           <h5><i class="fa fa-leaf mr-2"></i> Materijal</h5>
-          <h6>{{ spentMaterial.material.name }}</h6>
+          <h6>{{ spentMaterial.material.Name }}</h6>
           <h6 *ngIf="spentMaterial.id != undefined">
             Planirana količina: {{ spentMaterial.quantity }}
-            {{ spentMaterial.material.unit }}
+            {{ spentMaterial.material.Unit }}
           </h6>
           <hr class="solid" />
           <div class="form-group">
             <label for="quantity">Utrošena količina</label>
             <div class="input-group mb-3">
               <input [(ngModel)]="spentMaterial.spent" type="number" name="quantity" id="quantity" class="form-control"
-                #quantity="ngModel" required onKeyPress="if(this.value.length==7) return false;"/>
+                #quantity="ngModel" required onKeyPress="if(this.value.length==7) return false;"
+                (change)="calculateSpentPerHectar()"/>
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2"
                   *ngIf="new; else elseBlockSpentMaterialModal">{{ unit }}</span>
                 <ng-template #elseBlockSpentMaterialModal>
                   <span class="input-group-text" id="basic-addon2">{{
-                    spentMaterial.material.unit
+                    spentMaterial.material.Unit
                   }}</span>
                 </ng-template>
               </div>
@@ -1466,10 +1823,10 @@
                 <span class="input-group-text" id="basic-addon2">{{ unit }}/ha</span>
               </div>
               <ng-template #elseBlockSpentPerHectar>
-                <input [(ngModel)]="spentMaterial.spent / workOrder.area" type="number" name="spentPerHectar" id=""
+                <input [(ngModel)]="spentPerHectar" type="number" name="spentPerHectar" id=""
                   class="form-control" readonly />
                 <div class="input-group-append">
-                  <span class="input-group-text" id="basic-addon2">{{ spentMaterial.material.unit }}/ha</span>
+                  <span class="input-group-text" id="basic-addon2">{{ spentMaterial.material.Unit }}/ha</span>
                 </div>
               </ng-template>
             </div>
@@ -1480,7 +1837,7 @@
               <input *ngIf="new; else elseBlcokUnit" [(ngModel)]="unit" type="text" name="jm" id="" class="form-control"
                 readonly />
               <ng-template #elseBlcokUnit>
-                <input [(ngModel)]="spentMaterial.material.unit" type="text" name="jm" id="" class="form-control"
+                <input [(ngModel)]="spentMaterial.material.Unit" type="text" name="jm" id="" class="form-control"
                   readonly />
               </ng-template>
             </div>
@@ -1529,3 +1886,24 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="closeWOModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          Potrvda zatvaranja RN i knjiženja materijala
+        </h4>
+      </div>
+      <div class="modal-body">
+        <h5>Datum otvaranaj RN: {{dateOfCreateWO}}</h5>
+        <h5>Datum knjiženja RN: {{dateOfCreateWO}}</h5>
+        <h5>Datum zatvaranja RN: {{today | date:'dd.MM.yyyy.'}}</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i class="fa fa-window-close"></i> Odustani</button>
+        <button class="btn btn-primary btn-add" (click)="closeWorkOrder()" >
+            <i class="fa fa-check"></i> Potrvdi
+          </button>
+      </div>

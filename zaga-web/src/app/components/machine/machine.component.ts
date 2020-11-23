@@ -59,7 +59,7 @@ export class MachineComponent implements OnInit {
   }
 
   getMachine(id){
-    this.machine = this.machines.find((x) => x.id == id);
+    this.machine = this.machines.find((x) => x.dbid == id);
   }
 
   editMachine(){

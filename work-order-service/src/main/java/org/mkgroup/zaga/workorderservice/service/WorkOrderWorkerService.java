@@ -121,13 +121,13 @@ public class WorkOrderWorkerService {
 		}
 		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+		if(wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 			wow.setConnectingMachine(null);
 		}else {
-			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
 		}
 		
-		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
 		
 		wow = wowRepo.save(wow);
 		
@@ -189,13 +189,13 @@ public class WorkOrderWorkerService {
 		WorkOrder workOrder = wow.getWorkOrder();
 		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+		if(wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 			wow.setConnectingMachine(null);
 		}else {
-			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
 		}
 		
-		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
 		
 		wow = wowRepo.save(wow);
 		
@@ -271,11 +271,11 @@ public class WorkOrderWorkerService {
 			wow.setWorkPeriod(-1.0);
 		}
 		wow.setOperation(operationRepo.getOne(wowDTO.getOperation().getId()));
-		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getId())));
-		if(wowDTO.getConnectingMachine().getId().equals("-1")) {
+		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
+		if(wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 			wow.setConnectingMachine(null);
 		}else {
-			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+			wow.setConnectingMachine(machineRepo.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
 		}
 		if(wowDTO.getInitialState() != null) {
 			wow.setInitialState(wowDTO.getInitialState());

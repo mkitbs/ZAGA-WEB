@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value =  Include.NON_NULL)
 public class MachineDTO {
 	
-	private String id;
+	private String dbid;
 	
 	@JsonProperty("Id")
 	private String erpId; //iz sapa stize BEZ-MASINE
@@ -47,11 +47,12 @@ public class MachineDTO {
 	private UUID machineGroup;
 	
 	public MachineDTO(Machine machine) {
-		id = machine.getId().toString();
+		dbid = machine.getId().toString();
 		name = machine.getName();
 		type = machine.getType().toString();
 		fuelType = machine.getFuelType().toString();
 		machineGroup = machine.getMachineGroupId().getId();
+		erpId = machine.getErpId();
 	}
 
 }

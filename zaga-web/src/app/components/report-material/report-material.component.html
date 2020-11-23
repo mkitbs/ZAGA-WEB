@@ -1,0 +1,70 @@
+<div class="container d-none d-xl-block">
+    <div style="padding-top: 10px"></div>
+    <h3 class="mt-2 mb-2">Materijali</h3>
+    <div style="padding-top: 10px"></div>
+    <div class="break-class pt-2 mb-4">
+      <span *ngIf="empty" style="font-size: 15px; float: left">Nema kreiranih naloga.</span>
+      <table class="table table-hover tabela-nalozi">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Materijal</th>
+            <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
+                  class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
+            <th scope="col">Operacija</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Parcela</th>
+            <th scope="col">Usev</th>
+            <th scope="col">Planirano</th>
+            <th scope="col">Planirano/ha</th>
+            <th scope="col">Utrošeno</th>
+            <th scope="col">Utrošeno/ha</th>
+            <th scope="col">JM</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let workOrder of workOrdersWithMaterials 
+             ;
+              let j = index" 
+            style="cursor: pointer"
+          >
+            <th scope="row" >{{ j + 1 }}</th>
+            <td *ngFor="let mat of workOrder.materials">{{ mat.material.Name }}</td>
+            <td>
+                {{ workOrder.sapId }}
+            </td>
+            <td>{{ workOrder.operationName }}</td>
+            <td>{{ workOrder.date }}</td>
+            <td>{{ workOrder.table }}</td>
+            <td>
+              {{ workOrder.cropName.split(",")[1] }}
+            </td>
+            <td>
+              planirana
+            </td>
+            <td>
+                planirana po ha
+            </td>
+            <td>
+                utrosena
+            </td>
+            <td>
+                utorsena po ha
+            </td>
+            <td>
+               jm
+            </td>
+            <td [ngClass]="{
+                statusNovi: workOrder.status == 'Novi',
+                statusURadu: workOrder.status == 'U radu',
+                statusZatvoren: workOrder.status == 'Zatvoren'
+              }" >
+              {{ workOrder.status }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>

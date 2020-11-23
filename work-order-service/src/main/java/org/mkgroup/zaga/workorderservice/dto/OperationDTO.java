@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value =  Include.NON_NULL)
 public class OperationDTO {
 
-	@JsonProperty("id")
+	@JsonProperty("dbid")
 	private UUID id;
 	
 	@JsonProperty("Id")
@@ -44,5 +44,7 @@ public class OperationDTO {
 		name = operation.getName();
 		type = operation.getType().toString();
 		operationGroupId = operation.getOperationGroup().getId();
+		erpId = operation.getErpId();
+		
 	}
 }

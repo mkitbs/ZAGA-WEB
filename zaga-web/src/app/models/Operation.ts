@@ -1,11 +1,12 @@
 import { WorkOrder } from "./WorkOrder";
 
 export class Operation {
-  id = "";
+  dbid;
   kind;
-  name;
+  Name;
   status;
   Type;
   operationGroup;
   operationGroupId;
+  Id;//erpId
 }

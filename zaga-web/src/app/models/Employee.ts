@@ -10,4 +10,5 @@ export class Employee {
   operation;
   operationId;
   userId;
+  Id;
 }

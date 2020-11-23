@@ -174,10 +174,10 @@ public class WorkOrderService {
 				}
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getId())));
+				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
 				
-				if(!wowDTO.getConnectingMachine().getId().equals("-1")) {
-					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getId())));
+				if(!wowDTO.getConnectingMachine().getDbid().equals("-1")) {
+					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
 				}else {
 					wow.setConnectingMachine(null);
 				}
@@ -191,7 +191,7 @@ public class WorkOrderService {
 
 				material.setMaterial(materialService.getOne(m.getMaterial().getDbid()));
 				material.setQuantity(m.getQuantity());
-				material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
+				//material.setQuantityPerHectar(m.getQuantity() / workOrder.getCrop().getArea());
 				if(m.getSpent() != null) {
 					material.setSpent(m.getSpent());
 					material.setSpentPerHectar(m.getSpent() / workOrder.getCrop().getArea());

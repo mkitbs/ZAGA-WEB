@@ -123,7 +123,7 @@ export class CropComponent implements OnInit {
   }
 
   getCropForEdit(id) {
-    this.crop = this.crops.find((crop) => crop.id == id);
+    this.crop = this.crops.find((crop) => crop.Id == id);
   }
 
   editCrop() {

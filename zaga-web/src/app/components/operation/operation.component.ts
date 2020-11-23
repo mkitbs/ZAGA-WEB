@@ -51,7 +51,7 @@ export class OperationComponent implements OnInit {
   }
 
   getOperation(id){
-    this.operation = this.operations.find(x => x.id == id);
+    this.operation = this.operations.find(x => x.dbid == id);
   }
 
   editOperation(){
