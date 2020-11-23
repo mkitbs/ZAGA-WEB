@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Form, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/models/Employee';
 import { UserService } from 'src/app/service/user.service';
@@ -15,14 +15,6 @@ export class EmployeeComponent implements OnInit {
 
   allEmployees: Employee[] = [];
   employee: Employee = new Employee();
-
-  nameFC: FormControl = new FormControl("");
-
-  filteredOptions: Observable<string[]>;
-
-  auto; //zbog npm build
-  autoLaptop; //zbog npm build
-  autoTablet; //zbog npm build
 
   ngOnInit() {
     this.userService.getAll().subscribe((data) => {
@@ -44,11 +36,6 @@ export class EmployeeComponent implements OnInit {
         this.allEmployees = data.content;
       });
     });
-  }
-
-  //autocomplete
-  displayFn(emp: Employee): string {
-    return emp && emp.Name ? emp.Name : "";
   }
 
 }

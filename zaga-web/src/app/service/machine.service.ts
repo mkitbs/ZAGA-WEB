@@ -38,4 +38,10 @@ export class MachineService {
       environment.gatewayWorkOrderURL + "api/machine/getAll"
     );
   }
+
+  getMachinesByMachineGroup(id): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/getMachinesByMachineGroup/" + id
+    );
+  }
 }

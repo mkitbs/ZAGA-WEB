@@ -136,7 +136,7 @@ public class MachineService {
 	}
 	
 	public void editMachine(MachineDTO machineDTO) {
-		Machine machine = machineRepository.getOne(UUID.fromString(machineDTO.getId()));
+		Machine machine = machineRepository.getOne(UUID.fromString(machineDTO.getDbid()));
 		if(machineDTO.getType().equals("PRIKLJUČNA")) {
 			machine.setType(MachineType.COUPLING);
 		} else if (machineDTO.getType().equals("POGONSKA")) {
@@ -167,5 +167,15 @@ public class MachineService {
 		MachineGroup machineGroup = machineGroupRepo.getOne(machineDTO.getMachineGroup());
 		machine.setMachineGroupId(machineGroup);
 		machineRepository.save(machine);
+	}
+	
+	public List<MachineDTO> getAllByGroup(UUID id) {
+		List<Machine> machines = machineRepository.getAllByMachineGroup(id);
+		List<MachineDTO> retVals = new ArrayList<MachineDTO>();
+		for(Machine machine : machines) {
+			MachineDTO retVal = new MachineDTO(machine);
+			retVals.add(retVal);
+		}
+		return retVals;
 	}
 }

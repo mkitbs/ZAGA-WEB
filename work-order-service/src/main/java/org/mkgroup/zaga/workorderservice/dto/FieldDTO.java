@@ -52,6 +52,7 @@ public class FieldDTO implements Serializable{
 		year = field.getYear();
 		area = field.getArea();
 		fieldGroup = field.getFieldGroup().getId();
+		erpId = field.getErpId();
 	}
 
 }

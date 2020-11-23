@@ -53,6 +53,7 @@ public class CropDTO {
 		year = crop.getYear();
 		fieldId = crop.getField().getId();
 		cultureId = crop.getCulture().getId();
+		erpId = crop.getErpId();
 	}
 
 }

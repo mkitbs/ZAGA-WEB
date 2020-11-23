@@ -1,0 +1,37 @@
+h3 {
+  color: #5c7495;
+}
+
+.tabela-nalozi {
+  background: white;
+  width: 100%;
+  font-size: 12px;
+}
+
+table,
+td,
+tr,
+th {
+  text-align: center;
+  font-size: medium;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.break-class {
+  width: 100% !important;
+  border-top: 2px solid #33490b !important;
+  font-size: 12px;
+}
+
+.statusNovi {
+  color: #5c7495;
+}
+
+.statusURadu {
+  color: #f68901;
+}
+
+.statusZatvoren {
+  color: #73964a;
+}

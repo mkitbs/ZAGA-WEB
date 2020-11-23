@@ -47,6 +47,20 @@ import { CultureGroupComponent } from './components/culture-group/culture-group.
 import { CultureComponent } from './components/culture/culture.component';
 import { VarietyComponent } from './components/variety/variety.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SearchEmployeesPositionPipe } from './pipes/search-employees-position.pipe';
+import { SearchWorkOrdersTablePipe } from './pipes/search-work-orders-table.pipe';
+import { SearchWorkOrdersDatePipe } from './pipes/search-work-orders-date.pipe';
+import { SearchWorkOrdersCropPipe } from './pipes/search-work-orders-crop.pipe';
+import { SearchWorkOrdersOperationPipe } from './pipes/search-work-orders-operation.pipe';
+import { ReportMaterialComponent } from './components/report-material/report-material.component';
+import { ReportMachineComponent } from './components/report-machine/report-machine.component';
+import { ReportEmployeeComponent } from './components/report-employee/report-employee.component';
+import { SearchOperationsPipe } from './pipes/search-operations.pipe';
+import { SearchFieldsPipe } from './pipes/search-fields.pipe';
+import { SearchCulturesPipe } from './pipes/search-cultures.pipe';
+import { SearchPropulsionMachinesPipe } from './pipes/search-propulsion-machines.pipe';
+import { SearchCouplingMachinesPipe } from './pipes/search-coupling-machines.pipe';
+import { SearchMaterialsPipe } from './pipes/search-materials.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -69,6 +83,9 @@ const routes: Routes = [
   { path: "masterData/cultureGroup", component: CultureGroupComponent },
   { path: "masterData/culture", component: CultureComponent },
   { path: "masterData/variety", component: VarietyComponent },
+  { path: "report/material", component: ReportMaterialComponent },
+  { path: "report/machine", component: ReportMachineComponent },
+  { path: "report/employee", component: ReportEmployeeComponent },
   { path: "", component: HomeComponent },
 ];
 
@@ -96,6 +113,20 @@ const routes: Routes = [
     CultureGroupComponent,
     CultureComponent,
     VarietyComponent,
+    SearchEmployeesPositionPipe,
+    SearchWorkOrdersTablePipe,
+    SearchWorkOrdersDatePipe,
+    SearchWorkOrdersCropPipe,
+    SearchWorkOrdersOperationPipe,
+    ReportMaterialComponent,
+    ReportMachineComponent,
+    ReportEmployeeComponent,
+    SearchOperationsPipe,
+    SearchFieldsPipe,
+    SearchCulturesPipe,
+    SearchPropulsionMachinesPipe,
+    SearchCouplingMachinesPipe,
+    SearchMaterialsPipe,
   ],
   imports: [
     BrowserModule,

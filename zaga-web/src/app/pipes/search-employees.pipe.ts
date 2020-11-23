@@ -7,7 +7,15 @@ import { Pipe, PipeTransform } from "@angular/core";
 export class SearchEmployeesPipe implements PipeTransform {
   transform(employees: any[], query): any {
     return employees.filter((employee) =>
-      employee.name.toLowerCase().includes(query.toLowerCase())
+      this.matchValue(employee, query)
     );
+  }
+
+  matchValue(data, value) {
+    if(Number(value)){
+      return data.perNumber == value;
+    } else{
+      return data.name.toLowerCase().includes(value.toLowerCase()) 
+    }
   }
 }

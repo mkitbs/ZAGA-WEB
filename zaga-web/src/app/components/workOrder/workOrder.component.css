@@ -133,3 +133,26 @@ th {
 [type="radio"]:checked + .btn-date {
   background-color: #5c7495;
 }
+
+.inputAuto,
+.mat-form-field-infix {
+  font-size: 12px !important;
+  font-family: "Montserrat" !important;
+  width: 100% !important;
+  color: black !important;
+}
+
+.mat-input-element {
+  caret-color: #5c7495 !important;
+  /* cursor color on autocomplete input */
+}
+
+::ng-deep .mat-form-field-underline,
+::ng-deep .mat-form-field-ripple {
+  background-color: #5c7495 !important;
+  color: #5c7495 !important;
+}
+
+::ng-deep .mat-form-field-empty.mat-form-field-label {
+  color: #5c7495 !important;
+}

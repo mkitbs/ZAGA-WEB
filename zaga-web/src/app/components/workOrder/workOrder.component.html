@@ -11,27 +11,46 @@
   <form action="" class="collapse mb-4" id="collapseExample">
     <div class="form-row">
       <div class="col">
-        <label> Datum </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchDate
+            placeholder="Pretražite po datumu"
+          />
+        </mat-form-field>
       </div>
       <div class="col">
-        <label> Tabla </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchTable
+            placeholder="Pretražite po parceli"
+          />
+        </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
-        <label> Usev </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchCrop
+            placeholder="Pretražite po usevu"
+          />
+        </mat-form-field>
       </div>
       <div class="col">
-        <label> Status </label>
-        <select class="form-control" id="exampleFormControlSelect1">
-          <option value=""></option>
-          <option value="novi">Novi</option>
-          <option value="u redu">U radu</option>
-          <option value="zavrseno">Završeno</option>
-        </select>
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchOperation
+            placeholder="Pretražite po operaciji"
+          />
+        </mat-form-field>
       </div>
     </div>
   </form>
@@ -68,7 +87,7 @@
               class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
         <th scope="col">Operacija</th>
         <th scope="col">Datum</th>
-        <th scope="col">Tabla</th>
+        <th scope="col">Parcela</th>
         <th scope="col">Površina</th>
         <th scope="col">Usev</th>
         <th scope="col">Odgovorna osoba</th>
@@ -77,7 +96,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let workOrder of workOrders; let j = index" style="cursor: pointer">
+      <tr 
+        *ngFor="let workOrder of workOrders 
+          | SearchWorkOrdersTable: searchTable.value
+          | SearchWorkOrdersDate: searchDate.value
+          | SearchWorkOrdersCrop: searchCrop.value
+          | SearchWorkOrdersOperation: searchOperation.value;
+          let j = index" 
+        style="cursor: pointer"
+      >
         <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
         <td>{{ workOrder.sapId }}</td>
         <td (click)="changeRoute(workOrder.id)">

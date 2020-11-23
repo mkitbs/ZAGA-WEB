@@ -1,5 +1,5 @@
 export class Machine {
-    id;
+    dbid;
     Name;
     compnayCode: string;
     orgUnit: string;
@@ -9,4 +9,5 @@ export class Machine {
     machineGroupName;
     machineGroup;
     name;
+    Id;
 }

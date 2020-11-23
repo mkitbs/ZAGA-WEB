@@ -1,5 +1,5 @@
 export class Crop {
-  id;
+  Id;
   cultureId;
   Name;
   organisationUnit;

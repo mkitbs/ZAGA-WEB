@@ -1,5 +1,5 @@
 export class Field {
-  id;
+  Id;
   Name;
   Year;
   Area;

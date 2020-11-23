@@ -32,4 +32,13 @@ export class WorkOrderWorkerService {
         id
     );
   }
+
+  updateWorkOrderWorkerBasicInfo(id, wow): Observable<any> {
+    return this.http.post(
+      environment.gatewayWorkOrderURL +
+        "api/workOrderWorker/updateWorkOrderWorkerBasicInfo/" +
+        id,
+      wow
+    );
+  }
 }

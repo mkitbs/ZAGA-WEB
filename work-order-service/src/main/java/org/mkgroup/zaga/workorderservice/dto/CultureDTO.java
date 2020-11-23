@@ -40,6 +40,7 @@ public class CultureDTO {
 		cultureGroup = culture.getCultureGroup().getId();
 		orgCon = culture.getOrgCon().toString();
 		type = culture.getType().toString();
+		erpId = culture.getErpId();
 	}
 
 }

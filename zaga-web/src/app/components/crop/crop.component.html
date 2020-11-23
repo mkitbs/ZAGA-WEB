@@ -6,7 +6,7 @@
   
     <div class="form-row">
       <div class="col-3">
-        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <label><i class="fa fa-map-marker"></i> Parcela </label>
         <div class="input-group mb-3">
           <select
             name="table"
@@ -88,7 +88,7 @@
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title">
-                    {{ crop.Name.split(",")[1] }}
+                    {{ crop.Name }}
                   </h5>
                   <table>
                     <tr title="Parcela" style="cursor: help">
@@ -117,7 +117,7 @@
             (click)="getCropForEdit(crop.id)"
             data-toggle="modal"
             data-target="#editCropModal"
-            disabled
+            hidden
           >
             <i class="fa fa-edit"></i>
           </button>
@@ -135,7 +135,7 @@
   
     <div class="form-row">
       <div class="col-3">
-        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <label><i class="fa fa-map-marker"></i> Parcela </label>
         <div class="input-group mb-3">
           <select
             name="table"
@@ -217,7 +217,7 @@
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title">
-                    {{ crop.Name.split(",")[1] }}
+                    {{ crop.Name }}
                   </h5>
                   <table>
                     <tr title="Parcela" style="cursor: help">
@@ -246,7 +246,7 @@
             (click)="getCropForEdit(crop.id)"
             data-toggle="modal"
             data-target="#editCropModal"
-            disabled
+            hidden
           >
             <i class="fa fa-edit"></i>
           </button>
@@ -264,7 +264,7 @@
   
     <div class="form-row">
       <div class="col-3">
-        <label><i class="fa fa-map-marker"></i> Tabla </label>
+        <label><i class="fa fa-map-marker"></i> Parcela </label>
         <div class="input-group mb-3">
           <select
             name="table"
@@ -346,7 +346,7 @@
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title">
-                    {{ crop.Name.split(",")[1] }}
+                    {{ crop.Name }}
                   </h5>
                   <table>
                     <tr title="Parcela" style="cursor: help">
@@ -375,7 +375,7 @@
             (click)="getCropForEdit(crop.id)"
             data-toggle="modal"
             data-target="#editCropModal"
-            disabled
+            hidden
           >
             <i class="fa fa-edit"></i>
           </button>

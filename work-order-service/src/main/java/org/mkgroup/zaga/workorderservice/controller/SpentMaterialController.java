@@ -1,7 +1,10 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.model.Material;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,5 +69,22 @@ public class SpentMaterialController {
 	public ResponseEntity<?> deleteSpentMaterial(@PathVariable UUID id){
 		spentMaterialService.deleteSpentMaterial(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("updateSpentMaterialBasicInfo/{id}")
+	public ResponseEntity<?> updateSpentMaterialBasicInfo(@PathVariable UUID id, @RequestBody SpentMaterialDTO spentMaterialDTO) throws Exception{
+		
+		Response resp = spentMaterialService.updateMaterialBasicInfo(id, spentMaterialDTO);
+		if(resp.isSuccess()) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Response>(resp, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("getDataForReport")
+	public ResponseEntity<?> getDataForReport(){
+		List<List<MaterialReportHelperDTO>> data = spentMaterialService.getMaterialsForReport();
+		return new ResponseEntity<List<List<MaterialReportHelperDTO>>>(data, HttpStatus.OK);
 	}
 }

@@ -85,7 +85,11 @@ public class WorkOrderToSAP {
 		this.CropId = workOrder.getCrop().getErpId().toString();
 		this.OperationId = workOrder.getOperation().getErpId().toString();
 		this.NoMaterial = (workOrder.getMaterials().size() == 0)? "X" : "";
-		this.OnlyMaterial = "";
+		if(workOrder.getWorkers().size() == 0) {
+			this.OnlyMaterial = "X";
+		} else {
+			this.OnlyMaterial = "";
+		}
 		this.Note = "";
 		this.DataEntryUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
 		this.Deleted = "";
