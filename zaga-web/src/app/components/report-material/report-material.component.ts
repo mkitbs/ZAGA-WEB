@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MaterialReport } from 'src/app/models/MaterialReport';
 import { WorkOrder } from 'src/app/models/WorkOrder';
+import { SpentMaterialService } from 'src/app/service/spent-material.service';
 import { WorkOrderService } from 'src/app/service/work-order.service';
 
 @Component({
@@ -10,62 +13,45 @@ import { WorkOrderService } from 'src/app/service/work-order.service';
 export class ReportMaterialComponent implements OnInit {
 
   constructor(
-    private workOrderService:WorkOrderService
+    private spentMaterialService:SpentMaterialService,
+    private router: Router
   ) { }
 
-  workOrders: WorkOrder[] = [];
-  workOrdersWithMaterials: WorkOrder[] = [];
-
-  empty;
-  desc = false;
+  materials: MaterialReport[] = [];
+  
+  sumsQuantity: any[] = [];
+  sumsSpent: any[] = [];
 
   ngOnInit() {
-    this.workOrderService.getAll().subscribe((data) => {
-      this.workOrders = data;
-      console.log(this.workOrders);
-      if (this.workOrders.length == 0) {
-        this.empty = true;
-      } else {
-        this.empty = false;
-        this.workOrders.forEach((workOrder) => {
-          if(workOrder.materials.length != 0){
-            var date = "";
-            date =
-              workOrder.date.day.split(" ")[0] +
-              "." +
-              workOrder.date.month +
-              "." +
-              workOrder.date.year +
-              ".";
-            workOrder.date = date;
-            if (workOrder.status == "NEW") {
-              workOrder.status = "Novi";
-            } else if (workOrder.status == "IN_PROGRESS") {
-              workOrder.status = "U radu";
-            } else if (workOrder.status == "CLOSED") {
-              workOrder.status = "Zatvoren";
-            }
-            if(workOrder.sapId == 0){
-              workOrder.sapId = null;
-            }
-            this.workOrdersWithMaterials.push(workOrder);
-            console.log(this.workOrdersWithMaterials)
+    this.spentMaterialService.getDataForReport().subscribe(data => {
+      this.materials = data;
+      console.log(this.materials)
+      this.materials.forEach(material => {
+        var date = "";
+        material.workOrders.forEach(workOrder => {
+          date =
+          workOrder.date.day.split(" ")[0] +
+          "." +
+          workOrder.date.month +
+          "." +
+          workOrder.date.year +
+          ".";
+          workOrder.date = date;
+
+          if (workOrder.status == "NEW") {
+            workOrder.status = "Novi";
+          } else if (workOrder.status == "IN_PROGRESS") {
+            workOrder.status = "U radu";
+          } else if (workOrder.status == "CLOSED") {
+            workOrder.status = "Zatvoren";
           }
-          
-        });
-      }
-      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
-    });
+      })
+    })
+  })
   }
 
-  sortBySapId() {
-    this.desc = !this.desc;
-    if(this.desc) {
-      this.workOrders.sort((w1, w2) => w1.sapId - w2.sapId);
-    } else {
-      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
-    }
-
+  changeRoute(id) {
+    this.router.navigateByUrl("/create/workOrder/" + id);
   }
 
 }

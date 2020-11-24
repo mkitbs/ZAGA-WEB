@@ -15,8 +15,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.MaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -436,29 +438,59 @@ public class SpentMaterialService {
 
 	}
 	
-	public List<List<MaterialReportHelperDTO>> getMaterialsForReport(){
-		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAll();
-		List<MaterialReportHelperDTO> helper = new ArrayList<MaterialReportHelperDTO>();
-		for(SpentMaterial sm : spentMaterials) {
-			MaterialReportHelperDTO dto = new MaterialReportHelperDTO();
-			dto.setMaterial(sm.getMaterial().getId());
-			dto.setWorkOrder(sm.getWorkOrder().getId());
-			dto.setName(sm.getMaterial().getName());
-			helper.add(dto);
+	public List<MaterialReportDTO> getMaterialsForReport(){
+		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId();
+		MaterialReportDTO report = new MaterialReportDTO();
+		List<MaterialReportDTO> retValues = new ArrayList<MaterialReportDTO>();
+		if(spentMaterials.size() > 0) {
+			report.setMaterial(new SpentMaterialDTO(spentMaterials.get(0)));
+			report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(0).getWorkOrder(), spentMaterials.get(0).getMaterial().getId()));
+			if(spentMaterials.size() == 1) {
+				retValues.add(report);
+			}
+		}
+		for(int i = 0; i<spentMaterials.size()-1; i++) {
+			if(spentMaterials.get(i).getMaterial().getId().equals(spentMaterials.get(i+1).getMaterial().getId())) {
+				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				if(i+1 == spentMaterials.size()-1) {
+					retValues.add(report);
+				}
+			} else {
+				retValues.add(report);
+				report = new MaterialReportDTO();
+				report.setMaterial(new SpentMaterialDTO(spentMaterials.get(i+1)));
+				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				if(i+1 == spentMaterials.size()) {
+					retValues.add(report);
+				}
+			}
+			
 		}
 		
-		Map<UUID, List<MaterialReportHelperDTO>> materialsGrouped =
-			    helper
-			    .stream()
-			    .sorted(Comparator.comparing(MaterialReportHelperDTO::getName)
-			    		.thenComparing(MaterialReportHelperDTO::getWorkOrder))
-			    .collect(Collectors.groupingBy(e -> e.getMaterial()));
-		
-		System.out.println(materialsGrouped);
-		
-		List<List<MaterialReportHelperDTO>> retValues = new ArrayList<List<MaterialReportHelperDTO>>();
-		retValues = materialsGrouped.values().stream().collect(Collectors.toList());
-		
+		for(MaterialReportDTO r : retValues) {
+			MaterialReportSumDTO quantity = new MaterialReportSumDTO();
+			MaterialReportSumDTO spent = new MaterialReportSumDTO();
+			double sumQuantity = 0.0;
+			double sumSpent = 0.0;
+			for(WorkOrderDTO wo : r.getWorkOrders()) {
+				for(SpentMaterialDTO mat : wo.getMaterials()) {
+					if(mat.getQuantity() == -1) {
+						mat.setQuantity(0.0);
+					}
+					sumQuantity += mat.getQuantity();
+					quantity.setSum(sumQuantity);
+					quantity.setUnit(mat.getMaterial().getUnit());
+					if(mat.getSpent() == -1) {
+						mat.setSpent(0.0);
+					}
+					sumSpent += mat.getSpent();
+					spent.setSum(sumSpent);
+					spent.setUnit(mat.getMaterial().getUnit());
+				}
+				r.setSumQuantity(quantity);
+				r.setSumSpent(spent);
+			}
+		}
 		
 		return retValues;
 	}

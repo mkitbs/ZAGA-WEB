@@ -41,7 +41,6 @@ public class WorkOrderDTO {
 	private double treated;
 	private long sapId;
 	
-	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
 		date = new DateDTO(wo);
@@ -77,6 +76,31 @@ public class WorkOrderDTO {
 		for(WorkOrderWorker wow : wo.getWorkers()) {
 			WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 			this.workers.add(wowDTO);
+		}
+		
+	}	
+	
+	public WorkOrderDTO(WorkOrder wo, UUID idMaterial) {
+		id = wo.getId();
+		date = new DateDTO(wo);
+		status = wo.getStatus().toString();
+		operationName = wo.getOperation().getName();
+		responsibleName = wo.getResponsible().getName();
+		table = wo.getCrop().getField().getName();
+		cropName = wo.getCrop().getName();
+		treated = wo.getTreated();
+		if(wo.getErpId() != null) {
+			sapId = wo.getErpId();
+		} else {
+			sapId = 0;
+		}
+		
+		this.materials = new ArrayList<SpentMaterialDTO>();
+		for(SpentMaterial sm : wo.getMaterials()) {
+			if(sm.getMaterial().getId().equals(idMaterial)) {
+				SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
+				this.materials.add(smDTO);
+			}
 		}
 		
 	}	

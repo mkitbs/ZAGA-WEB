@@ -106,7 +106,9 @@
         style="cursor: pointer"
       >
         <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
-        <td>{{ workOrder.sapId }}</td>
+        <td (click)="changeRoute(workOrder.id)">
+          {{ workOrder.sapId }}
+        </td>
         <td (click)="changeRoute(workOrder.id)">
           {{ workOrder.operationName }}
         </td>

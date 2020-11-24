@@ -41,6 +41,7 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonMaterialModal", null) closeButtonMaterialModal;
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
+  @ViewChild("closeButtonCloseWOModal", null) closeButtonCloseWOModal;
   
 
   constructor(
@@ -160,6 +161,10 @@ export class CreateworkOrderComponent implements OnInit {
   woMaterialFC: FormControl = new FormControl("");
 
   filteredOptions: Observable<string[]>;
+
+  currentYear;
+  nextYear;
+  previousYear;
 
   ngOnInit() {
     if (this.workId == "new") {
@@ -311,6 +316,11 @@ export class CreateworkOrderComponent implements OnInit {
       this.fields = data;
       console.log(this.fields)
     });
+
+    var now = new Date();
+    this.currentYear = now.getFullYear();
+    this.nextYear = now.getFullYear() + 1;
+    this.previousYear = now.getFullYear() - 1; 
   }
 
   //methods for on change listeners
@@ -373,7 +383,10 @@ export class CreateworkOrderComponent implements OnInit {
 
   calculateSpentPerHectar(){
     if(this.workOrder.treated != undefined){
-      this.spentPerHectar = this.spentMaterial.spent / this.workOrder.treated
+      this.workOrder.materials.forEach(mat => {
+        this.spentPerHectar = mat.spent / this.workOrder.treated
+        console.log(this.spentPerHectar)
+      })
     } else {
       this.spentPerHectar = this.spentMaterial.spent / this.treatedEntered;
     }
@@ -510,7 +523,7 @@ export class CreateworkOrderComponent implements OnInit {
       (x) => x.userId == this.wow.user.userId
     ).name;
     console.log(this.wow.machine);
-    if(this.wow.machine.Id == "BEZ MAŠINE"){
+    if(this.wow.machine.Id == "BEZ-MASINE"){
       this.withoutMachine = true;
     } else {
       this.withoutMachine = false;
@@ -569,15 +582,12 @@ export class CreateworkOrderComponent implements OnInit {
       this.addNewWow = false;
     } else {
       this.addNewWow = true;
-      this.workOrder.workers.forEach(wow => {
-        console.log(wow.machine.Id)
-        if(wow.machine.Id = "BEZ MAŠINE"){
-          this.withoutMachine = true;
-        } else {
-          this.withoutMachine = false;
-        }
-        
-      })
+      console.log(this.workerMachineFC.value)
+      if(this.workerMachineFC.value.Id == "BEZ-MASINE"){
+        this.withoutMachine = true;
+      } else {
+        this.withoutMachine = false;
+      }
     }
     this.wow.dayPeriod = null;
     this.wow.nightPeriod = null;
@@ -690,17 +700,17 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validWorkPeriod = true;
     }
-    if (workOrderWorker.initialState < 0 || workOrderWorker.initialState == null){
+    if ((workOrderWorker.initialState < 0 || workOrderWorker.initialState == null) && !this.withoutMachine){
       this.validInitialState = false;
     } else {
       this.validInitialState = true;
     }
-    if (workOrderWorker.finalState < this.wow.initialState || workOrderWorker.finalState < 0 || workOrderWorker.finalState == null) {
+    if ((workOrderWorker.finalState < this.wow.initialState || workOrderWorker.finalState < 0 || workOrderWorker.finalState == null) && !this.withoutMachine) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if (workOrderWorker.fuel < 0 || workOrderWorker.fuel == null){
+    if ((workOrderWorker.fuel < 0 || workOrderWorker.fuel == null) && !this.withoutMachine){
       this.validFuel = false;
     } else {
       this.validFuel = true;
@@ -851,6 +861,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editMaterial(material) {
+    console.log(material)
     if (this.new) {
       this.spentMaterial.spent = material.spent;
       this.spentMaterial.material.Unit = material.material.unit;
@@ -873,9 +884,21 @@ export class CreateworkOrderComponent implements OnInit {
       if (material.spent == -1) {
         this.spentMaterial.spent = null;
         this.spentMaterial.spentPerHectar = null;
+        this.spentPerHectar = null;
       } else {
         this.spentMaterial.spent = material.spent;
         this.spentMaterial.spentPerHectar = material.spentPerHectar;
+        console.log("TREATED: " + this.workOrder.treated)
+        if(this.workOrder.treated != 0){
+          console.log("IF")
+          this.spentPerHectar = this.spentMaterial.spent / this.workOrder.treated;
+        }
+        else {
+          console.log("ELSE")
+          this.spentPerHectar = this.spentMaterial.spent / this.treatedEntered;
+          console.log(this.spentPerHectar)
+        }
+        
       }
     }
   }
@@ -1203,30 +1226,34 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
+      console.log(this.withoutMachine)
       if (
-        wow.dayPeriod == -1 ||
+        (wow.dayPeriod == -1 ||
         wow.nightPeriod == -1 ||
         wow.initialState == -1 ||
         wow.finalState == -1 ||
-        wow.fuel == -1
+        wow.fuel == -1) &&
+        this.withoutMachine == false
       ) {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
-        wow.dayPeriod == null ||
+        (wow.dayPeriod == null ||
         wow.nightPeriod == null ||
         wow.initialState == null ||
         wow.finalState == null ||
-        wow.fuel == null
+        wow.fuel == null) && 
+        this.withoutMachine == false
       ) {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
-        wow.initialState == -1 ||
+        (wow.initialState == -1 ||
         wow.finalState == -1 ||
-        wow.sumState == -1
+        wow.sumState == -1) && 
+        this.withoutMachine == false
       ) {
         this.validWow = false;
         const element: HTMLElement = document.getElementById(wow.id);
@@ -1236,7 +1263,7 @@ export class CreateworkOrderComponent implements OnInit {
       ) {
         this.validWow = true;
       } else if (
-        wow.machine.Name === "BEZ MASINE"
+        wow.machine.Name === "BEZ MAŠINE"
       ) {
         this.validWow = true;
       } else {
@@ -1290,6 +1317,7 @@ export class CreateworkOrderComponent implements OnInit {
           }
         });
     }
+    this.closeButtonCloseWOModal.nativeElement.click();
   }
 
   /*metode za ponistavanje selectovanih radnika i operacija jer ukoliko se 
