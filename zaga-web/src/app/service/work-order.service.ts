@@ -52,4 +52,5 @@ export class WorkOrderService {
       environment.gatewayWorkOrderURL + "workOrder/getAllByStatus/" + status
     );
   }
+  
 }

@@ -84,7 +84,7 @@ public class SpentMaterialController {
 	
 	@GetMapping("getDataForReport")
 	public ResponseEntity<?> getDataForReport(){
-		List<List<MaterialReportHelperDTO>> data = spentMaterialService.getMaterialsForReport();
-		return new ResponseEntity<List<List<MaterialReportHelperDTO>>>(data, HttpStatus.OK);
+		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport();
+		return new ResponseEntity<List<MaterialReportDTO>>(data, HttpStatus.OK);
 	}
 }

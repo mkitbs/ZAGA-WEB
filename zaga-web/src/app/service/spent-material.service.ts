@@ -41,4 +41,11 @@ export class SpentMaterialService {
       material
     );
   }
+
+  getDataForReport(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/spentMaterial/getDataForReport"
+    )
+  }
 }

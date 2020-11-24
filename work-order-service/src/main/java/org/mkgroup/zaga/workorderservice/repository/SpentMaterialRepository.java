@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SpentMaterialRepository extends JpaRepository<SpentMaterial, UUID>{
 
-	
+	List<SpentMaterial> findAllByOrderByMaterialId();
 }
