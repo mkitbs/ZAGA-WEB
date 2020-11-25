@@ -61,6 +61,12 @@ import { SearchCulturesPipe } from './pipes/search-cultures.pipe';
 import { SearchPropulsionMachinesPipe } from './pipes/search-propulsion-machines.pipe';
 import { SearchCouplingMachinesPipe } from './pipes/search-coupling-machines.pipe';
 import { SearchMaterialsPipe } from './pipes/search-materials.pipe';
+import { ReportMaterialMaterialPipe } from './pipes/report-material-material.pipe';
+import { ReportMaterialSapIdPipe } from './pipes/report-material-sap-id.pipe';
+import { ReportMaterialDatePipe } from './pipes/report-material-date.pipe';
+import { ReportMaterialOperationPipe } from './pipes/report-material-operation.pipe';
+import { ReportMaterialCropPipe } from './pipes/report-material-crop.pipe';
+import { ReportMaterialFieldPipe } from './pipes/report-material-field.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -127,6 +133,12 @@ const routes: Routes = [
     SearchPropulsionMachinesPipe,
     SearchCouplingMachinesPipe,
     SearchMaterialsPipe,
+    ReportMaterialMaterialPipe,
+    ReportMaterialSapIdPipe,
+    ReportMaterialDatePipe,
+    ReportMaterialOperationPipe,
+    ReportMaterialCropPipe,
+    ReportMaterialFieldPipe,
   ],
   imports: [
     BrowserModule,

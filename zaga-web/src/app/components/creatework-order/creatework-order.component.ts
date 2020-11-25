@@ -1044,6 +1044,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.error = true;
         this.errors = err.error.errors;
       });
+      this.closeButtonMaterialModal.nativeElement.click();
     }
     
   }

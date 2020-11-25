@@ -1,7 +1,82 @@
-<div class="container d-none d-xl-block">
+<div class="container">
   <div style="padding-top: 10px"></div>
   <h3 class="mt-2 mb-2">Materijali</h3>
   <div style="padding-top: 10px"></div>
+  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+    Filteri
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+  </button>
+  <br />
+  <form action="" class="collapse mb-4" id="collapseExample">
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchWorkOrder
+            placeholder="Pretražite po broju naloga"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchMaterial
+            placeholder="Pretražite po materijalu"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchDate
+            placeholder="Pretražite po datumu"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchOperation
+            placeholder="Pretražite po operaciji"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchCrop
+            placeholder="Pretražite po usevu"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchTable
+            placeholder="Pretražite po parceli"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
   <div class="break-class pt-2 mb-4"></div>
   <table class="table table-hover tabela-nalozi">
     <thead>
@@ -21,7 +96,14 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let material of materials; let i = index" >
+      <ng-container *ngFor="let material of materials 
+          | ReportMaterialMaterial: searchMaterial.value 
+          | ReportMaterialField: searchTable.value
+          | ReportMaterialOperation: searchOperation.value
+          | ReportMaterialDate: searchDate.value
+          | ReportMaterialCrop: searchCrop.value
+          | ReportMaterialSapId: searchWorkOrder.value;
+          let i = index" >
         <tr>
           <td style="font-weight: bold;">{{ material.material.material.Name }}</td>
         <tr>
