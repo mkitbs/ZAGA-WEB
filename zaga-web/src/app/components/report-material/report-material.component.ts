@@ -22,6 +22,8 @@ export class ReportMaterialComponent implements OnInit {
   sumsQuantity: any[] = [];
   sumsSpent: any[] = [];
 
+  collapseBool = true;
+
   ngOnInit() {
     this.spentMaterialService.getDataForReport().subscribe(data => {
       this.materials = data;
@@ -52,6 +54,10 @@ export class ReportMaterialComponent implements OnInit {
 
   changeRoute(id) {
     this.router.navigateByUrl("/create/workOrder/" + id);
+  }
+
+  collapse() {
+    this.collapseBool = !this.collapseBool;
   }
 
 }
