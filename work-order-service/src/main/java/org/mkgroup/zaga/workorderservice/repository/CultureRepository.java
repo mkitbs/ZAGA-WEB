@@ -41,5 +41,11 @@ public interface CultureRepository  extends JpaRepository<Culture, UUID>{
 	
 	@Query(value = "SELECT * FROM culture c WHERE c.type=:type AND c.culture_group_id=:id", nativeQuery = true)
 	List<Culture> findAllByCultureTypeAndCultureGroup(@Param("type") String type, @Param("id") UUID id);
+	
+	@Query(value = "SELECT * FROM culture c GROUP BY c.type", nativeQuery = true)
+	List<Culture> findAllGroupByCultureType();
+	
+	@Query(value = "SELECT * FROM culture c GROUP BY c.org_con", nativeQuery = true)
+	List<Culture> findAllGroupByProductionType();
 }
 

@@ -46,6 +46,8 @@ public class MachineDTO {
 	
 	private UUID machineGroup;
 	
+	private String machineGroupName;
+	
 	public MachineDTO(Machine machine) {
 		dbid = machine.getId().toString();
 		name = machine.getName();
@@ -53,6 +55,12 @@ public class MachineDTO {
 		fuelType = machine.getFuelType().toString();
 		machineGroup = machine.getMachineGroupId().getId();
 		erpId = machine.getErpId();
+		machineGroupName = machine.getMachineGroupId().getName();
+		machineGroupId = machine.getMachineGroupId().getErpId();
+	}
+
+	public MachineDTO(String name) {
+		this.name = name;
 	}
 
 }

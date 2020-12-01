@@ -63,10 +63,32 @@ import { SearchCouplingMachinesPipe } from './pipes/search-coupling-machines.pip
 import { SearchMaterialsPipe } from './pipes/search-materials.pipe';
 import { ReportMaterialMaterialPipe } from './pipes/report-material-material.pipe';
 import { ReportMaterialSapIdPipe } from './pipes/report-material-sap-id.pipe';
-import { ReportMaterialDatePipe } from './pipes/report-material-date.pipe';
-import { ReportMaterialOperationPipe } from './pipes/report-material-operation.pipe';
-import { ReportMaterialCropPipe } from './pipes/report-material-crop.pipe';
-import { ReportMaterialFieldPipe } from './pipes/report-material-field.pipe';
+import { ReportEmployeeWorkerPipe } from './pipes/report-employee-worker.pipe';
+import { ReportMachineMachinePipe } from './pipes/report-machine-machine.pipe';
+import { SearchWoBetweenDatesPipe } from './pipes/search-wo-between-dates.pipe';
+import { SearchMaterialUnitPipe } from './pipes/search-material-unit.pipe';
+import { SearchMachineCouplingPipe } from './pipes/search-machine-coupling.pipe';
+import { SearchEmployeePositionPipe } from './pipes/search-employee-position.pipe';
+import { SearchCropFieldPipe } from './pipes/search-crop-field.pipe';
+import { SearchCropCulturePipe } from './pipes/search-crop-culture.pipe';
+import { SearchCulturePipe } from './pipes/search-culture.pipe';
+import { SearchCropPipe } from './pipes/search-crop.pipe';
+import { SerachMachineTypePipe } from './pipes/serach-machine-type.pipe';
+import { SerachMachineGroupPipe } from './pipes/serach-machine-group.pipe';
+import { SearchMachineMachineGroupPipe } from './pipes/search-machine-machine-group.pipe';
+import { SearchMachinePipe } from './pipes/search-machine.pipe';
+import { SearchFieldGroupPipe } from './pipes/search-field-group.pipe';
+import { SearchOperationGroupPipe } from './pipes/search-operation-group.pipe';
+import { SearchOperationTypePipe } from './pipes/search-operation-type.pipe';
+import { SearchOperationOperationGroupPipe } from './pipes/search-operation-operation-group.pipe';
+import { SearchCultureGroupPipe } from './pipes/search-culture-group.pipe';
+import { SearchCultureCultureTypePipe } from './pipes/search-culture-culture-type.pipe';
+import { SearchCultureProductionTypePipe } from './pipes/search-culture-production-type.pipe';
+import { SearchCultureOrgConPipe } from './pipes/search-culture-org-con.pipe';
+import { SearchCultureTypePipe } from './pipes/search-culture-type.pipe';
+import { SearchCultureCultureGroupPipe } from './pipes/search-culture-culture-group.pipe';
+import { SearchVarietyPipe } from './pipes/search-variety.pipe';
+import { SearchVarietyCultureGroupPipe } from './pipes/search-variety-culture-group.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -135,10 +157,32 @@ const routes: Routes = [
     SearchMaterialsPipe,
     ReportMaterialMaterialPipe,
     ReportMaterialSapIdPipe,
-    ReportMaterialDatePipe,
-    ReportMaterialOperationPipe,
-    ReportMaterialCropPipe,
-    ReportMaterialFieldPipe,
+    ReportEmployeeWorkerPipe,
+    ReportMachineMachinePipe,
+    SearchWoBetweenDatesPipe,
+    SearchMaterialUnitPipe,
+    SearchMachineCouplingPipe,
+    SearchEmployeePositionPipe,
+    SearchCropFieldPipe,
+    SearchCropCulturePipe,
+    SearchCulturePipe,
+    SearchCropPipe,
+    SerachMachineTypePipe,
+    SerachMachineGroupPipe,
+    SearchMachineMachineGroupPipe,
+    SearchMachinePipe,
+    SearchFieldGroupPipe,
+    SearchOperationGroupPipe,
+    SearchOperationTypePipe,
+    SearchOperationOperationGroupPipe,
+    SearchCultureGroupPipe,
+    SearchCultureCultureTypePipe,
+    SearchCultureProductionTypePipe,
+    SearchCultureOrgConPipe,
+    SearchCultureTypePipe,
+    SearchCultureCultureGroupPipe,
+    SearchVarietyPipe,
+    SearchVarietyCultureGroupPipe,
   ],
   imports: [
     BrowserModule,

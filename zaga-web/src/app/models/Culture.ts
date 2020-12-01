@@ -1,5 +1,5 @@
 export class Culture {
-  id;
+  Id;
   Name;
   OrgKon;
   Type;
@@ -9,4 +9,5 @@ export class Culture {
   culturegroup;
   cultureGroupName;
   cultureGroup;
+  cultureGroupId;
 }

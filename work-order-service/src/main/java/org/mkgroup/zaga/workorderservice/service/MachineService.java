@@ -7,16 +7,23 @@ import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
+import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
 import org.mkgroup.zaga.workorderservice.model.FuelType;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.MachineGroup;
 import org.mkgroup.zaga.workorderservice.model.MachineType;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.odata.ODataToDTOConvertor;
 import org.mkgroup.zaga.workorderservice.repository.MachineGroupRepository;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
+import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,6 +51,9 @@ public class MachineService {
 	
 	@Autowired
 	MachineGroupRepository machineGroupRepo;
+	
+	@Autowired
+	WorkOrderWorkerRepository wowRepo;
 	
 	public List<MachineDTO> getMachinesFromSAP() throws JSONException {
 		//Authorization String to Encode
@@ -177,5 +187,66 @@ public class MachineService {
 			retVals.add(retVal);
 		}
 		return retVals;
+	}
+	
+	public List<MachineReportDTO> getMachinesForReport(){
+		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByMachineId();
+		MachineReportDTO report = new MachineReportDTO();
+		List<MachineReportDTO> retValues = new ArrayList<MachineReportDTO>();
+		if(wows.size() > 0) {
+			report.setMachine(new MachineDTO(wows.get(0).getMachine()));
+			report.getWorkOrders().add(new WorkOrderDTO(wows.get(0).getWorkOrder(), wows.get(0).getMachine().getName()));
+			if(wows.size() == 1) {
+				retValues.add(report);
+			}
+		}
+		for(int i = 0; i<wows.size()-1; i++) {
+			if(wows.get(i).getMachine().getId().equals(wows.get(i+1).getMachine().getId())) {
+				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getMachine().getName()));
+				if(i+1 == wows.size()-1) {
+					retValues.add(report);
+				}
+			} else {
+				retValues.add(report);
+				report = new MachineReportDTO();
+				report.setMachine(new MachineDTO(wows.get(i+1).getMachine()));
+				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getMachine().getName()));
+				if(i+1 == wows.size()) {
+					retValues.add(report);
+				}
+			}
+			
+		}
+		
+		for(MachineReportDTO r : retValues) {
+			double finalStateSum = 0.0;
+			double fuelSum = 0.0;
+			for(WorkOrderDTO wo : r.getWorkOrders()) {
+				for(WorkOrderWorkerDTO wow : wo.getWorkers()) {
+					if(wow.getSumState() == -1) {
+						wow.setSumState(0.0);
+					}
+					finalStateSum += wow.getSumState();
+					if(wow.getFuel() == -1) {
+						wow.setFuel(0.0);
+					}
+					fuelSum += wow.getFuel();
+				}
+			}
+			r.setFinalStateSum(finalStateSum);
+			r.setFuelSum(fuelSum);
+		}
+		
+		return retValues;
+	}
+	
+	public List<MachineDTO> getAllGrouByMachineType(){
+		List<Machine> machines = machineRepository.findAllByGroupByType();
+		List<MachineDTO> retValues = new ArrayList<MachineDTO>();
+		for(Machine machine : machines) {
+			MachineDTO machineDTO = new MachineDTO(machine);
+			retValues.add(machineDTO);
+		}
+		return retValues;
 	}
 }

@@ -77,5 +77,11 @@ public class OperationController {
 		List<OperationDTO> operations = operationService.getAllByGroup(groupId);
 		return new ResponseEntity<List<OperationDTO>>(operations, HttpStatus.OK);
 	}
+	
+	@GetMapping("getAllGroupByType")
+	public ResponseEntity<?> getAllGroupByType(){
+		List<OperationDTO> operations = operationService.getAllGroupByType();
+		return new ResponseEntity<List<OperationDTO>>(operations, HttpStatus.OK);
+	}
 
 }

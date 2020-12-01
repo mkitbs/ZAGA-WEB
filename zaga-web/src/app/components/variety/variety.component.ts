@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Culture } from 'src/app/models/Culture';
 import { Variety } from 'src/app/models/Variety';
 import { CultureService } from 'src/app/service/culture.service';
@@ -20,6 +21,9 @@ export class VarietyComponent implements OnInit {
   cultures: Culture[] = [];
   variety: Variety = new Variety();
 
+  varietyFC: FormControl = new FormControl("");
+  cultureFC: FormControl = new FormControl("");
+
   ngOnInit() {
     this.cultureService.getAll().subscribe(data => {
       this.cultures = data;
@@ -35,6 +39,14 @@ export class VarietyComponent implements OnInit {
   getVariety(id){
     this.variety = this.varieties.find(variety => variety.dbId == id);
     console.log(this.variety)
+  }
+
+  displayFnVariety(variety: Variety): string {
+    return variety && variety.Id + " - " + variety.Name;
+  }
+
+  displayFnCulture(culture: Culture): string {
+    return culture && culture.Id + " - " + culture.Name;
   }
 
 }

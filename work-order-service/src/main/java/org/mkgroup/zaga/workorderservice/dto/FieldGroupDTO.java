@@ -39,5 +39,6 @@ public class FieldGroupDTO implements Serializable{
 		name = field.getName();
 		companyCode = field.getCompanyCode();
 		orgUnit = field.getOrgUnit();
+		id = field.getErpId();
 	}
 }

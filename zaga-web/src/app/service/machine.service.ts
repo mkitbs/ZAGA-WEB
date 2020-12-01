@@ -44,4 +44,16 @@ export class MachineService {
       environment.gatewayWorkOrderURL + "api/machine/getMachinesByMachineGroup/" + id
     );
   }
+
+  getDataForReport(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/getDataForReport"
+    )
+  }
+
+  getAllGroupByType(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/getAllGroupByType"
+    )
+  }
 }

@@ -5,8 +5,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldGroupFC" [matAutocomplete]="autoFieldGroup" #searchFieldGroup
+             placeholder="Pretražite po nazivu ili šifri poteza"/>
+            <mat-autocomplete #autoFieldGroup="matAutocomplete" [displayWith]="displayFnFieldGroup" place>
+              <mat-option *ngFor="
+                let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroup.value
+                " [value]="fieldGroup" >
+                {{fieldGroup.Id}} - {{ fieldGroup.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let fieldGroup of fieldGroups; let j = index">
+        <div class="col-4" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroup.value; let j = index">
           <div class="card mb-4" style="width: 30rem;">
             <div class="card-body">
               <div class="row">
@@ -27,6 +44,10 @@
                       {{ fieldGroup.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ fieldGroup.Id }}</td>
+                      </tr>
                       <tr title="Kod kompanije" style="cursor: help">
                         <th><i class="fa fa-building-o"></i></th>
                         <td>{{ fieldGroup.CompanyCode }}</td>
@@ -62,8 +83,25 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldGroupFC" [matAutocomplete]="autoFieldGroupLaptop" #searchFieldGroupLaptop
+             placeholder="Pretražite po nazivu ili šifri poteza"/>
+            <mat-autocomplete #autoFieldGroupLaptop="matAutocomplete" [displayWith]="displayFnFieldGroup" place>
+              <mat-option *ngFor="
+                let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupLaptop.value
+                " [value]="fieldGroup" >
+                {{fieldGroup.Id}} - {{ fieldGroup.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-5" *ngFor="let fieldGroup of fieldGroups; let j = index">
+      <div class="col-5" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupLaptop.value; let j = index">
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
@@ -84,6 +122,10 @@
                     {{ fieldGroup.Name }}
                   </h5>
                   <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ fieldGroup.Id }}</td>
+                    </tr>
                     <tr title="Kod kompanije" style="cursor: help">
                       <th><i class="fa fa-building-o"></i></th>
                       <td>{{ fieldGroup.CompanyCode }}</td>
@@ -119,8 +161,25 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-4">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldGroupFC" [matAutocomplete]="autoFieldGroupTablet" #searchFieldGroupTablet
+             placeholder="Pretražite po nazivu ili šifri poteza"/>
+            <mat-autocomplete #autoFieldGroupTablet="matAutocomplete" [displayWith]="displayFnFieldGroup" place>
+              <mat-option *ngFor="
+                let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value
+                " [value]="fieldGroup" >
+                {{fieldGroup.Id}} - {{ fieldGroup.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-7" *ngFor="let fieldGroup of fieldGroups; let j = index">
+      <div class="col-7" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value; let j = index">
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
@@ -141,6 +200,10 @@
                     {{ fieldGroup.Name }}
                   </h5>
                   <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ fieldGroup.Id }}</td>
+                    </tr>
                     <tr title="Kod kompanije" style="cursor: help">
                       <th><i class="fa fa-building-o"></i></th>
                       <td>{{ fieldGroup.CompanyCode }}</td>

@@ -22,4 +22,7 @@ public interface OperationRepository extends JpaRepository<Operation, UUID>{
 	
 	@Query(value = "SELECT * FROM operation o WHERE o.operation_group_id=:groupId", nativeQuery = true)
 	List<Operation> findAllByGroup(@Param("groupId") UUID groupId);
+	
+	@Query(value = "SELECT * FROM operation o GROUP BY o.type", nativeQuery = true)
+	List<Operation> findAllByGroupByType();
 }

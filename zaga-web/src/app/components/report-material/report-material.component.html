@@ -34,12 +34,55 @@
     </div>
     <div class="form-row">
       <div class="col">
+        <mat-form-field class="inputAuto customMatInput">
+          <input 
+            ngbDatepicker 
+            #od="ngbDatepicker" 
+            (click)="od.toggle()"
+            matInput 
+            #searchDateFrom
+            [(ngModel)]="dates.dateFrom"
+            placeholder="Pretražite po datumu od"
+            (ngModelChange)="updateFilters()"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </mat-form-field>
+        -
+        <mat-form-field class="inputAuto customMatInput">
+          <input 
+            ngbDatepicker 
+            #do="ngbDatepicker" 
+            (click)="do.toggle()"
+            matInput 
+            #searchDateTo
+            placeholder="Pretražite po datumu do"
+            [(ngModel)]="dates.dateTo"
+            (ngModelChange)="updateFilters()"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </mat-form-field>
+      </div>
+     <div class="col">
+      <mat-form-field class="inputAuto">
+        <input 
+          ngbDatepicker 
+          #day="ngbDatepicker" 
+          (click)="day.toggle()"
+          matInput 
+          #searchDate
+          placeholder="Pretražite po danu"
+        />
+      </mat-form-field>
+     </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
         <mat-form-field class="inputAuto">
           <input 
             type="text" 
             matInput 
-            #searchDate
-            placeholder="Pretražite po datumu"
+            #searchOperation
+            placeholder="Pretražite po agrotehničkoj meri"
           />
         </mat-form-field>
       </div>
@@ -48,8 +91,8 @@
           <input 
             type="text" 
             matInput 
-            #searchOperation
-            placeholder="Pretražite po operaciji"
+            #searchUnit
+            placeholder="Pretražite po jedinici mere"
           />
         </mat-form-field>
       </div>
@@ -83,7 +126,7 @@
       <tr>
         <th scope="col">Materijal</th>
         <th scope="col">SAP ID</th>
-        <th scope="col">Operacija</th>
+        <th scope="col">ATM</th>
         <th scope="col">Datum</th>
         <th scope="col">Parcela</th>
         <th scope="col">Usev</th>
@@ -97,19 +140,20 @@
     </thead>
     <tbody>
       <ng-container *ngFor="let material of materials 
-          | ReportMaterialMaterial: searchMaterial.value 
-          | ReportMaterialField: searchTable.value
-          | ReportMaterialOperation: searchOperation.value
-          | ReportMaterialDate: searchDate.value
-          | ReportMaterialCrop: searchCrop.value
-          | ReportMaterialSapId: searchWorkOrder.value;
+        | ReportMaterialMaterial: searchMaterial.value
+        | SearchMaterialUnit: searchUnit.value;
           let i = index" >
-        <tr>
-          <td style="font-weight: bold;">{{ material.material.material.Name }}</td>
-        <tr>
-        <tr *ngFor="let workOrder of material.workOrders; let j = index">
+        <tr *ngFor="let workOrder of material.workOrders
+          | SearchWorkOrdersTable: searchTable.value
+          | SearchWorkOrdersOperation: searchOperation.value
+          | SearchWorkOrdersDate: searchDate.value
+          | SearchWorkOrdersCrop: searchCrop.value
+          | ReportMaterialSapId: searchWorkOrder.value
+          | SearchWoBetweenDates: filters; 
+          let j = index">
           <ng-container *ngFor="let mat of workOrder.materials">
-          <td></td>
+          <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
+          <ng-template #elseBlockName><td></td></ng-template>
           <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
           <td>{{ workOrder.operationName }}</td>
           <td>{{ workOrder.date }}</td>
@@ -135,17 +179,46 @@
         </ng-container>
         </tr>
         <tr>
-          <td>Σ {{ material.material.material.Name }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td style="font-weight: bold;">{{material.sumQuantity.sum}}</td>
-          <td style="font-weight: bold;">{{material.sumSpent.sum}}</td>
-          <td style="font-weight: bold;">{{ material.material.material.Unit }}</td>
-          <td></td>
-          <td></td>
+          <ng-container *ngFor="let workOrder of material.workOrders 
+            | SearchWorkOrdersCrop: searchCrop.value
+            | SearchWorkOrdersTable: searchTable.value
+            | SearchWorkOrdersOperation: searchOperation.value
+            | SearchWoBetweenDates: filters
+            | SearchWorkOrdersDate: searchDate.value
+            | ReportMaterialSapId: searchWorkOrder.value; 
+            let i = index ">
+            <td *ngIf="i==0">Σ {{ material.material.material.Name }}</td>
+            <td *ngIf="i==0"></td>
+            <td *ngIf="i==0"></td>
+            <td *ngIf="i==0"></td>
+            <td *ngIf="i==0"></td>
+            <td *ngIf="i==0"></td>
+            <td style="font-weight: bold;" *ngIf="i==0">
+              {{
+                getQuantitySum(material.workOrders 
+                | SearchWorkOrdersCrop: searchCrop.value
+                | SearchWorkOrdersTable: searchTable.value
+                | SearchWorkOrdersOperation: searchOperation.value
+                | SearchWoBetweenDates: filters
+                | SearchWorkOrdersDate: searchDate.value
+                | ReportMaterialSapId: searchWorkOrder.value)
+              }}
+            </td>
+            <td style="font-weight: bold;" *ngIf="i==0">
+              {{
+                getSpentSum(material.workOrders 
+                | SearchWorkOrdersCrop: searchCrop.value
+                | SearchWorkOrdersTable: searchTable.value
+                | SearchWorkOrdersOperation: searchOperation.value
+                | SearchWoBetweenDates: filters
+                | SearchWorkOrdersDate: searchDate.value
+                | ReportMaterialSapId: searchWorkOrder.value)
+              }}
+            </td>
+            <td style="font-weight: bold;" *ngIf="i==0">{{ material.material.material.Unit }}</td>
+            <td *ngIf="i==0"></td>
+            <td *ngIf="i==0"></td>
+          </ng-container>
         </tr>
       </ng-container>
     </tbody>

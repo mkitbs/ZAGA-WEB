@@ -335,13 +335,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getOperation(op) {
-    console.log(op.dbid)
-    this.workerOperationFC.value.dbid = op.dbid;
-    this.workerOperationFC.value.id = op.id;
-    this.workerOperationFC.value.name = op.name;
-    this.workerOperationFC.value.operationgroupid = op.operationgroupid;
-    this.workerOperationFC.value.type = op.type;
-    console.log(this.workerOperationFC)
+    this.workerOperationFC.setValue(op);
   }
 
   getUnitOfMaterial(id) {
@@ -502,7 +496,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.wows)
         console.log("===============")
         this.workerFC = new FormControl("");
-        this.workerOperationFC = new FormControl("");
+        this.workerOperationFC.setValue(this.operationFC.value);
         this.workerMachineFC = new FormControl("");
         this.workerCoMachineFC = new FormControl("");
         console.log(this.wows)

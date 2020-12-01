@@ -26,5 +26,6 @@ public class OperationGroupDTO {
 	public OperationGroupDTO(OperationGroup operationGroup) {
 		dbId = operationGroup.getId();
 		name = operationGroup.getName();
+		id = operationGroup.getErpId();
 	}
 }

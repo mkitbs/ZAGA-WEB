@@ -40,13 +40,13 @@
       <table class="table header-table">
         <tr>
           <td class="left-col-header">
-            <i class="fa fa-file mr-2"></i>Operacija:
+            <i class="fa fa-file mr-2"></i>ATM:
           </td>
           <td class="right-col-header">
             <form>
               <mat-form-field class="inputAuto">
                 <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp
-                  required placeholder="Izaberite operaciju"/>
+                  required placeholder="Izaberite agrotehničku meru"/>
 
                 <mat-autocomplete #autoOp="matAutocomplete" [displayWith]="displayFnOperation" place>
                   <mat-option *ngFor="
@@ -57,7 +57,7 @@
                 </mat-autocomplete>
               </mat-form-field>
               <div *ngIf="operationFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite operaciju.
+                Izaberite agrotehničku meru.
               </div>
             </form>
           </td>
@@ -266,7 +266,7 @@
           <table class="table table-input">
             <thead>
               <th>Radnik*</th>
-              <th>Operacija*</th>
+              <th>ATM*</th>
               <th>Mašina</th>
               <th>Priključna mašina</th>
               <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
@@ -314,7 +314,7 @@
                     <form>
                       <mat-form-field class="inputAuto">
                         <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp" #searchWorkerOp
-                          required placeholder="Izaberite operaciju"/>
+                          required placeholder="Izaberite agrotehničku meru"/>
         
                         <mat-autocomplete #autoWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
                           <mat-option *ngFor="
@@ -325,7 +325,7 @@
                         </mat-autocomplete>
                       </mat-form-field>
                       <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
-                        Izaberite operaciju.
+                        Izaberite agrotehničku meru.
                       </div>
                     </form>
                     <!--

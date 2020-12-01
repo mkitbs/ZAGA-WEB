@@ -111,4 +111,17 @@ public class CultureController {
 		List<CultureDTO> cultures = cultureService.getAllByCultureTypeAndCultureGroup(type, id);
 		return new ResponseEntity<List<CultureDTO>>(cultures, HttpStatus.OK);
 	}
+	
+	@GetMapping("getAllGroupByCultureType")
+	public ResponseEntity<?> getAllGroupByCultureType(){
+		List<CultureDTO> cultures = cultureService.getAllGroupByCultureType();
+		return new ResponseEntity<List<CultureDTO>>(cultures, HttpStatus.OK);
+	}
+	
+	@GetMapping("getAllGroupByProductionType")
+	public ResponseEntity<?> getAllGroupByProductionType(){
+		List<CultureDTO> cultures = cultureService.getAllGroupByProductionType();
+		return new ResponseEntity<List<CultureDTO>>(cultures, HttpStatus.OK);
+	}
+	
 }

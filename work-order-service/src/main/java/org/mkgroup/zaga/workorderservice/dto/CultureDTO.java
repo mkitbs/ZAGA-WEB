@@ -34,6 +34,8 @@ public class CultureDTO {
 	
 	private UUID cultureGroup;
 	
+	private String cultureGroupName;
+	
 	public CultureDTO(Culture culture) {
 		dbId = culture.getId();
 		name = culture.getName();
@@ -41,6 +43,8 @@ public class CultureDTO {
 		orgCon = culture.getOrgCon().toString();
 		type = culture.getType().toString();
 		erpId = culture.getErpId();
+		cultureGroupName = culture.getCultureGroup().getName();
+		cultureGroupId = culture.getCultureGroup().getErpId();
 	}
 
 }

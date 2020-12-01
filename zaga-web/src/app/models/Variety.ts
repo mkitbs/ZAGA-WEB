@@ -3,4 +3,5 @@ export class Variety{
     Name;
     culture;
     cultureName;
+    Id;
 }

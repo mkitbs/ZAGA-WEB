@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { FormControl } from '@angular/forms';
 import { Field } from "src/app/models/Field";
 import { FieldGroup } from "src/app/models/FieldGroup";
 import { FieldGroupService } from "src/app/service/field-group.service";
@@ -19,6 +20,7 @@ export class FieldComponent implements OnInit {
   fieldGroups: FieldGroup[] = [];
 
   field: Field = new Field();
+  fieldFC: FormControl = new FormControl("")
 
   ngOnInit() {
     this.fieldGroupService.getAll().subscribe((data) => {
@@ -52,19 +54,7 @@ export class FieldComponent implements OnInit {
     });
   }
 
-  //method for convert json property names to lower case
-  convertKeysToLowerCase(obj) {
-    var output = [];
-    for (let i in obj) {
-      if (Object.prototype.toString.apply(obj[i]) === "[object Object]") {
-        output[i.toLowerCase()] = this.convertKeysToLowerCase(obj[i]);
-      } else if (Object.prototype.toString.apply(obj[i]) === "[object Array]") {
-        output[i.toLowerCase()] = [];
-        output[i.toLowerCase()].push(this.convertKeysToLowerCase(obj[i][0]));
-      } else {
-        output[i.toLowerCase()] = obj[i];
-      }
-    }
-    return output;
+  displayFnField(field : Field): string {
+    return field && field.Id + " - " + field.Name;
   }
 }

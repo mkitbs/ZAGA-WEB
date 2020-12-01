@@ -11,7 +11,7 @@
                 type="text"
                 matInput
                 #search
-                placeholder="Pretražite zaposlenog"
+                placeholder="Pretražite po imenu ili šifri radnika"
               />
             </mat-form-field>
           </form>
@@ -23,7 +23,7 @@
                 type="text"
                 matInput
                 #searchP
-                placeholder="Pretražite poziciju zaposlenog"
+                placeholder="Pretražite po poziciji radnika"
               />
             </mat-form-field>
           </form>
@@ -63,6 +63,10 @@
                       {{ employee.name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ employee.perNumber }}</td>
+                      </tr>
                       <tr title="Pozicija" style="cursor: help">
                         <th><i class="fa fa-briefcase"></i></th>
                         <td>{{ employee.position }}</td>
@@ -104,7 +108,7 @@
                 type="text"
                 matInput
                 #searchLaptop
-                placeholder="Pretražite zaposlenog"
+                placeholder="Pretražite po imenu ili šifri radnika"
               />
             </mat-form-field>
           </form>
@@ -116,7 +120,7 @@
                 type="text"
                 matInput
                 #searchPLaptop
-                placeholder="Pretražite poziciju zaposlenog"
+                placeholder="Pretražite po poziciji radnika"
               />
             </mat-form-field>
           </form>
@@ -156,6 +160,10 @@
                       {{ employee.name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ employee.perNumber }}</td>
+                      </tr>
                       <tr title="Pozicija" style="cursor: help">
                         <th><i class="fa fa-briefcase"></i></th>
                         <td>{{ employee.position }}</td>
@@ -197,7 +205,7 @@
                 type="text"
                 matInput
                 #searchTablet
-                placeholder="Pretražite zaposlenog"
+                placeholder="Pretražite po imenu ili šifri radnika"
               />
             </mat-form-field>
           </form>
@@ -209,7 +217,7 @@
                 type="text"
                 matInput
                 #searchPTablet
-                placeholder="Pretražite poziciju zaposlenog"
+                placeholder="Pretražite po poziciji radnika"
               />
             </mat-form-field>
           </form>
@@ -249,6 +257,10 @@
                       {{ employee.name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ employee.perNumber }}</td>
+                      </tr>
                       <tr title="Pozicija" style="cursor: help">
                         <th><i class="fa fa-briefcase"></i></th>
                         <td>{{ employee.position }}</td>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Operation } from 'src/app/models/Operation';
 import { OperationGroup } from 'src/app/models/OperationGroup';
 import { OperationGroupService } from 'src/app/service/operation-group.service';
@@ -19,12 +20,15 @@ export class OperationComponent implements OnInit {
   operations: Operation[] = [];
   operationGroups: OperationGroup[] = [];
   operation: Operation = new Operation();
-
-  selectedType;
-  selectedGroup;
+  operationTypes: Operation[] = [];
+  
+  operationFC: FormControl = new FormControl("");
+  operationTypeFC: FormControl = new FormControl("");
+  operationGroupFC: FormControl = new FormControl("");
 
   ngOnInit() {
     this.getAll();
+    this.getAllGroupByType();
   }
 
   getAll(){
@@ -61,101 +65,34 @@ export class OperationComponent implements OnInit {
     })
   }
 
-  getOperations(){
-    if (
-      //izabrani su i tip i grupa
-      this.selectedType != undefined &&
-      this.selectedGroup != undefined &&
-      this.selectedType != -1 &&
-      this.selectedGroup != -1
-    ) {
-      this.operationGroupService.getAll().subscribe(data => {
-        this.operationGroups = data;
-        this.operationService.getAllByTypeAndGroup(this.selectedType, this.selectedGroup).subscribe(data => {
-          this.operations = data;
-          this.operations.forEach(operation => {
-            if(operation.Type == "CROP_FARMING"){
-              operation.Type = "RATARSTVO";
-            } else if(operation.Type == "VITICULTURE"){
-              operation.Type = "VINOGRADARSTVO";
-            } else if(operation.Type == "FRUIT_GROWING"){
-              operation.Type = "VOĆARSTVO";
-            } else if(operation.Type == "VEGETABLE"){
-              operation.Type = "POVRTARSTVO";
-            } else if(operation.Type == "ANIMAL_HUSBANDRY"){
-              operation.Type = "STOČARSTVO";
-            }
-            operation.operationGroup = this.operationGroups.find(operationGroup => operationGroup.dbId == operation.operationGroupId).Name
-          });
-        });
-      });
-    } else if (
-      //nije izabrano nista, odnosono ponisteni su prethodni izbori
-      (this.selectedType == -1 || this.selectedType == undefined) &&
-      (this.selectedGroup == -1 || this.selectedGroup == undefined)
-    ) {
-      this.getAll();
-    } else if (
-      //izabran je samo tip
-      (this.selectedGroup == undefined || this.selectedGroup == -1) &&
-      (this.selectedType != undefined || this.selectedType != -1)
-    ) {
-      this.operationGroupService.getAll().subscribe(data => {
-        this.operationGroups = data;
-        this.operationService.getAllByType(this.selectedType).subscribe(data => {
-          this.operations = data;
-          this.operations.forEach(operation => {
-            if(operation.Type == "CROP_FARMING"){
-              operation.Type = "RATARSTVO";
-            } else if(operation.Type == "VITICULTURE"){
-              operation.Type = "VINOGRADARSTVO";
-            } else if(operation.Type == "FRUIT_GROWING"){
-              operation.Type = "VOĆARSTVO";
-            } else if(operation.Type == "VEGETABLE"){
-              operation.Type = "POVRTARSTVO";
-            } else if(operation.Type == "ANIMAL_HUSBANDRY"){
-              operation.Type = "STOČARSTVO";
-            }
-            operation.operationGroup = this.operationGroups.find(operationGroup => operationGroup.dbId == operation.operationGroupId).Name
-          });
-        });
-      });
-    } else if (
-      //izabrana je samo grupa
-      (this.selectedType == undefined || this.selectedType == -1) &&
-      (this.selectedGroup != undefined || this.selectedGroup != -1)
-    ) {
-      this.operationGroupService.getAll().subscribe(data => {
-        this.operationGroups = data;
-        this.operationService.getAllByGroup(this.selectedGroup).subscribe(data => {
-          this.operations = data;
-          this.operations.forEach(operation => {
-            if(operation.Type == "CROP_FARMING"){
-              operation.Type = "RATARSTVO";
-            } else if(operation.Type == "VITICULTURE"){
-              operation.Type = "VINOGRADARSTVO";
-            } else if(operation.Type == "FRUIT_GROWING"){
-              operation.Type = "VOĆARSTVO";
-            } else if(operation.Type == "VEGETABLE"){
-              operation.Type = "POVRTARSTVO";
-            } else if(operation.Type == "ANIMAL_HUSBANDRY"){
-              operation.Type = "STOČARSTVO";
-            }
-            operation.operationGroup = this.operationGroups.find(operationGroup => operationGroup.dbId == operation.operationGroupId).Name
-          });
-        });
-      });
-    }
-  }
-
-  setValueForSelectedType(){
-    this.selectedType = -1;
-    this.getOperations();
-  }
-
-  setValueForSelectedGroup(){
-    this.selectedGroup = -1;
-    this.getOperations();
+  getAllGroupByType(){
+    this.operationService.getAllGroupByType().subscribe(data => {
+      this.operationTypes = data;
+      this.operationTypes.forEach(operation => {
+        if(operation.Type == "CROP_FARMING"){
+          operation.Type = "RATARSTVO";
+        } else if(operation.Type == "VITICULTURE"){
+          operation.Type = "VINOGRADARSTVO";
+        } else if(operation.Type == "FRUIT_GROWING"){
+          operation.Type = "VOĆARSTVO";
+        } else if(operation.Type == "VEGETABLE"){
+          operation.Type = "POVRTARSTVO";
+        } else if(operation.Type == "ANIMAL_HUSBANDRY"){
+          operation.Type = "STOČARSTVO";
+        }
+      })
+    })
   }
   
+  displayFnOperation(operation: Operation): string {
+    return operation && operation.Id + " - " + operation.Name;
+  }
+
+  displayFnOperationType(operation: Operation): string {
+    return operation && operation.Type;
+  }
+
+  displayFnOperationGroup(operationGroup: OperationGroup): string {
+    return operationGroup && operationGroup.Id + " - " + operationGroup.Name;
+  }
 }

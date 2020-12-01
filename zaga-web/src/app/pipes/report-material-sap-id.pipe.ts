@@ -6,10 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ReportMaterialSapIdPipe implements PipeTransform {
 
-  transform(materials: any[], query): any {
-    return materials.filter((mat =>
-      mat.workOrders.find((wo => 
-        wo.sapId.toString().toLowerCase().includes(query.toLowerCase())))
-      ))
+  transform(workOrders: any[], query): any {
+    return workOrders.filter((wo => 
+      wo.sapId.toString().toLowerCase().includes(query.toLowerCase())
+    ))
   }
 }

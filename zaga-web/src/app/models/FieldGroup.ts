@@ -3,4 +3,5 @@ export class FieldGroup {
   Name;
   CompanyCode;
   OrganisationUnit;
+  Id;
 }

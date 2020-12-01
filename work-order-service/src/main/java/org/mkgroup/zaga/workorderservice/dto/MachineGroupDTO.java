@@ -26,6 +26,7 @@ public class MachineGroupDTO {
 	public MachineGroupDTO(MachineGroup machineGroup) {
 		dbId = machineGroup.getId();
 		name = machineGroup.getName();
+		erpId = machineGroup.getErpId();
 	}
 
 }

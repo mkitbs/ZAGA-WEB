@@ -236,4 +236,24 @@ public class CultureService {
 		return retValues;
 	}
 	
+	public List<CultureDTO> getAllGroupByCultureType(){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllGroupByCultureType();
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
+	public List<CultureDTO> getAllGroupByProductionType(){
+		List<CultureDTO> retValues = new ArrayList<CultureDTO>();
+		List<Culture> cultures = cultureRepo.findAllGroupByProductionType();
+		for(Culture culture : cultures) {
+			CultureDTO retValue = new CultureDTO(culture);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
 }

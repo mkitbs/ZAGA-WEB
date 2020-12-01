@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { OperationGroup } from 'src/app/models/OperationGroup';
 import { OperationGroupService } from 'src/app/service/operation-group.service';
 
@@ -13,10 +14,16 @@ export class OperationGroupComponent implements OnInit {
 
   operationGroups: OperationGroup[] = [];
 
+  operationGroupFC: FormControl = new FormControl("");
+
   ngOnInit() {
     this.operationGroupService.getAll().subscribe(data => {
       this.operationGroups = data;
     });
+  }
+
+  displayFnOperationGroup(operation: OperationGroup): string {
+    return operation && operation.Id + " - " + operation.Name;
   }
 
 }

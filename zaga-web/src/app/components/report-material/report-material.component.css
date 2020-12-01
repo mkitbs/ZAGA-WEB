@@ -52,6 +52,13 @@ th {
   color: black !important;
 }
 
+.customMatInput {
+  font-size: 12px !important;
+  font-family: "Montserrat" !important;
+  width: 48% !important;
+  color: black !important;
+}
+
 .mat-input-element {
   caret-color: #5c7495 !important;
   /* cursor color on autocomplete input */

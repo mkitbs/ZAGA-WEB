@@ -5,8 +5,25 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoField" #searchField
+             placeholder="Pretražite po nazivu ili šifri parcele"/>
+            <mat-autocomplete #autoField="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                let field of fields | SearchFields: searchField.value
+                " [value]="field" >
+                {{field.Id}} - {{ field.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-4" *ngFor="let field of fields; let j = index">
+      <div class="col-4" *ngFor="let field of fields | SearchFields: searchField.value; let j = index">
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
@@ -27,6 +44,10 @@
                     {{ field.Name }}
                   </h5>
                   <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ field.Id }}</td>
+                    </tr>
                     <tr title="Površina" style="cursor: help">
                       <th><i class="fa fa-clone"></i></th>
                       <td title="Površina">{{ field.Area }} ha</td>
@@ -66,8 +87,25 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-4">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldTablet" #searchFieldTablet
+             placeholder="Pretražite po nazivu ili šifri parcele"/>
+            <mat-autocomplete #autoFieldTablet="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                let field of fields | SearchFields: searchFieldTablet.value
+                " [value]="field" >
+                {{field.Id}} - {{ field.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-5" *ngFor="let field of fields; let j = index">
+      <div class="col-5" *ngFor="let field of fields | SearchFields: searchFieldTablet.value; let j = index">
         <div class="card mb-3" style="width: 23rem;">
           <div class="card-body">
             <div class="row">
@@ -88,6 +126,10 @@
                     {{ field.Name }}
                   </h5>
                   <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ field.Id }}</td>
+                    </tr>
                     <tr title="Površina" style="cursor: help">
                       <th><i class="fa fa-clone"></i></th>
                       <td title="Površina">{{ field.Area }} ha</td>
@@ -127,8 +169,25 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldLaptop" #searchFieldLaptop
+             placeholder="Pretražite po nazivu ili šifri parcele"/>
+            <mat-autocomplete #autoFieldLaptop="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                let field of fields | SearchFields: searchFieldLaptop.value
+                " [value]="field" >
+                {{field.Id}} - {{ field.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-4" *ngFor="let field of fields; let j = index">
+      <div class="col-4" *ngFor="let field of fields | SearchFields: searchFieldLaptop.value; let j = index">
         <div class="card mb-3" style="width: 25rem;">
           <div class="card-body">
             <div class="row">
@@ -149,6 +208,10 @@
                     {{ field.Name }}
                   </h5>
                   <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ field.Id }}</td>
+                    </tr>
                     <tr title="Površina" style="cursor: help">
                       <th><i class="fa fa-clone"></i></th>
                       <td title="Površina">{{ field.Area }} ha</td>

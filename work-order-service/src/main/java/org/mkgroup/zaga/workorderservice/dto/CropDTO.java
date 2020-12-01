@@ -20,6 +20,10 @@ public class CropDTO {
 	private UUID cultureId;
 	
 	private UUID fieldId;
+	
+	private String fieldName;
+	
+	private String cultureName;
 
 	@JsonProperty("Id")
 	private Long erpId;
@@ -54,6 +58,10 @@ public class CropDTO {
 		fieldId = crop.getField().getId();
 		cultureId = crop.getCulture().getId();
 		erpId = crop.getErpId();
+		fieldName = crop.getField().getName();
+		cultureName = crop.getCulture().getName();
+		erpFieldId = crop.getField().getErpId();
+		erpCultureId = crop.getCulture().getErpId();
 	}
 
 }

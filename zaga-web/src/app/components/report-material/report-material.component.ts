@@ -18,11 +18,11 @@ export class ReportMaterialComponent implements OnInit {
   ) { }
 
   materials: MaterialReport[] = [];
-  
-  sumsQuantity: any[] = [];
-  sumsSpent: any[] = [];
-
   collapseBool = true;
+
+  dates: any  = { dateFrom: "", dateTo: "" };
+  filters: any = { namdateFrome: "", dateTo: "" };
+
 
   ngOnInit() {
     this.spentMaterialService.getDataForReport().subscribe(data => {
@@ -58,6 +58,38 @@ export class ReportMaterialComponent implements OnInit {
 
   collapse() {
     this.collapseBool = !this.collapseBool;
+  }
+
+  getQuantitySum(workOrders){
+    let quantitySum = 0.0;
+    workOrders.forEach(wo => {
+      wo.materials.forEach(m => {
+        if(m.quantity == -1){
+          m.quantity = 0.0;
+        }
+        quantitySum += m.quantity;
+      })
+    })
+    return quantitySum
+  }
+
+  getSpentSum(workOrders){
+    let spentSum = 0.0;
+    workOrders.forEach(wo => {
+      wo.materials.forEach(m => {
+        if(m.spent == -1){
+          m.spent = 0.0;
+        }
+        spentSum += m.spent;
+      })
+    })
+    return spentSum
+  }
+
+  
+  updateFilters(): void {
+    this.filters = Object.assign({}, this.dates);
+    console.log(this.filters)
   }
 
 }
