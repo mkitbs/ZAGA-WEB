@@ -17,6 +17,7 @@ public class UserPrincipal implements UserDetails {
 	private String username;
 	private boolean enabled;
 	private boolean nonLocked;
+	private String sapUserId;
 	private Collection<? extends GrantedAuthority> autorities;
 	
 	public Long getId() {
@@ -27,17 +28,18 @@ public class UserPrincipal implements UserDetails {
 		this.id = id;
 	}
 	
-	public UserPrincipal(Long id, String password, String username, boolean enabled, Collection<? extends GrantedAuthority> autorities, boolean locked) {
+	public UserPrincipal(Long id, String password, String username, boolean enabled, Collection<? extends GrantedAuthority> autorities, boolean locked, String sapUserId) {
 		this.id = id;
 		this.password = password;
 		this.username = username;
 		this.autorities = autorities;
 		this.enabled = enabled;
 		this.nonLocked = locked;
+		this.sapUserId = sapUserId;
 	}
 	
-	public UserPrincipal(Long id, String username, boolean enabled, Collection<? extends GrantedAuthority> autorities, boolean locked) {
-		this(id, null, username, enabled, autorities, locked);
+	public UserPrincipal(Long id, String username, boolean enabled, Collection<? extends GrantedAuthority> autorities, boolean locked, String sapUserId) {
+		this(id, null, username, enabled, autorities, locked, sapUserId);
 	}
 	
 
@@ -76,4 +78,9 @@ public class UserPrincipal implements UserDetails {
 		return enabled;
 	}
 
+	public String getSapUserId() {
+		return sapUserId;
+	}
+
+	
 }

@@ -6,6 +6,11 @@ import java.util.List;
 import org.mkgroup.zaga.authorizationservice.model.Role;
 import org.mkgroup.zaga.authorizationservice.model.User;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class UserDTO {
 
 	Long id;
@@ -18,7 +23,7 @@ public class UserDTO {
 	boolean nonLocked;
 	List<RoleDTO> roles;
 	String telephone;
-	
+	String sapUserId;
 
 	public UserDTO(Long id, String name, String surname, Long address, String email, String password,
 			boolean enabled, boolean nonLocked) {
@@ -42,7 +47,7 @@ public class UserDTO {
 		this.enabled = u.isEnabled();
 		this.nonLocked = u.isNonLocked();
 		this.telephone = u.getTelephone();
-		
+		this.sapUserId = u.getSapUserId();
 		roles = new ArrayList<>();
 		if(u.getRoles() != null) {
 			for(Role r : u.getRoles()) {
@@ -50,4 +55,5 @@ public class UserDTO {
 			}
 		}
 	}
+	
 }

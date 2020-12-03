@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.authorizationservice.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
 @Service
@@ -66,6 +68,7 @@ public class CheckTokenAndPermissions {
 	public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            System.out.println(new Date() +" VREME");
             return true;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token -> Message: {}", e);
@@ -75,7 +78,9 @@ public class CheckTokenAndPermissions {
             logger.error("Unsupported JWT token -> Message: {}", e);
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty -> Message: {}", e);
-        }
+        } catch (SignatureException e) {
+        	logger.error("JWT signature doews not match locally computed signature -> Message: {}", e);
+		}
         
         return false;
     }

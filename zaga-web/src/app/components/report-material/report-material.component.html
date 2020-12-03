@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="container">
   <div style="padding-top: 10px"></div>
   <h3 class="mt-2 mb-2">Materijali</h3>
@@ -13,66 +14,36 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchWorkOrder
-            placeholder="Pretražite po broju naloga"
-          />
+          <input type="text" matInput #searchWorkOrder placeholder="Pretražite po broju naloga" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchMaterial
-            placeholder="Pretražite po materijalu"
-          />
+          <input type="text" matInput #searchMaterial placeholder="Pretražite po materijalu" />
         </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchDate
-            placeholder="Pretražite po datumu"
-          />
+          <input type="text" matInput #searchDate placeholder="Pretražite po datumu" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchOperation
-            placeholder="Pretražite po operaciji"
-          />
+          <input type="text" matInput #searchOperation placeholder="Pretražite po operaciji" />
         </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchCrop
-            placeholder="Pretražite po usevu"
-          />
+          <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchTable
-            placeholder="Pretražite po parceli"
-          />
+          <input type="text" matInput #searchTable placeholder="Pretražite po parceli" />
         </mat-form-field>
       </div>
     </div>
@@ -103,36 +74,39 @@
           | ReportMaterialDate: searchDate.value
           | ReportMaterialCrop: searchCrop.value
           | ReportMaterialSapId: searchWorkOrder.value;
-          let i = index" >
+          let i = index">
         <tr>
           <td style="font-weight: bold;">{{ material.material.material.Name }}</td>
         <tr>
         <tr *ngFor="let workOrder of material.workOrders; let j = index">
           <ng-container *ngFor="let mat of workOrder.materials">
-          <td></td>
-          <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
-          <td>{{ workOrder.operationName }}</td>
-          <td>{{ workOrder.date }}</td>
-          <td>{{ workOrder.table }}</td>
-          <td>{{ workOrder.cropName.split(",")[1] }}</td>
-          <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
-          <ng-template #elseQuantity><td>/</td></ng-template>
-          <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
-          <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
-          <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
-          <ng-template #elseSpent><td>Nije uneto</td></ng-template>
-          <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
-          <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
-          <td>{{ material.material.material.Unit }}</td>
-          <td [ngClass]="{
+            <td></td>
+            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+            <td>{{ workOrder.operationName }}</td>
+            <td>{{ workOrder.date }}</td>
+            <td>{{ workOrder.table }}</td>
+            <td>{{ workOrder.cropName.split(",")[1] }}</td>
+            <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
+            <ng-template #elseQuantity>
+              <td>/</td>
+            </ng-template>
+            <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
+            <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
+            <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
+            <ng-template #elseSpent>
+              <td>Nije uneto</td>
+            </ng-template>
+            <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
+            <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
+            <td>{{ material.material.material.Unit }}</td>
+            <td [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
-              }" 
-          >
-            {{ workOrder.status }}
-          </td>
-        </ng-container>
+              }">
+              {{ workOrder.status }}
+            </td>
+          </ng-container>
         </tr>
         <tr>
           <td>Σ {{ material.material.material.Name }}</td>

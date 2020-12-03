@@ -35,6 +35,8 @@ public class SignupRequestDTO {
 
 	@NotBlank
 	private String password;
+	
+	private String sapUserId;
 
 	@NotBlank
 	private String confirmPassword;

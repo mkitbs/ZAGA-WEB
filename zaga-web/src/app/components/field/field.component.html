@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
   <div style="padding-top: 10px"></div>
   <div class="container">
@@ -10,16 +11,8 @@
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-bottom: 10px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/field1.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/field1.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
@@ -44,13 +37,8 @@
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            (click)="getField(field.dbId)"
-            data-toggle="modal"
-            data-target="#editFieldModal"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getField(field.dbId)" data-toggle="modal"
+            data-target="#editFieldModal" hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -71,16 +59,8 @@
         <div class="card mb-3" style="width: 23rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-top: 12px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/field1.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
+                <img class="card-img-right" src="../../../assets/field1.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
@@ -105,13 +85,8 @@
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            (click)="getField(field.dbId)"
-            data-toggle="modal"
-            data-target="#editFieldModal"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getField(field.dbId)" data-toggle="modal"
+            data-target="#editFieldModal" hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -132,16 +107,8 @@
         <div class="card mb-3" style="width: 25rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-top: 12px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/field1.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
+                <img class="card-img-right" src="../../../assets/field1.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
@@ -166,13 +133,8 @@
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            (click)="getField(field.dbId)"
-            data-toggle="modal"
-            data-target="#editFieldModal"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getField(field.dbId)" data-toggle="modal"
+            data-target="#editFieldModal" hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -181,26 +143,15 @@
   </div>
 </div>
 <!--Edit field modal-->
-<div
-  class="modal fade"
-  id="editFieldModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editFieldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
           <i class="fa fa-database mr-2"></i> {{ field.Name }}
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -209,13 +160,7 @@
           <div class="form-group">
             <label for="area"><i class="fa fa-clone"></i> Površina</label>
             <div class="input-group mb-3">
-              <input
-                [(ngModel)]="field.Area"
-                type="number"
-                name="area"
-                class="form-control"
-                id=""
-              />
+              <input [(ngModel)]="field.Area" type="number" name="area" class="form-control" id="" />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">h</span>
               </div>
@@ -224,26 +169,12 @@
           <div class="form-group">
             <label for="year"><i class="fa fa-calendar"></i> Godina</label>
 
-            <input
-              [(ngModel)]="field.Year"
-              type="number"
-              name="year"
-              class="form-control"
-              id=""
-            />
+            <input [(ngModel)]="field.Year" type="number" name="year" class="form-control" id="" />
           </div>
           <div class="form-group">
             <label for="potez"><i class="fa fa-area-chart"></i> Potez</label>
-            <select
-              id=""
-              class="form-control"
-              name="potez"
-              [(ngModel)]="field.fieldGroup"
-            >
-              <option
-                value="{{ fieldGroup.dbId }}"
-                *ngFor="let fieldGroup of fieldGroups"
-              >
+            <select id="" class="form-control" name="potez" [(ngModel)]="field.fieldGroup">
+              <option value="{{ fieldGroup.dbId }}" *ngFor="let fieldGroup of fieldGroups">
                 {{ fieldGroup.Name }}
               </option>
             </select>
@@ -251,21 +182,11 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editField()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editField()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

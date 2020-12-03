@@ -28,6 +28,7 @@ public class WorkOrderDTO {
 	private UUID responsibleId;
 	private UUID tableId;
 	private UUID cultureId;
+	private String userCreatedId;
 	private List<SpentMaterialDTO> materials;
 	private List<WorkOrderWorkerDTO> workers;
 	private String operationName;
@@ -59,6 +60,7 @@ public class WorkOrderDTO {
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
 		treated = wo.getTreated();
+		userCreatedId = wo.getUserCreatedSapId().toString();
 		if(wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {

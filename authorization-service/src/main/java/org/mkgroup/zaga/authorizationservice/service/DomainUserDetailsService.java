@@ -109,7 +109,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 				.collect(Collectors.toList());
 
 		return new UserPrincipal(user.getId(), user.getPassword(), user.getEmail(), user.isEnabled(), authorities,
-				user.isNonLocked());
+				user.isNonLocked(), user.getSapUserId());
 	}
 
 	public void activateUser(User user) {

@@ -1,4 +1,5 @@
-<div class="container d-none d-md-block">
+<navbar></navbar>
+<div class="container d-none d-md-block" style="margin-top: 70px;">
   <h3 class="mt-2 mb-2">Pregled naloga</h3>
 
   <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
@@ -12,44 +13,24 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchDate
-            placeholder="Pretražite po datumu"
-          />
+          <input type="text" matInput #searchDate placeholder="Pretražite po datumu" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchTable
-            placeholder="Pretražite po parceli"
-          />
+          <input type="text" matInput #searchTable placeholder="Pretražite po parceli" />
         </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchCrop
-            placeholder="Pretražite po usevu"
-          />
+          <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchOperation
-            placeholder="Pretražite po operaciji"
-          />
+          <input type="text" matInput #searchOperation placeholder="Pretražite po operaciji" />
         </mat-form-field>
       </div>
     </div>
@@ -96,15 +77,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr 
-        *ngFor="let workOrder of workOrders 
+      <tr *ngFor="let workOrder of workOrders 
           | SearchWorkOrdersTable: searchTable.value
           | SearchWorkOrdersDate: searchDate.value
           | SearchWorkOrdersCrop: searchCrop.value
           | SearchWorkOrdersOperation: searchOperation.value;
-          let j = index" 
-        style="cursor: pointer"
-      >
+          let j = index" style="cursor: pointer">
         <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
         <td (click)="changeRoute(workOrder.id)">
           {{ workOrder.sapId }}

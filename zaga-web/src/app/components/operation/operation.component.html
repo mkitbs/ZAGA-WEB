@@ -1,428 +1,292 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
+  <div style="padding-top: 10px"></div>
+  <div class="containerOperations">
+    <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
-      <div class="form-row">
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip ATM </label>
-          <div class="input-group mb-3">
-            <select
-                id=""
-                class="form-control"
-                name="type"
-                [(ngModel)]="selectedType"
-                (change)="getOperations()"
-            >
-                <option value="-1"></option>
-                <option value="RATARSTVO">
-                    RATARSTVO
-                </option>
-                <option value="VINOGRADARSTVO">
-                    VINOGRADARSTVO
-                </option>
-                <option value="VOĆARSTVO">
-                    VOĆARSTVO
-                </option>
-                <option value="POVRTARSTVO">
-                    POVRTARSTVO
-                </option>
-                <option value="STOČARSTVO">
-                    STOČARSTVO
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedType != undefined">
-              <span
-                *ngIf="selectedType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip"
-                >x</span
-              >
-            </div>
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fas fa-seedling"></i> Tip ATM </label>
+        <div class="input-group mb-3">
+          <select id="" class="form-control" name="type" [(ngModel)]="selectedType" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="RATARSTVO">
+              RATARSTVO
+            </option>
+            <option value="VINOGRADARSTVO">
+              VINOGRADARSTVO
+            </option>
+            <option value="VOĆARSTVO">
+              VOĆARSTVO
+            </option>
+            <option value="POVRTARSTVO">
+              POVRTARSTVO
+            </option>
+            <option value="STOČARSTVO">
+              STOČARSTVO
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedType != undefined">
+            <span *ngIf="selectedType != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedType()" style="cursor: pointer" title="Poništi odabrani tip">x</span>
           </div>
         </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-cogs"></i> Grupa ATM </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedGroup"
-              (change)="getOperations()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ operationGroup.dbId }}"
-                *ngFor="let operationGroup of operationGroups"
-                >
-                    {{ operationGroup.Name }}
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedGroup != undefined">
-              <span
-                *ngIf="selectedGroup != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedGroup()"
-                style="cursor: pointer"
-                title="Poništi odabranu grupu"
-                >x</span
-              >
-            </div>
+      </div>
+
+      <div class="col-3">
+        <label><i class="fas fa-cogs"></i> Grupa ATM </label>
+        <div class="input-group mb-3">
+          <select name="culture" class="form-control" id="" [(ngModel)]="selectedGroup" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="{{ operationGroup.dbId }}" *ngFor="let operationGroup of operationGroups">
+              {{ operationGroup.Name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedGroup != undefined">
+            <span *ngIf="selectedGroup != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedGroup()" style="cursor: pointer" title="Poništi odabranu grupu">x</span>
           </div>
         </div>
       </div>
     </div>
-    <div style="padding-top: 20px"></div>
-    <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
-      <div class="row card-group">
-        <div class="col-4" *ngFor="let operation of operations; let j = index">
-          <div class="card mb-4" style="width: 32.7rem;">
-            <div class="card-body">
-              <div class="row">
-                <div
-                  class="col-md-auto"
-                  style="width: fit-content; padding-bottom: 10px"
-                >
-                  <img
-                    class="card-img-right"
-                    src="../../../assets/shovel.png"
-                    width="80px"
-                    height="80px"
-                  />
-                </div>
-                <div class="col" style="margin-right: 13px;">
-                  <div class="card-text">
-                    <h5 class="card-title" style="margin-right: 30px;">
-                      {{ operation.Name }}
-                    </h5>
-                    <table>
-                      <tr title="Tip ATM" style="cursor: help">
-                        <th><i class="fas fa-seedling"></i></th>
-                        <td>{{ operation.Type }}</td>
-                      </tr>
-                      <tr title="Grupa ATM" style="cursor: help">
-                        <th><i class="fas fa-cogs"></i></th>
-                        <td>{{ operation.operationGroup }}</td>
-                      </tr>
-                    </table>
-                  </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="containerOperations">
+    <h5 *ngIf="operations.length == 0">
+      Nema ATM za prikazivanje.
+    </h5>
+    <div class="row card-group">
+      <div class="col-4" *ngFor="let operation of operations; let j = index">
+        <div class="card mb-4" style="width: 32.7rem;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/shovel.png" width="80px" height="80px" />
+              </div>
+              <div class="col" style="margin-right: 13px;">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ operation.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Tip ATM" style="cursor: help">
+                      <th><i class="fas fa-seedling"></i></th>
+                      <td>{{ operation.Type }}</td>
+                    </tr>
+                    <tr title="Grupa ATM" style="cursor: help">
+                      <th><i class="fas fa-cogs"></i></th>
+                      <td>{{ operation.operationGroup }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editOperationModal"
-              (click)="getOperation(operation.id)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editOperationModal"
+            (click)="getOperation(operation.id)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+  <div class="containerOperations">
+    <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
-      <div class="form-row">
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip ATM </label>
-          <div class="input-group mb-3">
-            <select
-                id=""
-                class="form-control"
-                name="type"
-                [(ngModel)]="selectedType"
-                (change)="getOperations()"
-            >
-                <option value="-1"></option>
-                <option value="RATARSTVO">
-                    RATARSTVO
-                </option>
-                <option value="VINOGRADARSTVO">
-                    VINOGRADARSTVO
-                </option>
-                <option value="VOĆARSTVO">
-                    VOĆARSTVO
-                </option>
-                <option value="POVRTARSTVO">
-                    POVRTARSTVO
-                </option>
-                <option value="STOČARSTVO">
-                    STOČARSTVO
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedType != undefined">
-              <span
-                *ngIf="selectedType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip"
-                >x</span
-              >
-            </div>
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fas fa-seedling"></i> Tip ATM </label>
+        <div class="input-group mb-3">
+          <select id="" class="form-control" name="type" [(ngModel)]="selectedType" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="RATARSTVO">
+              RATARSTVO
+            </option>
+            <option value="VINOGRADARSTVO">
+              VINOGRADARSTVO
+            </option>
+            <option value="VOĆARSTVO">
+              VOĆARSTVO
+            </option>
+            <option value="POVRTARSTVO">
+              POVRTARSTVO
+            </option>
+            <option value="STOČARSTVO">
+              STOČARSTVO
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedType != undefined">
+            <span *ngIf="selectedType != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedType()" style="cursor: pointer" title="Poništi odabrani tip">x</span>
           </div>
         </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-cogs"></i> Grupa ATM </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedGroup"
-              (change)="getOperations()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ operationGroup.dbId }}"
-                *ngFor="let operationGroup of operationGroups"
-                >
-                    {{ operationGroup.Name }}
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedGroup != undefined">
-              <span
-                *ngIf="selectedGroup != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedGroup()"
-                style="cursor: pointer"
-                title="Poništi odabranu grupu"
-                >x</span
-              >
-            </div>
+      </div>
+
+      <div class="col-3">
+        <label><i class="fas fa-cogs"></i> Grupa ATM </label>
+        <div class="input-group mb-3">
+          <select name="culture" class="form-control" id="" [(ngModel)]="selectedGroup" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="{{ operationGroup.dbId }}" *ngFor="let operationGroup of operationGroups">
+              {{ operationGroup.Name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedGroup != undefined">
+            <span *ngIf="selectedGroup != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedGroup()" style="cursor: pointer" title="Poništi odabranu grupu">x</span>
           </div>
         </div>
       </div>
     </div>
-    <div style="padding-top: 20px"></div>
-    <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
-      <div class="row card-group">
-        <div class="col-5" *ngFor="let operation of operations; let j = index">
-          <div class="card mb-4" style="width: 32.7rem;">
-            <div class="card-body">
-              <div class="row">
-                <div
-                  class="col-md-auto"
-                  style="width: fit-content; padding-bottom: 10px"
-                >
-                  <img
-                    class="card-img-right"
-                    src="../../../assets/shovel.png"
-                    width="80px"
-                    height="80px"
-                  />
-                </div>
-                <div class="col" style="margin-right: 13px;">
-                  <div class="card-text">
-                    <h5 class="card-title" style="margin-right: 30px;">
-                      {{ operation.Name }}
-                    </h5>
-                    <table>
-                      <tr title="Tip ATM" style="cursor: help">
-                        <th><i class="fas fa-seedling"></i></th>
-                        <td>{{ operation.Type }}</td>
-                      </tr>
-                      <tr title="Grupa ATM" style="cursor: help">
-                        <th><i class="fas fa-cogs"></i></th>
-                        <td>{{ operation.operationGroup }}</td>
-                      </tr>
-                    </table>
-                  </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="containerOperations">
+    <h5 *ngIf="operations.length == 0">
+      Nema ATM za prikazivanje.
+    </h5>
+    <div class="row card-group">
+      <div class="col-5" *ngFor="let operation of operations; let j = index">
+        <div class="card mb-4" style="width: 32.7rem;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/shovel.png" width="80px" height="80px" />
+              </div>
+              <div class="col" style="margin-right: 13px;">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ operation.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Tip ATM" style="cursor: help">
+                      <th><i class="fas fa-seedling"></i></th>
+                      <td>{{ operation.Type }}</td>
+                    </tr>
+                    <tr title="Grupa ATM" style="cursor: help">
+                      <th><i class="fas fa-cogs"></i></th>
+                      <td>{{ operation.operationGroup }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editOperationModal"
-              (click)="getOperation(operation.id)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editOperationModal"
+            (click)="getOperation(operation.id)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+  <div class="containerOperations">
+    <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
-      <div class="form-row">
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip ATM </label>
-          <div class="input-group mb-3">
-            <select
-                id=""
-                class="form-control"
-                name="type"
-                [(ngModel)]="selectedType"
-                (change)="getOperations()"
-            >
-                <option value="-1"></option>
-                <option value="RATARSTVO">
-                    RATARSTVO
-                </option>
-                <option value="VINOGRADARSTVO">
-                    VINOGRADARSTVO
-                </option>
-                <option value="VOĆARSTVO">
-                    VOĆARSTVO
-                </option>
-                <option value="POVRTARSTVO">
-                    POVRTARSTVO
-                </option>
-                <option value="STOČARSTVO">
-                    STOČARSTVO
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedType != undefined">
-              <span
-                *ngIf="selectedType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip"
-                >x</span
-              >
-            </div>
+    <div class="form-row">
+      <div class="col-3">
+        <label><i class="fas fa-seedling"></i> Tip ATM </label>
+        <div class="input-group mb-3">
+          <select id="" class="form-control" name="type" [(ngModel)]="selectedType" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="RATARSTVO">
+              RATARSTVO
+            </option>
+            <option value="VINOGRADARSTVO">
+              VINOGRADARSTVO
+            </option>
+            <option value="VOĆARSTVO">
+              VOĆARSTVO
+            </option>
+            <option value="POVRTARSTVO">
+              POVRTARSTVO
+            </option>
+            <option value="STOČARSTVO">
+              STOČARSTVO
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedType != undefined">
+            <span *ngIf="selectedType != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedType()" style="cursor: pointer" title="Poništi odabrani tip">x</span>
           </div>
         </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-cogs"></i> Grupa ATM </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedGroup"
-              (change)="getOperations()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ operationGroup.dbId }}"
-                *ngFor="let operationGroup of operationGroups"
-                >
-                    {{ operationGroup.Name }}
-                </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedGroup != undefined">
-              <span
-                *ngIf="selectedGroup != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedGroup()"
-                style="cursor: pointer"
-                title="Poništi odabranu grupu"
-                >x</span
-              >
-            </div>
+      </div>
+
+      <div class="col-3">
+        <label><i class="fas fa-cogs"></i> Grupa ATM </label>
+        <div class="input-group mb-3">
+          <select name="culture" class="form-control" id="" [(ngModel)]="selectedGroup" (change)="getOperations()">
+            <option value="-1"></option>
+            <option value="{{ operationGroup.dbId }}" *ngFor="let operationGroup of operationGroups">
+              {{ operationGroup.Name }}
+            </option>
+          </select>
+          <div class="input-group-append" *ngIf="selectedGroup != undefined">
+            <span *ngIf="selectedGroup != -1" class="input-group-text" id="basic-addon2"
+              (click)="setValueForSelectedGroup()" style="cursor: pointer" title="Poništi odabranu grupu">x</span>
           </div>
         </div>
       </div>
     </div>
-    <div style="padding-top: 20px"></div>
-    <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
-      <div class="row card-group">
-        <div class="col-7" *ngFor="let operation of operations; let j = index">
-          <div class="card mb-4" style="width: 32.7rem;">
-            <div class="card-body">
-              <div class="row">
-                <div
-                  class="col-md-auto"
-                  style="width: fit-content; padding-bottom: 10px"
-                >
-                  <img
-                    class="card-img-right"
-                    src="../../../assets/shovel.png"
-                    width="80px"
-                    height="80px"
-                  />
-                </div>
-                <div class="col" style="margin-right: 13px;">
-                  <div class="card-text">
-                    <h5 class="card-title" style="margin-right: 30px;">
-                      {{ operation.Name }}
-                    </h5>
-                    <table>
-                      <tr title="Tip ATM" style="cursor: help">
-                        <th><i class="fas fa-seedling"></i></th>
-                        <td>{{ operation.Type }}</td>
-                      </tr>
-                      <tr title="Grupa ATM" style="cursor: help">
-                        <th><i class="fas fa-cogs"></i></th>
-                        <td>{{ operation.operationGroup }}</td>
-                      </tr>
-                    </table>
-                  </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="containerOperations">
+    <h5 *ngIf="operations.length == 0">
+      Nema ATM za prikazivanje.
+    </h5>
+    <div class="row card-group">
+      <div class="col-7" *ngFor="let operation of operations; let j = index">
+        <div class="card mb-4" style="width: 32.7rem;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/shovel.png" width="80px" height="80px" />
+              </div>
+              <div class="col" style="margin-right: 13px;">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ operation.Name }}
+                  </h5>
+                  <table>
+                    <tr title="Tip ATM" style="cursor: help">
+                      <th><i class="fas fa-seedling"></i></th>
+                      <td>{{ operation.Type }}</td>
+                    </tr>
+                    <tr title="Grupa ATM" style="cursor: help">
+                      <th><i class="fas fa-cogs"></i></th>
+                      <td>{{ operation.operationGroup }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editOperationModal"
-              (click)="getOperation(operation.id)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editOperationModal"
+            (click)="getOperation(operation.id)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--Edit operation modal-->
-<div
-  class="modal fade"
-  id="editOperationModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
-  >
+<div class="modal fade" id="editOperationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fas fa-cog"></i> 
+          <i class="fas fa-cog"></i>
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -430,12 +294,7 @@
         <form #editOperationModalForm="ngForm">
           <div class="form-group">
             <label for="area"><i class="fas fa-seedling"></i> Tip ATM</label>
-            <select
-              id=""
-              class="form-control"
-              name="type"
-              [(ngModel)]="operation.Type"
-            >
+            <select id="" class="form-control" name="type" [(ngModel)]="operation.Type">
               <option value="RATARSTVO">
                 RATARSTVO
               </option>
@@ -455,38 +314,20 @@
           </div>
           <div class="form-group">
             <label for="fuel"><i class="fas fa-cogs"></i> Grupa ATM</label>
-            <select
-            id=""
-            class="form-control"
-            name="fuel"
-            [(ngModel)]="operation.operationGroupId"
-            >
-                <option
-                value="{{ operationGroup.dbId }}"
-                *ngFor="let operationGroup of operationGroups"
-                >
-                    {{ operationGroup.Name }}
-                </option>
+            <select id="" class="form-control" name="fuel" [(ngModel)]="operation.operationGroupId">
+              <option value="{{ operationGroup.dbId }}" *ngFor="let operationGroup of operationGroups">
+                {{ operationGroup.Name }}
+              </option>
             </select>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editOperation()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editOperation()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

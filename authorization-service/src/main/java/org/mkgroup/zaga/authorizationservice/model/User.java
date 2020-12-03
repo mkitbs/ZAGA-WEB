@@ -52,6 +52,8 @@ public class User {
 	
 	private boolean enabled;
 	
+	private String sapUserId;
+	
 	private boolean nonLocked;
 	
 	protected Date dateOfBirth;
@@ -107,6 +109,7 @@ public class User {
 		this.roles = roles;
 		this.name = sr.getName();
 		this.surname = sr.getSurname();
+		this.sapUserId = sr.getSapUserId();
 		this.telephone = sr.getTelephone();
 		this.enabled = true;
 		this.nonLocked = true;
