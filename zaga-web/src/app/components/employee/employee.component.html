@@ -1,4 +1,8 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
     <div style="padding-top: 10px"></div>
     <div class="container">
       <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
@@ -80,22 +84,21 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editEmployeeModal"
-              (click)="getEmployee(employee.userId)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editEmployeeModal"
+            (click)="getEmployee(employee.userId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
     <div style="padding-top: 10px"></div>
     <div class="container">
       <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
@@ -177,22 +180,21 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editEmployeeModal"
-              (click)="getEmployee(employee.userId)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editEmployeeModal"
+            (click)="getEmployee(employee.userId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
     <div style="padding-top: 10px"></div>
     <div class="container">
       <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
@@ -274,41 +276,26 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editEmployeeModal"
-              (click)="getEmployee(employee.userId)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editEmployeeModal"
+            (click)="getEmployee(employee.userId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--Edit employee modal-->
-<div
-  class="modal fade"
-  id="editEmployeeModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
-  >
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
           <i class="fa fa-user"></i> {{ employee.name }}
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -316,46 +303,23 @@
         <form #editEmployeeModalForm="ngForm">
           <div class="form-group">
             <label for="position"><i class="fa fa-briefcase"></i> Pozicija</label>
-            <input
-                type="text"
-                name="position"
-                class="form-control"
-                id=""
-                [(ngModel)]="employee.position"
-              />
+            <input type="text" name="position" class="form-control" id="" [(ngModel)]="employee.position" />
           </div>
           <div class="form-group">
             <label for="department"><i class="fa fa-building-o"></i> Odeljenje</label>
-            <input
-                type="text"
-                name="department"
-                class="form-control"
-                id=""
-                [(ngModel)]="employee.department"
-              />
+            <input type="text" name="department" class="form-control" id="" [(ngModel)]="employee.department" />
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editUser()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editUser()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>
     </div>
   </div>
 </div>
-

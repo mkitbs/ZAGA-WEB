@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -118,19 +119,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -256,19 +253,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -394,45 +387,27 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--Edit crop modal-->
-<div
-  class="modal fade"
-  id="editCultureModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editCultureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4
-          class="modal-title"
-          id="exampleModalLabel"
-        >
-        <i class="fa fa-leaf mr-2"></i>
-         {{ culture.Name }}
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fa fa-leaf mr-2"></i>
+          {{ culture.Name }}
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -440,12 +415,7 @@
         <form #editCultureModalForm="ngForm">
           <div class="form-group">
             <label for="type"><i class="fa fa-industry"></i> Tip proizvodnje</label>
-            <select
-              id=""
-              class="form-control"
-              name="orgKon"
-              [(ngModel)]="culture.OrgKon"
-            >
+            <select id="" class="form-control" name="orgKon" [(ngModel)]="culture.OrgKon">
               <option value="ORGANSKA">
                 ORGANSKA
               </option>
@@ -456,12 +426,7 @@
           </div>
           <div class="form-group">
             <label for="cultureType"><i class="fas fa-seedling"></i> Tip kulture</label>
-            <select
-              id=""
-              class="form-control"
-              name="cultureType"
-              [(ngModel)]="culture.Type"
-            >
+            <select id="" class="form-control" name="cultureType" [(ngModel)]="culture.Type">
               <option value="VOĆE">
                 VOĆE
               </option>
@@ -478,16 +443,8 @@
           </div>
           <div class="form-group">
             <label for="culture"><i class="fa fa-cubes"></i> Grupa kulture</label>
-            <select
-              id=""
-              class="form-control"
-              name="culture"
-              [(ngModel)]="culture.cultureGroup"
-            >
-              <option
-                value="{{ cultureGroup.dbId }}"
-                *ngFor="let cultureGroup of cultureGroups"
-              >
+            <select id="" class="form-control" name="culture" [(ngModel)]="culture.cultureGroup">
+              <option value="{{ cultureGroup.dbId }}" *ngFor="let cultureGroup of cultureGroups">
                 {{ cultureGroup.Name }}
               </option>
             </select>
@@ -495,21 +452,11 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editCulture()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editCulture()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

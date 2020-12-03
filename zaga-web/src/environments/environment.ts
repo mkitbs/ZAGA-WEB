@@ -13,7 +13,8 @@ export const environment = {
 export const environment = {
   gatewayWorkOrderURL: "http://localhost:8765/work-order-service/",
   gatewayElasticURL: "http://localhost:8765/search-service/",
-  production: false,
+  auth: "http://localhost:8091/auth/",
+  production: false
 };
 */
 /*

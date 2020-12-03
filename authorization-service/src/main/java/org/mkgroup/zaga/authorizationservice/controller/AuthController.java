@@ -13,6 +13,7 @@ import org.mkgroup.zaga.authorizationservice.dto.LoginResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.RoleDTO;
 import org.mkgroup.zaga.authorizationservice.dto.SignupRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.UserDTO;
+import org.mkgroup.zaga.authorizationservice.exception.InvalidJTWTokenException;
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
 import org.mkgroup.zaga.authorizationservice.model.Role;
 import org.mkgroup.zaga.authorizationservice.model.User;
@@ -29,9 +30,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -98,6 +101,48 @@ public class AuthController {
 							"Nevalidni kredencijali."), 
 					HttpStatus.UNAUTHORIZED);
 		}
+    }
+	
+	@GetMapping("/check/{token}") 
+    public ResponseEntity<?> checkToken(@PathVariable String token) throws InvalidJTWTokenException{
+    	if(permissions.validateJwtToken(token)) {
+    		String s = "";
+    		try {
+				for(GrantedAuthority str:jwtProvider.getUserPrincipal(token).getAuthorities()) {
+					s += str.getAuthority() + '|';
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		return new ResponseEntity<String>(s,HttpStatus.OK);
+    	} return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+	
+	@GetMapping("/check/{token}/sapUserId")
+    public ResponseEntity<?> getUsername(@PathVariable String token) throws InvalidJTWTokenException{
+    	if(permissions.validateJwtToken(token)) {
+    		try {
+				return new ResponseEntity<String>(jwtProvider.getUserPrincipal(token).getSapUserId(), HttpStatus.OK);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	return null;
+    }
+	
+	@GetMapping("/getLogged")
+    public ResponseEntity<?> getLogged() {
+    	
+    	if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    		return new ResponseEntity<UserDTO>(new UserDTO(logged), HttpStatus.OK);
+    	} else {
+    		 return new ResponseEntity<>("Fail ->No logged user",
+                     HttpStatus.BAD_REQUEST);
+    	}   	
+    	
     }
 	
 	@GetMapping("/signout") 

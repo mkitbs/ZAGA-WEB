@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -74,19 +75,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -165,19 +162,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden            
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -256,83 +249,49 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--Edit field modal-->
-<div
-class="modal fade"
-id="editVarietydModal"
-tabindex="-1"
-role="dialog"
-aria-labelledby="exampleModalLabel"
-aria-hidden="true"
->
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title" id="exampleModalLabel">
-        <i class="fas fa-seedling mr-2"></i> {{ variety.Name }}
-      </h4>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form #editVarietyModalForm="ngForm">
-        <div class="form-group">
-          <label for="culture"><i class="fa fa-cubes"></i> Kultura</label>
-          <select
-            id=""
-            class="form-control"
-            name="culture"
-            
-          >
-            <option
-              value="{{ culture.dbId }}"
-              *ngFor="let culture of cultures"
-            >
-              {{ culture.Name }}
-            </option>
-          </select>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-danger"
-        data-dismiss="modal"
-        style="background-color: #f68901"
-      >
-        <i class="fa fa-window-close"></i> Odustani
-      </button>
-      <button
-        type="button"
-        class="btn btn-success"
-        style="background-color: #33590b"
-        data-dismiss="modal"
-      >
-        <i class="fa fa-save"></i> Sačuvaj
-      </button>
+<div class="modal fade" id="editVarietydModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fas fa-seedling mr-2"></i> {{ variety.Name }}
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editVarietyModalForm="ngForm">
+          <div class="form-group">
+            <label for="culture"><i class="fa fa-cubes"></i> Kultura</label>
+            <select id="" class="form-control" name="culture">
+              <option value="{{ culture.dbId }}" *ngFor="let culture of cultures">
+                {{ culture.Name }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
+          <i class="fa fa-window-close"></i> Odustani
+        </button>
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal">
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+      </div>
     </div>
   </div>
 </div>
-</div>
-

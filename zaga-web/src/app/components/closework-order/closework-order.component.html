@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="container mt-4">
 
     <h3>
@@ -8,17 +9,17 @@
         <table class="table header-table">
             <tr>
                 <td class="left-col-header">
-                   <i class="fa fa-file mr-2"></i>Nalog:
+                    <i class="fa fa-file mr-2"></i>Nalog:
                 </td>
                 <td class="right-col-header">
                     {{ workOrder.name }}
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-tasks mr-2"></i>Status:
-                 </td>
-                 <td class="right-col-header">
+                </td>
+                <td class="right-col-header">
                     {{ workOrder.status }}
-                 </td>
+                </td>
             </tr>
             <tr>
                 <td class="left-col-header">
@@ -29,112 +30,119 @@
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-user mr-2"></i>Odgovorna osoba:
-                 </td>
-                 <td class="right-col-header">
+                </td>
+                <td class="right-col-header">
                     {{ workOrder.responsible }}
-                 </td>
+                </td>
             </tr>
             <tr>
                 <td class="left-col-header">
-                  <i class="fa fa-cubes "></i> Kultura:
+                    <i class="fa fa-cubes "></i> Kultura:
                 </td>
                 <td class="right-col-header">
                     {{ workOrder.culture }}
                 </td>
                 <td class="left-col-header">
                     <i class="fa fa-database mr-2"></i>Kategorija:
-                 </td>
-                 <td class="right-col-header">
+                </td>
+                <td class="right-col-header">
                     {{ workOrder.category }}
-                 </td>
+                </td>
             </tr>
         </table>
     </div>
 
     <!--workers-->
     <div class="workers">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button"
+            data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+                *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body collapse-card">
                 <form name="formWorkers">
-                <table class="table table-input">
-                    <thead>
-                        <th>
-                            Radnik
-                        </th>
-                        <th>
-                            Datum
-                        </th>
-                        <th>
-                            Redovan rad
-                        </th>
-                        <th>
-                            Noćni rad
-                        </th>
-                        <th>
-                            Ukupan rad
-                        </th>
-                        <th>
-                            Snimi
-                        </th>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let worker of workOrder.workers">
-                            
-                            <td>
-                                {{worker.worker}}
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <select name="" id="" class="form-control">
-                                        <option value="-1"></option>
-                                        <option value="datum1">13.08.2020.</option>
-                                        <option value="datum2">14.08.2020.</option>
-                                        <option value="datum3">15.08.2020.</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <input type="number" name="dayWorkPeriod" class="form-control" id="" [(ngModel)]="worker.dayWorkPeriod">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <input type="number" name="nightWorkPeriod" class="form-control" id="" [(ngModel)]="worker.nightWorkPeriod">
-                                </div>
-                            </td>
-                            <td>
-                                {{worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <button class="btn btn-primary btn-add mr-2">
-                                        <i class="fa fa-save"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-            </div>  
+                    <table class="table table-input">
+                        <thead>
+                            <th>
+                                Radnik
+                            </th>
+                            <th>
+                                Datum
+                            </th>
+                            <th>
+                                Redovan rad
+                            </th>
+                            <th>
+                                Noćni rad
+                            </th>
+                            <th>
+                                Ukupan rad
+                            </th>
+                            <th>
+                                Snimi
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let worker of workOrder.workers">
+
+                                <td>
+                                    {{worker.worker}}
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <select name="" id="" class="form-control">
+                                            <option value="-1"></option>
+                                            <option value="datum1">13.08.2020.</option>
+                                            <option value="datum2">14.08.2020.</option>
+                                            <option value="datum3">15.08.2020.</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="number" name="dayWorkPeriod" class="form-control" id=""
+                                            [(ngModel)]="worker.dayWorkPeriod">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="number" name="nightWorkPeriod" class="form-control" id=""
+                                            [(ngModel)]="worker.nightWorkPeriod">
+                                    </div>
+                                </td>
+                                <td>
+                                    {{worker.dayWorkPeriod*1 + worker.nightWorkPeriod*1 || 0}}h
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-add mr-2">
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
         </div>
     </div>
 
     <!--machines-->
     <div class="machines mt-4">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button" data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines">
-            <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button"
+            data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
+            aria-controls="collapseExampleMachines">
+            <i class="fa fa-truck mr-2"></i>Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+                *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
         </button>
         <div class="collapse" id="collapseExampleMachines">
             <div class="card card-body collapse-card">
                 <table class="table table-input">
                     <thead>
                         <th>
-                            Mašina     
+                            Mašina
                         </th>
                         <th>
                             Radnik
@@ -158,16 +166,18 @@
                                 {{machine.machine}}
                             </td>
                             <td>
-                                {{machine.worker}}        
+                                {{machine.worker}}
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="number" name="initialState" class="form-control" id="" [(ngModel)]="machine.initialState">
+                                    <input type="number" name="initialState" class="form-control" id=""
+                                        [(ngModel)]="machine.initialState">
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <input type="number" name="finalState" class="form-control" id="" [(ngModel)]="machine.finalState">
+                                    <input type="number" name="finalState" class="form-control" id=""
+                                        [(ngModel)]="machine.finalState">
                                 </div>
                             </td>
                             <td>
@@ -178,25 +188,29 @@
                                     <input type="number" name="" id="" class="form-control">
                                 </div>
                             </td>
-                                
+
                         </tr>
                     </tbody>
                 </table>
-            </div>  
+            </div>
         </div>
     </div>
 
     <!--materials-->
     <div class="machines mt-4">
-        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false" aria-controls="collapseExampleMachines">
-            <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
+        <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button"
+            data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+            aria-controls="collapseExampleMachines">
+            <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials"
+                class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i *ngIf="materials"
+                class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
         </button>
         <div class="collapse" id="collapseExampleMaterials">
             <div class="card card-body collapse-card">
                 <table class="table table-input">
                     <thead>
                         <th>
-                            Materijal   
+                            Materijal
                         </th>
                         <th>
                             Planirano
@@ -223,7 +237,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>  
+            </div>
         </div>
     </div>
     <br><br>

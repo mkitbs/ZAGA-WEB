@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -61,19 +62,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editFieldGroupModal"
-              (click)="getFieldGroup(fieldGroup.dbId)"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -105,16 +102,8 @@
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-bottom: 10px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/fieldGroup.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/fieldGroup.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
@@ -139,13 +128,8 @@
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            data-toggle="modal"
-            data-target="#editFieldGroupModal"
-            (click)="getFieldGroup(fieldGroup.dbId)"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbId)" hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -183,16 +167,8 @@
         <div class="card mb-4" style="width: 30rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-bottom: 10px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/fieldGroup.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/fieldGroup.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
@@ -217,13 +193,8 @@
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            data-toggle="modal"
-            data-target="#editFieldGroupModal"
-            (click)="getFieldGroup(fieldGroup.dbId)"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbId)" hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -232,26 +203,15 @@
   </div>
 </div>
 <!--Edit field group modal-->
-<div
-  class="modal fade"
-  id="editFieldGroupModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editFieldGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-            <i class="fa fa-area-chart"></i> {{ fieldGroup.Name }}
+          <i class="fa fa-area-chart"></i> {{ fieldGroup.Name }}
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -259,42 +219,20 @@
         <form #editFieldModalForm="ngForm">
           <div class="form-group">
             <label for="companyCode"><i class="fa fa-building-o"></i> Kod kompanije</label>
-              <input
-                [(ngModel)]="fieldGroup.CompanyCode"
-                type="text"
-                name="companyCode"
-                class="form-control"
-                id=""
-              />
+            <input [(ngModel)]="fieldGroup.CompanyCode" type="text" name="companyCode" class="form-control" id="" />
           </div>
           <div class="form-group">
             <label for="orgUnit"><i class="fa fa-registered"></i> Organizaciona jedinica</label>
-            <input
-              [(ngModel)]="fieldGroup.OrganisationUnit"  
-              type="text"
-              name="orgUnit"
-              class="form-control"
-              id=""
-            />
+            <input [(ngModel)]="fieldGroup.OrganisationUnit" type="text" name="orgUnit" class="form-control" id="" />
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editFieldGroup()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editFieldGroup()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

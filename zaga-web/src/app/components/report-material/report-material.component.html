@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="container">
   <div style="padding-top: 10px"></div>
   <h3 class="mt-2 mb-2">Materijali</h3>
@@ -13,22 +14,12 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchWorkOrder
-            placeholder="Pretražite po broju naloga"
-          />
+          <input type="text" matInput #searchWorkOrder placeholder="Pretražite po broju naloga" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchMaterial
-            placeholder="Pretražite po materijalu"
-          />
+          <input type="text" matInput #searchMaterial placeholder="Pretražite po materijalu" />
         </mat-form-field>
       </div>
     </div>
@@ -100,22 +91,12 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchCrop
-            placeholder="Pretražite po usevu"
-          />
+          <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input 
-            type="text" 
-            matInput 
-            #searchTable
-            placeholder="Pretražite po parceli"
-          />
+          <input type="text" matInput #searchTable placeholder="Pretražite po parceli" />
         </mat-form-field>
       </div>
     </div>
@@ -172,11 +153,10 @@
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
-              }" 
-          >
-            {{ workOrder.status }}
-          </td>
-        </ng-container>
+              }">
+              {{ workOrder.status }}
+            </td>
+          </ng-container>
         </tr>
         <tr>
           <ng-container *ngFor="let workOrder of material.workOrders 
