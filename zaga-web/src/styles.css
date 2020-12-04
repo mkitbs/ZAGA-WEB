@@ -15,6 +15,10 @@ body {
   background-color: #73964a;
 }
 
+#toast-container > .toast-info {
+  background-color: #5c7495;
+}
+
 navbar > nav > div > ul > li > a {
   color: #f68901 !important;
 }
