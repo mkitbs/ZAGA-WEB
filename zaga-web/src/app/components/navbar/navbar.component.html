@@ -26,8 +26,8 @@
           <a class="dropdown-item" href="#/masterData/culture">Kulture</a>
           <a class="dropdown-item" href="#/masterData/variety">Sorte</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Pravna lica</a>
-          <a class="dropdown-item" href="#">Radne jedinice</a>
+          <a class="dropdown-item" href="#/404">Pravna lica</a>
+          <a class="dropdown-item" href="#/404">Radne jedinice</a>
         </div>
       </li>
 
@@ -53,9 +53,14 @@
           <a class="dropdown-item" href="#/report/employee">Učinak radnika</a>
           <a class="dropdown-item" href="#/report/machine">Učinak mašina</a>
           <a class="dropdown-item" href="#/yieldOverview">Pregled prinosa</a>
-          <a class="dropdown-item" href="#">Kalkulacija CK</a>
+          <a class="dropdown-item" href="#/404">Kalkulacija CK</a>
         </div>
       </li>
     </ul>
+    <div class="topnav-right">
+      <a *ngIf="admin" href="#/settings"><i class="fa fa-cog fa-lg"></i></a>
+      &nbsp;
+      <a href="#/login" (click)="signout()"><i class="fa fa-sign-out fa-lg" title="Odjavite se"></i></a>
+    </div>
   </div>
 </nav>

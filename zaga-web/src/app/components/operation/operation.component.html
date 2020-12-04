@@ -1,104 +1,101 @@
 <navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
   <div style="padding-top: 10px"></div>
   <div class="containerOperations">
     <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
-      <div class="form-row">
-        <div class="col-3">
-          <form>
-            <mat-form-field class="inputAuto">
-              <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOperation" #searchOperation
-                placeholder="Pretražite po nazivu ili šifri ATM"/>
-              <mat-autocomplete #autoOperation="matAutocomplete" [displayWith]="displayFnOperation" place>
-                <mat-option *ngFor="
-                  let operation of operations | SearchOperations: searchOperation.value
-                  " [value]="operation" >
-                  {{ operation.Id }} - {{operation.Name}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-        </div>
-        <div class="col-3">
-          <form>
-            <mat-form-field class="inputAuto">
-              <input type="text" matInput [formControl]="operationTypeFC" [matAutocomplete]="autoOperationType" #searchOperationType
-                placeholder="Pretražite po tipu ATM"/>
-              <mat-autocomplete #autoOperationType="matAutocomplete" [displayWith]="displayFnOperationType" place>
-                <mat-option *ngFor="
-                  let operation of operationTypes | SearchOperationType: searchOperationType.value
-                  " [value]="operation" >
-                  {{ operation.Type }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-        </div>
-        <div class="col-3">
-          <form>
-            <mat-form-field class="inputAuto">
-              <input type="text" matInput [formControl]="operationGroupFC" [matAutocomplete]="autoOperationGroup" #searchOperationGroup
-                placeholder="Pretražite po nazivu ili šifri grupe ATM"/>
-              <mat-autocomplete #autoOperationGroup="matAutocomplete" [displayWith]="displayFnOperationGroup" place>
-                <mat-option *ngFor="
-                  let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value
-                  " [value]="operationGroup" >
-                  {{ operationGroup.Id }} - {{operationGroup.Name}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-        </div>
+    <div class="form-row">
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOperation" #searchOperation
+              placeholder="Pretražite po nazivu ili šifri ATM"/>
+            <mat-autocomplete #autoOperation="matAutocomplete" [displayWith]="displayFnOperation" place>
+              <mat-option *ngFor="
+                let operation of operations | SearchOperations: searchOperation.value
+                " [value]="operation" >
+                {{ operation.Id }} - {{operation.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="operationTypeFC" [matAutocomplete]="autoOperationType" #searchOperationType
+              placeholder="Pretražite po tipu ATM"/>
+            <mat-autocomplete #autoOperationType="matAutocomplete" [displayWith]="displayFnOperationType" place>
+              <mat-option *ngFor="
+                let operation of operationTypes | SearchOperationType: searchOperationType.value
+                " [value]="operation" >
+                {{ operation.Type }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-3">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="operationGroupFC" [matAutocomplete]="autoOperationGroup" #searchOperationGroup
+              placeholder="Pretražite po nazivu ili šifri grupe ATM"/>
+            <mat-autocomplete #autoOperationGroup="matAutocomplete" [displayWith]="displayFnOperationGroup" place>
+              <mat-option *ngFor="
+                let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value
+                " [value]="operationGroup" >
+                {{ operationGroup.Id }} - {{operationGroup.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
       </div>
     </div>
-    <div style="padding-top: 20px"></div>
-    <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
-      <div class="row card-group">
-        <div class="col-4" *ngFor="let operation of operations
-          | SearchOperations: searchOperation.value
-          | SearchOperationType: searchOperationType.value
-          | SearchOperationOperationGroup: searchOperationGroup.value; let j = index">
-          <div class="card mb-4" style="width: 32.7rem; height: 10vw;">
-            <div class="card-body">
-              <div class="row">
-                <div
-                  class="col-md-auto"
-                  style="width: fit-content; padding-bottom: 10px"
-                >
-                  <img
-                    class="card-img-right"
-                    src="../../../assets/shovel.png"
-                    width="80px"
-                    height="80px"
-                  />
-                </div>
-                <div class="col" style="margin-right: 13px;">
-                  <div class="card-text">
-                    <h5 class="card-title" style="margin-right: 30px;">
-                      {{ operation.Name }}
-                    </h5>
-                    <table>
-                      <tr title="SAP ID" style="cursor: help">
-                        <th><i class='fas fa-fingerprint'></i></th>
-                        <td>{{ operation.Id }}</td>
-                      </tr>
-                      <tr title="Tip ATM" style="cursor: help">
-                        <th><i class="fas fa-seedling"></i></th>
-                        <td>{{ operation.Type }}</td>
-                      </tr>
-                      <tr title="Grupa ATM" style="cursor: help">
-                        <th><i class="fas fa-cogs"></i></th>
-                        <td>{{ operation.operationGroup }}</td>
-                      </tr>
-                    </table>
-                  </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="containerOperations">
+    <h5 *ngIf="operations.length == 0">
+      Nema ATM za prikazivanje.
+    </h5>
+    <div class="row card-group">
+      <div class="col-4" *ngFor="let operation of operations
+        | SearchOperations: searchOperation.value
+        | SearchOperationType: searchOperationType.value
+        | SearchOperationOperationGroup: searchOperationGroup.value; let j = index">
+        <div class="card mb-4" style="width: 32.7rem; height: 10vw;">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-bottom: 10px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/shovel.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col" style="margin-right: 13px;">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ operation.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ operation.Id }}</td>
+                    </tr>
+                    <tr title="Tip ATM" style="cursor: help">
+                      <th><i class="fas fa-seedling"></i></th>
+                      <td>{{ operation.Type }}</td>
+                    </tr>
+                    <tr title="Grupa ATM" style="cursor: help">
+                      <th><i class="fas fa-cogs"></i></th>
+                      <td>{{ operation.operationGroup }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>

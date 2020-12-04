@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.spinner.show();
     this.authService.signin(this.authForm).subscribe(data => {
+      console.log(data)
       window.sessionStorage.setItem("AuthToken", data.ac_id);
       this.spinner.hide();
       this.router.navigate(['']);

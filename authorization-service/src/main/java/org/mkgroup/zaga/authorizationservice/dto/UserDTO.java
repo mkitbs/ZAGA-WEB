@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.authorizationservice.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mkgroup.zaga.authorizationservice.model.Role;
@@ -24,6 +25,7 @@ public class UserDTO {
 	List<RoleDTO> roles;
 	String telephone;
 	String sapUserId;
+	Date dateOfBirth;
 
 	public UserDTO(Long id, String name, String surname, Long address, String email, String password,
 			boolean enabled, boolean nonLocked) {
@@ -48,10 +50,11 @@ public class UserDTO {
 		this.nonLocked = u.isNonLocked();
 		this.telephone = u.getTelephone();
 		this.sapUserId = u.getSapUserId();
+		this.dateOfBirth = u.getDateOfBirth();
 		roles = new ArrayList<>();
 		if(u.getRoles() != null) {
 			for(Role r : u.getRoles()) {
-				roles.add(new RoleDTO(r.getName()));
+				roles.add(new RoleDTO(r));
 			}
 		}
 	}

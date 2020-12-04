@@ -166,7 +166,10 @@ export class CreateworkOrderComponent implements OnInit {
   nextYear;
   previousYear;
 
+  sapId;
+
   ngOnInit() {
+    this.sapId = localStorage.getItem("idSetting");
     if (this.workId == "new") {
       //new
       this.new = true;
@@ -454,6 +457,30 @@ export class CreateworkOrderComponent implements OnInit {
 
   displayFnMaterial(substance: Material): string {
     return substance && substance.Id + " - " + substance.Name;
+  }
+
+  displayFnWithoutId(element: any): string {
+    return element && element.Name;
+  }
+
+  displayFnResponsible(emp: Employee): string {
+    if(emp.perNumber == undefined && emp.name == undefined){
+      return emp && emp.Name;
+    } else {
+      return emp && emp.name;
+    }
+  }
+
+  displayFnMachineWithoutId(machine: Machine): string {
+    if(machine.Id == undefined){
+      return machine && "BEZ PRIKLJUČNE MAŠINE"
+    } else{
+      return machine && machine.Name
+    }
+  }
+
+  displayFnCultureWithoutId(culture: Crop): string {
+    return culture && culture.Name.split(",")[1]
   }
 
   //methods for work order workers, operations and machines

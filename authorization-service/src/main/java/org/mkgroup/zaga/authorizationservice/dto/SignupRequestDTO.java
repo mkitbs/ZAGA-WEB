@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequestDTO {
+	
+	private Long id;
 
 	@NotBlank
 	private String name;

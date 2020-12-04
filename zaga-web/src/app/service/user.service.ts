@@ -28,4 +28,46 @@ export class UserService {
     return this.http.post(environment.gatewayWorkOrderURL + "api/employee/editUser", user);
   }
 
+  getAllRoles(): Observable<any> {
+    return this.http.get(
+      environment.auth + "user/getRoles"
+    )
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(
+      environment.auth + "user/getAllUsers"
+    )
+  }
+
+  signup(user): Observable<any> {
+    return this.http.post(
+      environment.auth + "auth/signup", user
+    )
+  }
+
+  updateUser(user): Observable<any> {
+    return this.http.put(
+      environment.auth + "auth/updateUser", user
+    )
+  }
+
+  deleteUser(id): Observable<any> {
+    return this.http.get(
+      environment.auth + "auth/deleteUser/" + id
+    )
+  }
+
+  activateUser(id): Observable<any> {
+    return this.http.get(
+      environment.auth + "auth/activateUser/" + id
+    )
+  }
+
+  deactivateUser(id): Observable<any> {
+    return this.http.get(
+      environment.auth + "auth/deactivateUser/" + id
+    )
+  }
+
 }

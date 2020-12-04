@@ -1,12 +1,13 @@
 <navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
-    <div style="padding-top: 10px"></div>
-    <div class="container">
-      <h3 class="mt-2 mb-2">Pregled poteza</h3>
-    </div>
-    <div style="padding-top: 20px"></div>
-    <div class="container">
-      <div class="form-row">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled poteza</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="form-row">
       <div class="col-3">
         <form>
           <mat-form-field class="inputAuto">
@@ -23,42 +24,41 @@
         </form>
       </div>
     </div>
-      <div class="row card-group">
-        <div class="col-4" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroup.value; let j = index">
-          <div class="card mb-4" style="width: 30rem;">
-            <div class="card-body">
-              <div class="row">
-                <div
-                  class="col-md-auto"
-                  style="width: fit-content; padding-bottom: 10px"
-                >
-                  <img
-                    class="card-img-right"
-                    src="../../../assets/fieldGroup.png"
-                    width="80px"
-                    height="80px"
-                  />
-                </div>
-                <div class="col">
-                  <div class="card-text">
-                    <h5 class="card-title">
-                      {{ fieldGroup.Name }}
-                    </h5>
-                    <table>
-                      <tr title="SAP ID" style="cursor: help">
-                        <th><i class='fas fa-fingerprint'></i></th>
-                        <td>{{ fieldGroup.Id }}</td>
-                      </tr>
-                      <tr title="Kod kompanije" style="cursor: help">
-                        <th><i class="fa fa-building-o"></i></th>
-                        <td>{{ fieldGroup.CompanyCode }}</td>
-                      </tr>
-                      <tr title="Organizaciona jedinica" style="cursor: help">
-                        <th><i class="fa fa-registered"></i></th>
-                        <td>{{ fieldGroup.OrganisationUnit }}</td>
-                      </tr>
-                    </table>
-                  </div>
+    <div class="row card-group">
+      <div class="col-4" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroup.value; let j = index">
+        <div class="card mb-4" style="width: 30rem;">
+          <div class="card-body">
+            <div class="row">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-bottom: 10px"
+              >
+                <img
+                  class="card-img-right"
+                  src="../../../assets/fieldGroup.png"
+                  width="80px"
+                  height="80px"
+                />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ fieldGroup.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ fieldGroup.Id }}</td>
+                    </tr>
+                    <tr title="Kod kompanije" style="cursor: help">
+                      <th><i class="fa fa-building-o"></i></th>
+                      <td>{{ fieldGroup.CompanyCode }}</td>
+                    </tr>
+                    <tr title="Organizaciona jedinica" style="cursor: help">
+                      <th><i class="fa fa-registered"></i></th>
+                      <td>{{ fieldGroup.OrganisationUnit }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>

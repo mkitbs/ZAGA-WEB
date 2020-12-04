@@ -93,6 +93,10 @@ import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthGuardGuard } from './service/auth-guard.guard';
 import { AuthInterceptor } from './service/auth/auth';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MatTabsModule, MatIconModule } from '@angular/material';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AdminGuardGuard } from "./service/admin-guard.guard"
 
 declare var require: any;
 var config = require("config");
@@ -119,6 +123,8 @@ const routes: Routes = [
   { path: "report/material", component: ReportMaterialComponent, canActivate: [AuthGuardGuard] },
   { path: "report/machine", component: ReportMachineComponent, canActivate: [AuthGuardGuard] },
   { path: "report/employee", component: ReportEmployeeComponent, canActivate: [AuthGuardGuard] },
+  { path: "settings", component: SettingsComponent, canActivate: [AdminGuardGuard] },
+  { path: "404", component: NotFoundComponent },
   { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
   { path: "**", component: NotFoundComponent }
 ];
@@ -191,6 +197,7 @@ const routes: Routes = [
     SearchVarietyCultureGroupPipe,
     LoginComponent,
     NotFoundComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -202,11 +209,14 @@ const routes: Routes = [
       preventDuplicates: false,
     }),
     NgbDatepickerModule,
+    NgMultiSelectDropDownModule.forRoot(),
     ReactiveFormsModule,
     MatTooltipModule,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTabsModule,
+    MatIconModule,
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
