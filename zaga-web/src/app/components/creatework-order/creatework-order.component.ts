@@ -30,6 +30,8 @@ import { SpentMaterialService } from "src/app/service/spent-material.service";
 import { Renderer2 } from "@angular/core";
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/service/auth/auth.service';
+import { User } from 'src/app/models/User';
 
 @Component({
   selector: "app-creatework-order",
@@ -59,7 +61,8 @@ export class CreateworkOrderComponent implements OnInit {
     private deviceService: DeviceDetectorService,
     private wowService: WorkOrderWorkerService,
     private spentMaterialService: SpentMaterialService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -167,9 +170,17 @@ export class CreateworkOrderComponent implements OnInit {
   previousYear;
 
   sapId;
+  creator;
+  loggedUser;
+  user: User = new User();
+  userCreator: User = new User();
 
   ngOnInit() {
     this.sapId = localStorage.getItem("idSetting");
+    this.authService.getLogged().subscribe(data => {
+      this.user = data;
+      this.loggedUser = this.user.sapUserId;
+    })
     if (this.workId == "new") {
       //new
       this.new = true;
@@ -228,6 +239,11 @@ export class CreateworkOrderComponent implements OnInit {
         };
 
         this.dateOfCreateWO = this.workOrder.date.day + "." + this.workOrder.date.month + "." + this.workOrder.date.year + "."
+        this.creator = this.workOrder.userCreatedId;
+
+        this.userService.getUserBySapId(this.workOrder.userCreatedId).subscribe(data => {
+          this.userCreator = data;
+        })
 
         this.cropService
           .getAllByFieldAndYear(data.tableId, data.year)

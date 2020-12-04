@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	
 	@Query("select u from User u where u.id != ?#{principal.id}")
 	List<User> findUsersExceptSelf();
+	
+	User findBySapUserId(String sapId);
 }

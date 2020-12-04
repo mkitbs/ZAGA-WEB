@@ -11,4 +11,5 @@ export class User{
     nonLocked;
     roles:Roles [];
     telephone;
+    sapUserId;
 }

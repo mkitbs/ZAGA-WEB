@@ -70,4 +70,10 @@ export class UserService {
     )
   }
 
+  getUserBySapId(id): Observable<any> {
+    return this.http.get(
+      environment.auth + "user/getUserBySapId/" + id
+    )
+  }
+
 }

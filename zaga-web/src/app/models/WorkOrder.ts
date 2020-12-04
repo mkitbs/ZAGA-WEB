@@ -19,4 +19,5 @@ export class WorkOrder {
   year;
   sapId;
   table;
+  userCreatedId;
 }
