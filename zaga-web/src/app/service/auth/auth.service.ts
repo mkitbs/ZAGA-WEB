@@ -11,23 +11,23 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   signin(form): Observable<any> {
-    return this.http.post(environment.auth + "auth/signin", form);
+    return this.http.post(environment.authURL + "signin", form);
   }
 
   checkToken(token): Observable<any> {
     console.log(token)
-    return this.http.get(environment.auth + "auth/check/" + token, { responseType: 'text' });
+    return this.http.get(environment.authURL + "check/" + token, { responseType: 'text' });
   }
 
   checkUserRoles(): Observable<any> {
-    return this.http.get(environment.auth + "auth/getAdminRole");
+    return this.http.get(environment.authURL + "getAdminRole");
   }
 
   getLogged(): Observable<any> {
-    return this.http.get(environment.auth + "auth/getLogged")
+    return this.http.get(environment.authURL + "getLogged")
   }
 
   signout(): Observable<any> {
-    return this.http.get(environment.auth + "auth/signout");
+    return this.http.get(environment.authURL + "signout");
   }
 }

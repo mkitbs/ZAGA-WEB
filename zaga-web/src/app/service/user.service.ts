@@ -30,49 +30,49 @@ export class UserService {
 
   getAllRoles(): Observable<any> {
     return this.http.get(
-      environment.auth + "user/getRoles"
+      environment.userURL + "getRoles"
     )
   }
 
   getAllUsers(): Observable<any> {
     return this.http.get(
-      environment.auth + "user/getAllUsers"
+      environment.userURL + "getAllUsers"
     )
   }
 
   signup(user): Observable<any> {
     return this.http.post(
-      environment.auth + "auth/signup", user
+      environment.authURL + "signup", user
     )
   }
 
   updateUser(user): Observable<any> {
     return this.http.put(
-      environment.auth + "auth/updateUser", user
+      environment.authURL + "updateUser", user
     )
   }
 
   deleteUser(id): Observable<any> {
     return this.http.get(
-      environment.auth + "auth/deleteUser/" + id
+      environment.authURL + "deleteUser/" + id
     )
   }
 
   activateUser(id): Observable<any> {
     return this.http.get(
-      environment.auth + "auth/activateUser/" + id
+      environment.authURL + "activateUser/" + id
     )
   }
 
   deactivateUser(id): Observable<any> {
     return this.http.get(
-      environment.auth + "auth/deactivateUser/" + id
+      environment.authURL + "deactivateUser/" + id
     )
   }
 
   getUserBySapId(id): Observable<any> {
     return this.http.get(
-      environment.auth + "user/getUserBySapId/" + id
+      environment.userURL + "getUserBySapId/" + id
     )
   }
 
