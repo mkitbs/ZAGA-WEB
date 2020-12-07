@@ -37,6 +37,7 @@
     "jquery": "^3.5.1",
     "lodash": "^4.17.20",
     "ng2-charts": "^2.4.0",
+    "ngx-cookie-service": "^11.0.2",
     "ngx-device-detector": "^2.0.0",
     "ngx-spinner": "^8.0.0",
     "ngx-toastr": "^10.0.4",

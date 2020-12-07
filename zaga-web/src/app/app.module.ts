@@ -97,6 +97,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { MatTabsModule, MatIconModule } from '@angular/material';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AdminGuardGuard } from "./service/admin-guard.guard"
+import { CookieService } from 'ngx-cookie-service';
 
 declare var require: any;
 var config = require("config");
@@ -232,6 +233,7 @@ const routes: Routes = [
       multi: true,
     },
     DeviceDetectorService,
+    CookieService,
     { provide: NgbDateParserFormatter, useClass: NgbDateParser },
   ],
   bootstrap: [AppComponent],
