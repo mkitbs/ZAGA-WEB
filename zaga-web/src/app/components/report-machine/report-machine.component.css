@@ -3,7 +3,6 @@ h3 {
 }
 
 .tabela-nalozi {
-  background: white;
   width: 100%;
   font-size: 12px;
 }
@@ -72,4 +71,15 @@ th {
 
 ::ng-deep .mat-form-field-empty.mat-form-field-label {
   color: #5c7495 !important;
+}
+
+.table-fixed {
+  width: 100%;
+}
+
+/*This will work on every browser*/
+.table-fixed thead th {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
 }

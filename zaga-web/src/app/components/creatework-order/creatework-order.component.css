@@ -165,3 +165,9 @@ button.calendar {
 .ok {
   background-color: #33590b;
 }
+
+.background {
+  background-image: url("https://www.agroglobe.rs/wp-content/uploads/2020/04/kontaktBack-1.png");
+  background-repeat: repeat;
+  background-size: 115vw;
+}
