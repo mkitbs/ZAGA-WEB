@@ -672,9 +672,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   addNewWorkerAndMachine() {
-    this.wow.user.userId = this.selectedWorker;
-    this.wow.operation.dbid = this.selectedOperation;
-    this.wow.machine.dbid = this.selectedMachine;
+    this.wow.user.userId = this.workerFC.value.userId;
+    this.wow.operation.dbid = this.workerOperationFC.value.dbid;
+    this.wow.machine.dbid = this.workerMachineFC.value.dbid;
     this.spinner.show();
     this.wow.connectingMachine.dbid = this.selectedCouplingMachine;
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
@@ -978,7 +978,6 @@ export class CreateworkOrderComponent implements OnInit {
   addNewMaterial() {
     this.clickAddNewMaterial = true;
     this.spinner.show();
-    this.spentMaterial.material.dbid = this.selectedMaterial;
     if(this.quantityEntered < 0){
       this.validMaterialQuantity = false;
       this.spinner.hide();
@@ -988,8 +987,10 @@ export class CreateworkOrderComponent implements OnInit {
     }
     if(this.validMaterialQuantity == true){
       this.clickAddNewMaterial = false;
+      this.spentMaterial.quantity = this.quantityEntered;
+      this.spentMaterial.material.dbid = this.materialFC.value.dbid;
       this.spentMaterialService
-      .addSpentMaterial(this.workId, this.materialFC.value)
+      .addSpentMaterial(this.workId, this.spentMaterial)
       .subscribe((res) => {
         this.spinner.hide();
         console.log(res);

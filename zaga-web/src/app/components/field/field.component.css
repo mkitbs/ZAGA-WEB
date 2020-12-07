@@ -44,6 +44,13 @@ h3 {
   box-shadow: none;
 }
 
+.btn-map {
+  float: right;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
 .inputAuto,
 .mat-form-field-infix {
   font-size: 12px !important;
@@ -65,4 +72,8 @@ h3 {
 
 ::ng-deep .mat-form-field-empty.mat-form-field-label {
   color: #5c7495 !important;
+}
+
+agm-map {
+  height: 500px;
 }

@@ -100,8 +100,13 @@ public class SpentMaterialService {
 				
 		SpentMaterial spentMaterial = new SpentMaterial();
 		spentMaterial.setWorkOrder(workOrder);
-		spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
-		spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
+		if(spentMaterialDTO.getQuantity() != null) {
+			spentMaterial.setQuantity(spentMaterialDTO.getQuantity());
+			spentMaterial.setQuantityPerHectar(spentMaterialDTO.getQuantity() / workOrder.getCrop().getArea());
+		} else {
+			spentMaterial.setQuantity(-1.0);
+			spentMaterial.setQuantityPerHectar(-1.0);
+		}
 		if(spentMaterialDTO.getSpent() != null) {
 			spentMaterial.setSpent(spentMaterialDTO.getSpent());
 			spentMaterial.setSpentPerHectar(spentMaterialDTO.getSpent() / workOrder.getCrop().getArea());

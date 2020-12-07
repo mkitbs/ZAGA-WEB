@@ -221,7 +221,7 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
+      apiKey: "AIzaSyCYhI5DKGX1t8Oref8HdsUXWsA9a25NXCg",
       libraries: ["drawing"],
     }),
   ],
@@ -239,3 +239,6 @@ const routes: Routes = [
   bootstrap: [AppComponent],
 })
 export class AppModule { }
+
+//AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug   
+//AIzaSyCYhI5DKGX1t8Oref8HdsUXWsA9a25NXCg //devMode
