@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/service/auth/auth.service';
 
 @Component({
@@ -9,7 +10,8 @@ import { AuthService } from 'src/app/service/auth/auth.service';
 export class NavbarComponent implements OnInit {
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private cookieService: CookieService
   ) { }
 
   admin;
@@ -25,9 +27,8 @@ export class NavbarComponent implements OnInit {
 
   signout(){
     sessionStorage.clear();
-    this.authService.signout().subscribe(res => {
-      
-    })
+    this.cookieService.delete("UserIdentity");
+    this.authService.signout().subscribe(res => {})
   }
 
 }

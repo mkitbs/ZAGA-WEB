@@ -1,4 +1,5 @@
 <navbar></navbar>
+<div class="background">
 <div class="container">
   <div style="padding-top: 70px;"></div>
   <h3 class="mt-2 mb-2">Podešavanja</h3> 
@@ -131,8 +132,8 @@
             <div class="flip-card">
               <div class="flip-card-inner">
                 <div class="flip-card-front">
-                  <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/userActive.png" alt="Avatar" style="width: 250px; height: 200px;">
-                  <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/userDeactive.png" alt="Avatar" style="width: 250px; height: 200px;">
+                  <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/active.jpg" alt="Avatar" style="width: 250px; height: 200px;">
+                  <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/deactive.jpg" alt="Avatar" style="width: 250px; height: 200px;">
                   <div class="card-body">
                     <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
                   </div>
@@ -566,4 +567,5 @@
     </mat-tab-group>
    
   </div>
+</div>
 </div>
