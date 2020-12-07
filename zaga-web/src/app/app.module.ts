@@ -71,6 +71,7 @@ import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AuthGuardGuard } from './service/auth-guard.guard';
 import { AuthInterceptor } from './service/auth/auth';
+import { CookieService } from 'ngx-cookie-service';
 
 declare var require: any;
 var config = require("config");
@@ -178,6 +179,7 @@ const routes: Routes = [
       multi: true,
     },
     DeviceDetectorService,
+    CookieService,
     { provide: NgbDateParserFormatter, useClass: NgbDateParser },
   ],
   bootstrap: [AppComponent],
