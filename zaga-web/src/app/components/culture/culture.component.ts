@@ -1,5 +1,6 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Culture } from 'src/app/models/Culture';
 import { CultureGroup } from 'src/app/models/CultureGroup';
 import { CultureGroupService } from 'src/app/service/culture-group.service';
@@ -20,13 +21,22 @@ export class CultureComponent implements OnInit {
   cultures: Culture[] = [];
   cultureGroups: CultureGroup[] = [];
   culture: Culture = new Culture();
+  cultureTypes: Culture[] = [];
+  productionTypes: Culture[] = [];
 
   selectedOrgCon;
   selectedCultureType;
   selectedCulture;
 
+  cultureFC: FormControl = new FormControl("");
+  cultureTypeFC: FormControl = new FormControl("");
+  productionTypeFC: FormControl = new FormControl("");
+  cultureGroupFC: FormControl = new FormControl("");
+
   ngOnInit() {
     this.getAll();
+    this.getAllCultureTypes();
+    this.getAllProductionTypes();
   }
 
   getAll(){
@@ -66,267 +76,50 @@ export class CultureComponent implements OnInit {
     })
   }
 
-  getAllByOrgCon(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByOrgCon(this.selectedOrgCon).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
+  getAllCultureTypes(){
+    this.cultureService.getAllGroupByCultureType().subscribe(data => {
+      this.cultureTypes = data;
+      this.cultureTypes.forEach(culture => {
+        if(culture.Type == "FRUIT"){
+          culture.Type = "VOĆE";
+        } else if(culture.Type == "VEGETABLE"){
+          culture.Type = "POVRĆE";
+        } else if(culture.Type == "CROP_FARMING"){
+          culture.Type = "RATARSKA";
+        } else if(culture.Type == "VITICULTURE"){
+          culture.Type = "VINOGRADARSKA";
+        }
+      })
+    })
   }
 
-  getAllByCultureType(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByCultureType(this.selectedCultureType).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
+  getAllProductionTypes(){
+    this.cultureService.getAllGroupByProductionType().subscribe(data => {
+      this.productionTypes = data; 
+      this.productionTypes.forEach(culture => {
+        if(culture.OrgKon == "ORGANIC"){
+          culture.OrgKon = "ORGANSKA";
+        } else if(culture.OrgKon == "CONVENTIONAL"){
+          culture.OrgKon = "KONVENCIONALNA";
+        }
+      })
+    })
   }
 
-  getAllByCultureGroup(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByCultureGroup(this.selectedCulture).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
+  displayFnCulture(culture: Culture): string {
+    return culture && culture.Id + " - " + culture.Name;
   }
 
-  getAllByOrgConCultureTypeCultureGroup(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByOrgConCultureTypeCultureGroup(
-        this.selectedOrgCon, this.selectedCultureType, this.selectedCulture
-        ).subscribe(data => {
-          this.cultures = data;
-          this.cultures.forEach(culture => {
-            if(culture.Type == "FRUIT"){
-              culture.Type = "VOĆE";
-            } else if(culture.Type == "VEGETABLE"){
-              culture.Type = "POVRĆE";
-            } else if(culture.Type == "CROP_FARMING"){
-              culture.Type = "RATARSKA";
-            } else if(culture.Type == "VITICULTURE"){
-              culture.Type = "VINOGRADARSKA";
-            }
-            if(culture.OrgKon == "ORGANIC"){
-              culture.OrgKon = "ORGANSKA";
-            } else if(culture.OrgKon == "CONVENTIONAL"){
-              culture.OrgKon = "KONVENCIONALNA";
-            }
-            culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-          })
-        });
-    });
+  displayFnProductionType(culture: Culture): string {
+    return culture && culture.OrgKon;
   }
 
-  getAllByOrgConAndCultureType(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByOrgConAndCultureType(this.selectedOrgCon, this.selectedCultureType).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
+  displayFnCultureType(culture: Culture): string {
+    return culture && culture.Type;
   }
 
-  getAllByOrgConAndCultureGroup(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByOrgConAndCultureGroup(this.selectedOrgCon, this.selectedCulture).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
-  }
-
-  getAllByCultureTypeAndCultureGroup(){
-    this.cultureGroupService.getAll().subscribe(data => {
-      this.cultureGroups = data;
-      this.cultureService.getAllByCultureTypeAndCultureGroup(this.selectedCultureType, this.selectedCulture).subscribe(data => {
-        this.cultures = data;
-        this.cultures.forEach(culture => {
-          if(culture.Type == "FRUIT"){
-            culture.Type = "VOĆE";
-          } else if(culture.Type == "VEGETABLE"){
-            culture.Type = "POVRĆE";
-          } else if(culture.Type == "CROP_FARMING"){
-            culture.Type = "RATARSKA";
-          } else if(culture.Type == "VITICULTURE"){
-            culture.Type = "VINOGRADARSKA";
-          }
-          if(culture.OrgKon == "ORGANIC"){
-            culture.OrgKon = "ORGANSKA";
-          } else if(culture.OrgKon == "CONVENTIONAL"){
-            culture.OrgKon = "KONVENCIONALNA";
-          }
-          culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
-        })
-      });
-    });
-  }
-
-  getCultures(){
-    if (
-      //izabrani su i tip proizvodnje i tip kulture i grupa kulture
-      this.selectedOrgCon != undefined &&
-      this.selectedCultureType != undefined &&
-      this.selectedCulture != undefined &&
-      this.selectedOrgCon != -1 &&
-      this.selectedCultureType != -1 &&
-      this.selectedCulture != -1 
-    ) {
-      this.getAllByOrgConCultureTypeCultureGroup();
-    } else if (
-      //nije izabrano nista, odnosono ponisteni su prethodni izbori
-      (this.selectedOrgCon == -1 || this.selectedOrgCon == undefined) &&
-      (this.selectedCultureType == -1 || this.selectedCultureType == undefined) &&
-      (this.selectedCulture == -1 || this.selectedCulture == undefined)
-    ) {
-      this.getAll();
-    } else if (
-      //izabran je samo tip proizvodnje
-      (this.selectedCultureType == undefined || this.selectedCultureType == -1) &&
-      (this.selectedCulture == undefined || this.selectedCulture == -1) &&
-      (this.selectedOrgCon != undefined || this.selectedOrgCon != -1)
-    ) {
-      this.getAllByOrgCon();
-    } else if (
-      //izabran je samo tip kulture
-      (this.selectedCultureType != undefined || this.selectedCultureType != -1) &&
-      (this.selectedCulture == undefined || this.selectedCulture == -1) &&
-      (this.selectedOrgCon == undefined || this.selectedOrgCon == -1)
-    ) {
-      this.getAllByCultureType();
-    } else if (
-      //izabrana je samo grupa kultura
-      (this.selectedCultureType == undefined || this.selectedCultureType == -1) &&
-      (this.selectedCulture != undefined || this.selectedCulture != -1) &&
-      (this.selectedOrgCon == undefined || this.selectedOrgCon == -1)
-    ) {
-      this.getAllByCultureGroup();
-    } else if (
-      //izabran je tip proizvodnje i tip kulture
-      (this.selectedCultureType != undefined || this.selectedCultureType != -1) &&
-      (this.selectedCulture == undefined || this.selectedCulture == -1) &&
-      (this.selectedOrgCon != undefined || this.selectedOrgCon != -1)
-    ) {
-      this.getAllByOrgConAndCultureType();
-    } else if (
-      //izabran je tip proizvodnje i grupa kulture
-      (this.selectedCultureType == undefined || this.selectedCultureType == -1) &&
-      (this.selectedCulture != undefined || this.selectedCulture != -1) &&
-      (this.selectedOrgCon != undefined || this.selectedOrgCon != -1)
-    ) {
-      this.getAllByOrgConAndCultureGroup();
-    } else if (
-      //izabran je tip kulture i grupa kulture
-      (this.selectedCultureType != undefined || this.selectedCultureType != -1) &&
-      (this.selectedCulture != undefined || this.selectedCulture != -1) &&
-      (this.selectedOrgCon == undefined || this.selectedOrgCon == -1)
-    ) {
-      this.getAllByCultureTypeAndCultureGroup();
-    }
-    
-  }
-
-  setValueForSelectedOrgCon(){
-    this.selectedOrgCon = -1;
-    this.getCultures();
-  }
-
-  setValueForSelectedCultureType() {
-    this.selectedCultureType = -1;
-    this.getCultures();
-  }
-
-  setValueForSelectedCulture(){
-    this.selectedCulture = -1;
-    this.getCultures();
+  displayFnCultureGroup(cultureGroup: CultureGroup): string {
+    return cultureGroup && cultureGroup.Id + " - " + cultureGroup.Name;
   }
 
 }

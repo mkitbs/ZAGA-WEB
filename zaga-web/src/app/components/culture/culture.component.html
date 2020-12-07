@@ -1,109 +1,70 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
       <h3 class="mt-2 mb-2" >Pregled kultura</h3>
       <div style="padding-top: 20px"></div>
-    
       <div class="form-row">
         <div class="col-3">
-          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
-          <div class="input-group mb-3">
-            <select
-              name="table"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedOrgCon"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="ORGANIC">
-                ORGANSKA
-              </option>
-              <option value="CONVENTIONAL">
-                KONVENCIONALNA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
-              <span
-                *ngIf="selectedOrgCon != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedOrgCon()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip proizvodnje"
-                >x</span
-              >
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCultureType"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="FRUIT">
-                VOĆE
-              </option>
-              <option value="VEGETABLE">
-                POVRĆE
-              </option>
-              <option value="CROP_FARMING">
-                RATARSKA
-              </option>
-              <option value="VITICULTURE">
-                VINOGRADARSKA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
-              <span
-                *ngIf="selectedCultureType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCultureType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip kulture"
-                >x</span
-              >
-            </div>
-          </div>
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCulture.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
         <div class="col-3">
-          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCulture"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ cultureGroup.dbId }}"
-                *ngFor="let cultureGroup of cultureGroups"
-              >
-                {{ cultureGroup.Name }}
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCulture != undefined">
-              <span
-                *ngIf="selectedCulture != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCulture()"
-                style="cursor: pointer"
-                title="Poništi odabranu kulturu"
-                >x</span
-              >
-            </div>
-          </div>
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureTypeFC" [matAutocomplete]="autoProductionType" #searchProductionType
+                placeholder="Pretražite po tipu proizvodnje"/>
+              <mat-autocomplete #autoProductionType="matAutocomplete" [displayWith]="displayFnProductionType" place>
+                <mat-option *ngFor="
+                  let culture of productionTypes | SearchCultureProductionType: searchProductionType.value
+                  " [value]="culture" >
+                  {{ culture.OrgKon }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="productionTypeFC" [matAutocomplete]="autoCultureType" #searchCultureType
+                placeholder="Pretražite po tipu kulture"/>
+              <mat-autocomplete #autoCultureType="matAutocomplete" [displayWith]="displayFnCultureType" place>
+                <mat-option *ngFor="
+                  let culture of cultureTypes | SearchCultureCultureType: searchCultureType.value
+                  " [value]="culture" >
+                  {{ culture.Type }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroup" #searchCultureGroup
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroup="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
       </div>
     </div>
@@ -113,7 +74,11 @@
         Nema kultura za prikazivanje.
       </h5>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let culture of cultures; let j = index">
+        <div class="col-4" *ngFor="let culture of cultures
+          | SearchCulture: searchCulture.value
+          | SearchCultureType: searchCultureType.value
+          | SearchCultureOrgCon: searchProductionType.value
+          | SearchCultureCultureGroup: searchCultureGroup.value; let j = index">
           <div class="card mb-3" style="width: 30.8rem">
             <div class="card-body">
               <div class="row">
@@ -134,6 +99,10 @@
                       {{ culture.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ culture.Id }}</td>
+                      </tr>
                       <tr title="Tip proizvodnje" style="cursor: help">
                         <th><i class="fa fa-industry"></i></th>
                         <td>{{ culture.OrgKon }}</td>
@@ -151,19 +120,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+ 
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -173,105 +138,67 @@
       <div style="padding-top: 20px"></div>
     
       <div class="form-row">
-        <div class="col-3">
-          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
-          <div class="input-group mb-3">
-            <select
-              name="table"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedOrgCon"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="ORGANIC">
-                ORGANSKA
-              </option>
-              <option value="CONVENTIONAL">
-                KONVENCIONALNA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
-              <span
-                *ngIf="selectedOrgCon != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedOrgCon()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip proizvodnje"
-                >x</span
-              >
-            </div>
-          </div>
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureTablet" #searchCultureTablet
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCultureTablet="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCultureTablet.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCultureType"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="FRUIT">
-                VOĆE
-              </option>
-              <option value="VEGETABLE">
-                POVRĆE
-              </option>
-              <option value="CROP_FARMING">
-                RATARSKA
-              </option>
-              <option value="VITICULTURE">
-                VINOGRADARSKA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
-              <span
-                *ngIf="selectedCultureType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCultureType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip kulture"
-                >x</span
-              >
-            </div>
-          </div>
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoProductionTypeTablet" #searchProductionTypeTablet
+                placeholder="Pretražite po tipu proizvodnje"/>
+              <mat-autocomplete #autoProductionTypeTablet="matAutocomplete" [displayWith]="displayFnProductionType" place>
+                <mat-option *ngFor="
+                  let culture of productionTypes | SearchCultureProductionType: searchProductionTypeTablet.value
+                  " [value]="culture" >
+                  {{ culture.OrgKon }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
-        <div class="col-3">
-          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCulture"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ cultureGroup.dbId }}"
-                *ngFor="let cultureGroup of cultureGroups"
-              >
-                {{ cultureGroup.Name }}
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCulture != undefined">
-              <span
-                *ngIf="selectedCulture != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCulture()"
-                style="cursor: pointer"
-                title="Poništi odabranu kulturu"
-                >x</span
-              >
-            </div>
-          </div>
+      </div>
+      <div class="form-row">
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureTypeTablet" #searchCultureTypeTablet
+                placeholder="Pretražite po tipu kulture"/>
+              <mat-autocomplete #autoCultureTypeTablet="matAutocomplete" [displayWith]="displayFnCultureType" place>
+                <mat-option *ngFor="
+                  let culture of cultureTypes | SearchCultureCultureType: searchCultureTypeTablet.value
+                  " [value]="culture" >
+                  {{ culture.Type }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroupTablet" #searchCultureGroupTablet
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroupTablet="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
       </div>
     </div>
@@ -281,7 +208,11 @@
         Nema kultura za prikazivanje.
       </h5>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let culture of cultures; let j = index">
+        <div class="col-7" *ngFor="let culture of cultures
+          | SearchCulture: searchCultureTablet.value
+          | SearchCultureType: searchCultureTypeTablet.value
+          | SearchCultureOrgCon: searchProductionTypeTablet.value
+          | SearchCultureCultureGroup: searchCultureGroupTablet.value; let j = index">
           <div class="card mb-3" style="width: 30.8rem">
             <div class="card-body">
               <div class="row">
@@ -302,6 +233,10 @@
                       {{ culture.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ culture.Id }}</td>
+                      </tr>
                       <tr title="Tip proizvodnje" style="cursor: help">
                         <th><i class="fa fa-industry"></i></th>
                         <td>{{ culture.OrgKon }}</td>
@@ -319,19 +254,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -341,105 +272,67 @@
       <div style="padding-top: 20px"></div>
     
       <div class="form-row">
-        <div class="col-3">
-          <label><i class="fa fa-industry"></i> Tip proizvodnje </label>
-          <div class="input-group mb-3">
-            <select
-              name="table"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedOrgCon"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="ORGANIC">
-                ORGANSKA
-              </option>
-              <option value="CONVENTIONAL">
-                KONVENCIONALNA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedOrgCon != undefined">
-              <span
-                *ngIf="selectedOrgCon != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedOrgCon()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip proizvodnje"
-                >x</span
-              >
-            </div>
-          </div>
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureLaptop" #searchCultureLaptop
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCultureLaptop="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCultureLaptop.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
-  
-        <div class="col-3">
-          <label><i class="fas fa-seedling"></i> Tip kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCultureType"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option value="FRUIT">
-                VOĆE
-              </option>
-              <option value="VEGETABLE">
-                POVRĆE
-              </option>
-              <option value="CROP_FARMING">
-                RATARSKA
-              </option>
-              <option value="VITICULTURE">
-                VINOGRADARSKA
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCultureType != undefined">
-              <span
-                *ngIf="selectedCultureType != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCultureType()"
-                style="cursor: pointer"
-                title="Poništi odabrani tip kulture"
-                >x</span
-              >
-            </div>
-          </div>
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoProductionTypeLaptop" #searchProductionTypeLaptop
+                placeholder="Pretražite po tipu proizvodnje"/>
+              <mat-autocomplete #autoProductionTypeLaptop="matAutocomplete" [displayWith]="displayFnProductionType" place>
+                <mat-option *ngFor="
+                  let culture of productionTypes | SearchCultureProductionType: searchProductionTypeLaptop.value
+                  " [value]="culture" >
+                  {{ culture.OrgKon }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
-        <div class="col-3">
-          <label><i class="fa fa-cubes"></i> Grupa kulture </label>
-          <div class="input-group mb-3">
-            <select
-              name="culture"
-              class="form-control"
-              id=""
-              [(ngModel)]="selectedCulture"
-              (change)="getCultures()"
-            >
-              <option value="-1"></option>
-              <option
-                value="{{ cultureGroup.dbId }}"
-                *ngFor="let cultureGroup of cultureGroups"
-              >
-                {{ cultureGroup.Name }}
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="selectedCulture != undefined">
-              <span
-                *ngIf="selectedCulture != -1"
-                class="input-group-text"
-                id="basic-addon2"
-                (click)="setValueForSelectedCulture()"
-                style="cursor: pointer"
-                title="Poništi odabranu kulturu"
-                >x</span
-              >
-            </div>
-          </div>
+      </div>
+      <div class="form-row">
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureTypeLaptop" #searchCultureTypeLaptop
+                placeholder="Pretražite po tipu kulture"/>
+              <mat-autocomplete #autoCultureTypeLaptop="matAutocomplete" [displayWith]="displayFnCultureType" place>
+                <mat-option *ngFor="
+                  let culture of cultureTypes | SearchCultureCultureType: searchCultureTypeLaptop.value
+                  " [value]="culture" >
+                  {{ culture.Type }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroupLaptop" #searchCultureGroupLaptop
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroupLaptop="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </div>
       </div>
     </div>
@@ -449,7 +342,11 @@
         Nema kultura za prikazivanje.
       </h5>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let culture of cultures; let j = index">
+        <div class="col-5" *ngFor="let culture of cultures
+          | SearchCulture: searchCultureLaptop.value
+          | SearchCultureType: searchCultureTypeLaptop.value
+          | SearchCultureOrgCon: searchProductionTypeLaptop.value
+          | SearchCultureCultureGroup: searchCultureGroupLaptop.value; let j = index">
           <div class="card mb-3" style="width: 30.8rem">
             <div class="card-body">
               <div class="row">
@@ -470,6 +367,10 @@
                       {{ culture.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ culture.Id }}</td>
+                      </tr>
                       <tr title="Tip proizvodnje" style="cursor: help">
                         <th><i class="fa fa-industry"></i></th>
                         <td>{{ culture.OrgKon }}</td>
@@ -487,45 +388,27 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getCultureForEdit(culture.dbId)"
-              data-toggle="modal"
-              data-target="#editCultureModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCultureForEdit(culture.dbId)"
+            data-toggle="modal" data-target="#editCultureModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+
 </div>
 <!--Edit crop modal-->
-<div
-  class="modal fade"
-  id="editCultureModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editCultureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4
-          class="modal-title"
-          id="exampleModalLabel"
-        >
-        <i class="fa fa-leaf mr-2"></i>
-         {{ culture.Name }}
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fa fa-leaf mr-2"></i>
+          {{ culture.Name }}
         </h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -533,12 +416,7 @@
         <form #editCultureModalForm="ngForm">
           <div class="form-group">
             <label for="type"><i class="fa fa-industry"></i> Tip proizvodnje</label>
-            <select
-              id=""
-              class="form-control"
-              name="orgKon"
-              [(ngModel)]="culture.OrgKon"
-            >
+            <select id="" class="form-control" name="orgKon" [(ngModel)]="culture.OrgKon">
               <option value="ORGANSKA">
                 ORGANSKA
               </option>
@@ -549,12 +427,7 @@
           </div>
           <div class="form-group">
             <label for="cultureType"><i class="fas fa-seedling"></i> Tip kulture</label>
-            <select
-              id=""
-              class="form-control"
-              name="cultureType"
-              [(ngModel)]="culture.Type"
-            >
+            <select id="" class="form-control" name="cultureType" [(ngModel)]="culture.Type">
               <option value="VOĆE">
                 VOĆE
               </option>
@@ -571,16 +444,8 @@
           </div>
           <div class="form-group">
             <label for="culture"><i class="fa fa-cubes"></i> Grupa kulture</label>
-            <select
-              id=""
-              class="form-control"
-              name="culture"
-              [(ngModel)]="culture.cultureGroup"
-            >
-              <option
-                value="{{ cultureGroup.dbId }}"
-                *ngFor="let cultureGroup of cultureGroups"
-              >
+            <select id="" class="form-control" name="culture" [(ngModel)]="culture.cultureGroup">
+              <option value="{{ cultureGroup.dbId }}" *ngFor="let cultureGroup of cultureGroups">
                 {{ cultureGroup.Name }}
               </option>
             </select>
@@ -588,21 +453,11 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          style="background-color: #f68901"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          style="background-color: #33590b"
-          data-dismiss="modal"
-          (click)="editCulture()"
-        >
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="editCulture()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

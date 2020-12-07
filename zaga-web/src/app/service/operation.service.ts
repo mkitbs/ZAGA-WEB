@@ -48,4 +48,10 @@ export class OperationService {
       groupId
     );
   }
+
+  getAllGroupByType(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAllGroupByType"
+    )
+  }
 }

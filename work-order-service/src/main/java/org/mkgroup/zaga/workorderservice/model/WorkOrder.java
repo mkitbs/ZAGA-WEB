@@ -51,6 +51,9 @@ public class WorkOrder {
 	@Enumerated(EnumType.STRING)
 	private WorkOrderStatus status;
 	
+	@Column(nullable = false)
+	private Long userCreatedSapId;
+	
 	@ManyToOne
 	@JoinColumn(name="responsible_id", nullable=true)
 	private User responsible;

@@ -1,3 +1,5 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -5,8 +7,42 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="varietyFC" [matAutocomplete]="autoVariety" #searchVariety
+                placeholder="Pretražite po nazivu ili šifri sorte"/>
+              <mat-autocomplete #autoVariety="matAutocomplete" [displayWith]="displayFnVariety" place>
+                <mat-option *ngFor="
+                  let variety of varieties | SearchVariety: searchVariety.value
+                  " [value]="variety" >
+                  {{ variety.Id }} - {{variety.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCulture.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let variety of varieties; let j = index">
+        <div class="col-4" *ngFor="let variety of varieties 
+          | SearchVariety: searchVariety.value
+          | SearchVarietyCultureGroup: searchCulture.value; let j = index">
           <div class="card mb-4" style="width: 30rem;">
             <div class="card-body">
               <div class="row">
@@ -27,6 +63,10 @@
                       {{ variety.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ variety.Id }}</td>
+                      </tr>
                       <tr title="Kultura" style="cursor: help">
                         <th><i class="fa fa-cubes"></i></th>
                         <td>{{ variety.cultureName }} </td>
@@ -36,19 +76,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -58,8 +94,42 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="varietyFC" [matAutocomplete]="autoVarietyLaptop" #searchVarietyLaptop
+                placeholder="Pretražite po nazivu ili šifri sorte"/>
+              <mat-autocomplete #autoVarietyLaptop="matAutocomplete" [displayWith]="displayFnVariety" place>
+                <mat-option *ngFor="
+                  let variety of varieties | SearchVariety: searchVarietyLaptop.value
+                  " [value]="variety" >
+                  {{ variety.Id }} - {{variety.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureLaptop" #searchCultureLaptop
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCultureLaptop="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCultureLaptop.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let variety of varieties; let j = index">
+        <div class="col-5" *ngFor="let variety of varieties
+          | SearchVariety: searchVarietyLaptop.value
+          | SearchVarietyCultureGroup: searchCultureLaptop.value; let j = index">
           <div class="card mb-4" style="width: 30rem;">
             <div class="card-body">
               <div class="row">
@@ -80,6 +150,10 @@
                       {{ variety.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ variety.Id }}</td>
+                      </tr>
                       <tr title="Kultura" style="cursor: help">
                         <th><i class="fa fa-cubes"></i></th>
                         <td>{{ variety.cultureName }} </td>
@@ -89,19 +163,15 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden            
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -111,8 +181,42 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="varietyFC" [matAutocomplete]="autoVarietyTablet" #searchVarietyTablet
+                placeholder="Pretražite po nazivu ili šifri sorte"/>
+              <mat-autocomplete #autoVarietyTablet="matAutocomplete" [displayWith]="displayFnVariety" place>
+                <mat-option *ngFor="
+                  let variety of varieties | SearchVariety: searchVarietyTablet.value
+                  " [value]="variety" >
+                  {{ variety.Id }} - {{variety.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureTablet" #searchCultureTablet
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCultureTablet="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCultureTablet.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let variety of varieties; let j = index">
+        <div class="col-7" *ngFor="let variety of varieties
+          | SearchVariety: searchVarietyTablet.value
+          | SearchVarietyCultureGroup: searchCultureTablet.value; let j = index">
           <div class="card mb-4" style="width: 30rem;">
             <div class="card-body">
               <div class="row">
@@ -133,6 +237,10 @@
                       {{ variety.Name }}
                     </h5>
                     <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ variety.Id }}</td>
+                      </tr>
                       <tr title="Kultura" style="cursor: help">
                         <th><i class="fa fa-cubes"></i></th>
                         <td>{{ variety.cultureName }} </td>
@@ -142,83 +250,49 @@
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              (click)="getVariety(variety.dbId)"
-              data-toggle="modal"
-              data-target="#editVarietydModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  
 </div>
 <!--Edit field modal-->
-<div
-class="modal fade"
-id="editVarietydModal"
-tabindex="-1"
-role="dialog"
-aria-labelledby="exampleModalLabel"
-aria-hidden="true"
->
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title" id="exampleModalLabel">
-        <i class="fas fa-seedling mr-2"></i> {{ variety.Name }}
-      </h4>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form #editVarietyModalForm="ngForm">
-        <div class="form-group">
-          <label for="culture"><i class="fa fa-cubes"></i> Kultura</label>
-          <select
-            id=""
-            class="form-control"
-            name="culture"
-            
-          >
-            <option
-              value="{{ culture.dbId }}"
-              *ngFor="let culture of cultures"
-            >
-              {{ culture.Name }}
-            </option>
-          </select>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-danger"
-        data-dismiss="modal"
-        style="background-color: #f68901"
-      >
-        <i class="fa fa-window-close"></i> Odustani
-      </button>
-      <button
-        type="button"
-        class="btn btn-success"
-        style="background-color: #33590b"
-        data-dismiss="modal"
-      >
-        <i class="fa fa-save"></i> Sačuvaj
-      </button>
+<div class="modal fade" id="editVarietydModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fas fa-seedling mr-2"></i> {{ variety.Name }}
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editVarietyModalForm="ngForm">
+          <div class="form-group">
+            <label for="culture"><i class="fa fa-cubes"></i> Kultura</label>
+            <select id="" class="form-control" name="culture">
+              <option value="{{ culture.dbId }}" *ngFor="let culture of cultures">
+                {{ culture.Name }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
+          <i class="fa fa-window-close"></i> Odustani
+        </button>
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal">
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
+      </div>
     </div>
   </div>
 </div>
-</div>
-

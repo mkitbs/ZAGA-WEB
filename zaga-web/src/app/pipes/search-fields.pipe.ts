@@ -20,6 +20,8 @@ export class SearchFieldsPipe implements PipeTransform {
       var numString = value.toString();
       var idString = data.Id.toString();
       return idString.toLowerCase().includes(numString.toLowerCase())
+    } else if(value.includes(" - ")){
+      return data.Name.toLowerCase().includes(value.split(" - ")[1].toLowerCase()) 
     } else{
       return data.Name.toLowerCase().includes(value.toLowerCase()) 
     }

@@ -28,6 +28,7 @@ public class WorkOrderDTO {
 	private UUID responsibleId;
 	private UUID tableId;
 	private UUID cultureId;
+	private String userCreatedId;
 	private List<SpentMaterialDTO> materials;
 	private List<WorkOrderWorkerDTO> workers;
 	private String operationName;
@@ -59,6 +60,7 @@ public class WorkOrderDTO {
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
 		treated = wo.getTreated();
+		userCreatedId = wo.getUserCreatedSapId().toString();
 		if(wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
@@ -101,6 +103,58 @@ public class WorkOrderDTO {
 				SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
 				this.materials.add(smDTO);
 			}
+		}
+		
+	}	
+	
+	public WorkOrderDTO(WorkOrder wo, Long idWorker) {
+		id = wo.getId();
+		date = new DateDTO(wo);
+		status = wo.getStatus().toString();
+		operationName = wo.getOperation().getName();
+		responsibleName = wo.getResponsible().getName();
+		table = wo.getCrop().getField().getName();
+		cropName = wo.getCrop().getName();
+		treated = wo.getTreated();
+		if(wo.getErpId() != null) {
+			sapId = wo.getErpId();
+		} else {
+			sapId = 0;
+		}
+		
+		this.workers = new ArrayList<WorkOrderWorkerDTO>();
+		for(WorkOrderWorker wow : wo.getWorkers()) {
+			if(wow.getUser().getPerNumber().equals(idWorker)) {
+				WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+				this.workers.add(wowDTO);
+			}
+			
+		}
+		
+	}	
+	
+	public WorkOrderDTO(WorkOrder wo, String machineName) {
+		id = wo.getId();
+		date = new DateDTO(wo);
+		status = wo.getStatus().toString();
+		operationName = wo.getOperation().getName();
+		responsibleName = wo.getResponsible().getName();
+		table = wo.getCrop().getField().getName();
+		cropName = wo.getCrop().getName();
+		treated = wo.getTreated();
+		if(wo.getErpId() != null) {
+			sapId = wo.getErpId();
+		} else {
+			sapId = 0;
+		}
+		
+		this.workers = new ArrayList<WorkOrderWorkerDTO>();
+		for(WorkOrderWorker wow : wo.getWorkers()) {
+			if(wow.getMachine().getName().equals(machineName)) {
+				WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+				this.workers.add(wowDTO);
+			}
+			
 		}
 		
 	}	

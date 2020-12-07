@@ -1,6 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { Routes, RouterModule } from "@angular/router";
 
 import { AppComponent } from "./app.component";
@@ -63,36 +63,71 @@ import { SearchCouplingMachinesPipe } from './pipes/search-coupling-machines.pip
 import { SearchMaterialsPipe } from './pipes/search-materials.pipe';
 import { ReportMaterialMaterialPipe } from './pipes/report-material-material.pipe';
 import { ReportMaterialSapIdPipe } from './pipes/report-material-sap-id.pipe';
-import { ReportMaterialDatePipe } from './pipes/report-material-date.pipe';
-import { ReportMaterialOperationPipe } from './pipes/report-material-operation.pipe';
-import { ReportMaterialCropPipe } from './pipes/report-material-crop.pipe';
-import { ReportMaterialFieldPipe } from './pipes/report-material-field.pipe';
+import { ReportEmployeeWorkerPipe } from './pipes/report-employee-worker.pipe';
+import { ReportMachineMachinePipe } from './pipes/report-machine-machine.pipe';
+import { SearchWoBetweenDatesPipe } from './pipes/search-wo-between-dates.pipe';
+import { SearchMaterialUnitPipe } from './pipes/search-material-unit.pipe';
+import { SearchMachineCouplingPipe } from './pipes/search-machine-coupling.pipe';
+import { SearchEmployeePositionPipe } from './pipes/search-employee-position.pipe';
+import { SearchCropFieldPipe } from './pipes/search-crop-field.pipe';
+import { SearchCropCulturePipe } from './pipes/search-crop-culture.pipe';
+import { SearchCulturePipe } from './pipes/search-culture.pipe';
+import { SearchCropPipe } from './pipes/search-crop.pipe';
+import { SerachMachineTypePipe } from './pipes/serach-machine-type.pipe';
+import { SerachMachineGroupPipe } from './pipes/serach-machine-group.pipe';
+import { SearchMachineMachineGroupPipe } from './pipes/search-machine-machine-group.pipe';
+import { SearchMachinePipe } from './pipes/search-machine.pipe';
+import { SearchFieldGroupPipe } from './pipes/search-field-group.pipe';
+import { SearchOperationGroupPipe } from './pipes/search-operation-group.pipe';
+import { SearchOperationTypePipe } from './pipes/search-operation-type.pipe';
+import { SearchOperationOperationGroupPipe } from './pipes/search-operation-operation-group.pipe';
+import { SearchCultureGroupPipe } from './pipes/search-culture-group.pipe';
+import { SearchCultureCultureTypePipe } from './pipes/search-culture-culture-type.pipe';
+import { SearchCultureProductionTypePipe } from './pipes/search-culture-production-type.pipe';
+import { SearchCultureOrgConPipe } from './pipes/search-culture-org-con.pipe';
+import { SearchCultureTypePipe } from './pipes/search-culture-type.pipe';
+import { SearchCultureCultureGroupPipe } from './pipes/search-culture-culture-group.pipe';
+import { SearchVarietyPipe } from './pipes/search-variety.pipe';
+import { SearchVarietyCultureGroupPipe } from './pipes/search-variety-culture-group.pipe';
+import { LoginComponent } from './components/login/login.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AuthGuardGuard } from './service/auth-guard.guard';
+import { AuthInterceptor } from './service/auth/auth';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MatTabsModule, MatIconModule } from '@angular/material';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AdminGuardGuard } from "./service/admin-guard.guard"
+import { CookieService } from 'ngx-cookie-service';
 
 declare var require: any;
 var config = require("config");
 
 const routes: Routes = [
-  { path: "create/workOrder/:workId", component: CreateworkOrderComponent },
-  { path: "nalog", component: NalogComponent },
-  { path: "workOrder", component: WorkOrderComponent },
-  { path: "close/workOrder/:workId", component: CloseWorkOrderComponent },
-  { path: "yieldOverview", component: YieldComponent },
-  { path: "masterData/machine", component: MachineComponent },
-  { path: "workOrder/:urlParam", component: WorkOrderComponent },
-  { path: "masterData/field", component: FieldComponent },
-  { path: "masterData/crop", component: CropComponent },
-  { path: "masterData/employee", component: EmployeeComponent },
-  { path: "masterData/fieldGroup", component: FieldGroupComponent },
-  { path: "masterData/machineGroup", component: MachineGroupComponent },
-  { path: "masterData/operationGroup", component: OperationGroupComponent },
-  { path: "masterData/operation", component: OperationComponent },
-  { path: "masterData/cultureGroup", component: CultureGroupComponent },
-  { path: "masterData/culture", component: CultureComponent },
-  { path: "masterData/variety", component: VarietyComponent },
-  { path: "report/material", component: ReportMaterialComponent },
-  { path: "report/machine", component: ReportMachineComponent },
-  { path: "report/employee", component: ReportEmployeeComponent },
-  { path: "", component: HomeComponent },
+  { path: "create/workOrder/:workId", component: CreateworkOrderComponent, canActivate: [AuthGuardGuard] },
+  { path: "nalog", component: NalogComponent, canActivate: [AuthGuardGuard] },
+  { path: "login", component: LoginComponent },
+  { path: "workOrder", component: WorkOrderComponent, canActivate: [AuthGuardGuard] },
+  { path: "close/workOrder/:workId", component: CloseWorkOrderComponent, canActivate: [AuthGuardGuard] },
+  { path: "yieldOverview", component: YieldComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/machine", component: MachineComponent, canActivate: [AuthGuardGuard] },
+  { path: "workOrder/:urlParam", component: WorkOrderComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/field", component: FieldComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/crop", component: CropComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/employee", component: EmployeeComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/fieldGroup", component: FieldGroupComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/machineGroup", component: MachineGroupComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/operationGroup", component: OperationGroupComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/operation", component: OperationComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/cultureGroup", component: CultureGroupComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/culture", component: CultureComponent, canActivate: [AuthGuardGuard] },
+  { path: "masterData/variety", component: VarietyComponent, canActivate: [AuthGuardGuard] },
+  { path: "report/material", component: ReportMaterialComponent, canActivate: [AuthGuardGuard] },
+  { path: "report/machine", component: ReportMachineComponent, canActivate: [AuthGuardGuard] },
+  { path: "report/employee", component: ReportEmployeeComponent, canActivate: [AuthGuardGuard] },
+  { path: "settings", component: SettingsComponent, canActivate: [AdminGuardGuard] },
+  { path: "404", component: NotFoundComponent },
+  { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
+  { path: "**", component: NotFoundComponent }
 ];
 
 @NgModule({
@@ -135,10 +170,35 @@ const routes: Routes = [
     SearchMaterialsPipe,
     ReportMaterialMaterialPipe,
     ReportMaterialSapIdPipe,
-    ReportMaterialDatePipe,
-    ReportMaterialOperationPipe,
-    ReportMaterialCropPipe,
-    ReportMaterialFieldPipe,
+    ReportEmployeeWorkerPipe,
+    ReportMachineMachinePipe,
+    SearchWoBetweenDatesPipe,
+    SearchMaterialUnitPipe,
+    SearchMachineCouplingPipe,
+    SearchEmployeePositionPipe,
+    SearchCropFieldPipe,
+    SearchCropCulturePipe,
+    SearchCulturePipe,
+    SearchCropPipe,
+    SerachMachineTypePipe,
+    SerachMachineGroupPipe,
+    SearchMachineMachineGroupPipe,
+    SearchMachinePipe,
+    SearchFieldGroupPipe,
+    SearchOperationGroupPipe,
+    SearchOperationTypePipe,
+    SearchOperationOperationGroupPipe,
+    SearchCultureGroupPipe,
+    SearchCultureCultureTypePipe,
+    SearchCultureProductionTypePipe,
+    SearchCultureOrgConPipe,
+    SearchCultureTypePipe,
+    SearchCultureCultureGroupPipe,
+    SearchVarietyPipe,
+    SearchVarietyCultureGroupPipe,
+    LoginComponent,
+    NotFoundComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -150,11 +210,14 @@ const routes: Routes = [
       preventDuplicates: false,
     }),
     NgbDatepickerModule,
+    NgMultiSelectDropDownModule.forRoot(),
     ReactiveFormsModule,
     MatTooltipModule,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTabsModule,
+    MatIconModule,
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
@@ -164,7 +227,13 @@ const routes: Routes = [
   ],
   providers: [
     ThemeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
     DeviceDetectorService,
+    CookieService,
     { provide: NgbDateParserFormatter, useClass: NgbDateParser },
   ],
   bootstrap: [AppComponent],

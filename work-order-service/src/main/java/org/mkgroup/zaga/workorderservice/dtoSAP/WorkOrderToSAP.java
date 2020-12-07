@@ -81,7 +81,7 @@ public class WorkOrderToSAP {
 		this.WorkOrderOpenDate = workOpenDate;
 		this.WorkOrderCloseDate = null;
 		this.ResponsibleUserNumber = workOrder.getResponsible().getPerNumber().toString();
-		this.ReleasedUserNumber = workOrder.getResponsible().getPerNumber().toString();
+		this.ReleasedUserNumber = workOrder.getUserCreatedSapId().toString();
 		this.CropId = workOrder.getCrop().getErpId().toString();
 		this.OperationId = workOrder.getOperation().getErpId().toString();
 		this.NoMaterial = (workOrder.getMaterials().size() == 0)? "X" : "";

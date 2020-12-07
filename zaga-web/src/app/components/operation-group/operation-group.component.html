@@ -1,3 +1,5 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -5,8 +7,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="operationGroupFC" [matAutocomplete]="autoOperationGroup" #searchOperationGroup
+                placeholder="Pretražite po nazivu ili šifri grupe ATM"/>
+              <mat-autocomplete #autoOperationGroup="matAutocomplete" [displayWith]="displayFnOperationGroup" place>
+                <mat-option *ngFor="
+                  let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value
+                  " [value]="operationGroup" >
+                  {{ operationGroup.Id }} - {{operationGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let operationGroup of operationGroups; let j = index">
+        <div class="col-4" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -26,22 +45,25 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ operationGroup.Name }}
                     </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ operationGroup.Id }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editFieldGroupModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+ 
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -51,8 +73,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="operationGroupFC" [matAutocomplete]="autoOperationGroupLaptop" #searchOperationGroupLaptop
+                placeholder="Pretražite po nazivu ili šifri grupe ATM"/>
+              <mat-autocomplete #autoOperationGroupLaptop="matAutocomplete" [displayWith]="displayFnOperationGroup" place>
+                <mat-option *ngFor="
+                  let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupLaptop.value
+                  " [value]="operationGroup" >
+                  {{ operationGroup.Id }} - {{operationGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let operationGroup of operationGroups; let j = index">
+        <div class="col-5" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupLaptop.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -72,22 +111,23 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ operationGroup.Name }}
                     </h5>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ operationGroup.Id }}</td>
+                    </tr>
                   </div>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editFieldGroupModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+ 
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -97,8 +137,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="operationGroupFC" [matAutocomplete]="autoOperationGroupTablet" #searchOperationGroupTablet
+                placeholder="Pretražite po nazivu ili šifri grupe ATM"/>
+              <mat-autocomplete #autoOperationGroupTablet="matAutocomplete" [displayWith]="displayFnOperationGroup" place>
+                <mat-option *ngFor="
+                  let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value
+                  " [value]="operationGroup" >
+                  {{ operationGroup.Id }} - {{operationGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let operationGroup of operationGroups; let j = index">
+        <div class="col-7" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -118,20 +175,21 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ operationGroup.Name }}
                     </h5>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ operationGroup.Id }}</td>
+                    </tr>
                   </div>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editFieldGroupModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+  
 </div>

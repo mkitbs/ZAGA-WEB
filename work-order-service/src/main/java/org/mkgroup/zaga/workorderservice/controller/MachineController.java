@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.MachineDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineReportDTO;
 import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.MachineType;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -91,6 +92,18 @@ public class MachineController {
 	@GetMapping("getMachinesByMachineGroup/{id}")
 	public ResponseEntity<?> getMachinesByMachineGroup(@PathVariable UUID id){
 		List<MachineDTO> machines = machineService.getAllByGroup(id);
+		return new ResponseEntity<List<MachineDTO>>(machines, HttpStatus.OK);
+	}
+	
+	@GetMapping("getDataForReport")
+	public ResponseEntity<?> getDataForReport(){
+		List<MachineReportDTO> data = machineService.getMachinesForReport();
+		return new ResponseEntity<List<MachineReportDTO>>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("getAllGroupByType")
+	public ResponseEntity<?> getAllGroupByType(){
+		List<MachineDTO> machines = machineService.getAllGrouByMachineType();
 		return new ResponseEntity<List<MachineDTO>>(machines, HttpStatus.OK);
 	}
 }

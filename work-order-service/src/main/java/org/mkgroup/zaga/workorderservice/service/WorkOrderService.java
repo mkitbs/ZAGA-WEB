@@ -101,7 +101,7 @@ public class WorkOrderService {
 	@Value("${sap.services.s4h_close}")
 	String sapS4Close;
 	
-	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO, String sapUserId) throws Exception {
 
 			SAPResponse sapResponse = new SAPResponse();
 			log.info("Work order creation started");
@@ -128,6 +128,7 @@ public class WorkOrderService {
 			User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
 			
 			workOrder.setResponsible(responsible);
+			workOrder.setUserCreatedSapId(Long.parseLong(sapUserId));
 			
 			workOrder = workOrderRepo.save(workOrder);
 			
@@ -209,7 +210,6 @@ public class WorkOrderService {
 			log.info("Work order creation successfuly finished");
 			
 			WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(wo, "NEW");
-
 			Map<String, String> headerValues = getHeaderValues(wo);
 			String csrfToken = headerValues.get("csrf");
 			String authHeader = headerValues.get("authHeader");

@@ -30,10 +30,11 @@ public class JwtTokenProvider {
 
 		Date now = new Date();
 		
-		Date expiryDate = new Date(now.getTime() + 8000000);//jwtExpirationInMs
+		Date expiryDate = new Date(now.getTime() + 1800000);//jwtExpirationInMs
 
 		Map<String, Object> additionalInfo = new HashMap<>();
 		additionalInfo.put("username", userDetails.getUsername());
+		additionalInfo.put("sapUserId", userDetails.getSapUserId());
 		additionalInfo.put("authorities", userDetails.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.toList()));
@@ -53,12 +54,12 @@ public class JwtTokenProvider {
 	public UserPrincipal getUserPrincipal(String jwt) throws Exception {
 		try {
 			Claims claims = getClaimsFromToken(jwt);
-			
+			System.out.println(claims.toString() + "AAAAAA");
 			return new UserPrincipal(
 				Long.parseLong(getIdFromClaims(claims)), 
 				getUsernameFromClaims(claims), 
 				true,
-				getGrantedAuthoritiesFromClaims(claims),true
+				getGrantedAuthoritiesFromClaims(claims),true,claims.get("sapUserId").toString()
 			);
 		} catch (Exception e) {
 			throw new Exception(e);

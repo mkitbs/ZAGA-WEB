@@ -35,6 +35,8 @@ public class VarietyDTO {
 	@JsonProperty("Protection")
 	private String protection;
 	
+	private String cultureName;
+	
 
 	public VarietyDTO(Variety variety) {
 		dbId = variety.getId();
@@ -43,6 +45,10 @@ public class VarietyDTO {
 		finishing = variety.getFinishing();
 		protection = variety.getProtection();
 		culture = variety.getCulture().getId();
+		id = variety.getErpId();
+		cultureId = variety.getCulture().getErpId();
+		cultureName = variety.getCulture().getName();
+		
 	}
 
 }

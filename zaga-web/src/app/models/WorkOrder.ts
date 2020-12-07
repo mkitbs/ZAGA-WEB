@@ -18,4 +18,6 @@ export class WorkOrder {
   treated;
   year;
   sapId;
+  table;
+  userCreatedId;
 }

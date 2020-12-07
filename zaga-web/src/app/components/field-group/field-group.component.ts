@@ -1,5 +1,6 @@
 import { ɵAnimationGroupPlayer } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { FieldGroup } from 'src/app/models/FieldGroup';
 import { FieldGroupService } from 'src/app/service/field-group.service';
 
@@ -14,6 +15,8 @@ export class FieldGroupComponent implements OnInit {
 
   fieldGroups : FieldGroup[] = [];
   fieldGroup : FieldGroup = new FieldGroup();
+
+  fieldGroupFC: FormControl = new FormControl("")
 
   ngOnInit() {
     this.fieldGroupService.getAll().subscribe(data => {
@@ -52,6 +55,10 @@ export class FieldGroupComponent implements OnInit {
       }
     }
     return output;
+  }
+
+  displayFnFieldGroup(fieldGroup : FieldGroup): string {
+    return fieldGroup && fieldGroup.Id + " - " + fieldGroup.Name;
   }
 
 }

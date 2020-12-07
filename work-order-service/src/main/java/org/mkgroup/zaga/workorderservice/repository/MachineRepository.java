@@ -22,4 +22,7 @@ public interface MachineRepository extends JpaRepository<Machine, UUID> {
 	
 	@Query(value = "SELECT * FROM machine m WHERE m.machine_group_id_id=:id", nativeQuery = true)
 	List<Machine> getAllByMachineGroup(@Param("id") UUID id);
+	
+	@Query(value = "SELECT * FROM machine m GROUP BY m.type", nativeQuery = true)
+	List<Machine> findAllByGroupByType();
 }

@@ -251,4 +251,16 @@ public class OperationService {
 		}
 		return retValues;
 	}
+	
+	public List<OperationDTO> getAllGroupByType(){
+		List<Operation> operations = operationRepo.findAllByGroupByType();
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		for(Operation operation : operations) {
+			OperationDTO operationDTO = new OperationDTO(operation);
+			retValues.add(operationDTO);
+		}
+		return retValues;
+	}
+	
+	
 }

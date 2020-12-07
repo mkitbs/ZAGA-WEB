@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequestDTO {
+	
+	private Long id;
 
 	@NotBlank
 	private String name;
@@ -35,6 +37,8 @@ public class SignupRequestDTO {
 
 	@NotBlank
 	private String password;
+	
+	private String sapUserId;
 
 	@NotBlank
 	private String confirmPassword;

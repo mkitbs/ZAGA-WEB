@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +41,9 @@ public class WorkOrderController {
 	SAP4HanaProxy sap4hana;
 	
 	@PostMapping("/createWorkOrder")
-	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request) throws Exception{
+	public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderDTO request, @RequestHeader("SapUserId") String sapuserid) throws Exception{
 		//try {
-			SAPResponse sapResponse = workOrderService.addWorkOrder(request);
+			SAPResponse sapResponse = workOrderService.addWorkOrder(request, sapuserid);
 			
 			if(sapResponse.isSuccess()) {
 				return new ResponseEntity<SAPResponse>(sapResponse ,HttpStatus.OK);
@@ -79,8 +80,9 @@ public class WorkOrderController {
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<?> getAllWorkOrders(){
+	public ResponseEntity<?> getAllWorkOrders(@RequestHeader("SapUserId") String sapuserid){
 		List<WorkOrderDTO> workOrders = workOrderService.getAll();
+		System.out.println(sapuserid);
 		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
 	}
 	

@@ -1,31 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-light navigation">
-  <a class="navbar-brand" href="#"
-    ><img class="logo" src="../../../assets/mk-agri.png"
-  /></a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
+<nav class="navbar navbar-expand-lg navbar-light fixed-top navigation">
+  <a class="navbar-brand" href="#"><img class="logo" src="../../../assets/mk-agri.png" /></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse ml-4" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Matični podaci
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -42,54 +26,41 @@
           <a class="dropdown-item" href="#/masterData/culture">Kulture</a>
           <a class="dropdown-item" href="#/masterData/variety">Sorte</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Pravna lica</a>
-          <a class="dropdown-item" href="#">Radne jedinice</a>
+          <a class="dropdown-item" href="#/404">Pravna lica</a>
+          <a class="dropdown-item" href="#/404">Radne jedinice</a>
         </div>
       </li>
 
       <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Radni nalozi
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#/workOrder">Pregled naloga</a>
-          <a class="dropdown-item" href="#/create/workOrder/new"
-            >Kreiranje naloga</a
-          >
-          <a class="dropdown-item" href="#/workOrder/closing"
-            >Zatvaranje naloga</a
-          >
+          <a class="dropdown-item" href="#/create/workOrder/new">Kreiranje naloga</a>
+          <a class="dropdown-item" href="#/workOrder/closing">Zatvaranje naloga</a>
         </div>
       </li>
 
       <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Izveštaji
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#/report/material">Učinak materijala</a>
-          <a class="dropdown-item" href="#">Učinak radnika</a>
-          <a class="dropdown-item" href="#">Učinak mašina</a>
+          <a class="dropdown-item" href="#/report/employee">Učinak radnika</a>
+          <a class="dropdown-item" href="#/report/machine">Učinak mašina</a>
           <a class="dropdown-item" href="#/yieldOverview">Pregled prinosa</a>
-          <a class="dropdown-item" href="#">Kalkulacija CK</a>
+          <a class="dropdown-item" href="#/404">Kalkulacija CK</a>
         </div>
       </li>
     </ul>
+    <div class="topnav-right">
+      <a *ngIf="admin" href="#/settings"><i class="fa fa-cog fa-lg"></i></a>
+      &nbsp;
+      <a href="#/login" (click)="signout()"><i class="fa fa-sign-out fa-lg" title="Odjavite se"></i></a>
+    </div>
   </div>
 </nav>

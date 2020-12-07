@@ -1,9 +1,11 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,5 +81,11 @@ public class WorkOrderWorkerController {
 			// TODO Auto-generated catch block
 		//	return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		//}
+	}
+	
+	@GetMapping("getDataForReport")
+	public ResponseEntity<?> getDataForReport(){
+		List<WorkerReportDTO> data = wowService.getWorkersForReport();
+		return new ResponseEntity<List<WorkerReportDTO>>(data, HttpStatus.OK);
 	}
 }

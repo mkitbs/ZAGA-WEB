@@ -3,7 +3,6 @@ h3 {
 }
 
 .tabela-nalozi {
-  background: white;
   width: 100%;
   font-size: 12px;
 }
@@ -49,6 +48,13 @@ th {
   font-size: 12px !important;
   font-family: "Montserrat" !important;
   width: 100% !important;
+  color: black !important;
+}
+
+.customMatInput {
+  font-size: 12px !important;
+  font-family: "Montserrat" !important;
+  width: 48% !important;
   color: black !important;
 }
 

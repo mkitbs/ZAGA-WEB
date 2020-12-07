@@ -1,7 +1,229 @@
-<div class="d-none d-xl-block">
-    <div style="padding-top: 10px"></div>
-    <div class="container">
-      <h3 class="mt-2 mb-2">Mašine</h3>
-      <div style="padding-top: 10px"></div>
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
+<div class="container">
+  <div style="padding-top: 10px"></div>
+  <h3 class="mt-2 mb-2">Mašine</h3>
+  <div style="padding-top: 10px"></div>
+  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+    Filteri
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+  </button>
+  <br />
+  <form action="" class="collapse mb-4" id="collapseExample">
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchWorkOrder
+            placeholder="Pretražite po broju naloga"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchMachine
+            placeholder="Pretražite po mašini"
+          />
+        </mat-form-field>
+      </div>
     </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto customMatInput">
+          <input 
+            ngbDatepicker 
+            #od="ngbDatepicker" 
+            (click)="od.toggle()"
+            matInput 
+            #searchDateFrom
+            placeholder="Pretražite po datumu od"
+            [(ngModel)]="dates.dateFrom"
+            (ngModelChange)="updateFilters()"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </mat-form-field>
+        -
+        <mat-form-field class="inputAuto customMatInput">
+          <input 
+            ngbDatepicker 
+            #do="ngbDatepicker" 
+            (click)="do.toggle()"
+            matInput 
+            #searchDateTo
+            placeholder="Pretražite po datumu do"
+            [(ngModel)]="dates.dateTo"
+            (ngModelChange)="updateFilters()"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            ngbDatepicker 
+            #day="ngbDatepicker" 
+            (click)="day.toggle()"
+            matInput 
+            #searchDate
+            placeholder="Pretražite po danu"
+          />
+        </mat-form-field>
+      </div>
+      
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchOperation
+            placeholder="Pretražite po agrotehničkoj meri"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchCouplingMachine
+            placeholder="Pretražite po priključnoj mašini"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchCrop
+            placeholder="Pretražite po usevu"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input 
+            type="text" 
+            matInput 
+            #searchTable
+            placeholder="Pretražite po parceli"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <div class="break-class pt-2 mb-4"></div>
+  <table class="table table-hover tabela-nalozi table-fixed">
+    <thead>
+      <tr >
+        <th scope="col" style="vertical-align: middle;">Mašina</th>
+        <th scope="col" style="vertical-align: middle;">SAP ID</th>
+        <th scope="col" style="vertical-align: middle;">ATM</th>
+        <th scope="col" style="vertical-align: middle;">Datum</th>
+        <th scope="col" style="vertical-align: middle;">Parcela</th>
+        <th scope="col" style="vertical-align: middle;">Usev</th>
+        <th scope="col" style="vertical-align: middle;">Radnik</th>
+        <th scope="col" style="vertical-align: middle;">Priključna mašina</th>
+        <th scope="col" style="vertical-align: middle;">Utrošak MČ</th>
+        <th scope="col" style="vertical-align: middle;">Utrošak goriva</th>
+        <th scope="col" style="vertical-align: middle;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let machine of machines | ReportMachineMachine: searchMachine.value; 
+        let i = index" >
+        <tr *ngFor="let workOrder of machine.workOrders 
+          | SearchWorkOrdersCrop: searchCrop.value
+          | SearchWorkOrdersTable: searchTable.value
+          | SearchWorkOrdersOperation: searchOperation.value
+          | SearchWorkOrdersDate: searchDate.value
+          | ReportMaterialSapId: searchWorkOrder.value
+          | SearchWoBetweenDates: filters
+          | SearchMachineCoupling: searchCouplingMachine.value; 
+          let j = index">
+          <ng-container *ngFor="let wo of workOrder.workers; let y = index">
+            <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{wo.machine.Name}}</td>
+            <ng-template #elseBlockName><td></td></ng-template>
+            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+            <td>{{ workOrder.operationName }}</td>
+            <td>{{ workOrder.date }}</td>
+            <td>{{ workOrder.table }}</td>
+            <td>{{ workOrder.cropName.split(",")[1] }}</td>
+            <td>{{ wo.user.Name }}</td>
+            <td>{{ wo.connectingMachine.Name }}</td>
+            <td *ngIf="wo.finalState != -1; else elseFinalState">{{ wo.sumState }} MČ</td>
+            <ng-template #elseFinalState><td>/</td></ng-template>
+            <td *ngIf="wo.fuel != -1; else elseFuel">{{ wo.fuel }} l</td>
+            <ng-template #elseFuel><td>/</td></ng-template>
+            <td [ngClass]="{
+                statusNovi: workOrder.status == 'Novi',
+                statusURadu: workOrder.status == 'U radu',
+                statusZatvoren: workOrder.status == 'Zatvoren'
+                }" 
+            >
+              {{ workOrder.status }}
+            </td>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let workOrder of machine.workOrders 
+            | SearchWorkOrdersCrop: searchCrop.value
+            | SearchWorkOrdersTable: searchTable.value
+            | SearchWorkOrdersOperation: searchOperation.value
+            | SearchWorkOrdersDate: searchDate.value
+            | ReportMaterialSapId: searchWorkOrder.value
+            | SearchWoBetweenDates: filters
+            | SearchMachineCoupling: searchCouplingMachine.value; 
+            let i = index ">
+            <ng-container >
+              <td *ngIf="i==0">Σ {{ machine.machine.Name }}</td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td style="font-weight: bold;" *ngIf="i==0">
+                {{
+                  getFinalMachineSum(machine.workOrders 
+                  | SearchWorkOrdersCrop: searchCrop.value
+                  | SearchWorkOrdersTable: searchTable.value
+                  | SearchWorkOrdersOperation: searchOperation.value
+                  | SearchWorkOrdersDate: searchDate.value
+                  | ReportMaterialSapId: searchWorkOrder.value
+                  | SearchWoBetweenDates: filters
+                  | SearchMachineCoupling: searchCouplingMachine.value)
+                }} MČ
+              </td>
+              <td style="font-weight: bold;" *ngIf="i==0">
+                {{
+                  getFuelSum(machine.workOrders 
+                  | SearchWorkOrdersCrop: searchCrop.value
+                  | SearchWorkOrdersTable: searchTable.value
+                  | SearchWorkOrdersOperation: searchOperation.value
+                  | SearchWorkOrdersDate: searchDate.value
+                  | ReportMaterialSapId: searchWorkOrder.value
+                  | SearchWoBetweenDates: filters
+                  | SearchMachineCoupling: searchCouplingMachine.value)
+                }} l
+              </td>
+              <td *ngIf="i==0"></td>
+            </ng-container>
+            </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
 </div>

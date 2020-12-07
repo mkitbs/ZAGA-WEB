@@ -1,3 +1,5 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -5,8 +7,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="machineGroupFC" [matAutocomplete]="autoMachineGroup" #searchMachineGroup
+                placeholder="Pretražite po nazivu ili šifri grupe mašina"/>
+              <mat-autocomplete #autoMachineGroup="matAutocomplete" [displayWith]="displayFnMachineGroup" place>
+                <mat-option *ngFor="
+                  let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroup.value
+                  " [value]="machineGroup" >
+                  {{ machineGroup.Id }} - {{machineGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let machineGroup of machineGroups; let j = index">
+        <div class="col-4" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroup.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -26,22 +45,25 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ machineGroup.Name }}
                     </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ machineGroup.Id }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-            <button
-              class="buttonEdit btn btn-primary btn-edit"
-              data-toggle="modal"
-              data-target="#editFieldGroupModal"
-              hidden
-            >
-              <i class="fa fa-edit"></i>
-            </button>
           </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
+            <i class="fa fa-edit"></i>
+          </button>
         </div>
       </div>
     </div>
+ 
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -51,37 +73,48 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-4">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineGroupFC" [matAutocomplete]="autoMachineGroupLaptop" #searchMachineGroupLaptop
+              placeholder="Pretražite po nazivu ili šifri grupe mašina"/>
+            <mat-autocomplete #autoMachineGroupLaptop="matAutocomplete" [displayWith]="displayFnMachineGroup" place>
+              <mat-option *ngFor="
+                let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupLaptop.value
+                " [value]="machineGroup" >
+                {{ machineGroup.Id }} - {{machineGroup.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-5" *ngFor="let machineGroup of machineGroups; let j = index">
+      <div class="col-5" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupLaptop.value; let j = index">
         <div class="card mb-4" style="width: 30.2rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-bottom: 10px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/tractor.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/tractor.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title" style="margin-right: 30px;">
                     {{ machineGroup.Name }}
                   </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ machineGroup.Id }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            data-toggle="modal"
-            data-target="#editFieldGroupModal"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>
@@ -97,37 +130,48 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
+    <div class="form-row">
+      <div class="col-5">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineGroupFC" [matAutocomplete]="autoMachineGroupTablet" #searchMachineGroupTablet
+              placeholder="Pretražite po nazivu ili šifri grupe mašina"/>
+            <mat-autocomplete #autoMachineGroupTablet="matAutocomplete" [displayWith]="displayFnMachineGroup" place>
+              <mat-option *ngFor="
+                let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value
+                " [value]="machineGroup" >
+                {{ machineGroup.Id }} - {{machineGroup.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
     <div class="row card-group">
-      <div class="col-7" *ngFor="let machineGroup of machineGroups; let j = index">
+      <div class="col-7" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value; let j = index">
         <div class="card mb-4" style="width: 30.2rem;">
           <div class="card-body">
             <div class="row">
-              <div
-                class="col-md-auto"
-                style="width: fit-content; padding-bottom: 10px"
-              >
-                <img
-                  class="card-img-right"
-                  src="../../../assets/tractor.png"
-                  width="80px"
-                  height="80px"
-                />
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/tractor.png" width="80px" height="80px" />
               </div>
               <div class="col">
                 <div class="card-text">
                   <h5 class="card-title" style="margin-right: 30px;">
                     {{ machineGroup.Name }}
                   </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ machineGroup.Id }}</td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-          <button
-            class="buttonEdit btn btn-primary btn-edit"
-            data-toggle="modal"
-            data-target="#editFieldGroupModal"
-            hidden
-          >
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
             <i class="fa fa-edit"></i>
           </button>
         </div>

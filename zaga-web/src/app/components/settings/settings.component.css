@@ -1,0 +1,84 @@
+h3 {
+  color: #5c7495;
+}
+
+.flip-card {
+  background-color: white;
+  width: 250px;
+  height: 240px;
+  border: 1px solid #ffffff;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  background-color: white;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: white;
+  color: black;
+}
+
+.flip-card-back {
+  background-image: linear-gradient(#73964a, #789459);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.mat-tab-group {
+  font-family: "Avenir", Helvetica, Arial, sans-serif !important;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 500px;
+}
+
+:host ::ng-deep .mat-tab-body.mat-tab-body-active {
+  height: 500px;
+}
+
+.collapsing-button {
+  width: fit-content;
+  text-align: center;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+::ng-deep .multiselect-dropdown .dropdown-btn {
+  width: 100% !important;
+}
+
+::ng-deep .dropdown-list {
+  width: 100% !important;
+}
+
+.background {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+}

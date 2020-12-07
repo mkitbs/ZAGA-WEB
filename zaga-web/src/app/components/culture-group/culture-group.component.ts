@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Culture } from 'src/app/models/Culture';
 import { CultureGroup } from 'src/app/models/CultureGroup';
 import { CultureGroupService } from 'src/app/service/culture-group.service';
@@ -16,10 +17,16 @@ export class CultureGroupComponent implements OnInit {
 
     cultureGroups: CultureGroup[] = [];
 
+    cultureGroupFC: FormControl = new FormControl("");
+
   ngOnInit() {
     this.cultureGroupService.getAll().subscribe(data => {
       this.cultureGroups = data;
     })
+  }
+
+  displayFnCultureGroup(cultureGroup: CultureGroup): string {
+    return cultureGroup && cultureGroup.Id + " - " + cultureGroup.Name;
   }
 
 }

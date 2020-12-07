@@ -31,6 +31,7 @@ public class CultureGroupDTO implements Serializable {
 	public CultureGroupDTO(CultureGroup cultureGroup) {
 		dbId = cultureGroup.getId();
 		name = cultureGroup.getName();
+		id = cultureGroup.getErpId();
 	}
 
 }

@@ -1,52 +1,72 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~ngx-toastr/toastr';
+@import "~ngx-toastr/toastr";
 
-html, body {
-    font-family: "Montserrat", Helvetica, Arial, sans-serif !important;
-    font-size: 12px;
-    background-color: #fafafa;
+html,
+body {
+  font-family: "Montserrat", Helvetica, Arial, sans-serif !important;
+  font-size: 12px;
+
+  background-image: url("https://www.agroglobe.rs/wp-content/uploads/2020/04/kontaktBack-1.png");
+  background-repeat: repeat;
+  background-size: 120vw;
 }
 
 #toast-container > .toast-success {
-    background-color: #73964a;
+  background-color: #73964a;
 }
 
-navbar > nav> div> ul > li >a{
-    color: #f68901 !important;
+#toast-container > .toast-info {
+  background-color: #5c7495;
+}
+
+navbar > nav > div > ul > li > a {
+  color: #f68901 !important;
 }
 
 .collapsing-button {
-    width: 100%;
-    text-align: left;
-    background-color: #73964a;
-    border: none;
-    box-shadow: none;
+  width: 100%;
+  text-align: left;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
 }
 
-.btn:focus, .btn:active, .btn:hover {
-    outline: none !important;
-    box-shadow: none !important;
-    background-color: #33490b !important;
-    -webkit-box-shadow: none;
+.btn:focus,
+.btn:active,
+.btn:hover {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #33490b !important;
+  -webkit-box-shadow: none;
 }
 
 .arrows {
-    float: right;
-    vertical-align: middle;
+  float: right;
+  vertical-align: middle;
 }
 
 .collapse-card {
-    border: 1px solid #33490b;
+  border: 1px solid #33490b;
 }
-
 
 .btn:hover {
-    background-color: #5C7495 !important;
+  background-color: #5c7495 !important;
 }
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

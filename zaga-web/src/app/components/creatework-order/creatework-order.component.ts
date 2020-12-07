@@ -30,6 +30,8 @@ import { SpentMaterialService } from "src/app/service/spent-material.service";
 import { Renderer2 } from "@angular/core";
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/service/auth/auth.service';
+import { User } from 'src/app/models/User';
 
 @Component({
   selector: "app-creatework-order",
@@ -59,7 +61,8 @@ export class CreateworkOrderComponent implements OnInit {
     private deviceService: DeviceDetectorService,
     private wowService: WorkOrderWorkerService,
     private spentMaterialService: SpentMaterialService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -166,7 +169,18 @@ export class CreateworkOrderComponent implements OnInit {
   nextYear;
   previousYear;
 
+  sapId;
+  creator;
+  loggedUser;
+  user: User = new User();
+  userCreator: User = new User();
+
   ngOnInit() {
+    this.sapId = localStorage.getItem("idSetting");
+    this.authService.getLogged().subscribe(data => {
+      this.user = data;
+      this.loggedUser = this.user.sapUserId;
+    })
     if (this.workId == "new") {
       //new
       this.new = true;
@@ -225,6 +239,11 @@ export class CreateworkOrderComponent implements OnInit {
         };
 
         this.dateOfCreateWO = this.workOrder.date.day + "." + this.workOrder.date.month + "." + this.workOrder.date.year + "."
+        this.creator = this.workOrder.userCreatedId;
+
+        this.userService.getUserBySapId(this.workOrder.userCreatedId).subscribe(data => {
+          this.userCreator = data;
+        })
 
         this.cropService
           .getAllByFieldAndYear(data.tableId, data.year)
@@ -335,13 +354,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getOperation(op) {
-    console.log(op.dbid)
-    this.workerOperationFC.value.dbid = op.dbid;
-    this.workerOperationFC.value.id = op.id;
-    this.workerOperationFC.value.name = op.name;
-    this.workerOperationFC.value.operationgroupid = op.operationgroupid;
-    this.workerOperationFC.value.type = op.type;
-    console.log(this.workerOperationFC)
+    this.workerOperationFC.setValue(op);
   }
 
   getUnitOfMaterial(id) {
@@ -462,6 +475,30 @@ export class CreateworkOrderComponent implements OnInit {
     return substance && substance.Id + " - " + substance.Name;
   }
 
+  displayFnWithoutId(element: any): string {
+    return element && element.Name;
+  }
+
+  displayFnResponsible(emp: Employee): string {
+    if(emp.perNumber == undefined && emp.name == undefined){
+      return emp && emp.Name;
+    } else {
+      return emp && emp.name;
+    }
+  }
+
+  displayFnMachineWithoutId(machine: Machine): string {
+    if(machine.Id == undefined){
+      return machine && "BEZ PRIKLJUČNE MAŠINE"
+    } else{
+      return machine && machine.Name
+    }
+  }
+
+  displayFnCultureWithoutId(culture: Crop): string {
+    return culture && culture.Name.split(",")[1]
+  }
+
   //methods for work order workers, operations and machines
 
   addWorkerAndMachine(valid) {
@@ -502,7 +539,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.wows)
         console.log("===============")
         this.workerFC = new FormControl("");
-        this.workerOperationFC = new FormControl("");
+        this.workerOperationFC.setValue(this.operationFC.value);
         this.workerMachineFC = new FormControl("");
         this.workerCoMachineFC = new FormControl("");
         console.log(this.wows)

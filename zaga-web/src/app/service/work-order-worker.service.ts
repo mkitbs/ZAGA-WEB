@@ -41,4 +41,11 @@ export class WorkOrderWorkerService {
       wow
     );
   }
+
+  getDataForReport(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getDataForReport"
+    )
+  }
 }

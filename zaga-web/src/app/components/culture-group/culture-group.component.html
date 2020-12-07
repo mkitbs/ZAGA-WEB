@@ -1,3 +1,5 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
 <div class="d-none d-xl-block">
     <div style="padding-top: 10px"></div>
     <div class="container">
@@ -5,8 +7,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-3">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroup" #searchCultureGroup
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroup="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let cultureGroup of cultureGroups; let j = index">
+        <div class="col-4" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -26,6 +45,12 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ cultureGroup.Name }}
                     </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ cultureGroup.Id }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -51,8 +76,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-5">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroupTablet" #searchCultureGroupTablet
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroupTablet="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let cultureGroup of cultureGroups; let j = index">
+        <div class="col-7" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -72,6 +114,12 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ cultureGroup.Name }}
                     </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ cultureGroup.Id }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -97,8 +145,25 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
+      <div class="form-row">
+        <div class="col-4">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureGroupFC" [matAutocomplete]="autoCultureGroupLaptop" #searchCultureGroupLaptop
+                placeholder="Pretražite po nazivu ili šifri grupe kultura"/>
+              <mat-autocomplete #autoCultureGroupLaptop="matAutocomplete" [displayWith]="displayFnCultureGroup" place>
+                <mat-option *ngFor="
+                  let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value
+                  " [value]="cultureGroup" >
+                  {{ cultureGroup.Id }} - {{cultureGroup.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let cultureGroup of cultureGroups; let j = index">
+        <div class="col-5" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value; let j = index">
           <div class="card mb-4" style="width: 30.2rem;">
             <div class="card-body">
               <div class="row">
@@ -118,6 +183,12 @@
                     <h5 class="card-title" style="margin-right: 30px;">
                       {{ cultureGroup.Name }}
                     </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ cultureGroup.Id }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>

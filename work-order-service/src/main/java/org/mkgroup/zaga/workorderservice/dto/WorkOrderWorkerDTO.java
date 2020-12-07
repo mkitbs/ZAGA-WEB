@@ -39,6 +39,7 @@ public class WorkOrderWorkerDTO {
 		}else {
 			this.connectingMachine = new MachineDTO();
 			this.connectingMachine.setDbid("-1");
+			this.connectingMachine.setName("BEZ PRIKLJUČNE MAŠINE");
 		}
 		this.initialState = wow.getInitialState();
 		this.finalState = wow.getFinalState();

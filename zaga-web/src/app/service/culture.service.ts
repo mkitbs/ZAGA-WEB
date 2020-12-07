@@ -78,4 +78,16 @@ export class CultureService {
       type + "/" + id
     );
   }
+
+  getAllGroupByCultureType(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/culture/getAllGroupByCultureType"
+    )
+  }
+
+  getAllGroupByProductionType(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/culture/getAllGroupByProductionType"
+    )
+  }
 }
