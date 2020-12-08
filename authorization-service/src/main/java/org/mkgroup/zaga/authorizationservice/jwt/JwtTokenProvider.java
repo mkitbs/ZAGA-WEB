@@ -30,7 +30,7 @@ public class JwtTokenProvider {
 
 		Date now = new Date();
 		
-		Date expiryDate = new Date(now.getTime() + 1800000);//jwtExpirationInMs
+		Date expiryDate = new Date(now.getTime() + 432000000);//jwtExpirationInMs
 
 		Map<String, Object> additionalInfo = new HashMap<>();
 		additionalInfo.put("username", userDetails.getUsername());
