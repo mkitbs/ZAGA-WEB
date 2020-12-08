@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     this.authService.signin(this.authForm).subscribe(data => {
       console.log(data)
       window.sessionStorage.setItem("AuthToken", data.ac_id);
-      this.cookieService.set('UserIdentity', data.ac_id, { expires: 30 });
+      this.cookieService.set('UserIdentity', data.ac_id, { expires: 5 });
       this.spinner.hide();
       this.router.navigate(['']);
     }, err => {
