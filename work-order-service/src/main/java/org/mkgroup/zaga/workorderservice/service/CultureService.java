@@ -54,8 +54,7 @@ public class CultureService {
 		ResponseEntity<Object> cultureGroupSet = 
 				gwProxy.fetchCultures("json", "Basic " + authHeader);
 		String oDataString = cultureGroupSet.getBody().toString().replace(":", "-");
-		oDataString = oDataString.replace("=", ":");
-		oDataString = oDataString.replace("/", "");
+		oDataString = formatJSON(oDataString);
 		//Map to specific object
 	    ArrayList<CultureDTO> cultureList = 
 	    						convertObjectToLocalList(odataConvertor
@@ -256,4 +255,12 @@ public class CultureService {
 		return retValues;
 	}
 	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		return json;
+	}
 }
