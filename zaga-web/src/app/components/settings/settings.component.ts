@@ -3,8 +3,10 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Roles } from 'src/app/models/Roles';
+import { Setting } from 'src/app/models/Setting';
 import { SignupRequest } from 'src/app/models/SignupRequest';
 import { User } from 'src/app/models/User';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -17,7 +19,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService
   ) { 
     this.dropdownSettings = {
       singleSelection: false,
@@ -40,11 +43,13 @@ export class SettingsComponent implements OnInit {
   newUser: SignupRequest = new SignupRequest();
   roles: Roles[] = [];
   user: SignupRequest = new SignupRequest();
+  setting: Setting = new Setting();
 
   selectedRolesNewUser = [];
   selectedRolesUser = [];
   clickAddNewUser;
-  selectedTypeOfMainData = localStorage.getItem("idSetting");
+  selectedTypeOfMainData;
+  useSap;
   newPassword;
   confirmNewPassword;
 
@@ -58,6 +63,8 @@ export class SettingsComponent implements OnInit {
     this.userService.getAllRoles().subscribe(data => {
       this.roles = data;
     })
+
+    this.getUserSettings();
   }
 
   getAllUsers(){
@@ -121,6 +128,8 @@ export class SettingsComponent implements OnInit {
           this.toastr.error("Uneti email se već koristi.");
         } else if(error.status === 400){
           this.toastr.error("Datum rođenja mora biti u prošlosti.")
+        } else if(error.status === 406){
+          this.toastr.error("SAP ID se već koristi.")
         } else {
           this.toastr.error("Trenutno nije moguće kreirati korisnika.")
         }
@@ -131,9 +140,15 @@ export class SettingsComponent implements OnInit {
   }
 
   saveChangeSAP(){
-    console.log(this.selectedTypeOfMainData)
-    localStorage.setItem('idSetting', this.selectedTypeOfMainData);
-    this.toastr.success("Promene su sačuvane.")
+    this.setting.useSap = this.useSap;
+    this.setting.masterDataFormat = this.selectedTypeOfMainData;
+    console.log(this.setting)
+    this.authService.updateUserSettings(this.setting.tenantId, this.setting).subscribe(res => {
+      this.toastr.success("Promene su sačuvane.")
+    }, error => {
+      this.toastr.error("Trenutno nije moguće izvršiti promene.")
+    })
+   
   }
 
   nextStep(user) {
@@ -204,6 +219,7 @@ export class SettingsComponent implements OnInit {
       */
       this.user.roles = [];
       this.user.roles = this.selectedRolesUser;
+      console.log(this.user)
       this.userService.updateUser(this.user).subscribe(res => {
         this.selectedIndex = 0;
         this.user = new SignupRequest();
@@ -244,6 +260,14 @@ export class SettingsComponent implements OnInit {
 
   languageSettings(){
     this.toastr.info("Nije implementirano.")
+  }
+
+  getUserSettings(){
+    this.authService.getUserSettings().subscribe(data => {
+      this.setting = data;
+      this.selectedTypeOfMainData = this.setting.masterDataFormat;
+      this.useSap = this.setting.useSap;
+    })
   }
 
 }

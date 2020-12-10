@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	List<User> findUsersExceptSelf();
 	
 	User findBySapUserId(String sapId);
+	
+	boolean existsBySapUserId(String sapUserId);
 }
