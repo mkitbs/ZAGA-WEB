@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
+import org.mkgroup.zaga.workorderservice.dto.FieldPolygonDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Field;
 import org.mkgroup.zaga.workorderservice.model.FieldGroup;
@@ -141,6 +142,12 @@ public class FieldService {
 		field.setYear(fieldDTO.getYear());
 		FieldGroup fieldGroup = fieldGroupRepo.getOne(fieldDTO.getFieldGroup());
 		field.setFieldGroup(fieldGroup);
+		fieldRepo.save(field);
+	}
+	
+	public void setFieldCoordinates(FieldPolygonDTO data) {
+		Field field = this.getOne(data.getId());
+		field.setCoordinates(data.getValues());
 		fieldRepo.save(field);
 	}
 	

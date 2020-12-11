@@ -63,8 +63,8 @@
             data-target="#editFieldModal" hidden>
             <i class="fa fa-edit"></i>
           </button>
-          <button class="buttonEdit btn btn-primary btn-map" (click)="getFieldOnMap()" data-toggle="modal"
-            data-target="#mapFieldModal" title="Vidi parcelu na mapi" hidden>
+          <button class="buttonEdit btn btn-primary btn-map" (click)="getField(field.dbId)" data-toggle="modal"
+            data-target="#mapFieldModal" title="Vidi parcelu na mapi">
             <i class="fa fa-globe"></i>
           </button>
         </div>
@@ -261,25 +261,36 @@
     </div>
   </div>
 </div>
-  <!--Edit field modal-->
+  <!--Map field modal-->
 <div class="modal fade" id="mapFieldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-database mr-2"></i> T101
+          <i class="fa fa-database mr-2"></i> {{ field.Name }}
         </h4>
+       
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <h5 *ngIf="(field.coordinates | json) == '{}'">Parcela nije ucrtana na mapi. Klikom na dugme <img src="../../../assets/drawImage.png"/>  možete ucrtati parcelu.</h5>
         <agm-map [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)" [mapTypeControl]="true"
           disableDoubleClickZoom="true" mapTypeId='satellite' [zoom]=15 (mapClick)="onChoseLocation($event)">
-        <agm-polygon [paths]="paths" [clickable]="false" [fillColor]="'#5C7495'">
-        </agm-polygon>
-      </agm-map>
+          <agm-polygon [paths]="paths" [clickable]="false" [fillColor]="'#5C7495'"></agm-polygon>
+        </agm-map>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" style="background-color: #f68901"
+        (click)="dismissPolygon()">
+          <i class="fa fa-window-close"></i> Poništi ucrtano
+        </button>
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="setPolygon(field.dbId)">
+          <i class="fa fa-save"></i> Sačuvaj
+        </button>
       </div>
     </div>
   </div>

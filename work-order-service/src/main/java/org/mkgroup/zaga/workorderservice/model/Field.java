@@ -1,13 +1,17 @@
 package org.mkgroup.zaga.workorderservice.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -41,6 +45,11 @@ public class Field {
 	private double area;
 	
 	private Long erpId;
+	
+	@ElementCollection
+	@MapKeyColumn(name="lat")
+    @Column(name="lng")
+	private Map<Double, Double> coordinates = new HashMap<Double, Double>();
 	
 	@ManyToOne
 	private FieldGroup fieldGroup;

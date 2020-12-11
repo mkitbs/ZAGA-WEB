@@ -1,11 +1,14 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.Field;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.org.apache.xpath.internal.axes.HasPositionalPredChecker;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,6 +49,8 @@ public class FieldDTO implements Serializable{
 	
 	private UUID fieldGroup;
 	
+	private Map<Double, Double> coordinates = new HashMap<Double, Double>();
+	
 	public FieldDTO(Field field) {
 		dbId = field.getId();
 		name = field.getName();
@@ -53,6 +58,7 @@ public class FieldDTO implements Serializable{
 		area = field.getArea();
 		fieldGroup = field.getFieldGroup().getId();
 		erpId = field.getErpId();
+		coordinates = field.getCoordinates();
 	}
 
 }
