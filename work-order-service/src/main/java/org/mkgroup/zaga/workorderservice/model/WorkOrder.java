@@ -54,6 +54,9 @@ public class WorkOrder {
 	@Column(nullable = false)
 	private Long userCreatedSapId;
 	
+	@Column(nullable = false)
+	private Long tenantId;
+	
 	@ManyToOne
 	@JoinColumn(name="responsible_id", nullable=true)
 	private User responsible;

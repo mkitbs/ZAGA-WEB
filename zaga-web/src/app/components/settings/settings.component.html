@@ -7,7 +7,8 @@
     <div class="d-none d-xl-block">
       <div class="row card-group">
         <div class="col-4">
-          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="sapSettings()">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="sapSettings()"
+            [ngClass]="sapSettingsBool ? 'card-border' : 'null'">
             <div class="card-body">
               <div class="row">
                 <div
@@ -25,7 +26,7 @@
                     <h5 class="card-title">
                       SAP
                     </h5>
-                    <p>Uključivanje/isključivanje SAP'a, forma matičnih podataka</p>
+                    <p>SAP podešavanja, matični podaci</p>
                   </div>
                 </div>
               </div>
@@ -33,7 +34,8 @@
           </div>
         </div>
         <div class="col-4">
-          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="accountSettings()">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="accountSettings()"
+            [ngClass]="accountSettingsBool ? 'card-border' : 'null'">
             <div class="card-body">
               <div class="row">
                 <div
@@ -108,7 +110,7 @@
                     <h5 class="card-title">
                       SAP
                     </h5>
-                    <p>Uključivanje/isključivanje SAP'a, forma matičnih podataka</p>
+                    <p>SAP podešavanja, matični podaci</p>
                   </div>
                 </div>
               </div>
@@ -201,6 +203,329 @@
               <i class="fa fa-save" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Sačuvaj
             </button>
           </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">restore_page</mat-icon>
+            &nbsp;Matični podaci
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <h5>Označite matične podatke koje želite da sinhronizujete. 
+           
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none"
+             (click)="sync()">
+              <i class="fa fa-refresh"></i> Sinhronizuj
+            </button>
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none dismiss"
+              (click)="dismissAll()">
+              <i class="fa fa-times"></i> Poništi sve
+            </button>
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none select"
+              (click)="selectAll()">
+              <i class="fa fa-check"></i> Označi sve
+            </button>
+          </h5>
+          
+          <div style="padding-top: 10px;"></div>
+          <div class="row card-group">
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCrop()"
+              [ngClass]="clickedCrop ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/crop.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Usevi
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedCrop" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickMachine()"
+              [ngClass]="clickedMachine ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/tractor.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Mašine
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedMachine" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickEmployee()"
+              [ngClass]="clickedEmployee ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/farmer.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Zaposleni
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedEmployee" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickFieldGroup()"
+              [ngClass]="clickedFieldGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/fieldGroup.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Potezi
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedFieldGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickField()"
+              [ngClass]="clickedField ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/field1.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Parcele
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedField" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickMachineGroup()"
+              [ngClass]="clickedMachineGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/tractor.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe mašina
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedMachineGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickOperationGroup()"
+              [ngClass]="clickedOperationGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/shovel.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe ATM
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedOperationGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickOperation()"
+              [ngClass]="clickedOperation ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/shovel.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          ATM
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedOperation" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCultureGroup()"
+              [ngClass]="clickedCultureGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/crops.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe kultura
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedCultureGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCulture()"
+              [ngClass]="clickedCulture ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/wheat.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Kulture
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedCulture" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickVariety()"
+                [ngClass]="clickedVariety ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/seeds.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Sorte
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedVariety" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+          </div> 
         </mat-tab>
       </mat-tab-group>
     </div>
