@@ -13,8 +13,8 @@ insert into setting (id, use_sap, master_data_format) values (2, 1, 'WITHOUT_ID'
 insert into setting (id, use_sap, master_data_format) values (3, 0, 'WITHOUT_ID');
 
 -- tenants
-insert into tenant (id, name, setting_id) values (1, 'MKBS', 1);
-insert into tenant (id, name, setting_id) values (2, 'PIK', 2);
+insert into tenant (id, company_code, name, setting_id) values (1, '1300', 'MKBS', 1);
+insert into tenant (id, company_code, name, setting_id) values (2, '1200', 'PIKB', 2);
 
 -- users
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 

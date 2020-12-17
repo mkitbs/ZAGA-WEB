@@ -342,4 +342,15 @@ public class AuthController {
     	
     	return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    @GetMapping("getLoggedTenant")
+    public ResponseEntity<?> getLoggedTenant(){
+    	if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    		return new ResponseEntity<Long>(logged.getTenant().getId(), HttpStatus.OK);
+    	} else {
+    		 return new ResponseEntity<>("Fail ->No logged user",
+                     HttpStatus.BAD_REQUEST);
+    	}   
+    }
 }

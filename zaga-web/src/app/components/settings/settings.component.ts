@@ -57,6 +57,18 @@ export class SettingsComponent implements OnInit {
 
   selectedIndex = 0;
 
+  clickedCrop = false;
+  clickedMachine = false;
+  clickedEmployee = false;
+  clickedField = false;
+  clickedFieldGroup = false;
+  clickedMachineGroup = false;
+  clickedOperationGroup = false;
+  clickedOperation = false;
+  clickedCulture = false;
+  clickedCultureGroup = false;
+  clickedVariety = false;
+
   ngOnInit() {
     this.getAllUsers();
 
@@ -269,5 +281,99 @@ export class SettingsComponent implements OnInit {
       this.useSap = this.setting.useSap;
     })
   }
+
+  clickCrop(){
+    this.clickedCrop = !this.clickedCrop;
+  }
+
+  clickMachine(){
+    this.clickedMachine = !this.clickedMachine;
+  }
+
+  clickEmployee(){
+    this.clickedEmployee = !this.clickedEmployee;
+  }
+
+  clickFieldGroup(){
+    this.clickedFieldGroup = !this.clickedFieldGroup;
+  }
+
+  clickField(){
+    this.clickedField = !this.clickedField;
+  }
+
+  clickMachineGroup(){
+    this.clickedMachineGroup = !this.clickedMachineGroup;
+  }
+
+  clickOperationGroup(){
+    this.clickedOperationGroup = !this.clickedOperationGroup;
+  }
+
+  clickOperation(){
+    this.clickedOperation = !this.clickedOperation;
+  }
+
+  clickCultureGroup(){
+    this.clickedCultureGroup = !this.clickedCultureGroup;
+  }
+
+  clickCulture(){
+    this.clickedCulture = !this.clickedCulture;
+  }
+
+  clickVariety(){
+    this.clickedVariety = !this.clickedVariety;
+  }
+
+  dismissAll(){
+    this.clickedCrop = false;
+    this.clickedMachine = false;
+    this.clickedEmployee = false;
+    this.clickedField = false;
+    this.clickedFieldGroup = false;
+    this.clickedMachineGroup = false;
+    this.clickedOperationGroup = false;
+    this.clickedOperation = false;
+    this.clickedCulture = false;
+    this.clickedCultureGroup = false;
+    this.clickedVariety = false;
+  }
+
+  selectAll(){
+    this.clickedCrop = true;
+    this.clickedMachine = true;
+    this.clickedEmployee = true;
+    this.clickedField = true;
+    this.clickedFieldGroup = true;
+    this.clickedMachineGroup = true;
+    this.clickedOperationGroup = true;
+    this.clickedOperation = true;
+    this.clickedCulture = true;
+    this.clickedCultureGroup = true;
+    this.clickedVariety = true;
+  }
+
+  sync(){
+    if(
+      this.clickedCrop == false &&
+      this.clickedMachine == false &&
+      this.clickedEmployee == false &&
+      this.clickedField == false &&
+      this.clickedFieldGroup == false &&
+      this.clickedMachineGroup == false &&
+      this.clickedOperationGroup == false &&
+      this.clickedOperation == false &&
+      this.clickedCulture == false &&
+      this.clickedCultureGroup == false &&
+      this.clickedVariety == false
+      ){
+        this.toastr.error("Ni jedan matični podatak nije označen.")
+      } else {
+        this.toastr.info("Nije implementirano.")
+        this.dismissAll();
+      }
+  }
+
 
 }

@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WorkOrderWorker {
-	
+
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	@GeneratedValue(generator = "uuid2")
@@ -60,4 +62,5 @@ public class WorkOrderWorker {
 	private Double fuel = -1.0;
 	
 	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
+	
 }

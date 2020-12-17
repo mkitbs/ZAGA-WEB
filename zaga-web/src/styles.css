@@ -7,7 +7,7 @@ body {
   font-size: 12px;
 
   background-image: url("https://www.agroglobe.rs/wp-content/uploads/2020/04/kontaktBack-1.png");
-  background-repeat: repeat;
+  background-repeat: no-repeat;
   background-size: 120vw;
 }
 

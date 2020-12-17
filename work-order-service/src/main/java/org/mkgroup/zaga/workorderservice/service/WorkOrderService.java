@@ -11,10 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderDTO;
@@ -35,6 +39,7 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,11 +47,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 
 @Service
 public class WorkOrderService {
@@ -129,6 +135,21 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			workOrder.setUserCreatedSapId(Long.parseLong(sapUserId));
+			
+			RestTemplate rest = new RestTemplate();
+			HttpServletRequest requesthttp = 
+			        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+			                .getRequest();
+
+			String token = (requesthttp.getHeader("Token"));
+			System.out.println(token);
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", "Bearer " + token);
+			HttpEntity<String> request2send = new HttpEntity<String>(headers);
+			ResponseEntity<Long> tenantId = rest.exchange(
+					"http://localhost:8091/auth/getLoggedTenant/", 
+					HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
+			workOrder.setTenantId(tenantId.getBody());
 			
 			workOrder = workOrderRepo.save(workOrder);
 			
@@ -322,12 +343,32 @@ public class WorkOrderService {
 		    return sapResponse;
 		}
 	
-	public List<WorkOrderDTO> getAll(){
+	public List<WorkOrderDTO> getAll(String sapUserId, HttpServletRequest request, HttpServletResponse response){
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+	    
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
 		for(WorkOrder workOrder : workOrders) {
-			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
-			workOrdersDTO.add(workOrderDTO);
+			for(UserAuthDTO u : user.getBody().getTenant().getUsers()) {
+				if(Long.parseLong(u.getSapUserId()) == workOrder.getUserCreatedSapId()) {
+					WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+					workOrdersDTO.add(workOrderDTO);
+				}
+			}
+			
 		}
 		return workOrdersDTO;
 	}
@@ -443,7 +484,7 @@ public class WorkOrderService {
 	
 	}
 	
-	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate) throws Exception {
+	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate, String sapUserId) throws Exception {
 		
 		SAPResponse sapResponse = new SAPResponse();
 		
@@ -465,6 +506,23 @@ public class WorkOrderService {
 		copy.setMaterials(new ArrayList<SpentMaterial>());
 		copy.setDate(date);
 		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
+		copy.setUserCreatedSapId(Long.parseLong(sapUserId));
+		
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<Long> tenantId = rest.exchange(
+				"http://localhost:8091/auth/getLoggedTenant/", 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
+		copy.setTenantId(tenantId.getBody());
+		
 		copy = workOrderRepo.save(copy);
 		UUID workOrderId = copy.getId();
 		
