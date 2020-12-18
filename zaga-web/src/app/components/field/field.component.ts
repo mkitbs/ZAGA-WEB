@@ -34,7 +34,11 @@ export class FieldComponent implements OnInit {
   lat = 45.588880;
   lng = 19.996049;
   map: any;
-  paths;
+  paths = [];
+  firstPair = {};
+
+  fieldId;
+  clickedOnField = false;
 
   polyLatLng: any[] = [];
   allOverlays: any[] = [];
@@ -62,7 +66,20 @@ export class FieldComponent implements OnInit {
   }
 
   getField(id) {
+    this.clickedOnField = true;
     this.field = this.fields.find((field) => field.dbId == id);
+    console.log(this.field.coordinates)
+    if(this.field.coordinates.length != 0){
+      this.paths = this.field.coordinates;
+      this.lat = this.field.coordinates[1].lat + ((this.field.coordinates[3].lat - this.field.coordinates[1].lat) / 2);
+      this.lng = this.field.coordinates[1].lng + ((this.field.coordinates[3].lng - this.field.coordinates[1].lng) / 2);
+      var polygon = new google.maps.Polygon({
+        path : this.paths,
+        map: this.map
+      });
+      this.field.Area = google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2);
+    } 
+    
     this.dismissPolygon();
   }
 
@@ -93,26 +110,6 @@ export class FieldComponent implements OnInit {
     this.lng = event.coords.lng;
   }
 
-  getFieldOnMap(){
-    var lat1 = 45.585433;
-    var lng1 = 20.008278;
-    var lat2 = 45.583605;
-    var lng2 = 20.016601;
-    var lat3 = 45.591386;
-    var lng3 = 20.020407;
-    var lat4 = 45.593470;
-    var lng4 = 20.011968;
-
-    this.lat = lat1 + ((lat3 - lat1) / 2);
-    this.lng = lng1 + ((lng3 - lng1) / 2);
-    this.paths = [
-      {lat: lat1, lng: lng1},
-      {lat: lat2, lng: lng2},
-      {lat: lat3, lng: lng3},
-      {lat: lat4, lng: lng4}
-    ]
-  }
-
   initDrawingManager(map: any) {
     const options = {
       drawingControl: true,
@@ -128,6 +125,7 @@ export class FieldComponent implements OnInit {
     var self = this;
     var drawingManager = new google.maps.drawing.DrawingManager(options);
     drawingManager.setMap(map);
+    var infowindow = new google.maps.InfoWindow();
      google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
       const len = polygon.getPath().getLength();
       console.log(this.poly)
@@ -144,6 +142,11 @@ export class FieldComponent implements OnInit {
 
       self.polyLatLng = polyArrayLatLng;
 
+      var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+      infowindow.setContent("Površina: "+area.toFixed(2)+ "metara kvadratnih.");
+      infowindow.setPosition(polygon.getPath().getAt(0));
+      infowindow.open(map);
+
       console.log('coordinates', polyArrayLatLng);
     });
     
@@ -155,19 +158,23 @@ export class FieldComponent implements OnInit {
 
   setPolygon(id){
     console.log(this.polyLatLng)
-    let myhash: IHash = {};
-    this.polyLatLng.forEach(poly => {
-      myhash[poly.lat] = poly.lng;
+    let myhash = [];
+    this.polyLatLng.forEach((poly, i) => {
+      console.log(poly)
+      let pair = {lat: poly.lat, lng: poly.lng}
+      myhash.push(pair)
     })
     this.fieldPolygon.values = myhash;
     this.fieldPolygon.id = id;
     console.log(this.fieldPolygon)
+    
     this.fieldService.setFieldCoordinates(this.fieldPolygon).subscribe(res => {
       this.getAll();
       this.toastr.success("Parcela je ucrtana na mapi.")
     }, error => {
       this.toastr.error("Parcela nije ucrtana na mapi.")
     })
+    
   }
 
   dismissPolygon(){
@@ -175,6 +182,11 @@ export class FieldComponent implements OnInit {
       this.allOverlays[i].overlay.setMap(null);
     }
     this.allOverlays = [];
+  }
+
+  closeModal(){
+    this.paths = [];
+    this.clickedOnField = false;
   }
 
 }

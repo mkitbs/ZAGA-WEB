@@ -696,10 +696,6 @@ export class DashboardComponent implements OnInit {
   clickedMarker(latitude, longitude, workerId, index) {
     this.lat = latitude;    
     this.lng = longitude;
-
-    console.log(this.scroll.nativeElement.scrollHeight);
-    this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight
-
     
     if(this.markers[index].animation != 'BOUNCE'){
       this.markers[index].animation = 'BOUNCE';

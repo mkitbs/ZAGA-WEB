@@ -1,7 +1,11 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -49,7 +53,7 @@ public class FieldDTO implements Serializable{
 	
 	private UUID fieldGroup;
 	
-	private Map<Double, Double> coordinates = new HashMap<Double, Double>();
+	private List<LocationDTO> coordinates = new ArrayList<LocationDTO>();
 	
 	public FieldDTO(Field field) {
 		dbId = field.getId();
@@ -58,7 +62,16 @@ public class FieldDTO implements Serializable{
 		area = field.getArea();
 		fieldGroup = field.getFieldGroup().getId();
 		erpId = field.getErpId();
-		coordinates = field.getCoordinates();
+		Iterator it = field.getCoordinates().entrySet().iterator();
+		while (it.hasNext()) {
+			   Map.Entry pair = (Map.Entry)it.next();
+			   LocationDTO location = new LocationDTO();
+			   String[] latLng = pair.getValue().toString().split("-");
+			   System.out.println(latLng);
+			   location.setLat(Double.parseDouble(latLng[0]));
+			   location.setLng(Double.parseDouble(latLng[1]));
+			   coordinates.add(location);
+			}
 	}
 
 }

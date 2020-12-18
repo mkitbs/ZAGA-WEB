@@ -15,7 +15,6 @@ export class AuthService {
   }
 
   checkToken(token): Observable<any> {
-    console.log(token)
     return this.http.get(environment.authURL + "check/" + token, { responseType: 'text' });
   }
 

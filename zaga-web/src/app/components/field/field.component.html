@@ -205,7 +205,7 @@
             data-target="#editFieldModal" hidden>
             <i class="fa fa-edit"></i>
           </button>
-          <button class="buttonEdit btn btn-primary btn-map" (click)="getFieldOnMap()" data-toggle="modal"
+          <button class="buttonEdit btn btn-primary btn-map" (click)="getField(field.dbId)" data-toggle="modal"
           data-target="#mapFieldModal" title="Vidi parcelu na mapi" hidden>
           <i class="fa fa-globe"></i>
         </button>
@@ -275,15 +275,18 @@
           <i class="fa fa-database mr-2"></i> {{ field.Name }}
         </h4>
        
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <h5 *ngIf="(field.coordinates | json) == '{}'">Parcela nije ucrtana na mapi. Klikom na dugme <img src="../../../assets/drawImage.png"/>  možete ucrtati parcelu.</h5>
+        <h5 *ngIf="field.coordinates.length == 0">Parcela nije ucrtana na mapi. Klikom na dugme <img src="../../../assets/drawImage.png"/>  možete ucrtati parcelu.</h5>
+        <h5 *ngIf="field.coordinates.length != 0"><i class="fa fa-area-chart"></i> {{field.Area}} &#13217;</h5>
         <agm-map [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)" [mapTypeControl]="true"
-          disableDoubleClickZoom="true" mapTypeId='satellite' [zoom]=15 (mapClick)="onChoseLocation($event)">
-          <agm-polygon [paths]="paths" [clickable]="false" [fillColor]="'#5C7495'"></agm-polygon>
+          disableDoubleClickZoom="true" mapTypeId='hybrid' [zoom]=15 (mapClick)="onChoseLocation($event)">
+          <agm-polygon *ngIf="clickedOnField" [paths]="paths" [strokeColor]="'red'" [strokeWeight]="4" [clickable]="false" [fillColor]="'#5C7495'">
+            <agm-info-window [disableAutoPan]="false" [isOpen]="true" #infoWindow><h2>Test</h2></agm-info-window>
+          </agm-polygon>
         </agm-map>
       </div>
       <div class="modal-footer">

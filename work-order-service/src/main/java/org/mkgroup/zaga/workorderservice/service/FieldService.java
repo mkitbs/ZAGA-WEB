@@ -2,13 +2,18 @@ package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.FieldDTO;
 import org.mkgroup.zaga.workorderservice.dto.FieldPolygonDTO;
+import org.mkgroup.zaga.workorderservice.dto.LocationDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Field;
 import org.mkgroup.zaga.workorderservice.model.FieldGroup;
@@ -147,7 +152,13 @@ public class FieldService {
 	
 	public void setFieldCoordinates(FieldPolygonDTO data) {
 		Field field = this.getOne(data.getId());
-		field.setCoordinates(data.getValues());
+		LinkedHashMap<Integer, String> coordinates = new LinkedHashMap<Integer, String>();
+		System.out.println(data.getValues());
+		for(int i=0; i<data.getValues().size(); i++) {
+			coordinates.put(i, data.getValues().get(i).getLat() + "-" + data.getValues().get(i).getLng());
+		}
+		System.out.println(coordinates);
+		field.setCoordinates(coordinates);
 		fieldRepo.save(field);
 	}
 	

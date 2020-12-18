@@ -1,7 +1,7 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 public class FieldPolygonDTO {
 
 	private UUID id;
-	private Map<Double, Double> values = new HashMap<Double, Double>();
+	private List<LocationDTO> values = new ArrayList<LocationDTO>();
 }

@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.model;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,9 +48,9 @@ public class Field {
 	private Long erpId;
 	
 	@ElementCollection
-	@MapKeyColumn(name="lat")
-    @Column(name="lng")
-	private Map<Double, Double> coordinates = new HashMap<Double, Double>();
+	@MapKeyColumn(name="ordernumber")
+    @Column(name="lat_lng")
+	private Map<Integer, String> coordinates = new LinkedHashMap<Integer, String>();
 	
 	@ManyToOne
 	private FieldGroup fieldGroup;
