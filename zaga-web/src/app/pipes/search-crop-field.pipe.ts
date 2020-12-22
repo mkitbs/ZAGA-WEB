@@ -10,9 +10,13 @@ export class SearchCropFieldPipe implements PipeTransform {
     if(!query){
       return crops;
     }
-    return crops.filter((crop) =>
+    var result = crops.filter((crop) =>
       this.matchValue(crop, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

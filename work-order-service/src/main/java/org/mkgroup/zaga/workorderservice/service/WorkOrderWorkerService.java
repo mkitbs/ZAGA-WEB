@@ -471,7 +471,7 @@ public class WorkOrderWorkerService {
 				report = new WorkerReportDTO();
 				report.setWorker(new EmployeeDTO(wows.get(i+1).getUser()));
 				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
-				if(i+1 == wows.size()) {
+				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
 			}

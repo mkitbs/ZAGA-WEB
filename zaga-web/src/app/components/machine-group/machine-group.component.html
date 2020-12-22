@@ -24,9 +24,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="machineGroups.length == 0">
+        <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroup.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="machineGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroup.value; let j = index">
+          <div *ngIf="machineGroup === -1" class="center">
+            <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe mašine za prikazivanje</h4>
+          </div>
+          <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -90,9 +98,17 @@
         </form>
       </div>
     </div>
+    <div class="center" *ngIf="machineGroups.length == 0">
+      <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
+    </div>
     <div class="row card-group">
-      <div class="col-5" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupLaptop.value; let j = index">
-        <div class="card mb-4" style="width: 30.2rem;">
+      <div [ngClass]="machineGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupLaptop.value; let j = index">
+        <div *ngIf="machineGroup === -1" class="center">
+          <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema grupe mašine za prikazivanje</h4>
+        </div>
+        <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
           <div class="card-body">
             <div class="row">
               <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
@@ -147,9 +163,17 @@
         </form>
       </div>
     </div>
+    <div class="center" *ngIf="machineGroups.length == 0">
+      <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
+    </div>
     <div class="row card-group">
-      <div class="col-7" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value; let j = index">
-        <div class="card mb-4" style="width: 30.2rem;">
+      <div [ngClass]="machineGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value; let j = index">
+        <div *ngIf="machineGroup === -1" class="center">
+          <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema grupe mašine za prikazivanje</h4>
+        </div>
+        <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
           <div class="card-body">
             <div class="row">
               <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">

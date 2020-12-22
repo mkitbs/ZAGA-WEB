@@ -103,6 +103,10 @@
     </div>
   </form>
   <div class="break-class pt-2 mb-4"></div>
+  <div *ngIf="materials.length == 0" class="center">
+    <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
+  </div>
   <table class="table table-hover tabela-nalozi">
     <thead>
       <tr>
@@ -125,6 +129,12 @@
         | ReportMaterialMaterial: searchMaterial.value
         | SearchMaterialUnit: searchUnit.value;
           let i = index" >
+          <tr *ngIf="material === -1">
+            <td colspan="10" >
+              <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
+              <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
+            </td>
+          </tr>
         <tr *ngFor="let workOrder of material.workOrders
           | SearchWorkOrdersTable: searchTable.value
           | SearchWorkOrdersOperation: searchOperation.value
@@ -168,7 +178,7 @@
             | SearchWorkOrdersDate: searchDate.value
             | ReportMaterialSapId: searchWorkOrder.value; 
             let i = index ">
-            <td *ngIf="i==0">Σ {{ material.material.material.Name }}</td>
+            <td *ngIf="i==0 && workOrder !== -1">Σ {{ material.material.material.Name }}</td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
@@ -196,7 +206,7 @@
                 | ReportMaterialSapId: searchWorkOrder.value)
               }}
             </td>
-            <td style="font-weight: bold;" *ngIf="i==0">{{ material.material.material.Unit }}</td>
+            <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">{{ material.material.material.Unit }}</td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
           </ng-container>

@@ -10,9 +10,13 @@ export class SearchOperationsPipe implements PipeTransform {
     if(!query) {
       return operations;
     }
-    return operations.filter((operation) =>
+    var result = operations.filter((operation) =>
       this.matchValue(operation, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

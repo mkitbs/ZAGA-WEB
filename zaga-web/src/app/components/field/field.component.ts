@@ -68,7 +68,6 @@ export class FieldComponent implements OnInit {
   getField(id) {
     this.clickedOnField = true;
     this.field = this.fields.find((field) => field.dbId == id);
-    console.log(this.field.coordinates)
     if(this.field.coordinates.length != 0){
       this.paths = this.field.coordinates;
       this.lat = this.field.coordinates[1].lat + ((this.field.coordinates[3].lat - this.field.coordinates[1].lat) / 2);
@@ -79,7 +78,6 @@ export class FieldComponent implements OnInit {
       });
       this.field.Area = google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2);
     } 
-    
     this.dismissPolygon();
   }
 
@@ -112,7 +110,7 @@ export class FieldComponent implements OnInit {
 
   initDrawingManager(map: any) {
     const options = {
-      drawingControl: true,
+      drawingControl: false,
       drawingControlOptions: {
         drawingModes: ["polygon"]
       },
@@ -128,9 +126,7 @@ export class FieldComponent implements OnInit {
     var infowindow = new google.maps.InfoWindow();
      google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
       const len = polygon.getPath().getLength();
-      console.log(this.poly)
       var polyArrayLatLng = [];
-      
 
       for (let i = 0; i < len; i++) {
         var vertex = polygon.getPath().getAt(i);
@@ -143,21 +139,17 @@ export class FieldComponent implements OnInit {
       self.polyLatLng = polyArrayLatLng;
 
       var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
-      infowindow.setContent("Površina: "+area.toFixed(2)+ "metara kvadratnih.");
+      infowindow.setContent("Površina: " + area.toFixed(2) + " metara kvadratnih.");
       infowindow.setPosition(polygon.getPath().getAt(0));
       infowindow.open(map);
-
-      console.log('coordinates', polyArrayLatLng);
     });
     
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
       self.allOverlays.push(e);
-      console.log(self.allOverlays)
     })
   }
 
   setPolygon(id){
-    console.log(this.polyLatLng)
     let myhash = [];
     this.polyLatLng.forEach((poly, i) => {
       console.log(poly)
@@ -166,7 +158,6 @@ export class FieldComponent implements OnInit {
     })
     this.fieldPolygon.values = myhash;
     this.fieldPolygon.id = id;
-    console.log(this.fieldPolygon)
     
     this.fieldService.setFieldCoordinates(this.fieldPolygon).subscribe(res => {
       this.getAll();
@@ -187,6 +178,7 @@ export class FieldComponent implements OnInit {
   closeModal(){
     this.paths = [];
     this.clickedOnField = false;
+    this.dismissPolygon();
   }
 
 }

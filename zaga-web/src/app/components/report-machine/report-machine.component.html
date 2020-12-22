@@ -124,6 +124,10 @@
     </div>
   </form>
   <div class="break-class pt-2 mb-4"></div>
+  <div *ngIf="machines.length == 0" class="center">
+    <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
+  </div>
   <table class="table table-hover tabela-nalozi table-fixed">
     <thead>
       <tr >
@@ -143,6 +147,12 @@
     <tbody>
       <ng-container *ngFor="let machine of machines | ReportMachineMachine: searchMachine.value; 
         let i = index" >
+        <tr *ngIf="machine === -1">
+          <td colspan="11" >
+            <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
+            <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
+          </td>
+        </tr>
         <tr *ngFor="let workOrder of machine.workOrders 
           | SearchWorkOrdersCrop: searchCrop.value
           | SearchWorkOrdersTable: searchTable.value
@@ -187,7 +197,7 @@
             | SearchMachineCoupling: searchCouplingMachine.value; 
             let i = index ">
             <ng-container >
-              <td *ngIf="i==0">Σ {{ machine.machine.Name }}</td>
+              <td *ngIf="i==0 && workOrder !== -1">Σ {{ machine.machine.Name }}</td>
               <td *ngIf="i==0"></td>
               <td *ngIf="i==0"></td>
               <td *ngIf="i==0"></td>
@@ -205,7 +215,7 @@
                   | ReportMaterialSapId: searchWorkOrder.value
                   | SearchWoBetweenDates: filters
                   | SearchMachineCoupling: searchCouplingMachine.value)
-                }} MČ
+                }}
               </td>
               <td style="font-weight: bold;" *ngIf="i==0">
                 {{
@@ -217,7 +227,7 @@
                   | ReportMaterialSapId: searchWorkOrder.value
                   | SearchWoBetweenDates: filters
                   | SearchMachineCoupling: searchCouplingMachine.value)
-                }} l
+                }}
               </td>
               <td *ngIf="i==0"></td>
             </ng-container>

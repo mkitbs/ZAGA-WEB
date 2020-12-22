@@ -238,7 +238,7 @@ public class MachineService {
 				report = new MachineReportDTO();
 				report.setMachine(new MachineDTO(wows.get(i+1).getMachine()));
 				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getMachine().getName()));
-				if(i+1 == wows.size()) {
+				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
 			}

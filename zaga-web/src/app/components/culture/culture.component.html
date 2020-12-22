@@ -70,16 +70,21 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
-      <h5 *ngIf="cultures.length == 0">
-        Nema kultura za prikazivanje.
-      </h5>
+      <div *ngIf="cultures.length == 0" class="center">
+        <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let culture of cultures
+        <div [ngClass]="culture === -1 ? 'fullScreen' : 'col-4'" *ngFor="let culture of cultures
           | SearchCulture: searchCulture.value
           | SearchCultureType: searchCultureType.value
           | SearchCultureOrgCon: searchProductionType.value
           | SearchCultureCultureGroup: searchCultureGroup.value; let j = index">
-          <div class="card mb-3" style="width: 30.8rem">
+          <div *ngIf="culture === -1" class="center">
+            <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+          </div>
+          <div *ngIf="culture !== -1" class="card mb-3" style="width: 30.8rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -204,16 +209,21 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
-      <h5 *ngIf="cultures.length == 0">
-        Nema kultura za prikazivanje.
-      </h5>
+      <div *ngIf="cultures.length == 0" class="center">
+        <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let culture of cultures
+        <div [ngClass]="culture === -1 ? 'fullScreen' : 'col-7'" *ngFor="let culture of cultures
           | SearchCulture: searchCultureTablet.value
           | SearchCultureType: searchCultureTypeTablet.value
           | SearchCultureOrgCon: searchProductionTypeTablet.value
           | SearchCultureCultureGroup: searchCultureGroupTablet.value; let j = index">
-          <div class="card mb-3" style="width: 30.8rem">
+          <div *ngIf="culture === -1" class="center">
+            <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+          </div>
+          <div *ngIf="culture !== -1" class="card mb-3" style="width: 30.8rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -338,16 +348,21 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="container">
-      <h5 *ngIf="cultures.length == 0">
-        Nema kultura za prikazivanje.
-      </h5>
+      <div *ngIf="cultures.length == 0" class="center">
+        <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let culture of cultures
+        <div [ngClass]="culture === -1 ? 'fullScreen' : 'col-5'" *ngFor="let culture of cultures
           | SearchCulture: searchCultureLaptop.value
           | SearchCultureType: searchCultureTypeLaptop.value
           | SearchCultureOrgCon: searchProductionTypeLaptop.value
           | SearchCultureCultureGroup: searchCultureGroupLaptop.value; let j = index">
-          <div class="card mb-3" style="width: 30.8rem">
+          <div *ngIf="culture === -1" class="center">
+            <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
+          </div>
+          <div *ngIf="culture !== -1" class="card mb-3" style="width: 30.8rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div

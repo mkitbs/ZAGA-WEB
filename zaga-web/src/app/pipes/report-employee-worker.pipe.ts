@@ -7,8 +7,17 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ReportEmployeeWorkerPipe implements PipeTransform {
 
   transform(workers: any[], query): any {
-    return workers.filter(worker =>
-      worker.worker.Name.toLowerCase().includes(query.toLowerCase()));
+    if(!query){
+      return workers;
+    }
+    var result =  workers.filter(worker =>
+      worker.worker.Name.toLowerCase().includes(query.toLowerCase()
+    ));
+    
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
 }

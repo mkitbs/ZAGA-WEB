@@ -55,14 +55,19 @@
   <div style="padding-top: 20px"></div>
   <div class="container">
     <h5 *ngIf="crops.length == 0">
-      Nema useva za prikazivanje.
+      <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
     <div class="row card-group">
-      <div class="col-4" *ngFor="let crop of crops 
+      <div [ngClass]="crop === -1 ? 'fullScreen' : 'col-4'" *ngFor="let crop of crops 
         | SearchCropField: searchField.value
         | SearchCropCulture: searchCulture.value
         | SearchCrop: searchCrop.value; let j = index">
-        <div class="card mb-3" style="width: 30.8rem; height: 14rem;" >
+        <div *ngIf="crop === -1" class="center">
+          <img src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema useva za prikazivanje</h4>
+        </div>
+        <div *ngIf="crop !== -1" class="card mb-3" style="width: 30.8rem; height: 90%;" >
           <div class="card-body">
             <div class="row">
               <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
@@ -166,14 +171,19 @@
   <div style="padding-top: 20px"></div>
   <div class="container">
     <h5 *ngIf="crops.length == 0">
-      Nema useva za prikazivanje.
+      <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
     <div class="row card-group">
-      <div class="col-7" *ngFor="let crop of crops 
+      <div [ngClass]="crop === -1 ? 'fullScreen' : 'col-7'" *ngFor="let crop of crops 
       | SearchCropField: searchFieldTablet.value
       | SearchCropCulture: searchCultureTablet.value
       | SearchCrop: searchCropTablet.value; let j = index">
-        <div class="card mb-3" style="width: 30.8rem">
+      <div *ngIf="crop === -1" class="center">
+        <img src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema useva za prikazivanje</h4>
+      </div>
+      <div *ngIf="crop !== -1" class="card mb-3" style="width: 30.8rem;  height: 90%;">
           <div class="card-body">
             <div class="row">
               <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
@@ -277,14 +287,19 @@
   <div style="padding-top: 20px"></div>
   <div class="container">
     <h5 *ngIf="crops.length == 0">
-      Nema useva za prikazivanje.
+      <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
     <div class="row card-group">
-      <div class="col-5" *ngFor="let crop of crops 
+      <div [ngClass]="crop === -1 ? 'fullScreen' : 'col-5'" *ngFor="let crop of crops 
       | SearchCropField: searchFieldLaptop.value
       | SearchCropCulture: searchCultureLaptop.value
       | SearchCrop: searchCropLaptop.value; let j = index">
-        <div class="card mb-3" style="width: 30.8rem">
+      <div *ngIf="crop === -1" class="center">
+        <img src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema useva za prikazivanje</h4>
+      </div>
+      <div *ngIf="crop !== -1" class="card mb-3" style="width: 30.8rem; height: 90%;">
           <div class="card-body">
             <div class="row">
               <div class="col-md-auto" style="width: fit-content; padding-top: 12px">

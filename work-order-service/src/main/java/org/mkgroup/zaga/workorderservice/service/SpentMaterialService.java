@@ -485,7 +485,7 @@ public class SpentMaterialService {
 				report = new MaterialReportDTO();
 				report.setMaterial(new SpentMaterialDTO(spentMaterials.get(i+1)));
 				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
-				if(i+1 == spentMaterials.size()) {
+				if(i+1 == spentMaterials.size()-1) {
 					retValues.add(report);
 				}
 			}

@@ -10,9 +10,13 @@ export class SearchFieldsPipe implements PipeTransform {
     if(!query) {
       return fields;
     }
-    return fields.filter((field) =>
+    let result =  fields.filter((field) =>
       this.matchValue(field, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

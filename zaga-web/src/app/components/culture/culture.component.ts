@@ -53,11 +53,15 @@ export class CultureComponent implements OnInit {
             culture.Type = "RATARSKA";
           } else if(culture.Type == "VITICULTURE"){
             culture.Type = "VINOGRADARSKA";
+          } else if(culture.Type == "OTHER"){
+            culture.Type = "OSTALO";
           }
           if(culture.OrgKon == "ORGANIC"){
             culture.OrgKon = "ORGANSKA";
           } else if(culture.OrgKon == "CONVENTIONAL"){
             culture.OrgKon = "KONVENCIONALNA";
+          } else if(culture.OrgKon == "OTHER"){
+            culture.OrgKon = "OSTALO";
           }
           culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
         })
@@ -88,6 +92,8 @@ export class CultureComponent implements OnInit {
           culture.Type = "RATARSKA";
         } else if(culture.Type == "VITICULTURE"){
           culture.Type = "VINOGRADARSKA";
+        } else if(culture.Type == "OTHER"){
+          culture.Type = "OSTALO";
         }
       })
     })
@@ -101,6 +107,8 @@ export class CultureComponent implements OnInit {
           culture.OrgKon = "ORGANSKA";
         } else if(culture.OrgKon == "CONVENTIONAL"){
           culture.OrgKon = "KONVENCIONALNA";
+        } else if(culture.OrgKon == "OTHER"){
+          culture.OrgKon = "OSTALO";
         }
       })
     })

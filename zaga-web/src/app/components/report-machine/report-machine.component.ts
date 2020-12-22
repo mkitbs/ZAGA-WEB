@@ -58,28 +58,38 @@ export class ReportMachineComponent implements OnInit {
 
   getFinalMachineSum(workOrders){
     let machineSum = 0.0;
-    workOrders.forEach(wo => {
-      wo.workers.forEach(w => {
-        if(w.sumState == -1){
-          w.sumState = 0.0;
-        }
-        machineSum += w.sumState;
+    if(workOrders != -1){
+      workOrders.forEach(wo => {
+        wo.workers.forEach(w => {
+          if(w.sumState == -1){
+            w.sumState = 0.0;
+          }
+          machineSum += w.sumState;
+        })
       })
-    })
-    return machineSum
+      return machineSum + " MČ"
+    } else {
+      return null;
+    }
+   
   }
 
   getFuelSum(workOrders){
     let fuelSum = 0.0;
-    workOrders.forEach(wo => {
-      wo.workers.forEach(w => {
-        if(w.fuel == -1){
-          w.fuel = 0.0;
-        }
-        fuelSum += w.fuel;
+    if(workOrders != -1){
+      workOrders.forEach(wo => {
+        wo.workers.forEach(w => {
+          if(w.fuel == -1){
+            w.fuel = 0.0;
+          }
+          fuelSum += w.fuel;
+        })
       })
-    })
-    return fuelSum
+      return fuelSum + " l"
+    } else {
+      return null;
+    }
+    
   }
 
   updateFilters(): void {
