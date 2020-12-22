@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -13,6 +14,7 @@ import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
+import org.mkgroup.zaga.workorderservice.service.WorkOrderService;
 import org.mkgroup.zaga.workorderservice.service.WorkOrderWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +48,9 @@ public class WorkOrderWorkerController {
 	WorkOrderWorkerService wowService;
 	
 	@Autowired
+	WorkOrderService workOrderService;
+	
+	@Autowired
 	MachineRepository machineRepo;
 
 	@PostMapping("addWorker/{id}")
@@ -70,7 +75,17 @@ public class WorkOrderWorkerController {
 	@DeleteMapping("deleteWorkOrderWorker/{id}")
 	public ResponseEntity<?> deleteWow(@PathVariable UUID id){
 		wowService.deleteWow(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		WorkOrderWorker wow = wowRepo.getOne(id);
+		try {
+			SAPResponse response = workOrderService.updateDataWorkOrder(wow.getWorkOrder());
+			return new ResponseEntity<SAPResponse>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			SAPResponse response = new SAPResponse();
+			response.setSuccess(false);
+			response.getMessage().add(e.getMessage());
+			return new ResponseEntity<SAPResponse>(response, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("updateWorkOrderWorkerBasicInfo/{id}")

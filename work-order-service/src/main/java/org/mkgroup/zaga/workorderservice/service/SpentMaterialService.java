@@ -95,7 +95,8 @@ public class SpentMaterialService {
 	
 	public void deleteSpentMaterial(UUID id) {
 		try {
-			spentMaterialRepo.deleteById(id);
+			spentMaterialRepo.deleteMaterial(id);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -394,6 +394,62 @@ public class WorkOrderService {
 		}
 	}
 	
+	public SAPResponse updateDataWorkOrder(WorkOrder workOrder) throws Exception {
+		SAPResponse retVal = new SAPResponse();
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		System.out.println("Token:" + csrfToken);
+  		System.out.println(headersRestTemplate.toString());
+  		System.out.println("KA SAPU -> " + workOrderSAP.toString());
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+		
+  		ResponseEntity<Object> response = restTemplate.exchange(
+	  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+  		
+		System.out.println(response);
+	    if(response == null) {
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    	retVal.setSuccess(true);
+	    	retVal.getMessage().add("Radni nalog uspesno azuriran");
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	retVal.setSuccess(false);
+	    	retVal.getMessage().add("Greska prilikom azuriranja");
+	    }
+	
+	    return retVal;
+	} 
+	
 	public void updateWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
 		log.info("Work order update started");

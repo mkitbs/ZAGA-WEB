@@ -17,4 +17,5 @@ export class WorkOrderWorker {
   sumState;
   fuel;
   wowObjectId;
+  deleted: boolean;
 }

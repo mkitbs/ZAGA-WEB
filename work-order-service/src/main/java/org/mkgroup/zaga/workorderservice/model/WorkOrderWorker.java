@@ -63,4 +63,5 @@ public class WorkOrderWorker {
 	
 	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
 	
+	private boolean deleted = false; //logicko brisanje zbog SAP-a
 }

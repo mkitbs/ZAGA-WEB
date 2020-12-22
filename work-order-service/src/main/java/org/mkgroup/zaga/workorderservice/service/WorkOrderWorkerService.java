@@ -89,7 +89,7 @@ public class WorkOrderWorkerService {
 	
 	public void deleteWow(UUID id) {
 		try {
-			wowRepo.deleteById(id);
+			wowRepo.deleteWorker(id);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

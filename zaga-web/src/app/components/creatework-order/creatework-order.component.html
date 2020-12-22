@@ -20,12 +20,12 @@
             style="margin-left: 6px; float: right; border: none;" *ngIf="error">
             <i class="fa fa-exclamation-triangle"></i>
           </button>
-          <button class="btn btn-primary btn-edit" *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser" data-toggle="modal"
-            data-target="#closeWOModal">
+          <button class="btn btn-primary btn-edit" *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser"
+            data-toggle="modal" data-target="#closeWOModal">
             <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
           </button>
-          <button class="btn btn-primary btn-add mr-2" *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser"
-            (click)="updateWorkOrder()">
+          <button class="btn btn-primary btn-add mr-2"
+            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser" (click)="updateWorkOrder()">
             <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
           </button>
 
@@ -48,8 +48,8 @@
             <form>
               <!--WITH SAP ID-->
               <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockOp">
-                <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp
-                  required placeholder="Izaberite agrotehničku meru"/>
+                <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp required
+                  placeholder="Izaberite agrotehničku meru" />
 
                 <mat-autocomplete #autoOp="matAutocomplete" [displayWith]="displayFnOperation" place>
                   <mat-option *ngFor="
@@ -62,9 +62,9 @@
               <!--WITHOUT SAP ID-->
               <ng-template #elseBlockOp>
                 <mat-form-field class="inputAuto">
-                  <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpWithoutId" #searchOpWithoutId
-                    required placeholder="Izaberite agrotehničku meru"/>
-  
+                  <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpWithoutId"
+                    #searchOpWithoutId required placeholder="Izaberite agrotehničku meru" />
+
                   <mat-autocomplete #autoOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
                     <mat-option *ngFor="
                         let op of operations | SearchOperations: searchOpWithoutId.value
@@ -100,14 +100,14 @@
               <!--WITHOUT SAP ID-->
               <ng-template #elseBlockField>
                 <mat-form-field class="inputAuto">
-                  <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldWithoutId" #searchFieldWithoutId
-                   required placeholder="Izaberite parcelu" />
-  
+                  <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldWithoutId"
+                    #searchFieldWithoutId required placeholder="Izaberite parcelu" />
+
                   <mat-autocomplete #autoFieldWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
                     <mat-option *ngFor="
                         let field of fields | SearchFields: searchFieldWithoutId.value
                       " [value]="field" (click)="getCulture(field.dbId)">
-                     {{ field.Name }}
+                      {{ field.Name }}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
@@ -158,7 +158,7 @@
                 <mat-form-field class="inputAuto">
                   <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="autoWithoutId" #searchWithoutId
                     required placeholder="Izaberite odgovornu osobu" />
-  
+
                   <mat-autocomplete #autoWithoutId="matAutocomplete" [displayWith]="displayFnResponsible" place>
                     <mat-option *ngFor="
                         let emp of allEmployees | SearchEmployees: searchWithoutId.value
@@ -194,10 +194,11 @@
               <!--WITHOUT SAP ID-->
               <ng-template #elseBlockCulture>
                 <mat-form-field class="inputAuto">
-                  <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutId" #searchCultureWithoutId
-                    required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
-  
-                  <mat-autocomplete #autoCultureWithoutId="matAutocomplete" [displayWith]="displayFnCultureWithoutId" place>
+                  <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutId"
+                    #searchCultureWithoutId required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
+
+                  <mat-autocomplete #autoCultureWithoutId="matAutocomplete" [displayWith]="displayFnCultureWithoutId"
+                    place>
                     <mat-option *ngFor="
                       let crop of crops | SearchCultures: searchCultureWithoutId.value
                       " [value]="crop" (click)="getArea(crop.id)">
@@ -322,12 +323,13 @@
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorkerWithoutId"
                             #searchWorkerWithoutId required placeholder="Izaberite radnika" />
-  
-                          <mat-autocomplete #autoWorkerWithoutId="matAutocomplete" [displayWith]="displayFnResponsible" place>
+
+                          <mat-autocomplete #autoWorkerWithoutId="matAutocomplete" [displayWith]="displayFnResponsible"
+                            place>
                             <mat-option *ngFor="
                               let emp of allEmployees | SearchEmployees: searchWorkerWithoutId.value
                             " [value]="emp">
-                             {{ emp.name }}
+                              {{ emp.name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -344,9 +346,9 @@
                     <form>
                       <!--WITH SAP ID-->
                       <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerOp">
-                        <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp" #searchWorkerOp
-                          required placeholder="Izaberite agrotehničku meru"/>
-        
+                        <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp"
+                          #searchWorkerOp required placeholder="Izaberite agrotehničku meru" />
+
                         <mat-autocomplete #autoWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
                           <mat-option *ngFor="
                               let op of operations | SearchOperations: searchWorkerOp.value
@@ -355,22 +357,25 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockWorkerOp>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockWorkerOp>
                         <mat-form-field class="inputAuto">
-                          <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOpWithoutId" #searchWorkerOpWithoutId
-                            required placeholder="Izaberite agrotehničku meru"/>
-          
-                          <mat-autocomplete #autoWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                          <input type="text" matInput [formControl]="workerOperationFC"
+                            [matAutocomplete]="autoWorkerOpWithoutId" #searchWorkerOpWithoutId required
+                            placeholder="Izaberite agrotehničku meru" />
+
+                          <mat-autocomplete #autoWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId"
+                            place>
                             <mat-option *ngFor="
                                 let op of operations | SearchOperations: searchWorkerOpWithoutId.value
                               " [value]="op">
-                             {{ op.Name }}
+                              {{ op.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
                       </ng-template>
-                      <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true" style="color: red; font-weight: normal">
+                      <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true"
+                        style="color: red; font-weight: normal">
                         Izaberite agrotehničku meru.
                       </div>
                     </form>
@@ -393,14 +398,15 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockWorkerMachine>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockWorkerMachine>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [formControl]="workerMachineFC"
                             [matAutocomplete]="autoWorkerMachineWithoutId" #searchWorkerMachineWithoutId required
                             placeholder="Izaberite mašinu" />
-  
-                          <mat-autocomplete #autoWorkerMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId" place>
+
+                          <mat-autocomplete #autoWorkerMachineWithoutId="matAutocomplete"
+                            [displayWith]="displayFnMachineWithoutId" place>
                             <mat-option *ngFor="
                             let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutId.value
                               " [value]="dev">
@@ -436,21 +442,22 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockWorkerCoMachine>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockWorkerCoMachine>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [formControl]="workerCoMachineFC"
                             [matAutocomplete]="autoWorkerCoMachineWithoutId" #searchWorkerCoMachineWithoutId required
                             placeholder="Izaberite priključnu mašinu" />
-  
-                          <mat-autocomplete #autoWorkerCoMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId" place>
+
+                          <mat-autocomplete #autoWorkerCoMachineWithoutId="matAutocomplete"
+                            [displayWith]="displayFnMachineWithoutId" place>
                             <mat-option [value]="-1">
                               BEZ PRIKLJUČNE MAŠINE
                             </mat-option>
                             <mat-option *ngFor="
                             let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutId.value
                               " [value]="dev">
-                             {{ dev.Name }}
+                              {{ dev.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -504,13 +511,14 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExWorker>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockExWorker>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }"
                             [matAutocomplete]="autoExWorkerWithoutId" #searchWorkerWithoutId required />
-  
-                          <mat-autocomplete #autoExWorkerWithoutId="matAutocomplete" [displayWith]="displayFnResponsible" place>
+
+                          <mat-autocomplete #autoExWorkerWithoutId="matAutocomplete"
+                            [displayWith]="displayFnResponsible" place>
                             <mat-option *ngFor="
                               let emp of allEmployees | SearchEmployees: searchWorkerWithoutId.value
                             " [value]="emp">
@@ -536,13 +544,15 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExWorkerOp>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockExWorkerOp>
                         <mat-form-field class="inputAuto">
-                          <input type="text" matInput [(ngModel)]="wow.operation" [ngModelOptions]="{ standalone: true }"
-                            [matAutocomplete]="autoExWorkerOpWithoutId" #searchWorkerOpWithoutId required />
-  
-                          <mat-autocomplete #autoExWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                          <input type="text" matInput [(ngModel)]="wow.operation"
+                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorkerOpWithoutId"
+                            #searchWorkerOpWithoutId required />
+
+                          <mat-autocomplete #autoExWorkerOpWithoutId="matAutocomplete"
+                            [displayWith]="displayFnWithoutId" place>
                             <mat-option *ngFor="
                                 let op of operations | SearchOperations: searchWorkerOpWithoutId.value
                               " [value]="op">
@@ -568,13 +578,14 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExWorkerMachine>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockExWorkerMachine>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }"
                             [matAutocomplete]="autoExWorkerMachineWithoutId" #searchWorkerMachineWithoutId required />
-  
-                          <mat-autocomplete #autoExWorkerMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId" place>
+
+                          <mat-autocomplete #autoExWorkerMachineWithoutId="matAutocomplete"
+                            [displayWith]="displayFnMachineWithoutId" place>
                             <mat-option *ngFor="
                             let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutId.value
                               " [value]="dev">
@@ -605,22 +616,22 @@
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExWorkerCoMachine>
+                      <!--WITHOUT SAP ID-->
+                      <ng-template #elseBlockExWorkerCoMachine>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [(ngModel)]="wow.connectingMachine"
                             [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExWorkerCoMachineWithoutId"
                             #searchWorkerCoMachineWithoutId required />
-  
-                          <mat-autocomplete #autoExWorkerCoMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId"
-                            place>
+
+                          <mat-autocomplete #autoExWorkerCoMachineWithoutId="matAutocomplete"
+                            [displayWith]="displayFnMachineWithoutId" place>
                             <mat-option [value]="-1">
                               BEZ PRIKLJUČNE MAŠINE
                             </mat-option>
                             <mat-option *ngFor="
                             let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutId.value
                               " [value]="dev">
-                             {{ dev.Name }}
+                              {{ dev.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -660,172 +671,182 @@
               <ng-template #elseBlockMachineState>
 
                 <tr *ngFor="let wow of workOrder.workers">
-                  <td>
-                    <form>
-                      <!--WITH SAP ID-->
-                      <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorker">
-                        <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }"
-                          [matAutocomplete]="autoExDbWorker" #searchExDbWorker required />
+                  <ng-container *ngIf="!wow.deleted">
+                    <td>
+                      <form>
+                        <!--WITH SAP ID-->
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorker">
+                          <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }"
+                            [matAutocomplete]="autoExDbWorker" #searchExDbWorker required />
 
-                        <mat-autocomplete #autoExDbWorker="matAutocomplete" [displayWith]="displayFn" place>
-                          <mat-option *ngFor="
+                          <mat-autocomplete #autoExDbWorker="matAutocomplete" [displayWith]="displayFn" place>
+                            <mat-option *ngFor="
                               let emp of allEmployees | SearchEmployees: searchExDbWorker.value
                             " [value]="emp">
-                            {{emp.perNumber}} - {{ emp.name }}
-                          </mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExDbWorker>
-                        <mat-form-field class="inputAuto">
-                          <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }"
-                            [matAutocomplete]="autoExDbWorkerWithoutId" #searchExDbWorkerWithoutId required />
-  
-                          <mat-autocomplete #autoExDbWorkerWithoutId="matAutocomplete" [displayWith]="displayFnResponsible" place>
-                            <mat-option *ngFor="
+                              {{emp.perNumber}} - {{ emp.name }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                        <!--WITHOUT SAP ID-->
+                        <ng-template #elseBlockExDbWorker>
+                          <mat-form-field class="inputAuto">
+                            <input type="text" matInput [(ngModel)]="wow.user" [ngModelOptions]="{ standalone: true }"
+                              [matAutocomplete]="autoExDbWorkerWithoutId" #searchExDbWorkerWithoutId required />
+
+                            <mat-autocomplete #autoExDbWorkerWithoutId="matAutocomplete"
+                              [displayWith]="displayFnResponsible" place>
+                              <mat-option *ngFor="
                                 let emp of allEmployees | SearchEmployees: searchExDbWorkerWithoutId.value
                               " [value]="emp">
-                              {{ emp.name }}
-                            </mat-option>
-                          </mat-autocomplete>
-                        </mat-form-field>
-                      </ng-template>
-                    </form>
-                  </td>
-                  <td>
-                    <form>
-                      <!--WITH SAP ID-->
-                      <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerOp">
-                        <input type="text" matInput [(ngModel)]="wow.operation" [ngModelOptions]="{ standalone: true }"
-                          [matAutocomplete]="autoExDbWorkerOp" #searchExDbWorkerOp required />
+                                {{ emp.name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </ng-template>
+                      </form>
+                    </td>
+                    <td>
+                      <form>
+                        <!--WITH SAP ID-->
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerOp">
+                          <input type="text" matInput [(ngModel)]="wow.operation"
+                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerOp"
+                            #searchExDbWorkerOp required />
 
-                        <mat-autocomplete #autoExDbWorkerOp="matAutocomplete" [displayWith]="displayFnOperation" place>
-                          <mat-option *ngFor="
-                              let op of operations | SearchOperations: searchExDbWorkerOp.value
-                            " [value]="op">
-                            {{ op.Id }} - {{ op.Name }}
-                          </mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExDbWorkerOp>
-                        <mat-form-field class="inputAuto">
-                          <input type="text" matInput [(ngModel)]="wow.operation" [ngModelOptions]="{ standalone: true }"
-                            [matAutocomplete]="autoExDbWorkerOpWithoutId" #searchExDbWorkerOpWithoutId required />
-  
-                          <mat-autocomplete #autoExDbWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
-                            <mat-option *ngFor="
-                                let op of operations | SearchOperations: searchExDbWorkerOpWithoutId.value
-                              " [value]="op">
-                             {{ op.Name }}
-                            </mat-option>
-                          </mat-autocomplete>
-                        </mat-form-field>
-                      </ng-template>
-                    </form>
-                  </td>
-                  <td>
-                    <form>
-                      <!--WITH SAP ID-->
-                      <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerMachine">
-                        <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }"
-                          [matAutocomplete]="autoExDbWorkerMachine" #searchExDbWorkerMachine required />
-
-                        <mat-autocomplete #autoExDbWorkerMachine="matAutocomplete" [displayWith]="displayFnMachine"
-                          place>
-                          <mat-option *ngFor="
-                          let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachine.value
-                            " [value]="dev">
-                            {{dev.Id}} - {{ dev.Name }}
-                          </mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExDbWorkerMachine>
-                        <mat-form-field class="inputAuto">
-                          <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }"
-                            [matAutocomplete]="autoExDbWorkerMachineWithoutId" #searchExDbWorkerMachineWithoutId required />
-  
-                          <mat-autocomplete #autoExDbWorkerMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId"
+                          <mat-autocomplete #autoExDbWorkerOp="matAutocomplete" [displayWith]="displayFnOperation"
                             place>
                             <mat-option *ngFor="
-                            let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachineWithoutId.value
-                              " [value]="dev">
-                              {{ dev.Name }}
+                              let op of operations | SearchOperations: searchExDbWorkerOp.value
+                            " [value]="op">
+                              {{ op.Id }} - {{ op.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
-                      </ng-template>
-                    </form>
-                  </td>
-                  <td>
-                    <form>
-                      <!--WITH SAP ID-->
-                      <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerCoMachine">
-                        <input type="text" matInput [(ngModel)]="wow.connectingMachine"
-                          [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerCoMachine"
-                          #searchExDbWorkerCoMachine required />
+                        <!--WITHOUT SAP ID-->
+                        <ng-template #elseBlockExDbWorkerOp>
+                          <mat-form-field class="inputAuto">
+                            <input type="text" matInput [(ngModel)]="wow.operation"
+                              [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerOpWithoutId"
+                              #searchExDbWorkerOpWithoutId required />
 
-                        <mat-autocomplete #autoExDbWorkerCoMachine="matAutocomplete" [displayWith]="displayFnMachine"
-                          place>
-                          <mat-option [value]="-1">
-                            BEZ PRIKLJUČNE MAŠINE
-                          </mat-option>
-                          <mat-option *ngFor="
-                          let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachine.value
+                            <mat-autocomplete #autoExDbWorkerOpWithoutId="matAutocomplete"
+                              [displayWith]="displayFnWithoutId" place>
+                              <mat-option *ngFor="
+                                let op of operations | SearchOperations: searchExDbWorkerOpWithoutId.value
+                              " [value]="op">
+                                {{ op.Name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </ng-template>
+                      </form>
+                    </td>
+                    <td>
+                      <form>
+                        <!--WITH SAP ID-->
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerMachine">
+                          <input type="text" matInput [(ngModel)]="wow.machine" [ngModelOptions]="{ standalone: true }"
+                            [matAutocomplete]="autoExDbWorkerMachine" #searchExDbWorkerMachine required />
+
+                          <mat-autocomplete #autoExDbWorkerMachine="matAutocomplete" [displayWith]="displayFnMachine"
+                            place>
+                            <mat-option *ngFor="
+                          let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachine.value
                             " [value]="dev">
-                            {{dev.Id}} - {{ dev.Name }}
-                          </mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                       <!--WITHOUT SAP ID-->
-                       <ng-template #elseBlockExDbWorkerCoMachine>
-                        <mat-form-field class="inputAuto">
+                              {{dev.Id}} - {{ dev.Name }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                        <!--WITHOUT SAP ID-->
+                        <ng-template #elseBlockExDbWorkerMachine>
+                          <mat-form-field class="inputAuto">
+                            <input type="text" matInput [(ngModel)]="wow.machine"
+                              [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerMachineWithoutId"
+                              #searchExDbWorkerMachineWithoutId required />
+
+                            <mat-autocomplete #autoExDbWorkerMachineWithoutId="matAutocomplete"
+                              [displayWith]="displayFnMachineWithoutId" place>
+                              <mat-option *ngFor="
+                            let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachineWithoutId.value
+                              " [value]="dev">
+                                {{ dev.Name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </ng-template>
+                      </form>
+                    </td>
+                    <td>
+                      <form>
+                        <!--WITH SAP ID-->
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWorkerCoMachine">
                           <input type="text" matInput [(ngModel)]="wow.connectingMachine"
-                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerCoMachineWithoutId"
-                            #searchExDbWorkerCoMachineWithoutId required />
-  
-                          <mat-autocomplete #autoExDbWorkerCoMachineWithoutId="matAutocomplete" [displayWith]="displayFnMachineWithoutId"
+                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWorkerCoMachine"
+                            #searchExDbWorkerCoMachine required />
+
+                          <mat-autocomplete #autoExDbWorkerCoMachine="matAutocomplete" [displayWith]="displayFnMachine"
                             place>
                             <mat-option [value]="-1">
                               BEZ PRIKLJUČNE MAŠINE
                             </mat-option>
                             <mat-option *ngFor="
-                            let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachineWithoutId.value
-                              " [value]="dev">
-                              {{ dev.Name }}
+                          let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachine.value
+                            " [value]="dev">
+                              {{dev.Id}} - {{ dev.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
-                      </ng-template>
-                    </form>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#workerMachineModal"
-                        (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}" [ngClass]="!withoutMachine && (wow.dayPeriod == null || 
+                        <!--WITHOUT SAP ID-->
+                        <ng-template #elseBlockExDbWorkerCoMachine>
+                          <mat-form-field class="inputAuto">
+                            <input type="text" matInput [(ngModel)]="wow.connectingMachine"
+                              [ngModelOptions]="{ standalone: true }"
+                              [matAutocomplete]="autoExDbWorkerCoMachineWithoutId" #searchExDbWorkerCoMachineWithoutId
+                              required />
+
+                            <mat-autocomplete #autoExDbWorkerCoMachineWithoutId="matAutocomplete"
+                              [displayWith]="displayFnMachineWithoutId" place>
+                              <mat-option [value]="-1">
+                                BEZ PRIKLJUČNE MAŠINE
+                              </mat-option>
+                              <mat-option *ngFor="
+                            let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachineWithoutId.value
+                              " [value]="dev">
+                                {{ dev.Name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </ng-template>
+                      </form>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <button class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                          [ngClass]="!withoutMachine && (wow.dayPeriod == null || 
                         wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
                         wow.fuel == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 || 
                         wow.initialState == -1 || wow.finalState == -1 || wow.fuel == -1) ? 
                         'warning' : 'ok'">
-                        <i class="fa fa-ellipsis-v"></i>
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateWOWBasicInfo(wow)"
-                      [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <button class="btn btn-primary btn-delete mr-2" (click)="deleteExistingWorkOrderWorker(wow.id)"
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary btn-add mr-2" (click)="updateWOWBasicInfo(wow)"
                         [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                        <i class="fa fa-minus"></i>
+                        <i class="fa fa-check"></i>
                       </button>
-                    </div>
-                  </td>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <button class="btn btn-primary btn-delete mr-2" (click)="deleteExistingWorkOrderWorker(wow.id)"
+                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
+                          <i class="fa fa-minus"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
                 </tr>
               </ng-template>
             </tbody>
@@ -905,10 +926,12 @@
                       <!--WITHOUT SAP ID-->
                       <ng-template #elseBlockMaterial>
                         <mat-form-field class="inputAuto">
-                          <input type="text" matInput [formControl]="materialFC" [matAutocomplete]="autoMaterialWithoutId"
-                            #searchMaterialWithoutId required placeholder="Izaberite materijal" />
-  
-                          <mat-autocomplete #autoMaterialWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                          <input type="text" matInput [formControl]="materialFC"
+                            [matAutocomplete]="autoMaterialWithoutId" #searchMaterialWithoutId required
+                            placeholder="Izaberite materijal" />
+
+                          <mat-autocomplete #autoMaterialWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId"
+                            place>
                             <mat-option *ngFor="
                             let sub of substances | SearchMaterials: searchMaterialWithoutId.value
                               " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
@@ -932,7 +955,7 @@
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">{{
                           unit
-                        }}</span>
+                          }}</span>
                       </div>
                       <div *ngIf="(quantityEntered == null || quantityEntered == undefined) && clickAddMaterial"
                         style="color: red">
@@ -1010,10 +1033,11 @@
                       <ng-template #elseBlockWoMaterial>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [(ngModel)]="material.material"
-                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoWoMaterialWithoutId" #searchWoMaterialWithoutId
-                            required />
-  
-                          <mat-autocomplete #autoWoMaterialWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoWoMaterialWithoutId"
+                            #searchWoMaterialWithoutId required />
+
+                          <mat-autocomplete #autoWoMaterialWithoutId="matAutocomplete"
+                            [displayWith]="displayFnWithoutId" place>
                             <mat-option *ngFor="
                             let sub of substances | SearchMaterials: searchWoMaterialWithoutId.value
                               " [value]="sub">
@@ -1032,7 +1056,7 @@
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">{{
                             material.material.Unit
-                          }}</span>
+                            }}</span>
                         </div>
                       </div>
                     </div>
@@ -1094,92 +1118,97 @@
               <!--editable table materials existing wo-->
               <ng-template #elseBlockSpentMaterial>
                 <tr *ngFor="let material of workOrder.materials">
-                  <td>
-                    <form>
-                      <!--WITH SAP ID-->
-                      <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWoMaterial">
-                        <input type="text" matInput [(ngModel)]="material.material"
-                          [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterial"
-                          #searchExDbWoMaterial required />
+                  <ng-container *ngIf="!material.deleted">
+                    <td>
+                      <form>
+                        <!--WITH SAP ID-->
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWoMaterial">
+                          <input type="text" matInput [(ngModel)]="material.material"
+                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterial"
+                            #searchExDbWoMaterial required />
 
-                        <mat-autocomplete #autoExDbWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
-                          <mat-option *ngFor="
+                          <mat-autocomplete #autoExDbWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial"
+                            place>
+                            <mat-option *ngFor="
                           let sub of substances | SearchMaterials: searchExDbWoMaterial.value
                             " [value]="sub">
-                            {{sub.Id}} - {{ sub.Name }}
-                          </mat-option>
-                        </mat-autocomplete>
-                      </mat-form-field>
-                      <!--WITHOUT SAP ID-->
-                      <ng-template #elseBlockExDbWoMaterial>
-                        <mat-form-field class="inputAuto">
-                          <input type="text" matInput [(ngModel)]="material.material"
-                            [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterialWithoutId"
-                            #searchExDbWoMaterialWithoutId required />
-  
-                          <mat-autocomplete #autoExDbWoMaterialWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
-                            <mat-option *ngFor="
-                            let sub of substances | SearchMaterials: searchExDbWoMaterialWithoutId.value
-                              " [value]="sub">
-                             {{ sub.Name }}
+                              {{sub.Id}} - {{ sub.Name }}
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
-                      </ng-template>
-                    </form>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <div class="input-group mb-3">
-                        <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
-                          name="{{ material.quantity }}" id="" class="form-control"
-                          onKeyPress="if(this.value.length==7) return false;" />
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2">{{
-                            material.material.Unit
-                          }}</span>
+                        <!--WITHOUT SAP ID-->
+                        <ng-template #elseBlockExDbWoMaterial>
+                          <mat-form-field class="inputAuto">
+                            <input type="text" matInput [(ngModel)]="material.material"
+                              [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterialWithoutId"
+                              #searchExDbWoMaterialWithoutId required />
+
+                            <mat-autocomplete #autoExDbWoMaterialWithoutId="matAutocomplete"
+                              [displayWith]="displayFnWithoutId" place>
+                              <mat-option *ngFor="
+                            let sub of substances | SearchMaterials: searchExDbWoMaterialWithoutId.value
+                              " [value]="sub">
+                                {{ sub.Name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </ng-template>
+                      </form>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <div class="input-group mb-3">
+                          <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
+                            name="{{ material.quantity }}" id="" class="form-control"
+                            onKeyPress="if(this.value.length==7) return false;" />
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">{{
+                              material.material.Unit
+                              }}</span>
+                          </div>
+                        </div>
+                        <div *ngIf="validQuantity == false && clickUpdateMaterial && idForValidQuantity == material.id"
+                          style="color: red">
+                          Uneta količina mora biti 0 ili veća od nule.
                         </div>
                       </div>
-                      <div *ngIf="validQuantity == false && clickUpdateMaterial && idForValidQuantity == material.id"
-                        style="color: red">
-                        Uneta količina mora biti 0 ili veća od nule.
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <div class="input-group mb-3">
-                        <input [(ngModel)]="quantityPerHectar" [ngModelOptions]="{ standalone: true }" type="number"
-                          name="{{ material.quantityPerHectar }}" id="" class="form-control" disabled />
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2">{{ material.material.Unit }}/ha</span>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <div class="input-group mb-3">
+                          <input [(ngModel)]="quantityPerHectar" [ngModelOptions]="{ standalone: true }" type="number"
+                            name="{{ material.quantityPerHectar }}" id="" class="form-control" disabled />
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">{{ material.material.Unit }}/ha</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
-                        (click)="editMaterial(material)" id="{{ material.id }}" [ngClass]="material.spent == null || 
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
+                          (click)="editMaterial(material)" id="{{ material.id }}" [ngClass]="material.spent == null || 
                         material.spent == -1 ? 'warning' : 'ok'">
-                        <i class="fa fa-ellipsis-v"></i>
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
-                      [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                      <i class="fa fa-check"></i>
-                    </button>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <button class="btn btn-primary btn-delete mr-2" (click)="deleteExistingSpentMaterial(material.id)"
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
                         [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                        <i class="fa fa-minus"></i>
+                        <i class="fa fa-check"></i>
                       </button>
-                    </div>
-                  </td>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <button class="btn btn-primary btn-delete mr-2"
+                          (click)="deleteExistingSpentMaterial(material.id)"
+                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
+                          <i class="fa fa-minus"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
                 </tr>
                 <div class="input-group">
                   <p *ngIf="workOrder.materials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na
@@ -1903,19 +1932,20 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
+        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-danger"
+          data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success" style="background-color: #33590b"
-          data-dismiss="modal">
+        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button"
+          class="btn btn-success" style="background-color: #33590b" data-dismiss="modal">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
-        <button *ngIf="!new && !addNewWow && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success" style="background-color: #33590b"
-          (click)="updateWow(wow)">
+        <button *ngIf="!new && !addNewWow && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button"
+          class="btn btn-success" style="background-color: #33590b" (click)="updateWow(wow)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
-        <button *ngIf="!new && addNewWow && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success" style="background-color: #33590b"
-          (click)="validDetailOfNewWow()">
+        <button *ngIf="!new && addNewWow && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button"
+          class="btn btn-success" style="background-color: #33590b" (click)="validDetailOfNewWow()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>
@@ -1951,12 +1981,12 @@
                 #quantity="ngModel" required onKeyPress="if(this.value.length==7) return false;"
                 (change)="calculateSpentPerHectar()" />
               <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2"
-                  *ngIf="new; else elseBlockSpentMaterialModal">{{ unit }}</span>
+                <span class="input-group-text" id="basic-addon2" *ngIf="new; else elseBlockSpentMaterialModal">{{ unit
+                  }}</span>
                 <ng-template #elseBlockSpentMaterialModal>
                   <span class="input-group-text" id="basic-addon2">{{
                     spentMaterial.material.Unit
-                  }}</span>
+                    }}</span>
                 </ng-template>
               </div>
             </div>
@@ -2001,19 +2031,21 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
+        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-danger"
+          data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success" style="background-color: #33590b"
-          data-dismiss="modal">
+        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button"
+          class="btn btn-success" style="background-color: #33590b" data-dismiss="modal">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
-        <button *ngIf="!new && !addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success"
-          style="background-color: #33590b" (click)="updateMaterial(spentMaterial)">
+        <button *ngIf="!new && !addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser"
+          type="button" class="btn btn-success" style="background-color: #33590b"
+          (click)="updateMaterial(spentMaterial)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
-        <button *ngIf="!new && addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-success"
-          style="background-color: #33590b" (click)="validSpentMaterial()">
+        <button *ngIf="!new && addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser"
+          type="button" class="btn btn-success" style="background-color: #33590b" (click)="validSpentMaterial()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>

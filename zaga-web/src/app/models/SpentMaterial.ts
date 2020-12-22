@@ -8,4 +8,5 @@ export class SpentMaterial {
   spentPerHectar;
   material: Material = new Material();
   smObjectId;
+  deleted: boolean;
 }

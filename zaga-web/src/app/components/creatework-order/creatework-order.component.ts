@@ -45,7 +45,7 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
   @ViewChild("closeButtonCloseWOModal", null) closeButtonCloseWOModal;
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -158,7 +158,7 @@ export class CreateworkOrderComponent implements OnInit {
   workerOperationFC: FormControl = new FormControl("");
   workerMachineFC: FormControl = new FormControl("");
   workerCoMachineFC: FormControl = new FormControl("");
-  
+
   existingWorkerFC: FormControl = new FormControl("");
   existingWorkerOperationFC: FormControl = new FormControl("");
   workerExMachineFC: FormControl = new FormControl("");
@@ -211,7 +211,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
         console.log(this.workOrder.treated)
-        if(this.workOrder.treated != undefined){
+        if (this.workOrder.treated != undefined) {
           this.workOrder.materials.forEach(mat => {
             this.quantityPerHectar = mat.quantity / this.workOrder.treated
             console.log(this.quantityPerHectar)
@@ -266,7 +266,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.allEmployees)
         var comparableId = this.workOrder.responsibleId;
         var filterById = function (element) {
-          if(element.userId == comparableId){
+          if (element.userId == comparableId) {
             console.log(element)
             return element;
           }
@@ -278,7 +278,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.operations = data;
         var comparableId = this.workOrder.operationId;
         var filterById = function (element) {
-          if(element.dbid == comparableId){
+          if (element.dbid == comparableId) {
             console.log(element)
             return element;
           }
@@ -290,8 +290,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.fields = data;
         console.log(this.fields)
         var comparableId = this.workOrder.tableId;
-        var filterById = function(element){
-          if(element.dbId == comparableId){
+        var filterById = function (element) {
+          if (element.dbId == comparableId) {
             return element;
           }
         }
@@ -302,16 +302,16 @@ export class CreateworkOrderComponent implements OnInit {
         this.crops = data;
         console.log(this.crops)
         var comparableId = this.workOrder.cropId;
-        var filterById = function(element){
-          if(element.id == comparableId){
+        var filterById = function (element) {
+          if (element.id == comparableId) {
             return element;
           }
         }
         this.cultureFC.setValue(this.crops.filter(filterById)[0])
       })
 
-     
-      
+
+
     }
 
     this.operationService.getAll().subscribe((data) => {
@@ -321,13 +321,13 @@ export class CreateworkOrderComponent implements OnInit {
     });
 
     this.machineService.getAllPropulsion().subscribe((data) => {
-     // data = this.convertKeysToLowerCase(data);
+      // data = this.convertKeysToLowerCase(data);
       this.devicesPropulsion = data;
       console.log(this.devicesPropulsion)
     });
 
     this.machineService.getAllCoupling().subscribe((data) => {
-     // data = this.convertKeysToLowerCase(data);
+      // data = this.convertKeysToLowerCase(data);
       this.devicesCoupling = data;
     });
 
@@ -345,7 +345,7 @@ export class CreateworkOrderComponent implements OnInit {
     var now = new Date();
     this.currentYear = now.getFullYear();
     this.nextYear = now.getFullYear() + 1;
-    this.previousYear = now.getFullYear() - 1; 
+    this.previousYear = now.getFullYear() - 1;
   }
 
   //methods for on change listeners
@@ -394,14 +394,14 @@ export class CreateworkOrderComponent implements OnInit {
 
   }
 
-  calculateQuantityPerHectar(){
+  calculateQuantityPerHectar() {
     this.workOrder.materials.forEach(mat => {
       this.quantityPerHectar = mat.quantity / this.treatedEntered;
     })
   }
 
-  calculateSpentPerHectar(){
-    if(this.workOrder.treated != undefined){
+  calculateSpentPerHectar() {
+    if (this.workOrder.treated != undefined) {
       this.workOrder.materials.forEach(mat => {
         this.spentPerHectar = mat.spent / this.workOrder.treated
         console.log(this.spentPerHectar)
@@ -409,7 +409,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.spentPerHectar = this.spentMaterial.spent / this.treatedEntered;
     }
-    
+
   }
 
   //methods for autoscroll
@@ -448,13 +448,13 @@ export class CreateworkOrderComponent implements OnInit {
 
   //autocomplete
   displayFn(emp: Employee): string {
-    if(emp.perNumber == undefined && emp.name == undefined){
+    if (emp.perNumber == undefined && emp.name == undefined) {
       console.log("AAAAAAAAAA")
       return emp && emp.Id + " - " + emp.Name;
     } else {
       return emp && emp.perNumber + " - " + emp.name;
     }
-  
+
   }
 
   displayFnOperation(op: Operation): string {
@@ -470,9 +470,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnMachine(machine: Machine): string {
-    if(machine.Id == undefined){
+    if (machine.Id == undefined) {
       return machine && "BEZ PRIKLJUČNE MAŠINE"
-    } else{
+    } else {
       return machine && machine.Id + " - " + machine.Name
     }
   }
@@ -486,7 +486,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnResponsible(emp: Employee): string {
-    if(emp.perNumber == undefined && emp.name == undefined){
+    if (emp.perNumber == undefined && emp.name == undefined) {
       return emp && emp.Name;
     } else {
       return emp && emp.name;
@@ -494,9 +494,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnMachineWithoutId(machine: Machine): string {
-    if(machine.Id == undefined){
+    if (machine.Id == undefined) {
       return machine && "BEZ PRIKLJUČNE MAŠINE"
-    } else{
+    } else {
       return machine && machine.Name
     }
   }
@@ -509,26 +509,26 @@ export class CreateworkOrderComponent implements OnInit {
 
   addWorkerAndMachine(valid) {
     this.clickAddWorkerMachine = true;
-   
+
     if (
-      this.workerFC.valid == true && 
+      this.workerFC.valid == true &&
       this.workerOperationFC.valid == true &&
       this.workerMachineFC.valid == true &&
       this.workerCoMachineFC.valid == true
     ) {
       this.wow.wowObjectId = Math.floor(Math.random() * 100 + 1);
       this.wow.user = this.workerFC.value;
-      
+
       //this.wow.user.userd = this.selectedWorker;
       this.wow.operation = this.workerOperationFC.value;
       //this.wow.operation.dbid = this.workerOperationFC.value.dbid;
       this.wow.machine = this.workerMachineFC.value;
-      if(this.workerCoMachineFC.value == -1){
+      if (this.workerCoMachineFC.value == -1) {
         this.wow.connectingMachine.dbid = -1;
       } else {
         this.wow.connectingMachine = this.workerCoMachineFC.value;
       }
-     
+
       this.wows.forEach((wow) => {
         if (
           wow.user.id == this.wow.user.id &&
@@ -554,7 +554,7 @@ export class CreateworkOrderComponent implements OnInit {
       }
       this.exists = false;
       this.clickAddWorkerMachine = false;
-      
+
     }
   }
 
@@ -566,7 +566,7 @@ export class CreateworkOrderComponent implements OnInit {
       (x) => x.userId == this.wow.user.userId
     ).name;
     console.log(this.wow.machine);
-    if(this.wow.machine.Id == "BEZ-MASINE"){
+    if (this.wow.machine.Id == "BEZ-MASINE") {
       this.withoutMachine = true;
     } else {
       this.withoutMachine = false;
@@ -626,7 +626,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.addNewWow = true;
       console.log(this.workerMachineFC.value)
-      if(this.workerMachineFC.value.Id == "BEZ-MASINE"){
+      if (this.workerMachineFC.value.Id == "BEZ-MASINE") {
         this.withoutMachine = true;
       } else {
         this.withoutMachine = false;
@@ -662,12 +662,12 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validInitialState = true;
     }
-    if (this.wow.finalState < this.wow.initialState  || this.wow.finalState < 0) {
+    if (this.wow.finalState < this.wow.initialState || this.wow.finalState < 0) {
       this.validFinalState = false;
     } else {
       this.validFinalState = true;
     }
-    if (this.wow.fuel < 0){
+    if (this.wow.fuel < 0) {
       this.validFuel = false;
     } else {
       this.validFuel = true;
@@ -716,7 +716,7 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.treated == 0) {
           this.workOrder.treated = null;
         }
-        
+
       });
     }, err => {
       this.spinner.hide();
@@ -743,7 +743,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validWorkPeriod = true;
     }
-    if ((workOrderWorker.initialState < 0 || workOrderWorker.initialState == null) && !this.withoutMachine){
+    if ((workOrderWorker.initialState < 0 || workOrderWorker.initialState == null) && !this.withoutMachine) {
       this.validInitialState = false;
     } else {
       this.validInitialState = true;
@@ -753,7 +753,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validFinalState = true;
     }
-    if ((workOrderWorker.fuel < 0 || workOrderWorker.fuel == null) && !this.withoutMachine){
+    if ((workOrderWorker.fuel < 0 || workOrderWorker.fuel == null) && !this.withoutMachine) {
       this.validFuel = false;
     } else {
       this.validFuel = true;
@@ -812,7 +812,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   }
 
-  updateWOWBasicInfo(workOrderWorker){
+  updateWOWBasicInfo(workOrderWorker) {
     this.wowService.updateWorkOrderWorkerBasicInfo(workOrderWorker.id, workOrderWorker).subscribe((res) => {
       console.log(res);
       this.toastr.success("Uspešno sačuvane promene.");
@@ -866,7 +866,7 @@ export class CreateworkOrderComponent implements OnInit {
   addMaterial(valid) {
     this.clickAddMaterial = true;
     console.log(this.quantityEntered);
-    if (this.quantityEntered < 0){
+    if (this.quantityEntered < 0) {
       this.validMaterialQuantity = false;
       console.log(this.validMaterialQuantity)
     } else {
@@ -932,7 +932,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.spentMaterial.spent = material.spent;
         this.spentMaterial.spentPerHectar = material.spentPerHectar;
         console.log("TREATED: " + this.workOrder.treated)
-        if(this.workOrder.treated != 0){
+        if (this.workOrder.treated != 0) {
           console.log("IF")
           this.spentPerHectar = this.spentMaterial.spent / this.workOrder.treated;
         }
@@ -941,7 +941,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.spentPerHectar = this.spentMaterial.spent / this.treatedEntered;
           console.log(this.spentPerHectar)
         }
-        
+
       }
     }
   }
@@ -971,9 +971,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.spentMaterial.spent = null;
   }
 
-  validSpentMaterial(){
+  validSpentMaterial() {
     this.clickSaveNewModalMaterial = true;
-    if(this.spentMaterial.spent < 0){
+    if (this.spentMaterial.spent < 0) {
       this.validNewSpentQuantity = false;
     } else {
       this.validNewSpentQuantity = true;
@@ -984,54 +984,54 @@ export class CreateworkOrderComponent implements OnInit {
   addNewMaterial() {
     this.clickAddNewMaterial = true;
     this.spinner.show();
-    if(this.quantityEntered < 0){
+    if (this.quantityEntered < 0) {
       this.validMaterialQuantity = false;
       this.spinner.hide();
     } else {
       this.validMaterialQuantity = true;
       this.spentMaterial.quantity = this.quantityEntered;
     }
-    if(this.validMaterialQuantity == true){
+    if (this.validMaterialQuantity == true) {
       this.clickAddNewMaterial = false;
       this.spentMaterial.quantity = this.quantityEntered;
       this.spentMaterial.material.dbid = this.materialFC.value.dbid;
       this.spentMaterialService
-      .addSpentMaterial(this.workId, this.spentMaterial)
-      .subscribe((res) => {
-        this.spinner.hide();
-        console.log(res);
-        this.spentMaterial = new SpentMaterial();
-        this.selectedMaterial = null;
-        this.quantityEntered = null;
-        this.workOrderService.getOne(this.workId).subscribe((data) => {
-          this.workOrder = data;
-          if (this.workOrder.status == "NEW") {
-            this.workOrder.status = "Novi";
-          } else if (this.workOrder.status == "IN_PROGRESS") {
-            this.workOrder.status = "U radu";
-          } else if (this.workOrder.status == "CLOSED") {
-            this.workOrder.status = "Zatvoren";
-          }
+        .addSpentMaterial(this.workId, this.spentMaterial)
+        .subscribe((res) => {
+          this.spinner.hide();
+          console.log(res);
+          this.spentMaterial = new SpentMaterial();
+          this.selectedMaterial = null;
+          this.quantityEntered = null;
+          this.workOrderService.getOne(this.workId).subscribe((data) => {
+            this.workOrder = data;
+            if (this.workOrder.status == "NEW") {
+              this.workOrder.status = "Novi";
+            } else if (this.workOrder.status == "IN_PROGRESS") {
+              this.workOrder.status = "U radu";
+            } else if (this.workOrder.status == "CLOSED") {
+              this.workOrder.status = "Zatvoren";
+            }
 
-          this.workOrder.date = {
-            day: +this.workOrder.date.day,
-            month: +this.workOrder.date.month,
-            year: +this.workOrder.date.year,
-          };
+            this.workOrder.date = {
+              day: +this.workOrder.date.day,
+              month: +this.workOrder.date.month,
+              year: +this.workOrder.date.year,
+            };
 
-          this.cropService
-            .getAllByFieldAndYear(data.tableId, data.year)
-            .subscribe((res) => {
-              this.crops = res;
-            });
+            this.cropService
+              .getAllByFieldAndYear(data.tableId, data.year)
+              .subscribe((res) => {
+                this.crops = res;
+              });
 
-          if (this.workOrder.treated == 0) {
-            this.workOrder.treated = null;
-          }
+            if (this.workOrder.treated == 0) {
+              this.workOrder.treated = null;
+            }
+          });
         });
-      });
     }
-    
+
   }
 
   updateMaterial(spentMaterial) {
@@ -1040,111 +1040,111 @@ export class CreateworkOrderComponent implements OnInit {
     this.error = false;
     this.errors = [];
     this.spinner.show();
-    if(spentMaterial.spent < 0 || spentMaterial.spent == null){
+    if (spentMaterial.spent < 0 || spentMaterial.spent == null) {
       this.validSpentQuantity = false;
       this.spinner.hide();
     } else {
       this.validSpentQuantity = true;
     }
-    if(this.validSpentQuantity == true){
+    if (this.validSpentQuantity == true) {
       this.clickUpdateMaterial = false;
       this.spentMaterialService
-      .updateSpentMaterial(spentMaterial.id, spentMaterial)
-      .subscribe((res) => {
-        console.log(res);
-        this.toastr.success("Uspešno sačuvane promene.");
-        this.spinner.hide();
-        this.workOrderService.getOne(this.workId).subscribe((data) => {
-          this.workOrder = data;
-          if (this.workOrder.status == "NEW") {
-            this.workOrder.status = "Novi";
-          } else if (this.workOrder.status == "IN_PROGRESS") {
-            this.workOrder.status = "U radu";
-          } else if (this.workOrder.status == "CLOSED") {
-            this.workOrder.status = "Zatvoren";
-          }
+        .updateSpentMaterial(spentMaterial.id, spentMaterial)
+        .subscribe((res) => {
+          console.log(res);
+          this.toastr.success("Uspešno sačuvane promene.");
+          this.spinner.hide();
+          this.workOrderService.getOne(this.workId).subscribe((data) => {
+            this.workOrder = data;
+            if (this.workOrder.status == "NEW") {
+              this.workOrder.status = "Novi";
+            } else if (this.workOrder.status == "IN_PROGRESS") {
+              this.workOrder.status = "U radu";
+            } else if (this.workOrder.status == "CLOSED") {
+              this.workOrder.status = "Zatvoren";
+            }
 
-          this.workOrder.date = {
-            day: +this.workOrder.date.day,
-            month: +this.workOrder.date.month,
-            year: +this.workOrder.date.year,
-          };
+            this.workOrder.date = {
+              day: +this.workOrder.date.day,
+              month: +this.workOrder.date.month,
+              year: +this.workOrder.date.year,
+            };
 
-          this.cropService
-            .getAllByFieldAndYear(data.tableId, data.year)
-            .subscribe((res) => {
-              this.crops = res;
-            });
+            this.cropService
+              .getAllByFieldAndYear(data.tableId, data.year)
+              .subscribe((res) => {
+                this.crops = res;
+              });
 
-          if (this.workOrder.treated == 0) {
-            this.workOrder.treated = null;
-          }
+            if (this.workOrder.treated == 0) {
+              this.workOrder.treated = null;
+            }
+          });
+        }, err => {
+          this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+          spentMaterial.spent = null;
+          this.spinner.hide();
+          console.log(err);
+          this.error = true;
+          this.errors = err.error.errors;
         });
-      }, err => {
-        this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
-        spentMaterial.spent = null;
-        this.spinner.hide();
-        console.log(err);
-        this.error = true;
-        this.errors = err.error.errors;
-      });
       this.closeButtonMaterialModal.nativeElement.click();
     }
-    
+
   }
 
-  updateMaterialBasicInfo(spentMaterial){
+  updateMaterialBasicInfo(spentMaterial) {
     this.idForValidQuantity = spentMaterial.id;
     this.clickUpdateMaterial = true;
-    if(spentMaterial.quantity < 0 || spentMaterial.quantity == null){
+    if (spentMaterial.quantity < 0 || spentMaterial.quantity == null) {
       this.validQuantity = false;
     } else {
       this.validQuantity = true;
     }
-    if(this.validQuantity == true){
+    if (this.validQuantity == true) {
       this.spentMaterialService
-    .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)
-    .subscribe((res) => {
-      console.log(res);
-      this.toastr.success("Uspešno sačuvane promene.");
-      this.clickUpdateMaterial = false;
-      this.spinner.hide();
-      this.workOrderService.getOne(this.workId).subscribe((data) => {
-        this.workOrder = data;
-        if (this.workOrder.status == "NEW") {
-          this.workOrder.status = "Novi";
-        } else if (this.workOrder.status == "IN_PROGRESS") {
-          this.workOrder.status = "U radu";
-        } else if (this.workOrder.status == "CLOSED") {
-          this.workOrder.status = "Zatvoren";
-        }
+        .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)
+        .subscribe((res) => {
+          console.log(res);
+          this.toastr.success("Uspešno sačuvane promene.");
+          this.clickUpdateMaterial = false;
+          this.spinner.hide();
+          this.workOrderService.getOne(this.workId).subscribe((data) => {
+            this.workOrder = data;
+            if (this.workOrder.status == "NEW") {
+              this.workOrder.status = "Novi";
+            } else if (this.workOrder.status == "IN_PROGRESS") {
+              this.workOrder.status = "U radu";
+            } else if (this.workOrder.status == "CLOSED") {
+              this.workOrder.status = "Zatvoren";
+            }
 
-        this.workOrder.date = {
-          day: +this.workOrder.date.day,
-          month: +this.workOrder.date.month,
-          year: +this.workOrder.date.year,
-        };
+            this.workOrder.date = {
+              day: +this.workOrder.date.day,
+              month: +this.workOrder.date.month,
+              year: +this.workOrder.date.year,
+            };
 
-        this.cropService
-          .getAllByFieldAndYear(data.tableId, data.year)
-          .subscribe((res) => {
-            this.crops = res;
+            this.cropService
+              .getAllByFieldAndYear(data.tableId, data.year)
+              .subscribe((res) => {
+                this.crops = res;
+              });
+
+            if (this.workOrder.treated == 0) {
+              this.workOrder.treated = null;
+            }
           });
-
-        if (this.workOrder.treated == 0) {
-          this.workOrder.treated = null;
-        }
-      });
-    }, err => {
-      this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
-      spentMaterial.spent = null;
-      this.spinner.hide();
-      console.log(err);
-      this.error = true;
-      this.errors = err.error.errors;
-    });
+        }, err => {
+          this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+          spentMaterial.spent = null;
+          this.spinner.hide();
+          console.log(err);
+          this.error = true;
+          this.errors = err.error.errors;
+        });
     }
-    
+
   }
 
   //methods for work order
@@ -1175,7 +1175,7 @@ export class CreateworkOrderComponent implements OnInit {
       console.log("===========")
       console.log(this.workOrder)
       console.log("===========")
-      
+
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
           this.spinner.hide();
@@ -1196,7 +1196,7 @@ export class CreateworkOrderComponent implements OnInit {
           }
         }
       );
-      
+
     }
   }
 
@@ -1212,14 +1212,14 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.spinner.show();
     this.workOrder.responsibleId = this.nameFC.value.userId;
-    if(this.treatedEntered >= 0){
+    if (this.treatedEntered >= 0) {
       this.workOrder.treated = this.treatedEntered;
-    } else{
+    } else {
       this.validTreated = false;
       this.spinner.hide();
       return;
     }
-    
+
 
     this.workOrderService.updateWorkOrder(this.workOrder).subscribe(
       (data) => {
@@ -1274,10 +1274,10 @@ export class CreateworkOrderComponent implements OnInit {
       console.log(this.withoutMachine)
       if (
         (wow.dayPeriod == -1 ||
-        wow.nightPeriod == -1 ||
-        wow.initialState == -1 ||
-        wow.finalState == -1 ||
-        wow.fuel == -1) &&
+          wow.nightPeriod == -1 ||
+          wow.initialState == -1 ||
+          wow.finalState == -1 ||
+          wow.fuel == -1) &&
         this.withoutMachine == false
       ) {
         this.validWow = false;
@@ -1285,10 +1285,10 @@ export class CreateworkOrderComponent implements OnInit {
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
         (wow.dayPeriod == null ||
-        wow.nightPeriod == null ||
-        wow.initialState == null ||
-        wow.finalState == null ||
-        wow.fuel == null) && 
+          wow.nightPeriod == null ||
+          wow.initialState == null ||
+          wow.finalState == null ||
+          wow.fuel == null) &&
         this.withoutMachine == false
       ) {
         this.validWow = false;
@@ -1296,8 +1296,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.renderer.setStyle(element, "background-color", "#BD362F");
       } else if (
         (wow.initialState == -1 ||
-        wow.finalState == -1 ||
-        wow.sumState == -1) && 
+          wow.finalState == -1 ||
+          wow.sumState == -1) &&
         this.withoutMachine == false
       ) {
         this.validWow = false;
@@ -1384,67 +1384,33 @@ export class CreateworkOrderComponent implements OnInit {
   //delete methods
 
   deleteExistingWorkOrderWorker(id) {
+    this.spinner.show();
     this.wowService.deleteWorkOrderWorker(id).subscribe((res) => {
-      console.log(res);
-      this.workOrderService.getOne(this.workId).subscribe((data) => {
-        this.workOrder = data;
-        if (this.workOrder.status == "NEW") {
-          this.workOrder.status = "Novi";
-        } else if (this.workOrder.status == "IN_PROGRESS") {
-          this.workOrder.status = "U radu";
-        } else if (this.workOrder.status == "CLOSED") {
-          this.workOrder.status = "Zatvoren";
-        }
-
-        this.workOrder.date = {
-          day: +this.workOrder.date.day,
-          month: +this.workOrder.date.month,
-          year: +this.workOrder.date.year,
-        };
-
-        this.cropService
-          .getAllByFieldAndYear(data.tableId, data.year)
-          .subscribe((res) => {
-            this.crops = res;
-          });
-
-        if (this.workOrder.treated == 0) {
-          this.workOrder.treated = null;
-        }
+      let dataa = this.workOrder.workers.filter(item => item.id == id);
+      dataa[0].deleted = true;
+      this.spinner.hide();
+      this.toastr.success("Uspešno ste izbrisali radnika")
+    },
+      err => {
+        console.log(err);
+        this.toastr.error("Neuspešno brisanje radnika")
+        this.spinner.hide();
       });
-    });
   }
 
   deleteExistingSpentMaterial(id) {
+    this.spinner.show();
     this.spentMaterialService.deleteSpentMaterial(id).subscribe((res) => {
-      console.log(res);
-      this.workOrderService.getOne(this.workId).subscribe((data) => {
-        this.workOrder = data;
-        if (this.workOrder.status == "NEW") {
-          this.workOrder.status = "Novi";
-        } else if (this.workOrder.status == "IN_PROGRESS") {
-          this.workOrder.status = "U radu";
-        } else if (this.workOrder.status == "CLOSED") {
-          this.workOrder.status = "Zatvoren";
-        }
-
-        this.workOrder.date = {
-          day: +this.workOrder.date.day,
-          month: +this.workOrder.date.month,
-          year: +this.workOrder.date.year,
-        };
-
-        this.cropService
-          .getAllByFieldAndYear(data.tableId, data.year)
-          .subscribe((res) => {
-            this.crops = res;
-          });
-
-        if (this.workOrder.treated == 0) {
-          this.workOrder.treated = null;
-        }
+      let dataa = this.workOrder.materials.filter(item => item.id == id);
+      dataa[0].deleted = true;
+      this.spinner.hide();
+      this.toastr.success("Uspešno ste izbrisali materijal")
+    },
+      err => {
+        console.log(err);
+        this.toastr.error("Neuspešno brisanje materijala")
+        this.spinner.hide();
       });
-    });
   }
 
   deleteWorkOrderWorker(workOrderWorker) {
