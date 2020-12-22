@@ -10,9 +10,13 @@ export class SerachMachineGroupPipe implements PipeTransform {
     if(!query) {
       return machines;
     }
-    return machines.filter((machine) =>
+    var result = machines.filter((machine) =>
       this.matchValue(machine, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

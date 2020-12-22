@@ -1,4 +1,5 @@
 import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WorkerReport } from 'src/app/models/WorkerReport';
@@ -22,6 +23,8 @@ export class ReportEmployeeComponent implements OnInit {
 
   dates: any  = { dateFrom: "", dateTo: "" };
   filters: any = { namdateFrome: "", dateTo: "" };
+
+  empty;
  
   ngOnInit() {
     this.wowService.getDataForReport().subscribe(data => {
@@ -60,46 +63,60 @@ export class ReportEmployeeComponent implements OnInit {
 
   getDayPeriodSum(workOrders){
     let dayPeriodSum = 0.0;
-    workOrders.forEach(wo => {
-      wo.workers.forEach(w => {
-        if(w.dayPeriod == -1){
-          w.dayPeriod = 0.0;
-        }
-        dayPeriodSum += w.dayPeriod;
+    if(workOrders != -1){
+      workOrders.forEach(wo => {
+        wo.workers.forEach(w => {
+          if(w.dayPeriod == -1){
+            w.dayPeriod = 0.0;
+          }
+          dayPeriodSum += w.dayPeriod;
+        })
       })
-    })
-    return dayPeriodSum
+      return dayPeriodSum + " h"
+    } else {
+      return null;
+    }
+    
   }
 
   getNightPeriodSum(workOrders){
     let nightPeriodSum = 0.0;
-    workOrders.forEach(wo => {
-      wo.workers.forEach(w => {
-        if(w.nightPeriod == -1){
-          w.nightPeriod = 0.0;
-        }
-        nightPeriodSum += w.nightPeriod;
+    if(workOrders != -1){
+      workOrders.forEach(wo => {
+        wo.workers.forEach(w => {
+          if(w.nightPeriod == -1){
+            w.nightPeriod = 0.0;
+          }
+          nightPeriodSum += w.nightPeriod;
+        })
       })
-    })
-    return nightPeriodSum;
+      return nightPeriodSum + " h";
+    } else {
+      return null;
+    }
+    
   }
 
   getWorkPeriodSum(workOrders){
     let workPeriodSum = 0.0;
-    workOrders.forEach(wo => {
-      wo.workers.forEach(w => {
-        if(w.workPeriod == -1){
-          w.workPeriod = 0.0;
-        }
-        workPeriodSum += w.workPeriod;
+    if(workOrders != -1){
+      workOrders.forEach(wo => {
+        wo.workers.forEach(w => {
+          if(w.workPeriod == -1){
+            w.workPeriod = 0.0;
+          }
+          workPeriodSum += w.workPeriod;
+        })
       })
-    })
-    return workPeriodSum;
+      return workPeriodSum + " h";
+    } else {
+      return null;
+    }
+    
   }
 
   updateFilters(): void {
     this.filters = Object.assign({}, this.dates);
-    console.log(this.filters)
   }
 
 }

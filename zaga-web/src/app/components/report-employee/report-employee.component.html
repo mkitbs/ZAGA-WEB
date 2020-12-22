@@ -123,6 +123,10 @@
     </div>
   </form>
   <div class="break-class pt-2 mb-4"></div>
+  <div *ngIf="workers.length == 0" class="center">
+    <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
+  </div>
   <table class="table table-hover tabela-nalozi">
     <thead>
       <tr>
@@ -143,6 +147,12 @@
         | ReportEmployeeWorker: searchWorker.value
         | SearchEmployeePosition: searchWorkerPosition.value; 
         let i = index" >
+        <tr *ngIf="worker === -1">
+          <td colspan="10" >
+            <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
+            <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
+          </td>
+        </tr>
         <tr *ngFor="let workOrder of worker.workOrders
           | SearchWorkOrdersTable: searchTable.value
           | SearchWorkOrdersOperation: searchOperation.value
@@ -152,28 +162,28 @@
           | SearchWoBetweenDates: filters; 
           let j = index">
           <ng-container *ngFor="let wo of workOrder.workers">
-          <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
-          <ng-template #elseBlockName><td></td></ng-template>
-          <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
-          <td>{{ workOrder.operationName }}</td>
-          <td>{{ workOrder.date }}</td>
-          <td>{{ workOrder.table }}</td>
-          <td>{{ workOrder.cropName.split(",")[1] }}</td>
-          <td *ngIf="wo.dayPeriod != -1; else elseDayPeriod">{{ wo.dayPeriod }} h</td>
-          <ng-template #elseDayPeriod><td>/</td></ng-template>
-          <td *ngIf="wo.nightPeriod != -1; else elseNightPeriod">{{ wo.nightPeriod }} h</td>
-          <ng-template #elseNightPeriod><td>/</td></ng-template>
-          <td *ngIf="wo.workPeriod != -1; else elseWorkPeriod">{{ wo.workPeriod }} h</td>
-          <ng-template #elseWorkPeriod><td>/</td></ng-template>
-          <td [ngClass]="{
-              statusNovi: workOrder.status == 'Novi',
-              statusURadu: workOrder.status == 'U radu',
-              statusZatvoren: workOrder.status == 'Zatvoren'
-              }" 
-          >
-            {{ workOrder.status }}
-          </td>
-        </ng-container>
+            <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
+            <ng-template #elseBlockName><td></td></ng-template>
+            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+            <td>{{ workOrder.operationName }}</td>
+            <td>{{ workOrder.date }}</td>
+            <td>{{ workOrder.table }}</td>
+            <td>{{ workOrder.cropName.split(",")[1] }}</td>
+            <td *ngIf="wo.dayPeriod != -1; else elseDayPeriod">{{ wo.dayPeriod }} h</td>
+            <ng-template #elseDayPeriod><td>/</td></ng-template>
+            <td *ngIf="wo.nightPeriod != -1; else elseNightPeriod">{{ wo.nightPeriod }} h</td>
+            <ng-template #elseNightPeriod><td>/</td></ng-template>
+            <td *ngIf="wo.workPeriod != -1; else elseWorkPeriod">{{ wo.workPeriod }} h</td>
+            <ng-template #elseWorkPeriod><td>/</td></ng-template>
+            <td [ngClass]="{
+                statusNovi: workOrder.status == 'Novi',
+                statusURadu: workOrder.status == 'U radu',
+                statusZatvoren: workOrder.status == 'Zatvoren'
+                }" 
+            >
+              {{ workOrder.status }}
+            </td>
+          </ng-container>
         </tr>
         <tr>
           <ng-container *ngFor="let workOrder of worker.workOrders 
@@ -184,7 +194,7 @@
             | ReportMaterialSapId: searchWorkOrder.value
             | SearchWoBetweenDates: filters; 
             let i = index ">
-            <td *ngIf="i==0">Σ {{ worker.worker.Name }}</td>
+            <td *ngIf="i==0 && workOrder !== -1">Σ {{ worker.worker.Name }}</td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
@@ -199,7 +209,7 @@
                 | SearchWorkOrdersDate: searchDate.value
                 | ReportMaterialSapId: searchWorkOrder.value
                 | SearchWoBetweenDates: filters)
-              }} h
+              }}
             </td>
             <td style="font-weight: bold;" *ngIf="i==0">
               {{
@@ -209,7 +219,7 @@
                 | SearchWorkOrdersDate: searchDate.value
                 | ReportMaterialSapId: searchWorkOrder.value
                 | SearchWoBetweenDates: filters)
-              }} h
+              }}
             </td>
             <td style="font-weight: bold;" *ngIf="i==0">
               {{
@@ -219,7 +229,7 @@
                 | SearchWorkOrdersDate: searchDate.value
                 | ReportMaterialSapId: searchWorkOrder.value
                 | SearchWoBetweenDates: filters)
-              }} h
+              }}
             </td>
             <td *ngIf="i==0"></td>
             <td *ngIf="i==0"></td>
@@ -229,3 +239,4 @@
     </tbody>
   </table>
 </div>
+  

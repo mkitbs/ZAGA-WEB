@@ -26,9 +26,11 @@ public class UserDTO {
 	String telephone;
 	String sapUserId;
 	Date dateOfBirth;
+	TenantDTO tenant;
+	
 
 	public UserDTO(Long id, String name, String surname, Long address, String email, String password,
-			boolean enabled, boolean nonLocked) {
+			boolean enabled, boolean nonLocked, TenantDTO tenant) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -38,6 +40,7 @@ public class UserDTO {
 		this.password = password;
 		this.enabled = enabled;
 		this.nonLocked = nonLocked;
+		this.tenant = tenant;
 	}
 	
 	public UserDTO(User u) {
@@ -51,12 +54,17 @@ public class UserDTO {
 		this.telephone = u.getTelephone();
 		this.sapUserId = u.getSapUserId();
 		this.dateOfBirth = u.getDateOfBirth();
+		this.tenant = new TenantDTO(u.getTenant());
 		roles = new ArrayList<>();
 		if(u.getRoles() != null) {
 			for(Role r : u.getRoles()) {
 				roles.add(new RoleDTO(r));
 			}
 		}
+	}
+	
+	public UserDTO(String sapId) {
+		this.sapUserId = sapId;
 	}
 	
 }

@@ -10,19 +10,26 @@ export class SearchWoBetweenDatesPipe implements PipeTransform {
     if(dates.dateTo == "" && dates.namdateFrome == ""){
       return workOrders;
     } else {
-      var dateFrom = new Date(dates.dateFrom.year, dates.dateFrom.month, dates.dateFrom.day);
-      var dateTo = new Date(dates.dateTo.year, dates.dateTo.month, dates.dateTo.day);
-      //var dateFrom = dates.dateFrom.month + "/" + dates.dateFrom.day + "/" + dates.dateFrom.year;
-      //var dateTo = dates.dateTo.month + "/" + dates.dateTo.day + "/" + dates.dateTo.year;
+      if(dates.dateFrom !== null){
+        var dateFrom = new Date(dates.dateFrom.year, dates.dateFrom.month, dates.dateFrom.day);
+      } else {
+        return workOrders;
+      }
+      if(dates.dateTo!== null){
+        var dateTo = new Date(dates.dateTo.year, dates.dateTo.month, dates.dateTo.day);
+      } else {
+        return workOrders;
+      }
       var wos: any[] = [];
       workOrders.forEach(wo => {
         var woDate = new Date( wo.date.split(".")[2], wo.date.split(".")[1], wo.date.split(".")[0])
         if(woDate <= dateTo && woDate >= dateFrom){
-          console.log(wo)
           wos.push(wo);
         }
       });
-      console.log(wos)
+      if(wos.length === 0){
+        return[-1];
+      }
       return wos;
       
     }

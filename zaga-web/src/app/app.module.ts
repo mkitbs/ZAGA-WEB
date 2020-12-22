@@ -221,8 +221,8 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
-      libraries: ["drawing"],
+      apiKey: "AIzaSyCYhI5DKGX1t8Oref8HdsUXWsA9a25NXCg",
+      libraries: ["drawing", "geometry", "places"],
     }),
   ],
   providers: [

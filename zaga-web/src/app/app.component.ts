@@ -14,7 +14,6 @@ export class AppComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    console.log(window.sessionStorage.getItem('AuthToken'));
     if (window.sessionStorage.getItem('AuthToken') === null) {
       this.loginFlag = true;
     }

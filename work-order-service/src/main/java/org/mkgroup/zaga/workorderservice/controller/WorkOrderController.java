@@ -3,6 +3,9 @@ package org.mkgroup.zaga.workorderservice.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderResponse;
@@ -56,12 +59,12 @@ public class WorkOrderController {
 	}
 	
 	@PostMapping("/createCopy/{id}")
-	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date){
+	public ResponseEntity<?> copyWorkOrder(@PathVariable UUID id, @RequestBody DateDTO date, @RequestHeader("SapUserId") String sapuserid){
 		WorkOrder workOrder = wrepo.getOne(id);
 	
 		WorkOrder copy;
 		try {
-			copy = workOrderService.createCopy(workOrder, date);
+			copy = workOrderService.createCopy(workOrder, date, sapuserid);
 			return new ResponseEntity<UUID>(copy.getId(), HttpStatus.CREATED);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -80,8 +83,8 @@ public class WorkOrderController {
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<?> getAllWorkOrders(@RequestHeader("SapUserId") String sapuserid){
-		List<WorkOrderDTO> workOrders = workOrderService.getAll();
+	public ResponseEntity<?> getAllWorkOrders(@RequestHeader("SapUserId") String sapuserid, HttpServletRequest request, HttpServletResponse response){
+		List<WorkOrderDTO> workOrders = workOrderService.getAll(sapuserid, request, response);
 		System.out.println(sapuserid);
 		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
 	}

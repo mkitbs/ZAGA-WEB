@@ -32,6 +32,7 @@ import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { User } from 'src/app/models/User';
+import { Setting } from 'src/app/models/Setting';
 
 @Component({
   selector: "app-creatework-order",
@@ -91,9 +92,10 @@ export class CreateworkOrderComponent implements OnInit {
   crops: Crop[] = [];
   woMaterials: SpentMaterial[] = [];
   wows: WorkOrderWorker[] = [];
-
+  
   wow: WorkOrderWorker = new WorkOrderWorker();
   spentMaterial: SpentMaterial = new SpentMaterial();
+  setting: Setting = new Setting();
 
   crop: Crop = new Crop();
   workOrder: WorkOrder = new WorkOrder();
@@ -176,7 +178,11 @@ export class CreateworkOrderComponent implements OnInit {
   userCreator: User = new User();
 
   ngOnInit() {
-    this.sapId = localStorage.getItem("idSetting");
+    this.authService.getUserSettings().subscribe(data => {
+      this.setting = data;
+      this.sapId = this.setting.masterDataFormat;
+    })
+    
     this.authService.getLogged().subscribe(data => {
       this.user = data;
       this.loggedUser = this.user.sapUserId;

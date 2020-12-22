@@ -25,4 +25,11 @@ export class FieldService {
       field
     );
   }
+
+  setFieldCoordinates(data): Observable<any> {
+    return this.http.put(
+      environment.gatewayWorkOrderURL + "api/field/setFieldCoordinates", 
+        data
+    )
+  } 
 }

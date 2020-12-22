@@ -7,8 +7,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SearchWorkOrdersOperationPipe implements PipeTransform {
 
   transform(workOrders: any[], query): any {
-    return workOrders.filter((wo) =>
-    wo.operationName.toLowerCase().includes(query.toLowerCase()));
+    if(!query){
+      return workOrders;
+    }
+    var result = workOrders.filter((wo) =>
+      wo.operationName.toLowerCase().includes(query.toLowerCase()
+    ));
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
 }

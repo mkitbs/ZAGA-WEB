@@ -24,9 +24,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="cultureGroups.length == 0">
+        <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value; let j = index">
+          <div *ngIf="cultureGroup === -1" class="center">
+            <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
+          </div>
+          <div *ngIf="cultureGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -93,9 +101,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="cultureGroups.length == 0">
+        <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value; let j = index">
+          <div *ngIf="cultureGroup === -1" class="center">
+            <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
+          </div>
+          <div *ngIf="cultureGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -162,9 +178,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="cultureGroups.length == 0">
+        <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value; let j = index">
+          <div *ngIf="cultureGroup === -1" class="center">
+            <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
+          </div>
+          <div *ngIf="cultureGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div

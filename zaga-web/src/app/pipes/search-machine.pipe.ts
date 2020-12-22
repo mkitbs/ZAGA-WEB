@@ -7,9 +7,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SearchMachinePipe implements PipeTransform {
 
   transform(machines: any[], query): any {
-    return machines.filter((machine) =>
+    if(!query){
+      return machines;
+    }
+    var result = machines.filter((machine) =>
       this.matchValue(machine, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

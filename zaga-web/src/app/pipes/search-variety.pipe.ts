@@ -10,9 +10,13 @@ export class SearchVarietyPipe implements PipeTransform {
     if(!query) {
       return varieties;
     }
-    return varieties.filter((variety) =>
+    var result = varieties.filter((variety) =>
       this.matchValue(variety, query)
     );
+    if(result.length === 0){
+      return[-1];
+    }
+    return result;
   }
 
   matchValue(data, value) {

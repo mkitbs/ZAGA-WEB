@@ -15,7 +15,6 @@ export class AuthService {
   }
 
   checkToken(token): Observable<any> {
-    console.log(token)
     return this.http.get(environment.authURL + "check/" + token, { responseType: 'text' });
   }
 
@@ -29,5 +28,13 @@ export class AuthService {
 
   signout(): Observable<any> {
     return this.http.get(environment.authURL + "signout");
+  }
+
+  getUserSettings(): Observable<any> {
+    return this.http.get(environment.authURL + "getUserSettings");
+  }
+
+  updateUserSettings(tenantId, setting): Observable<any> {
+    return this.http.put(environment.authURL + "updateSettings/" + tenantId, setting);
   }
 }

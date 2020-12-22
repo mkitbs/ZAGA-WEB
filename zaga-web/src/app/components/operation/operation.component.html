@@ -55,15 +55,20 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="containerOperations">
-    <h5 *ngIf="operations.length == 0">
-      Nema ATM za prikazivanje.
-    </h5>
+    <div *ngIf="operations.length == 0" class="center">
+      <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+    </div>
     <div class="row card-group">
-      <div class="col-4" *ngFor="let operation of operations
+      <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-4'" *ngFor="let operation of operations
         | SearchOperations: searchOperation.value
         | SearchOperationType: searchOperationType.value
         | SearchOperationOperationGroup: searchOperationGroup.value; let j = index">
-        <div class="card mb-4" style="width: 32.7rem; height: 10vw;">
+        <div *ngIf="operation === -1" class="center">
+          <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+        </div>
+        <div *ngIf="operation !== -1" class="card mb-4" style="width: 32.7rem; height: 90%;">
           <div class="card-body">
             <div class="row">
               <div
@@ -115,9 +120,6 @@
   <div class="containerOperations">
     <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
       <div class="form-row">
         <div class="col-3">
           <form>
@@ -168,15 +170,20 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
+      <div *ngIf="operations.length == 0" class="center">
+        <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let operation of operations
+        <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-5'" *ngFor="let operation of operations
           | SearchOperations: searchOperationLaptop.value
           | SearchOperationType: searchOperationTypeLaptop.value
           | SearchOperationOperationGroup: searchOperationGroupLaptop.value; let j = index">
-          <div class="card mb-4" style="width: 32.7rem; height: 12vw;">
+          <div *ngIf="operation === -1" class="center">
+            <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+          </div>
+          <div *ngIf="operation !== -1" class="card mb-4" style="width: 32.7rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -221,7 +228,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -229,9 +236,6 @@
   <div class="containerOperations">
     <h3 class="mt-2 mb-2">Pregled ATM</h3>
     <div style="padding-top: 10px"></div>
-    <div class="containerOperations">
-      <h3 class="mt-2 mb-2">Pregled ATM</h3>
-      <div style="padding-top: 10px"></div>
       <div class="form-row">
         <div class="col-4">
           <form>
@@ -282,15 +286,20 @@
     </div>
     <div style="padding-top: 20px"></div>
     <div class="containerOperations">
-      <h5 *ngIf="operations.length == 0">
-        Nema ATM za prikazivanje.
-      </h5>
+      <div *ngIf="operations.length == 0" class="center">
+        <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let operation of operations
+        <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-7'" *ngFor="let operation of operations
           | SearchOperations: searchOperationTablet.value
           | SearchOperationType: searchOperationTypeTablet.value
           | SearchOperationOperationGroup: searchOperationGroupTablet.value; let j = index">
-          <div class="card mb-4" style="width: 32.7rem; height: 17vw;">
+          <div *ngIf="operation === -1" class="center">
+            <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
+          </div>
+          <div *ngIf="operation !== -1" class="card mb-4" style="width: 32.7rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -335,7 +344,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 </div>
 <!--Edit operation modal-->
 <div class="modal fade" id="editOperationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

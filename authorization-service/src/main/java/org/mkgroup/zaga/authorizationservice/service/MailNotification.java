@@ -181,7 +181,7 @@ public class MailNotification {
         msg.setContent(htmlMsg,"text/html");
         
         MimeMessageHelper helper = new MimeMessageHelper(msg, false, "utf-8");
-        helper.setTo("vrgovicm@gmail.com"); //postaviti kasnije na mail iz zaglavlja
+        helper.setTo(mail);
         helper.setFrom("af083085@gmail.com");
         helper.setSubject("ZAGA APP - kreiran korisnički nalog");
         javaMailSender.send(msg);
