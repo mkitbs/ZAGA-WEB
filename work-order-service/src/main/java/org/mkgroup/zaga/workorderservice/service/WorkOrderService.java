@@ -306,14 +306,10 @@ public class WorkOrderService {
 		    	}
 		    	
 		    	for(int i = 0; i <arrayMaterial.size(); i++) {
-		    		/*
-		    		 * handlovati slucaj kada se kreira nalog sa masinom sa sapa stize i materijal gorivo
-		    		 * bez WebBackendId
-		    		*/
 		    		if(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString().equals("")) {
 		    			SpentMaterial sm = new SpentMaterial();
-		    			long id = 10000049;
-		    			Material material = materialRepo.findByErpId(id).get();
+		    			//long id = 10000049;
+		    			Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
 		    			sm.setMaterial(material);
 		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
 		    			spentMaterialRepo.save(sm);
