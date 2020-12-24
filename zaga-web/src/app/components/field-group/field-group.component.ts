@@ -29,6 +29,8 @@ export class FieldGroupComponent implements OnInit {
       this.loading = false;
       //data = this.convertKeysToLowerCase(data);
       this.fieldGroups = data;
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

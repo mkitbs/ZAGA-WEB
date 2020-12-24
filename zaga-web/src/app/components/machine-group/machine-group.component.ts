@@ -26,6 +26,8 @@ export class MachineGroupComponent implements OnInit {
       this.loading = false;
       this.machineGroups = data;
       console.log(this.machineGroups)
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

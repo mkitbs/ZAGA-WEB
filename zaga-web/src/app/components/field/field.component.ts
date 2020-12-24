@@ -69,7 +69,11 @@ export class FieldComponent implements OnInit {
             (fieldGroup) => fieldGroup.dbId == field.fieldGroup
           ).Name;
         });
+      }, error =>{
+        this.spinner.hide();
       });
+    }, error =>{
+      this.spinner.hide();
     });
   }
 

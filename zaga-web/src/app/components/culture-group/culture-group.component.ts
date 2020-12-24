@@ -30,6 +30,8 @@ export class CultureGroupComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
       this.cultureGroups = data;
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

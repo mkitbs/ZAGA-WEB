@@ -44,6 +44,8 @@ export class CropComponent implements OnInit {
         this.cultures = data;
         this.cultures.forEach(culture => {
           culture.cultureGroupName = this.cultureGroups.find(cultureGroup => cultureGroup.dbId == culture.cultureGroup).Name;
+        }, error => {
+          this.spinner.hide();
         })
         console.log(this.cultures)
         this.fieldService.getAll().subscribe(data => {
@@ -56,7 +58,11 @@ export class CropComponent implements OnInit {
               crop.field = this.fields.find(field => field.dbId == crop.fieldId).Name;
               crop.cultureName = this.cultures.find(culture => culture.dbId == crop.cultureId).Name;
             });
+          }, error => {
+            this.spinner.hide();
           });
+        }, error => {
+          this.spinner.hide();
         })
       });
     });

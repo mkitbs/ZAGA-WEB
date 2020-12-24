@@ -58,7 +58,11 @@ export class OperationComponent implements OnInit {
           }
           operation.operationGroup = this.operationGroups.find(operationGroup => operationGroup.dbId == operation.operationGroupId).Name
         });
+      }, error =>{
+        this.spinner.hide();
       });
+    }, error =>{
+      this.spinner.hide();
     });
   }
 

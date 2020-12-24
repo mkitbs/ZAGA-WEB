@@ -73,7 +73,11 @@ export class CultureComponent implements OnInit {
           }
           culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
         })
+      }, error =>{
+        this.spinner.hide();
       });
+    }, error =>{
+      this.spinner.hide();
     });
   }
 

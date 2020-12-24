@@ -82,7 +82,11 @@ export class MachineComponent implements OnInit {
           }
           machine.machineGroupName = this.machineGroups.find(machineGroup => machineGroup.dbId == machine.machineGroup).Name
         })
+      }, error =>{
+        this.spinner.hide();
       })
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

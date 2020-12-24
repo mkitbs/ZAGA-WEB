@@ -40,7 +40,11 @@ export class VarietyComponent implements OnInit {
         this.varieties.forEach(variety => {
           variety.cultureName = this.cultures.find(culture => culture.dbId == variety.culture).Name;
         })
+      }, error =>{
+        this.spinner.hide();
       })
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

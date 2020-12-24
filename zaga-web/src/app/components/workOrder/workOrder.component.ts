@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { WorkOrderService } from "src/app/service/work-order.service";
 import { WorkOrder } from "src/app/models/WorkOrder";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-workOrder",
@@ -30,7 +31,8 @@ export class WorkOrderComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private workOrderService: WorkOrderService
+    private workOrderService: WorkOrderService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
@@ -115,7 +117,9 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getAllWorkOrdersByStatus(status) {
+    this.spinner.show();
     this.workOrderService.getAllByStatus(status).subscribe((res) => {
+      this.spinner.hide();
       this.workOrders = res;
 
       if (this.workOrders.length == 0) {
@@ -147,14 +151,18 @@ export class WorkOrderComponent implements OnInit {
         });
       }
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error => {
+      this.spinner.hide();
     });
   }
 
   getAll(){
     this.my = false;
     this.loading = true;
+    this.spinner.show();
     this.workOrderService.getAll().subscribe((data) => {
       this.loading = false;
+      this.spinner.hide();
       this.workOrders = data;
       console.log(this.workOrders);
       if (this.workOrders.length == 0) {
@@ -184,12 +192,18 @@ export class WorkOrderComponent implements OnInit {
         });
       }
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error => {
+      this.spinner.hide();
     });
   }
 
   getMyWorkOrders(){
     this.my = true;
+    this.loading = true;
+    this.spinner.show();
     this.workOrderService.getMyWorkOrders().subscribe(data => {
+      this.loading = false;
+      this.spinner.hide();
       this.workOrders = data;
       if (this.workOrders.length == 0) {
         this.empty = true;
@@ -218,6 +232,8 @@ export class WorkOrderComponent implements OnInit {
         });
       }
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error =>{
+      this.spinner.hide();
     })
   }
 }

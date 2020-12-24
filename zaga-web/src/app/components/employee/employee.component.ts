@@ -27,6 +27,8 @@ export class EmployeeComponent implements OnInit {
       this.loading = false;
       this.allEmployees = data.content;
       console.log(this.allEmployees)
+    }, error =>{
+      this.spinner.hide();
     });
   }
 

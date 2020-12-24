@@ -26,6 +26,8 @@ export class OperationGroupComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
       this.operationGroups = data;
+    }, error =>{
+      this.spinner.hide();
     });
   }
 
