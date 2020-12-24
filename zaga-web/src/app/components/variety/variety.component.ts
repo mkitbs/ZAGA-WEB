@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Culture } from 'src/app/models/Culture';
 import { Variety } from 'src/app/models/Variety';
 import { CultureService } from 'src/app/service/culture.service';
@@ -14,7 +15,8 @@ export class VarietyComponent implements OnInit {
 
   constructor(
     private varietyService:VarietyService,
-    private cultureService:CultureService
+    private cultureService:CultureService,
+    private spinner:NgxSpinnerService
     ) { }
 
   varieties: Variety[] = [];
@@ -24,10 +26,16 @@ export class VarietyComponent implements OnInit {
   varietyFC: FormControl = new FormControl("");
   cultureFC: FormControl = new FormControl("");
 
+  loading;
+
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.cultureService.getAll().subscribe(data => {
       this.cultures = data;
       this.varietyService.getAll().subscribe(data => {
+        this.spinner.hide();
+        this.loading = false;
         this.varieties = data;
         this.varieties.forEach(variety => {
           variety.cultureName = this.cultures.find(culture => culture.dbId == variety.culture).Name;

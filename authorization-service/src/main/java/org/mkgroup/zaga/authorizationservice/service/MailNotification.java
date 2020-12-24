@@ -182,7 +182,7 @@ public class MailNotification {
         
         MimeMessageHelper helper = new MimeMessageHelper(msg, false, "utf-8");
         helper.setTo(mail);
-        helper.setFrom("af083085@gmail.com");
+        helper.setFrom("noreplay@mkgroup.rs");
         helper.setSubject("ZAGA APP - kreiran korisnički nalog");
         javaMailSender.send(msg);
 

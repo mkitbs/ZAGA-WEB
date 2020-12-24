@@ -296,7 +296,7 @@
               <th>Priključna mašina</th>
               <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
               <th style="text-align: right !important">Dodaj/Potvrdi</th>
-              <th style="text-align: right !important" *ngIf="wows.length > 0 || workOrder.workers.length > 0">
+              <th style="text-align: right !important" *ngIf="wows.length > 0 || (workOrder.workers.length > 0 && !emptyWow)">
                 Obriši
               </th>
             </thead>
@@ -840,7 +840,7 @@
                     </td>
                     <td>
                       <div class="form-group">
-                        <button class="btn btn-primary btn-delete mr-2" (click)="deleteExistingWorkOrderWorker(wow.id)"
+                        <button class="btn btn-primary btn-delete mr-2" data-toggle="modal" data-target="#deleteWorkerModal" (click)="setWowId(wow.id)"
                           [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
                           <i class="fa fa-minus"></i>
                         </button>
@@ -1202,7 +1202,9 @@
                     <td>
                       <div class="form-group">
                         <button class="btn btn-primary btn-delete mr-2"
-                          (click)="deleteExistingSpentMaterial(material.id)"
+                          data-toggle="modal" 
+                          data-target="#deleteMaterialModal" 
+                          (click)="setMaterialId(material.id)"
                           [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
                           <i class="fa fa-minus"></i>
                         </button>
@@ -1233,12 +1235,12 @@
   <br />
   <div class="col" style="float: right">
     <button class="btn btn-primary btn-edit"
-      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren'" data-toggle="modal"
+      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser" data-toggle="modal"
       data-target="#closeWOModal">
       <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
     </button>
     <button class="btn btn-primary btn-add mr-2"
-      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren'"
+      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser"
       (click)="updateWorkOrder()">
       <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
     </button>
@@ -2074,9 +2076,8 @@
     </div>
   </div>
 </div>
-
-<div class="modal fade" id="closeWOModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
+<!--Modal zatvaranje radnog naloga-->
+<div class="modal fade" id="closeWOModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -2099,3 +2100,52 @@
           <i class="fa fa-check"></i> Potrvdi
         </button>
       </div>
+    </div>
+  </div>
+</div>
+<!--Modal upozorenje pre brisanje radnika-->
+<div class="modal fade" id="deleteWorkerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Da li ste sigurni da želite da obrišete radnika i mašinu
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i
+            class="fa fa-window-close"></i> Odustani</button>
+        <button class="btn btn-primary btn-add" data-dismiss="modal" (click)="deleteExistingWorkOrderWorker(workOrderWorkerId)">
+          <i class="fa fa-check"></i> Potrvdi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal upozorenje pre brisanje materijala-->
+<div class="modal fade" id="deleteMaterialModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Da li ste sigurni da želite da obrišete materijal
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i
+            class="fa fa-window-close"></i> Odustani</button>
+        <button class="btn btn-primary btn-add" data-dismiss="modal" (click)="deleteExistingSpentMaterial(materialId)">
+          <i class="fa fa-check"></i> Potrvdi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

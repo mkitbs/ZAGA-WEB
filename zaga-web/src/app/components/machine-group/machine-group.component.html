@@ -24,7 +24,7 @@
           </form>
         </div>
       </div>
-      <div class="center" *ngIf="machineGroups.length == 0">
+      <div class="center" *ngIf="machineGroups.length == 0 && loading == false">
         <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
         <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
       </div>
@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
- 
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -98,7 +98,7 @@
         </form>
       </div>
     </div>
-    <div class="center" *ngIf="machineGroups.length == 0">
+    <div class="center" *ngIf="machineGroups.length == 0 && loading == false">
       <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
     </div>
@@ -137,6 +137,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -163,7 +164,7 @@
         </form>
       </div>
     </div>
-    <div class="center" *ngIf="machineGroups.length == 0">
+    <div class="center" *ngIf="machineGroups.length == 0 && loading == false">
       <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
     </div>
@@ -202,4 +203,5 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>

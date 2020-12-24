@@ -477,7 +477,10 @@ public class SpentMaterialService {
 		}
 		for(int i = 0; i<spentMaterials.size()-1; i++) {
 			if(spentMaterials.get(i).getMaterial().getId().equals(spentMaterials.get(i+1).getMaterial().getId())) {
-				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				if(!spentMaterials.get(i).getWorkOrder().equals(spentMaterials.get(i+1).getWorkOrder())) {
+					report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				}
+				
 				if(i+1 == spentMaterials.size()-1) {
 					retValues.add(report);
 				}

@@ -107,7 +107,7 @@
     <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
   </div>
-  <table class="table table-hover tabela-nalozi">
+  <table *ngIf="materials.length > 0" class="table table-hover tabela-nalozi">
     <thead>
       <tr>
         <th scope="col">Materijal</th>
@@ -144,29 +144,31 @@
           | SearchWoBetweenDates: filters; 
           let j = index">
           <ng-container *ngFor="let mat of workOrder.materials">
-          <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
-          <ng-template #elseBlockName><td></td></ng-template>
-          <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
-          <td>{{ workOrder.operationName }}</td>
-          <td>{{ workOrder.date }}</td>
-          <td>{{ workOrder.table }}</td>
-          <td>{{ workOrder.cropName.split(",")[1] }}</td>
-          <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
-          <ng-template #elseQuantity><td>/</td></ng-template>
-          <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
-          <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
-          <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
-          <ng-template #elseSpent><td>Nije uneto</td></ng-template>
-          <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
-          <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
-          <td>{{ material.material.material.Unit }}</td>
-          <td [ngClass]="{
-              statusNovi: workOrder.status == 'Novi',
-              statusURadu: workOrder.status == 'U radu',
-              statusZatvoren: workOrder.status == 'Zatvoren'
-              }">
-              {{ workOrder.status }}
-            </td>
+            <ng-container *ngIf="mat.deleted == false">
+              <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
+              <ng-template #elseBlockName><td></td></ng-template>
+              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+              <td>{{ workOrder.operationName }}</td>
+              <td>{{ workOrder.date }}</td>
+              <td>{{ workOrder.table }}</td>
+              <td>{{ workOrder.cropName.split(",")[1] }}</td>
+              <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
+              <ng-template #elseQuantity><td>/</td></ng-template>
+              <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
+              <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
+              <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
+              <ng-template #elseSpent><td>Nije uneto</td></ng-template>
+              <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
+              <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
+              <td>{{ material.material.material.Unit }}</td>
+              <td [ngClass]="{
+                  statusNovi: workOrder.status == 'Novi',
+                  statusURadu: workOrder.status == 'U radu',
+                  statusZatvoren: workOrder.status == 'Zatvoren'
+                  }">
+                  {{ workOrder.status }}
+              </td>
+            </ng-container>
           </ng-container>
         </tr>
         <tr>

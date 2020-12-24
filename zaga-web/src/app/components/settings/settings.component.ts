@@ -136,6 +136,7 @@ export class SettingsComponent implements OnInit {
         this.selectedRolesNewUser = [];
       },error=>{
         this.loading = false;
+        this.spinner.hide();
         if(error.status === 409){
           this.toastr.error("Uneti email se već koristi.");
         } else if(error.status === 400){
@@ -232,11 +233,14 @@ export class SettingsComponent implements OnInit {
       this.user.roles = [];
       this.user.roles = this.selectedRolesUser;
       console.log(this.user)
+      this.spinner.show();
       this.userService.updateUser(this.user).subscribe(res => {
+        this.spinner.hide();
         this.selectedIndex = 0;
         this.user = new SignupRequest();
         this.toastr.success("Korisnik je uspešno sačuvan.")
       }, error => {
+        this.spinner.hide();
         this.toastr.error("Došlo je do greške. Trenutno nije moguće sačuvati promene.")
       })
     }

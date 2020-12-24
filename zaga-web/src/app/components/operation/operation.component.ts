@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Operation } from 'src/app/models/Operation';
 import { OperationGroup } from 'src/app/models/OperationGroup';
 import { OperationGroupService } from 'src/app/service/operation-group.service';
@@ -14,7 +15,8 @@ export class OperationComponent implements OnInit {
 
   constructor(
     private operationService:OperationService,
-    private operationGroupService:OperationGroupService
+    private operationGroupService:OperationGroupService,
+    private spinner: NgxSpinnerService
     ) { }
 
   operations: Operation[] = [];
@@ -26,15 +28,21 @@ export class OperationComponent implements OnInit {
   operationTypeFC: FormControl = new FormControl("");
   operationGroupFC: FormControl = new FormControl("");
 
+  loading;
+
   ngOnInit() {
     this.getAll();
     this.getAllGroupByType();
   }
 
   getAll(){
+    this.spinner.show();
+    this.loading = true;
     this.operationGroupService.getAll().subscribe(data => {
       this.operationGroups = data;
       this.operationService.getAll().subscribe(data => {
+        this.spinner.hide();
+        this.loading = false;
         this.operations = data;
         this.operations.forEach(operation => {
           if(operation.Type == "CROP_FARMING"){

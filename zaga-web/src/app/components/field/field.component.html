@@ -24,7 +24,7 @@
         </form>
       </div>
     </div>
-    <div class="center" *ngIf="fields.length == 0">
+    <div class="center" *ngIf="fields.length == 0 && loading == false">
       <img src="../../../assets/field-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema parcela za prikazivanje</h4>
     </div>
@@ -79,6 +79,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -105,7 +106,7 @@
         </form>
       </div>
     </div>
-    <div class="center" *ngIf="fields.length == 0">
+    <div class="center" *ngIf="fields.length == 0 && loading == false">
       <img src="../../../assets/field-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema parcela za prikazivanje</h4>
     </div>
@@ -160,6 +161,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -186,7 +188,7 @@
         </form>
       </div>
     </div>
-    <div class="center" *ngIf="fields.length == 0">
+    <div class="center" *ngIf="fields.length == 0 && loading == false">
       <img src="../../../assets/field-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema parcela za prikazivanje</h4>
     </div>
@@ -241,6 +243,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--Edit field modal-->
 <div class="modal fade" id="editFieldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

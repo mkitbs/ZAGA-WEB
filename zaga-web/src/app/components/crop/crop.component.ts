@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from "ngx-spinner";
 import { Crop } from "src/app/models/Crop";
 import { Culture } from "src/app/models/Culture";
 import { CultureGroup } from "src/app/models/CultureGroup";
@@ -19,7 +20,8 @@ export class CropComponent implements OnInit {
     private cropService: CropService,
     private cultureService: CultureService,
     private fieldService: FieldService,
-    private cultureGroupService: CultureGroupService
+    private cultureGroupService: CultureGroupService,
+    private spinner: NgxSpinnerService
   ) {}
 
   crops: Crop[] = [];
@@ -31,8 +33,11 @@ export class CropComponent implements OnInit {
   fieldFC: FormControl = new FormControl("");
   cultureFC: FormControl = new FormControl("");
   cropFC: FormControl = new FormControl("");
+  loading;
 
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.cultureGroupService.getAll().subscribe(data => {
       this.cultureGroups = data;
       this.cultureService.getAll().subscribe((data) => {
@@ -44,6 +49,8 @@ export class CropComponent implements OnInit {
         this.fieldService.getAll().subscribe(data => {
           this.fields = data;
           this.cropService.getAll().subscribe(data => {
+            this.loading = false;
+            this.spinner.hide();
             this.crops = data;
             this.crops.forEach(crop => {
               crop.field = this.fields.find(field => field.dbId == crop.fieldId).Name;

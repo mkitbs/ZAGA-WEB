@@ -177,6 +177,12 @@ export class CreateworkOrderComponent implements OnInit {
   user: User = new User();
   userCreator: User = new User();
 
+  workOrderWorkerId;
+  materialId;
+
+  emptyMaterial;
+  emptyWow;
+
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
       this.setting = data;
@@ -234,6 +240,21 @@ export class CreateworkOrderComponent implements OnInit {
             }
             if (material.quantityPerHectar == -1) {
               material.quantityPerHectar = null;
+            }
+            if(material.deleted == true){
+              this.emptyMaterial = true;
+            } else {
+              this.emptyMaterial = false;
+            }
+          })
+        }
+
+        if(this.workOrder.workers.length != 0){
+          this.workOrder.workers.forEach(wow => {
+            if(wow.deleted == true){
+              this.emptyWow = true;
+            } else {
+              this.emptyWow = false;
             }
           })
         }
@@ -448,13 +469,13 @@ export class CreateworkOrderComponent implements OnInit {
 
   //autocomplete
   displayFn(emp: Employee): string {
-    if (emp.perNumber == undefined && emp.name == undefined) {
-      console.log("AAAAAAAAAA")
-      return emp && emp.Id + " - " + emp.Name;
-    } else {
-      return emp && emp.perNumber + " - " + emp.name;
+    if(emp != null){
+      if (emp.perNumber == undefined && emp.name == undefined) {
+        return emp && emp.Id + " - " + emp.Name;
+      } else {
+        return emp && emp.perNumber + " - " + emp.name;
+      }
     }
-
   }
 
   displayFnOperation(op: Operation): string {
@@ -470,11 +491,14 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnMachine(machine: Machine): string {
-    if (machine.Id == undefined) {
-      return machine && "BEZ PRIKLJUČNE MAŠINE"
-    } else {
-      return machine && machine.Id + " - " + machine.Name
+    if(machine != null){
+      if (machine.Id == undefined) {
+        return machine && "BEZ PRIKLJUČNE MAŠINE"
+      } else {
+        return machine && machine.Id + " - " + machine.Name
+      }
     }
+    
   }
 
   displayFnMaterial(substance: Material): string {
@@ -603,6 +627,7 @@ export class CreateworkOrderComponent implements OnInit {
         wow.machine.dbid = this.devicesPropulsion.find(
           (x) => x.dbid == wow.machine.dbid
         ).dbid;
+        console.log(this.devicesCoupling);
         wow.connectingMachine.dbid = this.devicesCoupling.find(
           (x) => x.dbid == wow.connectingMachine.dbid
         ).dbid;
@@ -686,11 +711,11 @@ export class CreateworkOrderComponent implements OnInit {
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
       this.wow = new WorkOrderWorker();
-      this.selectedWorker = null;
       this.spinner.hide();
-      this.selectedOperation = null;
-      this.selectedMachine = null;
-      this.selectedCouplingMachine = null;
+      this.workerFC = new FormControl("");
+      this.workerOperationFC.setValue(this.operationFC.value);
+      this.workerMachineFC = new FormControl("");
+      this.workerCoMachineFC = new FormControl("");
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
         if (this.workOrder.status == "NEW") {
@@ -1001,6 +1026,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
           console.log(res);
           this.spentMaterial = new SpentMaterial();
+          this.materialFC = new FormControl("");
           this.selectedMaterial = null;
           this.quantityEntered = null;
           this.workOrderService.getOne(this.workId).subscribe((data) => {
@@ -1320,7 +1346,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWom = true;
     } else {
       this.workOrder.materials.forEach((material) => {
-        if (material.spent == -1) {
+        if (material.spent == -1 && material.deleted != true) {
           this.validWom = false;
           const element: HTMLElement = document.getElementById(material.id);
           this.renderer.setStyle(element, "background-color", "#BD362F");
@@ -1390,6 +1416,7 @@ export class CreateworkOrderComponent implements OnInit {
       dataa[0].deleted = true;
       this.spinner.hide();
       this.toastr.success("Uspešno ste izbrisali radnika")
+      
     },
       err => {
         console.log(err);
@@ -1443,5 +1470,15 @@ export class CreateworkOrderComponent implements OnInit {
       }
     }
     return output;
+  }
+
+  setWowId(id){
+    this.workOrderWorkerId = id;
+    console.log(this.workOrderWorkerId)
+  }
+
+  setMaterialId(id){
+    this.materialId = id;
+    console.log(this.materialId);
   }
 }

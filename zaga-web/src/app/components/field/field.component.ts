@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { Field } from "src/app/models/Field";
 import { FieldGroup } from "src/app/models/FieldGroup";
@@ -22,7 +23,8 @@ export class FieldComponent implements OnInit {
   constructor(
     private fieldService: FieldService,
     private fieldGroupService: FieldGroupService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
   ) {}
 
   fields: Field[] = [];
@@ -44,16 +46,22 @@ export class FieldComponent implements OnInit {
   allOverlays: any[] = [];
   fieldPolygon: FieldPolygon = new FieldPolygon();
 
+  loading;
+
   ngOnInit() {
     this.getAll();
     
   }
 
   getAll(){
+    this.spinner.show();
+    this.loading = true;
     this.fieldGroupService.getAll().subscribe((data) => {
       //data = this.convertKeysToLowerCase(data);
       this.fieldGroups = data;
       this.fieldService.getAll().subscribe((data) => {
+        this.loading = false;
+       this.spinner.hide();
         this.fields = data;
         console.log(this.fields)
         this.fields.forEach((field) => {

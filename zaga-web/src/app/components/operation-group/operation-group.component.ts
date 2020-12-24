@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { OperationGroup } from 'src/app/models/OperationGroup';
 import { OperationGroupService } from 'src/app/service/operation-group.service';
 
@@ -10,14 +11,20 @@ import { OperationGroupService } from 'src/app/service/operation-group.service';
 })
 export class OperationGroupComponent implements OnInit {
 
-  constructor(private operationGroupService:OperationGroupService) { }
+  constructor(private operationGroupService:OperationGroupService, private spinner: NgxSpinnerService) { }
 
   operationGroups: OperationGroup[] = [];
 
   operationGroupFC: FormControl = new FormControl("");
 
+  loading;
+
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.operationGroupService.getAll().subscribe(data => {
+      this.spinner.hide();
+      this.loading = false;
       this.operationGroups = data;
     });
   }

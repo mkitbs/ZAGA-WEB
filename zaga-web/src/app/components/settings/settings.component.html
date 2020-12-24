@@ -778,7 +778,7 @@
               style="float: right;"
               (click)="addNewUser(addNewUserForm.valid)"
             >
-              <i class="fa fa-plus" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Kreiraj
+              <i class="fa fa-plus"></i> Kreiraj
             </button>
           </div>
         </mat-tab>
@@ -970,12 +970,13 @@
               style="float: right;"
               (click)="updateUser(addNewUserForm.valid)"
             >
-              <i class="fa fa-save" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Sačuvaj
+              <i class="fa fa-save"></i> Sačuvaj
             </button>
           </div>
         </mat-tab>
       </mat-tab-group>
     </div>
+    <ngx-spinner></ngx-spinner>
   </div>
 </div>
 

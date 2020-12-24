@@ -229,7 +229,10 @@ public class MachineService {
 		}
 		for(int i = 0; i<wows.size()-1; i++) {
 			if(wows.get(i).getMachine().getId().equals(wows.get(i+1).getMachine().getId())) {
-				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getMachine().getName()));
+				if(!wows.get(i).getWorkOrder().equals(wows.get(i+1).getWorkOrder())) {
+					report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getMachine().getName()));
+				}
+				
 				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}

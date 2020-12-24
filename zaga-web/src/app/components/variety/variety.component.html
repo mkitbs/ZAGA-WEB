@@ -39,6 +39,10 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="varieties.length == 0 && loading == false">
+        <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
+      </div>
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-4'" *ngFor="let variety of varieties 
           | SearchVariety: searchVariety.value
@@ -88,7 +92,7 @@
         </div>
       </div>
     </div>
-  
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -129,6 +133,10 @@
             </mat-form-field>
           </form>
         </div>
+      </div>
+      <div class="center" *ngIf="varieties.length == 0 && loading == false">
+        <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
       </div>
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-5'" *ngFor="let variety of varieties
@@ -179,7 +187,7 @@
         </div>
       </div>
     </div>
-  
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -220,6 +228,10 @@
             </mat-form-field>
           </form>
         </div>
+      </div>
+      <div class="center" *ngIf="varieties.length == 0 && loading == false">
+        <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
       </div>
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-7'" *ngFor="let variety of varieties
@@ -270,7 +282,7 @@
         </div>
       </div>
     </div>
-  
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--Edit field modal-->
 <div class="modal fade" id="editVarietydModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

@@ -130,4 +130,10 @@ public class WorkOrderController {
 		List<WorkOrderDTO> workOrders = workOrderService.getAllByStatus(status);
 		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
 	}
+	
+	@GetMapping("/getMyWorkOrders")
+	public ResponseEntity<?> getMyWorkOrders(@RequestHeader("SapUserId") String sapUserId){
+		List<WorkOrderDTO> workOrders = workOrderService.getMyWorkOrders(sapUserId);
+		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+	}
 }

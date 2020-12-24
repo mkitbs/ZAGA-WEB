@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker, UUID> {
 
-	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId ORDER BY wow.worker_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wow.deleted=false ORDER BY wow.worker_id", nativeQuery = true)
 	List<WorkOrderWorker> findAllByOrderByWorkerId(@Param("tenantId") Long tenantId);
 	
-	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId ORDER BY wow.machine_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wow.deleted=false ORDER BY wow.machine_id", nativeQuery = true)
 	List<WorkOrderWorker> findAllByOrderByMachineId(@Param("tenantId") Long tenantId);
 	
 	@Query(value = "SELECT * FROM work_order_worker w ORDER BY w.machine_id", nativeQuery = true)

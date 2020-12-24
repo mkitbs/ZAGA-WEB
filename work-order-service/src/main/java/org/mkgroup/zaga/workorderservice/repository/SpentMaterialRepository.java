@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface SpentMaterialRepository extends JpaRepository<SpentMaterial, UUID>{
 
 
-	@Query(value = "SELECT * FROM spent_material AS sm INNER JOIN work_order AS wo ON sm.work_order_id=wo.id WHERE wo.tenant_id=:tenantId ORDER BY sm.material_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM spent_material AS sm INNER JOIN work_order AS wo ON sm.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND sm.deleted=false ORDER BY sm.material_id", nativeQuery = true)
 	List<SpentMaterial> findAllByOrderByMaterialId(@Param("tenantId") Long tenantId);
 	
 	List<SpentMaterial> findAllByOrderByMaterialId();

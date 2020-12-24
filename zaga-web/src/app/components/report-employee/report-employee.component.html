@@ -127,7 +127,7 @@
     <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
   </div>
-  <table class="table table-hover tabela-nalozi">
+  <table *ngIf="workers.length > 0" class="table table-hover tabela-nalozi">
     <thead>
       <tr>
         <th scope="col" style="vertical-align: middle;">Radnik</th>
@@ -153,19 +153,22 @@
             <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
           </td>
         </tr>
-        <tr *ngFor="let workOrder of worker.workOrders
-          | SearchWorkOrdersTable: searchTable.value
-          | SearchWorkOrdersOperation: searchOperation.value
-          | SearchWorkOrdersDate: searchDate.value
-          | SearchWorkOrdersCrop: searchCrop.value
-          | ReportMaterialSapId: searchWorkOrder.value
-          | SearchWoBetweenDates: filters; 
-          let j = index">
-          <ng-container *ngFor="let wo of workOrder.workers">
-            <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
+        <ng-container  *ngFor="let workOrder of worker.workOrders
+        | SearchWorkOrdersTable: searchTable.value
+        | SearchWorkOrdersOperation: searchOperation.value
+        | SearchWorkOrdersDate: searchDate.value
+        | SearchWorkOrdersCrop: searchCrop.value
+        | ReportMaterialSapId: searchWorkOrder.value
+        | SearchWoBetweenDates: filters; 
+        let j = index">
+
+        <tr *ngFor="let wo of workOrder.workers; let z = index">
+            <td *ngIf="z==0 && j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
             <ng-template #elseBlockName><td></td></ng-template>
-            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
-            <td>{{ workOrder.operationName }}</td>
+            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
+              {{ workOrder.sapId }}
+            </td>
+            <td>{{ wo.operation.Name }}</td>
             <td>{{ workOrder.date }}</td>
             <td>{{ workOrder.table }}</td>
             <td>{{ workOrder.cropName.split(",")[1] }}</td>
@@ -183,8 +186,9 @@
             >
               {{ workOrder.status }}
             </td>
-          </ng-container>
+        
         </tr>
+      </ng-container>
         <tr>
           <ng-container *ngFor="let workOrder of worker.workOrders 
             | SearchWorkOrdersCrop: searchCrop.value

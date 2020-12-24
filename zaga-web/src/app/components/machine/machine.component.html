@@ -55,7 +55,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <div *ngIf="machines.length == 0" class="center">
+    <div *ngIf="machines.length == 0 && loading == false" class="center">
       <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
     </div>
@@ -113,6 +113,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -170,7 +171,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <div *ngIf="machines.length == 0" class="center">
+    <div *ngIf="machines.length == 0 && loading == false" class="center">
       <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
     </div>
@@ -236,6 +237,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -293,7 +295,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <div *ngIf="machines.length == 0" class="center">
+    <div *ngIf="machines.length == 0 && loading == false" class="center">
       <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
     </div>
@@ -359,6 +361,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--Edit machine modal-->
 <div class="modal fade" id="editMachineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

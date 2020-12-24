@@ -54,7 +54,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <h5 *ngIf="crops.length == 0">
+    <h5 *ngIf="crops.length == 0 && loading == false">
       <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
@@ -112,6 +112,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -170,7 +171,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <h5 *ngIf="crops.length == 0">
+    <h5 *ngIf="crops.length == 0 && loading == false">
       <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
@@ -228,6 +229,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -286,7 +288,7 @@
   </div>
   <div style="padding-top: 20px"></div>
   <div class="container">
-    <h5 *ngIf="crops.length == 0">
+    <h5 *ngIf="crops.length == 0 && loading == false">
       <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
     </h5>
@@ -344,6 +346,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 <!--Edit crop modal-->
 <div class="modal fade" id="editCropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

@@ -27,12 +27,14 @@ import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
@@ -94,6 +96,9 @@ public class WorkOrderService {
 	
 	@Autowired
 	WorkOrderMachineRepository womRepo;
+	
+	@Autowired
+	MaterialRepository materialRepo;
 	
 	@Autowired
 	SAP4HanaProxy sap4hana;
@@ -290,7 +295,7 @@ public class WorkOrderService {
 		    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 		    	JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 			    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
-			    
+			    System.out.println(arrayMaterial);
 		    	
 		    	for(int i = 0; i <array.size(); i++) {
 		    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
@@ -301,11 +306,26 @@ public class WorkOrderService {
 		    	}
 		    	
 		    	for(int i = 0; i <arrayMaterial.size(); i++) {
-		    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
-		    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+		    		/*
+		    		 * handlovati slucaj kada se kreira nalog sa masinom sa sapa stize i materijal gorivo
+		    		 * bez WebBackendId
+		    		*/
+		    		if(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString().equals("")) {
+		    			SpentMaterial sm = new SpentMaterial();
+		    			long id = 10000049;
+		    			Material material = materialRepo.findByErpId(id).get();
+		    			sm.setMaterial(material);
+		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+		    			spentMaterialRepo.save(sm);
+		    		} else {
+		    			UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+			    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+			    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+			    		spentMaterialRepo.save(spentMat);
+		    		}
 		    		
-		    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
-		    		spentMaterialRepo.save(spentMat);
+		    		
+		    		
 		    	}
 		    	
 		    	log.info("Sending work order to SAP successfuly finished");
@@ -362,16 +382,25 @@ public class WorkOrderService {
 				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
 		
 		for(WorkOrder workOrder : workOrders) {
-			for(UserAuthDTO u : user.getBody().getTenant().getUsers()) {
-				if(Long.parseLong(u.getSapUserId()) == workOrder.getUserCreatedSapId()) {
-					WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
-					workOrdersDTO.add(workOrderDTO);
-				}
+			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
+				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
 			}
-			
 		}
 		return workOrdersDTO;
 	}
+	
+	public List<WorkOrderDTO> getMyWorkOrders(String sapUserId){
+		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId));
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+	    
+		for(WorkOrder workOrder : workOrders) {
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			workOrdersDTO.add(workOrderDTO);
+		}
+		return workOrdersDTO;
+	}
+	
 	
 	public WorkOrderDTO getOne(UUID id) {
 		try {

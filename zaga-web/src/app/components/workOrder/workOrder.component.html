@@ -49,8 +49,11 @@
         <i class="fa fa-plus"></i> Kreiraj novi nalog
       </button>
     </a>
-    <button class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getAll()">
+    <button *ngIf="my" class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getAll()">
       <i class="fa fa-tasks"></i> Svi
+    </button>
+    <button *ngIf="!my" class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getMyWorkOrders()">
+      <i class="fa fa-tasks"></i> Moji
     </button>
     <button *ngIf="!empty" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
       (click)="getAllWorkOrdersByStatus('NEW')">
@@ -66,9 +69,13 @@
     </button>
   </div>
   <br />
-  <div *ngIf="empty" class="center">
+  <div *ngIf="empty && !my" class="center">
     <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
+  </div>
+  <div *ngIf="empty && my" class="center">
+    <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px;">Niste kreirali ni jedan nalog</h4>
   </div>
   <ng-container *ngFor="let workOrder of workOrders 
   | SearchWorkOrdersTable: searchTable.value
@@ -128,7 +135,7 @@
           <td>
             <div class="form-group">
               <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
-                style="float: center" (click)="getWorkOrderId(workOrder.id)">
+                style="float: center" (click)="getWorkOrderId(workOrder)">
                 <i class="fa fa-copy"></i>
               </button>
             </div>
@@ -237,7 +244,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-sticky-note-o"></i> Radni nalog
+          <i class="fa fa-sticky-note-o"></i> Radni nalog #{{woSapId}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeButtonMaterialModal>
           <span aria-hidden="true">&times;</span>

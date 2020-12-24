@@ -456,13 +456,17 @@ public class WorkOrderWorkerService {
 		if(wows.size() > 0) {
 			report.setWorker(new EmployeeDTO(wows.get(0).getUser()));
 			report.getWorkOrders().add(new WorkOrderDTO(wows.get(0).getWorkOrder(), wows.get(0).getUser().getPerNumber()));
+			
 			if(wows.size() == 1) {
 				retValues.add(report);
 			}
 		}
 		for(int i = 0; i<wows.size()-1; i++) {
 			if(wows.get(i).getUser().getId().equals(wows.get(i+1).getUser().getId())) {
-				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
+				if(!wows.get(i).getWorkOrder().equals(wows.get(i+1).getWorkOrder())){
+					report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
+				}
+				
 				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
@@ -471,6 +475,7 @@ public class WorkOrderWorkerService {
 				report = new WorkerReportDTO();
 				report.setWorker(new EmployeeDTO(wows.get(i+1).getUser()));
 				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
+				
 				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
