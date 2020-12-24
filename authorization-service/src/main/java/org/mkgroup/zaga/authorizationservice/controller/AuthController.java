@@ -15,14 +15,19 @@ import org.mkgroup.zaga.authorizationservice.dto.ExceptionResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.RoleDTO;
+import org.mkgroup.zaga.authorizationservice.dto.SettingDTO;
 import org.mkgroup.zaga.authorizationservice.dto.SignupRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.UserDTO;
 import org.mkgroup.zaga.authorizationservice.exception.InvalidJTWTokenException;
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
 import org.mkgroup.zaga.authorizationservice.model.Role;
 import org.mkgroup.zaga.authorizationservice.model.RoleName;
+import org.mkgroup.zaga.authorizationservice.model.Setting;
+import org.mkgroup.zaga.authorizationservice.model.Tenant;
 import org.mkgroup.zaga.authorizationservice.model.User;
 import org.mkgroup.zaga.authorizationservice.repository.RoleRepository;
+import org.mkgroup.zaga.authorizationservice.repository.SettingRepository;
+import org.mkgroup.zaga.authorizationservice.repository.TenantRepository;
 import org.mkgroup.zaga.authorizationservice.repository.UserRepository;
 import org.mkgroup.zaga.authorizationservice.service.CheckTokenAndPermissions;
 import org.mkgroup.zaga.authorizationservice.service.MailNotification;
@@ -70,6 +75,12 @@ public class AuthController {
     
     @Autowired
     MailNotification mailNotification;
+    
+    @Autowired
+    TenantRepository tenantRepository;
+    
+    @Autowired
+    SettingRepository settingRepository;
     
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
@@ -166,6 +177,11 @@ public class AuthController {
           return new ResponseEntity<>("Fail -> Email is already in use!",
                    HttpStatus.CONFLICT);
         }
+       
+       if(userRepository.existsBySapUserId(signUpRequest.getSapUserId())) {
+    	   return new ResponseEntity<>("Fail -> Sap id is already in use!",
+    			   HttpStatus.NOT_ACCEPTABLE);
+       }
 
        if(signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
 				try {
@@ -177,6 +193,11 @@ public class AuthController {
 				       User user = new User(signUpRequest, encoder.encode(signUpRequest.getPassword()), roles);
 				        
 				        user.setEnabled(false);
+				        
+				        if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+				    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+				    		user.setTenant(logged.getTenant());
+				    	} 
 
 				        user = userRepository.save(user);
 				        UserDTO us = new UserDTO(user);
@@ -211,6 +232,7 @@ public class AuthController {
 	    user.setTelephone(request.getTelephone());
 	    user.setDateOfBirth(request.getDateOfBirth());
 	    user.setRoles(roles);
+	    user.setSapUserId(request.getSapUserId());
 	    if(request.getPassword() != null && request.getConfirmPassword() != null) {
 	    	if(request.getPassword().equals(request.getConfirmPassword())) {
 	    		user.setPassword(encoder.encode(request.getPassword()));
@@ -284,5 +306,51 @@ public class AuthController {
                      HttpStatus.BAD_REQUEST);
     	}   	
     	
+    }
+    
+    @GetMapping("/getUserSettings")
+    public ResponseEntity<?> getUserSettings() {
+    	if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    		SettingDTO setting = new SettingDTO(logged.getTenant().getSetting());
+    		setting.setTenantId(logged.getTenant().getId());
+    		return new ResponseEntity<SettingDTO>(setting, HttpStatus.OK);
+    	} else {
+   		 return new ResponseEntity<>("Fail ->No logged user", HttpStatus.BAD_REQUEST);
+    	}   	
+    }
+    
+    @PutMapping("/updateSettings/{tenantId}")
+    public ResponseEntity<?> updateSettings(@PathVariable Long tenantId, @RequestBody SettingDTO settingDTO){
+    	Tenant tenant = tenantRepository.getOne(tenantId);
+    	if(settingDTO.isUseSap() == true && settingDTO.getMasterDataFormat().equals("WITH_ID")) {
+    		long id = 1;
+    		Setting setting = settingRepository.getOne(id);
+    		tenant.setSetting(setting);
+    		tenantRepository.save(tenant);
+    	} else if (settingDTO.isUseSap() == true && settingDTO.getMasterDataFormat().equals("WITHOUT_ID")) {
+    		long id = 2;
+    		Setting setting = settingRepository.getOne(id);
+    		tenant.setSetting(setting);
+    		tenantRepository.save(tenant);
+    	} else {
+    		long id = 3;
+    		Setting setting = settingRepository.getOne(id);
+    		tenant.setSetting(setting);
+    		tenantRepository.save(tenant);
+    	}
+    	
+    	return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @GetMapping("getLoggedTenant")
+    public ResponseEntity<?> getLoggedTenant(){
+    	if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    		return new ResponseEntity<Long>(logged.getTenant().getId(), HttpStatus.OK);
+    	} else {
+    		 return new ResponseEntity<>("Fail ->No logged user",
+                     HttpStatus.BAD_REQUEST);
+    	}   
     }
 }

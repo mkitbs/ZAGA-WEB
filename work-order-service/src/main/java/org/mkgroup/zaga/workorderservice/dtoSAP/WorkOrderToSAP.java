@@ -105,7 +105,11 @@ public class WorkOrderToSAP {
 			
 			mat.setMaterialUnit(sp.getMaterial().getUnit());
 			mat.setCharge("");
-			mat.setDeleted("");
+			if(sp.isDeleted()) {
+				mat.setDeleted("X");
+			}else {
+				mat.setDeleted("");
+			}
 			if(sp.getSpent() == -1) {
 				mat.setSpentQuantity("0.000");
 			}else {
@@ -186,7 +190,11 @@ public class WorkOrderToSAP {
 				woeSAP.setMachineEffectiveHours("0.00000");
 			}
 			woeSAP.setMachineTime("0.0");
-			woeSAP.setDeleted("");
+			if(wow.isDeleted()) {
+				woeSAP.setDeleted("X");
+			}else {
+				woeSAP.setDeleted("");
+			}
 			woeSAP.setWebBackendId(wow.getId());
 			this.WorkOrderToEmployeeNavigation.getResults().add(woeSAP);
 		}

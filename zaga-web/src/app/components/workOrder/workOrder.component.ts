@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { WorkOrderService } from "src/app/service/work-order.service";
 import { WorkOrder } from "src/app/models/WorkOrder";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-workOrder",
@@ -23,47 +24,22 @@ export class WorkOrderComponent implements OnInit {
 
   urlParam = this.route.snapshot.params.urlParam;
 
+  my = true;
+  woSapId;
+  loading;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private workOrderService: WorkOrderService
+    private workOrderService: WorkOrderService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
     if (this.urlParam == "closing") {
       this.getAllWorkOrdersByStatus("IN_PROGRESS");
     } else {
-      this.workOrderService.getAll().subscribe((data) => {
-        this.workOrders = data;
-        console.log(this.workOrders);
-        if (this.workOrders.length == 0) {
-          this.empty = true;
-        } else {
-          this.empty = false;
-          this.workOrders.forEach((workOrder) => {
-            var date = "";
-            date =
-              workOrder.date.day.split(" ")[0] +
-              "." +
-              workOrder.date.month +
-              "." +
-              workOrder.date.year +
-              ".";
-            workOrder.date = date;
-            if (workOrder.status == "NEW") {
-              workOrder.status = "Novi";
-            } else if (workOrder.status == "IN_PROGRESS") {
-              workOrder.status = "U radu";
-            } else if (workOrder.status == "CLOSED") {
-              workOrder.status = "Zatvoren";
-            }
-            if(workOrder.sapId == 0){
-              workOrder.sapId = null;
-            }
-          });
-        }
-        this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
-      });
+     this.getMyWorkOrders();
     }
 
   }
@@ -106,8 +82,9 @@ export class WorkOrderComponent implements OnInit {
     }
   }
 
-  getWorkOrderId(id) {
-    this.workOrderId = id;
+  getWorkOrderId(wo) {
+    this.workOrderId = wo.id;
+    this.woSapId = wo.sapId;
   }
 
   createWorkOrderCopy() {
@@ -140,13 +117,17 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getAllWorkOrdersByStatus(status) {
+    this.spinner.show();
     this.workOrderService.getAllByStatus(status).subscribe((res) => {
+      this.spinner.hide();
       this.workOrders = res;
 
       if (this.workOrders.length == 0) {
         this.empty = true;
+        this.my = true;
       } else {
         this.empty = false;
+        this.my = false;
         this.workOrders.forEach((workOrder) => {
           var date = "";
           date =
@@ -170,11 +151,18 @@ export class WorkOrderComponent implements OnInit {
         });
       }
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error => {
+      this.spinner.hide();
     });
   }
 
   getAll(){
+    this.my = false;
+    this.loading = true;
+    this.spinner.show();
     this.workOrderService.getAll().subscribe((data) => {
+      this.loading = false;
+      this.spinner.hide();
       this.workOrders = data;
       console.log(this.workOrders);
       if (this.workOrders.length == 0) {
@@ -203,6 +191,49 @@ export class WorkOrderComponent implements OnInit {
           }
         });
       }
+      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error => {
+      this.spinner.hide();
     });
+  }
+
+  getMyWorkOrders(){
+    this.my = true;
+    this.loading = true;
+    this.spinner.show();
+    this.workOrderService.getMyWorkOrders().subscribe(data => {
+      this.loading = false;
+      this.spinner.hide();
+      this.workOrders = data;
+      if (this.workOrders.length == 0) {
+        this.empty = true;
+      } else {
+        this.empty = false;
+        this.workOrders.forEach((workOrder) => {
+          var date = "";
+          date =
+            workOrder.date.day.split(" ")[0] +
+            "." +
+            workOrder.date.month +
+            "." +
+            workOrder.date.year +
+            ".";
+          workOrder.date = date;
+          if (workOrder.status == "NEW") {
+            workOrder.status = "Novi";
+          } else if (workOrder.status == "IN_PROGRESS") {
+            workOrder.status = "U radu";
+          } else if (workOrder.status == "CLOSED") {
+            workOrder.status = "Zatvoren";
+          }
+          if(workOrder.sapId == 0){
+            workOrder.sapId = null;
+          }
+        });
+      }
+      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error =>{
+      this.spinner.hide();
+    })
   }
 }

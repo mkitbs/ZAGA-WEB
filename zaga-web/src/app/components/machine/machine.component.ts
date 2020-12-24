@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Machine } from 'src/app/models/Machine';
 import { MachineGroup } from 'src/app/models/MachineGroup';
 import { MachineGroupService } from 'src/app/service/machine-group.service';
@@ -12,7 +13,11 @@ import { MachineService } from 'src/app/service/machine.service';
 })
 export class MachineComponent implements OnInit {
 
-  constructor(private machineService:MachineService, private machineGroupSerivce:MachineGroupService) { }
+  constructor(
+    private machineService:MachineService, 
+    private machineGroupSerivce:MachineGroupService,
+    private spinner: NgxSpinnerService,
+  ) { }
 
   machines : Machine[] = [];
   machineGroups : MachineGroup[] = [];
@@ -22,6 +27,8 @@ export class MachineComponent implements OnInit {
   machineFC: FormControl = new FormControl("");
   machineTypeFC: FormControl = new FormControl("");
   machineGroupFC: FormControl = new FormControl("");
+
+  loading;
 
   ngOnInit() {
    this.getAll();
@@ -42,12 +49,16 @@ export class MachineComponent implements OnInit {
   }
 
   getAll(){
+    this.spinner.show();
+    this.loading = true;
     this.machineGroupSerivce.getAll().subscribe(data => {
       //data = this.convertKeysToLowerCase(data);
       this.machineGroups = data;
       console.log(this.machineGroups)
       this.machineService.getAll().subscribe(data => {
         //data = this.convertKeysToLowerCase(data);
+        this.spinner.hide();
+        this.loading = false;
         this.machines = data;
         console.log(this.machines)
         this.machines.forEach(machine => {
@@ -71,7 +82,11 @@ export class MachineComponent implements OnInit {
           }
           machine.machineGroupName = this.machineGroups.find(machineGroup => machineGroup.dbId == machine.machineGroup).Name
         })
+      }, error =>{
+        this.spinner.hide();
       })
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

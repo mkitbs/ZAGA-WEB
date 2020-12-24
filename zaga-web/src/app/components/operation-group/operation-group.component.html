@@ -24,9 +24,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="operationGroups.length == 0 && loading == false">
+        <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-4" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value; let j = index">
+          <div *ngIf="operationGroup === -1" class="center">
+            <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
+          </div>
+          <div *ngIf="operationGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -63,7 +71,7 @@
         </div>
       </div>
     </div>
- 
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--laptop version-->
 <div class="d-none d-lg-block d-xl-none">
@@ -90,9 +98,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="operationGroups.length == 0 && loading == false">
+        <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-5" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupLaptop.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupLaptop.value; let j = index">
+          <div *ngIf="operationGroup === -1" class="center">
+            <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
+          </div>
+          <div *ngIf="operationGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -127,7 +143,7 @@
         </div>
       </div>
     </div>
- 
+    <ngx-spinner></ngx-spinner>
 </div>
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
@@ -154,9 +170,17 @@
           </form>
         </div>
       </div>
+      <div class="center" *ngIf="operationGroups.length == 0 && loading == false">
+        <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
+      </div>
       <div class="row card-group">
-        <div class="col-7" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value; let j = index">
-          <div class="card mb-4" style="width: 30.2rem;">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value; let j = index">
+          <div *ngIf="operationGroup === -1" class="center">
+            <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
+          </div>
+          <div *ngIf="operationGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
               <div class="row">
                 <div
@@ -191,5 +215,5 @@
         </div>
       </div>
     </div>
-  
+    <ngx-spinner></ngx-spinner>
 </div>

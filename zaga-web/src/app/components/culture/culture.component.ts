@@ -1,6 +1,7 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Culture } from 'src/app/models/Culture';
 import { CultureGroup } from 'src/app/models/CultureGroup';
 import { CultureGroupService } from 'src/app/service/culture-group.service';
@@ -15,7 +16,8 @@ export class CultureComponent implements OnInit {
 
   constructor(
     private cultureService:CultureService,
-    private cultureGroupService:CultureGroupService
+    private cultureGroupService:CultureGroupService,
+    private spinner: NgxSpinnerService,
   ) { }
 
   cultures: Culture[] = [];
@@ -33,6 +35,8 @@ export class CultureComponent implements OnInit {
   productionTypeFC: FormControl = new FormControl("");
   cultureGroupFC: FormControl = new FormControl("");
 
+  loading;
+
   ngOnInit() {
     this.getAll();
     this.getAllCultureTypes();
@@ -40,9 +44,13 @@ export class CultureComponent implements OnInit {
   }
 
   getAll(){
+    this.spinner.show();
+    this.loading = true;
     this.cultureGroupService.getAll().subscribe(data => {
       this.cultureGroups = data;
       this.cultureService.getAll().subscribe(data => {
+        this.loading = false;
+        this.spinner.hide();
         this.cultures = data;
         this.cultures.forEach(culture => {
           if(culture.Type == "FRUIT"){
@@ -53,15 +61,23 @@ export class CultureComponent implements OnInit {
             culture.Type = "RATARSKA";
           } else if(culture.Type == "VITICULTURE"){
             culture.Type = "VINOGRADARSKA";
+          } else if(culture.Type == "OTHER"){
+            culture.Type = "OSTALO";
           }
           if(culture.OrgKon == "ORGANIC"){
             culture.OrgKon = "ORGANSKA";
           } else if(culture.OrgKon == "CONVENTIONAL"){
             culture.OrgKon = "KONVENCIONALNA";
+          } else if(culture.OrgKon == "OTHER"){
+            culture.OrgKon = "OSTALO";
           }
           culture.cultureGroupName = this.cultureGroups.find(x => x.dbId == culture.cultureGroup).Name;
         })
+      }, error =>{
+        this.spinner.hide();
       });
+    }, error =>{
+      this.spinner.hide();
     });
   }
 
@@ -88,6 +104,8 @@ export class CultureComponent implements OnInit {
           culture.Type = "RATARSKA";
         } else if(culture.Type == "VITICULTURE"){
           culture.Type = "VINOGRADARSKA";
+        } else if(culture.Type == "OTHER"){
+          culture.Type = "OSTALO";
         }
       })
     })
@@ -101,6 +119,8 @@ export class CultureComponent implements OnInit {
           culture.OrgKon = "ORGANSKA";
         } else if(culture.OrgKon == "CONVENTIONAL"){
           culture.OrgKon = "KONVENCIONALNA";
+        } else if(culture.OrgKon == "OTHER"){
+          culture.OrgKon = "OSTALO";
         }
       })
     })

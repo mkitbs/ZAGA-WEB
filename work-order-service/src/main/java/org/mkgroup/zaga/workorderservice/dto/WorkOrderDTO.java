@@ -100,8 +100,11 @@ public class WorkOrderDTO {
 		this.materials = new ArrayList<SpentMaterialDTO>();
 		for(SpentMaterial sm : wo.getMaterials()) {
 			if(sm.getMaterial().getId().equals(idMaterial)) {
-				SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
-				this.materials.add(smDTO);
+				if(sm.isDeleted() != true) {
+					SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
+					this.materials.add(smDTO);
+				}
+				
 			}
 		}
 		
@@ -125,8 +128,11 @@ public class WorkOrderDTO {
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
 		for(WorkOrderWorker wow : wo.getWorkers()) {
 			if(wow.getUser().getPerNumber().equals(idWorker)) {
-				WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
-				this.workers.add(wowDTO);
+				if(wow.isDeleted()!=true) {
+					WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+					this.workers.add(wowDTO);
+				}
+				
 			}
 			
 		}
@@ -151,8 +157,11 @@ public class WorkOrderDTO {
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
 		for(WorkOrderWorker wow : wo.getWorkers()) {
 			if(wow.getMachine().getName().equals(machineName)) {
-				WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
-				this.workers.add(wowDTO);
+				if(wow.isDeleted() != true) {
+					WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+					this.workers.add(wowDTO);
+				}
+				
 			}
 			
 		}

@@ -10,9 +10,13 @@ export class SearchCultureCultureGroupPipe implements PipeTransform {
     if(!query) {
       return cultures;
     }
-    return cultures.filter((culture) =>
+    var result = cultures.filter((culture) =>
       this.matchValue(culture, query)
     );
+    if(result.length === 0){
+      return[-1]
+    }
+    return result;
   }
 
   matchValue(data, value) {

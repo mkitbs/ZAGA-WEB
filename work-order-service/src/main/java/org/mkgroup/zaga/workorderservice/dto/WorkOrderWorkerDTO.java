@@ -25,6 +25,7 @@ public class WorkOrderWorkerDTO {
 	private Double sumState;
 	private Double fuel;
 	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
+	private boolean deleted;
 	
 	public WorkOrderWorkerDTO(WorkOrderWorker wow) {
 		this.id = wow.getId();
@@ -33,6 +34,7 @@ public class WorkOrderWorkerDTO {
 		this.nightPeriod = wow.getNightPeriod();
 		this.dayPeriod = wow.getDayPeriod();
 		this.workPeriod = wow.getWorkPeriod();
+		this.deleted = wow.isDeleted();
 		this.machine = new MachineDTO(wow.getMachine());
 		if(wow.getConnectingMachine() != null) {
 			this.connectingMachine = new MachineDTO(wow.getConnectingMachine());

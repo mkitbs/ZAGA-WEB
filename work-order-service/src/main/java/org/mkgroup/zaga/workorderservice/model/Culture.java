@@ -55,8 +55,10 @@ public class Culture {
 		this.name = c.getName();
 		if(c.getOrgCon().equals("K")) {
 			this.orgCon = OrgCon.CONVENTIONAL;
-		}else {
+		}else if(c.getOrgCon().equals("O")) {
 			this.orgCon = OrgCon.ORGANIC;
+		} else {
+			this.orgCon = OrgCon.OTHER;
 		}
 		this.erpId = c.getErpId();
 		switch(c.getType()) {
@@ -72,6 +74,8 @@ public class Culture {
 		case "G": 
 			this.type = CultureType.VITICULTURE;
 			break;
+		case "":
+			this.type = CultureType.OTHER;
 		default: 
 			break;
 		}

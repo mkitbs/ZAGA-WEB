@@ -1,3 +1,5 @@
+import { IHash } from "../components/field/field.component";
+
 export class Field {
   Id;
   Name;
@@ -7,4 +9,5 @@ export class Field {
   fieldGroup;
   dbId;
   name;
+  coordinates: any[] = [];
 }

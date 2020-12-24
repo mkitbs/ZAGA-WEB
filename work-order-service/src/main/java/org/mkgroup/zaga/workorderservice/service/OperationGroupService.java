@@ -45,6 +45,7 @@ public class OperationGroupService {
 		//Call SAP and retrieve operationGroupSet
 		ResponseEntity<Object> operationGroupSet = 
 				gwProxy.fetchOperationGroups("json", "Basic " + authHeader);
+		System.out.println(operationGroupSet);
 		String oDataString = operationGroupSet.getBody().toString().replace(":", "-");
 		oDataString = formatJSON(oDataString);
 		//Map to specific object

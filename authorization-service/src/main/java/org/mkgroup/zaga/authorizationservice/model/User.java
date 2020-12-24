@@ -13,6 +13,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
@@ -64,25 +65,29 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles;
+    
+    @ManyToOne
+    private Tenant tenant;
 	
 	public User() {
 		this.enabled = false;
 	}
 
 	public User(String name, String surname, Long address, String email, 
-				String password, Set<Role> roles) {
+				String password, Set<Role> roles, Tenant tenant) {
 		super();
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
 		this.password = password;
+		this.tenant = tenant;
 		//this.enabled = true;
 		//this.nonLocked = true;
 		this.roles = roles;
 	}
 
 	public User(Long id, String name, String surname, Long addressId, String email, String password,
-			boolean enabled, boolean nonLocked, Date dateOfBirth, String telephone) {
+			boolean enabled, boolean nonLocked, Date dateOfBirth, String telephone, Tenant tenant) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -93,6 +98,7 @@ public class User {
 		this.nonLocked = nonLocked;
 		this.dateOfBirth = dateOfBirth;
 		this.telephone = telephone;
+		this.tenant = tenant;
 	}
 
 	public User(String email, String password, Set<Role> roles) {

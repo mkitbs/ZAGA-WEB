@@ -13,7 +13,14 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchDate placeholder="Pretražite po datumu" />
+          <input 
+            ngbDatepicker 
+            #day="ngbDatepicker" 
+            (click)="day.toggle()"
+            matInput 
+            #searchDate
+            placeholder="Pretražite po datumu"
+          />
         </mat-form-field>
       </div>
       <div class="col">
@@ -42,81 +49,102 @@
         <i class="fa fa-plus"></i> Kreiraj novi nalog
       </button>
     </a>
-    <button class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getAll()">
+    <button *ngIf="my" class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getAll()">
       <i class="fa fa-tasks"></i> Svi
     </button>
-    <button class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
+    <button *ngIf="!my" class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getMyWorkOrders()">
+      <i class="fa fa-tasks"></i> Moji
+    </button>
+    <button *ngIf="!empty" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
       (click)="getAllWorkOrdersByStatus('NEW')">
       <i class="fa fa-tasks"></i> Novi
     </button>
-    <button class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
+    <button *ngIf="!empty" class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('IN_PROGRESS')">
       <i class="fa fa-tasks"></i> U radu
     </button>
-    <button class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
+    <button *ngIf="!empty" class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('CLOSED')">
       <i class="fa fa-tasks"></i> Zatvoreni
     </button>
   </div>
   <br />
-  <span *ngIf="empty" style="font-size: 15px; float: left">Nema kreiranih naloga.</span>
-  <table class="table table-hover tabela-nalozi">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
-              class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
-        <th scope="col">ATM</th>
-        <th scope="col">Datum</th>
-        <th scope="col">Parcela</th>
-        <th scope="col">Površina</th>
-        <th scope="col">Usev</th>
-        <th scope="col">Odgovorna osoba</th>
-        <th scope="col">Status</th>
-        <th scope="col">Kopiraj</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let workOrder of workOrders 
-          | SearchWorkOrdersTable: searchTable.value
-          | SearchWorkOrdersDate: searchDate.value
-          | SearchWorkOrdersCrop: searchCrop.value
-          | SearchWorkOrdersOperation: searchOperation.value;
-          let j = index" style="cursor: pointer">
-        <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
-        <td (click)="changeRoute(workOrder.id)">
-          {{ workOrder.sapId }}
-        </td>
-        <td (click)="changeRoute(workOrder.id)">
-          {{ workOrder.operationName }}
-        </td>
-        <td (click)="changeRoute(workOrder.id)">{{ workOrder.date }}</td>
-        <td (click)="changeRoute(workOrder.id)">{{ workOrder.table }}</td>
-        <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
-        <td (click)="changeRoute(workOrder.id)">
-          {{ workOrder.cropName.split(",")[1] }}
-        </td>
-        <td (click)="changeRoute(workOrder.id)">
-          {{ workOrder.responsibleName }}
-        </td>
-        <td [ngClass]="{
-            statusNovi: workOrder.status == 'Novi',
-            statusURadu: workOrder.status == 'U radu',
-            statusZatvoren: workOrder.status == 'Zatvoren'
-          }" (click)="changeRoute(workOrder.id)">
-          {{ workOrder.status }}
-        </td>
-        <td>
-          <div class="form-group">
-            <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
-              style="float: center" (click)="getWorkOrderId(workOrder.id)">
-              <i class="fa fa-copy"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="empty && !my && !loading" class="center">
+    <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
+  </div>
+  <div *ngIf="empty && my && !loading" class="center">
+    <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px;">Niste kreirali ni jedan nalog</h4>
+  </div>
+  <ng-container *ngFor="let workOrder of workOrders 
+  | SearchWorkOrdersTable: searchTable.value
+  | SearchWorkOrdersDate: searchDate.value
+  | SearchWorkOrdersCrop: searchCrop.value
+  | SearchWorkOrdersOperation: searchOperation.value; let i = index">
+    <div *ngIf="workOrder === -1" class="center">
+      <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
+    </div>
+    <table *ngIf="!empty && workOrder !==-1 && i==0" class="table table-hover tabela-nalozi">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
+                class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
+          <th scope="col">ATM</th>
+          <th scope="col">Datum</th>
+          <th scope="col">Parcela</th>
+          <th scope="col">Površina</th>
+          <th scope="col">Usev</th>
+          <th scope="col">Odgovorna osoba</th>
+          <th scope="col">Status</th>
+          <th scope="col">Kopiraj</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let workOrder of workOrders 
+            | SearchWorkOrdersTable: searchTable.value
+            | SearchWorkOrdersDate: searchDate.value
+            | SearchWorkOrdersCrop: searchCrop.value
+            | SearchWorkOrdersOperation: searchOperation.value;
+            let j = index" style="cursor: pointer">
+          <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
+          <td (click)="changeRoute(workOrder.id)">
+            {{ workOrder.sapId }}
+          </td>
+          <td (click)="changeRoute(workOrder.id)">
+            {{ workOrder.operationName }}
+          </td>
+          <td (click)="changeRoute(workOrder.id)">{{ workOrder.date }}</td>
+          <td (click)="changeRoute(workOrder.id)">{{ workOrder.table }}</td>
+          <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
+          <td (click)="changeRoute(workOrder.id)">
+            {{ workOrder.cropName.split(",")[1] }}
+          </td>
+          <td (click)="changeRoute(workOrder.id)">
+            {{ workOrder.responsibleName }}
+          </td>
+          <td [ngClass]="{
+              statusNovi: workOrder.status == 'Novi',
+              statusURadu: workOrder.status == 'U radu',
+              statusZatvoren: workOrder.status == 'Zatvoren'
+            }" (click)="changeRoute(workOrder.id)">
+            {{ workOrder.status }}
+          </td>
+          <td>
+            <div class="form-group">
+              <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
+                style="float: center" (click)="getWorkOrderId(workOrder)">
+                <i class="fa fa-copy"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ngx-spinner></ngx-spinner>
 </div>
 
 <div class="container d-md-none">
@@ -216,7 +244,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-sticky-note-o"></i> Radni nalog
+          <i class="fa fa-sticky-note-o"></i> Radni nalog #{{woSapId}}
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeButtonMaterialModal>
           <span aria-hidden="true">&times;</span>

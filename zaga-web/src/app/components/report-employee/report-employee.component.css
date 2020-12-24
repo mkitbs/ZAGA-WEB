@@ -72,3 +72,12 @@ th {
 ::ng-deep .mat-form-field-empty.mat-form-field-label {
   color: #5c7495 !important;
 }
+
+.center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 30%;
+  margin-bottom: auto;
+  width: 20%;
+}

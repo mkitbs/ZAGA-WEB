@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.MaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
@@ -21,6 +23,7 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
@@ -32,12 +35,15 @@ import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -89,7 +95,8 @@ public class SpentMaterialService {
 	
 	public void deleteSpentMaterial(UUID id) {
 		try {
-			spentMaterialRepo.deleteById(id);
+			spentMaterialRepo.deleteMaterial(id);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -443,8 +450,22 @@ public class SpentMaterialService {
 
 	}
 	
-	public List<MaterialReportDTO> getMaterialsForReport(){
-		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId();
+	public List<MaterialReportDTO> getMaterialsForReport(String sapUserId){
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
+		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId(user.getBody().getTenant().getId());
+		
 		MaterialReportDTO report = new MaterialReportDTO();
 		List<MaterialReportDTO> retValues = new ArrayList<MaterialReportDTO>();
 		if(spentMaterials.size() > 0) {
@@ -456,7 +477,10 @@ public class SpentMaterialService {
 		}
 		for(int i = 0; i<spentMaterials.size()-1; i++) {
 			if(spentMaterials.get(i).getMaterial().getId().equals(spentMaterials.get(i+1).getMaterial().getId())) {
-				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				if(!spentMaterials.get(i).getWorkOrder().equals(spentMaterials.get(i+1).getWorkOrder())) {
+					report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
+				}
+				
 				if(i+1 == spentMaterials.size()-1) {
 					retValues.add(report);
 				}
@@ -465,7 +489,7 @@ public class SpentMaterialService {
 				report = new MaterialReportDTO();
 				report.setMaterial(new SpentMaterialDTO(spentMaterials.get(i+1)));
 				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
-				if(i+1 == spentMaterials.size()) {
+				if(i+1 == spentMaterials.size()-1) {
 					retValues.add(report);
 				}
 			}

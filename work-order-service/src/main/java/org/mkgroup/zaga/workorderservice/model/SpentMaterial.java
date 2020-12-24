@@ -40,4 +40,5 @@ public class SpentMaterial {
 	
 	private int erpId = 0;
 	
+	private boolean deleted = false; //logicko brisanje zbog SAP-a
 }

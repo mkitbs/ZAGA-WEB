@@ -124,7 +124,11 @@
     </div>
   </form>
   <div class="break-class pt-2 mb-4"></div>
-  <table class="table table-hover tabela-nalozi table-fixed">
+  <div *ngIf="machines.length == 0" class="center">
+    <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
+  </div>
+  <table *ngIf="machines.length > 0" class="table table-hover tabela-nalozi table-fixed">
     <thead>
       <tr >
         <th scope="col" style="vertical-align: middle;">Mašina</th>
@@ -143,7 +147,14 @@
     <tbody>
       <ng-container *ngFor="let machine of machines | ReportMachineMachine: searchMachine.value; 
         let i = index" >
-        <tr *ngFor="let workOrder of machine.workOrders 
+        <tr *ngIf="machine === -1">
+          <td colspan="11" >
+            <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
+            <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
+          </td>
+        </tr>
+        <ng-container 
+        *ngFor="let workOrder of machine.workOrders 
           | SearchWorkOrdersCrop: searchCrop.value
           | SearchWorkOrdersTable: searchTable.value
           | SearchWorkOrdersOperation: searchOperation.value
@@ -152,30 +163,34 @@
           | SearchWoBetweenDates: filters
           | SearchMachineCoupling: searchCouplingMachine.value; 
           let j = index">
-          <ng-container *ngFor="let wo of workOrder.workers; let y = index">
-            <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{wo.machine.Name}}</td>
-            <ng-template #elseBlockName><td></td></ng-template>
-            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
-            <td>{{ workOrder.operationName }}</td>
-            <td>{{ workOrder.date }}</td>
-            <td>{{ workOrder.table }}</td>
-            <td>{{ workOrder.cropName.split(",")[1] }}</td>
-            <td>{{ wo.user.Name }}</td>
-            <td>{{ wo.connectingMachine.Name }}</td>
-            <td *ngIf="wo.finalState != -1; else elseFinalState">{{ wo.sumState }} MČ</td>
-            <ng-template #elseFinalState><td>/</td></ng-template>
-            <td *ngIf="wo.fuel != -1; else elseFuel">{{ wo.fuel }} l</td>
-            <ng-template #elseFuel><td>/</td></ng-template>
-            <td [ngClass]="{
-                statusNovi: workOrder.status == 'Novi',
-                statusURadu: workOrder.status == 'U radu',
-                statusZatvoren: workOrder.status == 'Zatvoren'
-                }" 
-            >
-              {{ workOrder.status }}
-            </td>
-          </ng-container>
+
+       
+        <tr *ngFor="let wo of workOrder.workers; let y = index">
+         
+              <td *ngIf="j==0 && y==0; else elseBlockName" style="font-weight: bold;">{{wo.machine.Name}}</td>
+              <ng-template #elseBlockName><td></td></ng-template>
+              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+              <td>{{ wo.operation.Name }}</td>
+              <td>{{ workOrder.date }}</td>
+              <td>{{ workOrder.table }}</td>
+              <td>{{ workOrder.cropName.split(",")[1] }}</td>
+              <td>{{ wo.user.Name }}</td>
+              <td>{{ wo.connectingMachine.Name }}</td>
+              <td *ngIf="wo.finalState != -1; else elseFinalState">{{ wo.sumState }} MČ</td>
+              <ng-template #elseFinalState><td>/</td></ng-template>
+              <td *ngIf="wo.fuel != -1; else elseFuel">{{ wo.fuel }} l</td>
+              <ng-template #elseFuel><td>/</td></ng-template>
+              <td [ngClass]="{
+                  statusNovi: workOrder.status == 'Novi',
+                  statusURadu: workOrder.status == 'U radu',
+                  statusZatvoren: workOrder.status == 'Zatvoren'
+                  }" 
+              >
+                {{ workOrder.status }}
+              </td>
+            
         </tr>
+      </ng-container>
         <tr>
           <ng-container *ngFor="let workOrder of machine.workOrders 
             | SearchWorkOrdersCrop: searchCrop.value
@@ -187,7 +202,7 @@
             | SearchMachineCoupling: searchCouplingMachine.value; 
             let i = index ">
             <ng-container >
-              <td *ngIf="i==0">Σ {{ machine.machine.Name }}</td>
+              <td *ngIf="i==0 && workOrder !== -1">Σ {{ machine.machine.Name }}</td>
               <td *ngIf="i==0"></td>
               <td *ngIf="i==0"></td>
               <td *ngIf="i==0"></td>
@@ -205,7 +220,7 @@
                   | ReportMaterialSapId: searchWorkOrder.value
                   | SearchWoBetweenDates: filters
                   | SearchMachineCoupling: searchCouplingMachine.value)
-                }} MČ
+                }}
               </td>
               <td style="font-weight: bold;" *ngIf="i==0">
                 {{
@@ -217,7 +232,7 @@
                   | ReportMaterialSapId: searchWorkOrder.value
                   | SearchWoBetweenDates: filters
                   | SearchMachineCoupling: searchCouplingMachine.value)
-                }} l
+                }}
               </td>
               <td *ngIf="i==0"></td>
             </ng-container>

@@ -1,6 +1,7 @@
 import { ɵAnimationGroupPlayer } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { FieldGroup } from 'src/app/models/FieldGroup';
 import { FieldGroupService } from 'src/app/service/field-group.service';
 
@@ -11,17 +12,25 @@ import { FieldGroupService } from 'src/app/service/field-group.service';
 })
 export class FieldGroupComponent implements OnInit {
 
-  constructor(private fieldGroupService:FieldGroupService) { }
+  constructor(private fieldGroupService:FieldGroupService, private spinner: NgxSpinnerService,) { }
 
   fieldGroups : FieldGroup[] = [];
   fieldGroup : FieldGroup = new FieldGroup();
 
   fieldGroupFC: FormControl = new FormControl("")
 
+  loading;
+
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.fieldGroupService.getAll().subscribe(data => {
+      this.spinner.hide();
+      this.loading = false;
       //data = this.convertKeysToLowerCase(data);
       this.fieldGroups = data;
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

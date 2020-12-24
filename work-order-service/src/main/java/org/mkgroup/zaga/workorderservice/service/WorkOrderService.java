@@ -11,10 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderDTO;
@@ -23,18 +27,21 @@ import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,11 +49,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 
 @Service
 public class WorkOrderService {
@@ -90,6 +98,9 @@ public class WorkOrderService {
 	WorkOrderMachineRepository womRepo;
 	
 	@Autowired
+	MaterialRepository materialRepo;
+	
+	@Autowired
 	SAP4HanaProxy sap4hana;
 	
 	@Autowired
@@ -129,6 +140,21 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			workOrder.setUserCreatedSapId(Long.parseLong(sapUserId));
+			
+			RestTemplate rest = new RestTemplate();
+			HttpServletRequest requesthttp = 
+			        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+			                .getRequest();
+
+			String token = (requesthttp.getHeader("Token"));
+			System.out.println(token);
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", "Bearer " + token);
+			HttpEntity<String> request2send = new HttpEntity<String>(headers);
+			ResponseEntity<Long> tenantId = rest.exchange(
+					"http://localhost:8091/auth/getLoggedTenant/", 
+					HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
+			workOrder.setTenantId(tenantId.getBody());
 			
 			workOrder = workOrderRepo.save(workOrder);
 			
@@ -269,7 +295,7 @@ public class WorkOrderService {
 		    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 		    	JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 			    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
-			    
+			    System.out.println(arrayMaterial);
 		    	
 		    	for(int i = 0; i <array.size(); i++) {
 		    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
@@ -280,11 +306,22 @@ public class WorkOrderService {
 		    	}
 		    	
 		    	for(int i = 0; i <arrayMaterial.size(); i++) {
-		    		UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
-		    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+		    		if(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString().equals("")) {
+		    			SpentMaterial sm = new SpentMaterial();
+		    			//long id = 10000049;
+		    			Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
+		    			sm.setMaterial(material);
+		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+		    			spentMaterialRepo.save(sm);
+		    		} else {
+		    			UUID uid = UUID.fromString(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString());
+			    		SpentMaterial spentMat = spentMaterialRepo.getOne(uid);
+			    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
+			    		spentMaterialRepo.save(spentMat);
+		    		}
 		    		
-		    		spentMat.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
-		    		spentMaterialRepo.save(spentMat);
+		    		
+		    		
 		    	}
 		    	
 		    	log.info("Sending work order to SAP successfuly finished");
@@ -322,15 +359,44 @@ public class WorkOrderService {
 		    return sapResponse;
 		}
 	
-	public List<WorkOrderDTO> getAll(){
+	public List<WorkOrderDTO> getAll(String sapUserId, HttpServletRequest request, HttpServletResponse response){
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+	    
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
+		for(WorkOrder workOrder : workOrders) {
+			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
+				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
+			}
+		}
+		return workOrdersDTO;
+	}
+	
+	public List<WorkOrderDTO> getMyWorkOrders(String sapUserId){
+		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId));
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+	    
 		for(WorkOrder workOrder : workOrders) {
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 			workOrdersDTO.add(workOrderDTO);
 		}
 		return workOrdersDTO;
 	}
+	
 	
 	public WorkOrderDTO getOne(UUID id) {
 		try {
@@ -352,6 +418,62 @@ public class WorkOrderService {
 			return null;
 		}
 	}
+	
+	public SAPResponse updateDataWorkOrder(WorkOrder workOrder) throws Exception {
+		SAPResponse retVal = new SAPResponse();
+		
+		Map<String, String> headerValues = getHeaderValues();
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+		
+		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		
+		log.info("Updating work order with employee to SAP started");
+	    
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+  		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+  		headersRestTemplate.set("X-CSRF-Token", csrfToken);
+  		headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+  		headersRestTemplate.set("Cookie", cookies);
+  		System.out.println("Token:" + csrfToken);
+  		System.out.println(headersRestTemplate.toString());
+  		System.out.println("KA SAPU -> " + workOrderSAP.toString());
+  		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+		
+  		ResponseEntity<Object> response = restTemplate.exchange(
+	  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
+  		
+		System.out.println(response);
+	    if(response == null) {
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    }
+	    System.out.println("REZZ" + response.getBody());
+	    
+	    String oDataString = response.toString().replace(":", "-");
+	    String formatted = formatJSON(oDataString);
+	    System.out.println(formatted + "ASASA");
+	    Pattern pattern = Pattern.compile("ReturnStatus:(.*?),");
+		Matcher matcher = pattern.matcher(formatted);
+		String status = "";
+		if (matcher.find())
+		{
+		    status = matcher.group(1);
+		}
+		
+	    
+	    if(status.equals("S")) {
+	    	System.out.println("USPESNO DODAT");
+	    	retVal.setSuccess(true);
+	    	retVal.getMessage().add("Radni nalog uspesno azuriran");
+	    }else if(status.equals("E")){
+	    	System.out.println("ERROR");
+	    	retVal.setSuccess(false);
+	    	retVal.getMessage().add("Greska prilikom azuriranja");
+	    }
+	
+	    return retVal;
+	} 
 	
 	public void updateWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
@@ -443,7 +565,7 @@ public class WorkOrderService {
 	
 	}
 	
-	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate) throws Exception {
+	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate, String sapUserId) throws Exception {
 		
 		SAPResponse sapResponse = new SAPResponse();
 		
@@ -465,6 +587,23 @@ public class WorkOrderService {
 		copy.setMaterials(new ArrayList<SpentMaterial>());
 		copy.setDate(date);
 		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
+		copy.setUserCreatedSapId(Long.parseLong(sapUserId));
+		
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<Long> tenantId = rest.exchange(
+				"http://localhost:8091/auth/getLoggedTenant/", 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
+		copy.setTenantId(tenantId.getBody());
+		
 		copy = workOrderRepo.save(copy);
 		UUID workOrderId = copy.getId();
 		

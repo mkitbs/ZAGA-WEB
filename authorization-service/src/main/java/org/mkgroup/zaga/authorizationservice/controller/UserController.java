@@ -14,6 +14,7 @@ import org.mkgroup.zaga.authorizationservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +33,17 @@ public class UserController {
 	@GetMapping("getAllUsers")
 	public ResponseEntity<?> getAllUsers(){
 		List<User> users = userRepo.findAll();
+		User logged = new User();
+		if(userRepo.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		logged = userRepo.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    	}
 		List<UserDTO> retValues = new ArrayList<UserDTO>();
 		for(User user : users) {
-			UserDTO userDTO = new UserDTO(user);
-			retValues.add(userDTO);
+			if(logged.getTenant().equals(user.getTenant())) {
+				UserDTO userDTO = new UserDTO(user);
+				retValues.add(userDTO);
+			}
+			
 		}
 		return new ResponseEntity<List<UserDTO>>(retValues, HttpStatus.OK);
 	}

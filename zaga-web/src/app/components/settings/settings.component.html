@@ -1,571 +1,983 @@
 <navbar></navbar>
 <div class="background">
-<div class="container">
-  <div style="padding-top: 70px;"></div>
-  <h3 class="mt-2 mb-2">Podešavanja</h3> 
-  <div style="padding-bottom: 20px;"></div>
-  <div class="row card-group">
-    <div class="col-4">
-      <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="sapSettings()">
-        <div class="card-body">
-          <div class="row">
-            <div
-              class="col-md-auto"
-              style="width: fit-content; "
-            >
-              <img
-                class="card-img-right"
-                src="../../../assets/sap.svg"
-                style="width: auto; height: 70px;"
-              />
-            </div>
-            <div class="col">
-              <div class="card-text">
-                <h5 class="card-title">
-                  SAP
-                </h5>
-                <p>Uključivanje/isključivanje SAP'a, forma matičnih podataka</p>
+  <div class="container">
+    <div style="padding-top: 70px;"></div>
+    <h3 class="mt-2 mb-2">Podešavanja</h3> 
+    <div style="padding-bottom: 20px;"></div>
+    <div class="d-none d-xl-block">
+      <div class="row card-group">
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="sapSettings()"
+            [ngClass]="sapSettingsBool ? 'card-border' : 'null'">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/sap.svg"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      SAP
+                    </h5>
+                    <p>SAP podešavanja, matični podaci</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="accountSettings()">
-        <div class="card-body">
-          <div class="row">
-            <div
-              class="col-md-auto"
-              style="width: fit-content; "
-            >
-              <img
-                class="card-img-right"
-                src="../../../assets/account.png"
-                style="width: auto; height: 70px;"
-              />
-            </div>
-            <div class="col">
-              <div class="card-text">
-                <h5 class="card-title">
-                  Nalozi
-                </h5>
-                <p>Pregled naloga, kreiranje novih naloga</p>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="accountSettings()"
+            [ngClass]="accountSettingsBool ? 'card-border' : 'null'">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/account.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Nalozi
+                    </h5>
+                    <p>Pregled naloga, kreiranje novih naloga</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="languageSettings()">
-        <div class="card-body">
-          <div class="row">
-            <div
-              class="col-md-auto"
-              style="width: fit-content; "
-            >
-              <img
-                class="card-img-right"
-                src="../../../assets/translate.png"
-                style="width: auto; height: 70px;"
-              />
-            </div>
-            <div class="col">
-              <div class="card-text">
-                <h5 class="card-title">
-                  Jezik
-                </h5>
-                <p>Podešavanje jezika aplikacije</p>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="languageSettings()">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/translate.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Jezik
+                    </h5>
+                    <p>Podešavanje jezika aplikacije</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
-  </div> 
-  <div *ngIf="sapSettingsBool" class="animated fadeInDown">  
-    <mat-tab-group>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">settings</mat-icon>
-          &nbsp;SAP
-        </ng-template>
-        <div style="padding-top: 50px;"></div>
-        <form >
-          <label>Da li u pozadini koristite SAP?</label>
-          <select class="form-control col-4">
-            <option value="yes" selected>Da</option>
-            <option value="no">Ne</option>
-          </select>
+    <!--small laptop version-->
+    <div class="d-none d-lg-block d-xl-none">
+      <div class="row card-group">
+        <div class="col-4">
+          <div class="card mb-3" style="width: 26rem; height: 8.5rem;" (click)="sapSettings()">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/sap.svg"
+                    style="width: fit-content; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      SAP
+                    </h5>
+                    <p>SAP podešavanja, matični podaci</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 26rem; height: 8.5rem;" (click)="accountSettings()">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/account.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Nalozi
+                    </h5>
+                    <p>Pregled naloga, kreiranje novih naloga</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 26rem; height: 8.5rem;" (click)="languageSettings()">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/translate.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Jezik
+                    </h5>
+                    <p>Podešavanje jezika aplikacije</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+    <div *ngIf="sapSettingsBool" class="animated fadeInDown">  
+      <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            &nbsp;SAP
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <form >
+            <label>Da li u pozadini koristite SAP?</label>
+            <select class="form-control col-4" [(ngModel)]="useSap" name="sap">
+              <option value="true">Da</option>
+              <option value="false">Ne</option>
+            </select>
+            <div style="padding-top: 10px;"></div>
+            <label>Forma prikaza matičnih podataka</label>
+            <select class="form-control col-4" [(ngModel)]="selectedTypeOfMainData" name="spaId">
+              <option value="WITH_ID" selected>Šifra matičnog podatka - naziv matičnog podatka</option>
+              <option value="WITHOUT_ID">Naziv matičnog podatka</option>
+            </select>
+          </form> 
+          <div style="padding-bottom: 10px;"></div>
+          <div class="col-4" style="padding-right: 0px;">
+            <button
+              type="button"
+              class="btn btn-primary collapsing-button shadow-none"
+              style="float: right;"
+              (click)="saveChangeSAP()"
+            >
+              <i class="fa fa-save" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Sačuvaj
+            </button>
+          </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">restore_page</mat-icon>
+            &nbsp;Matični podaci
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <h5>Označite matične podatke koje želite da sinhronizujete. 
+           
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none"
+             (click)="sync()">
+              <i class="fa fa-refresh"></i> Sinhronizuj
+            </button>
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none dismiss"
+              (click)="dismissAll()">
+              <i class="fa fa-times"></i> Poništi sve
+            </button>
+            <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none select"
+              (click)="selectAll()">
+              <i class="fa fa-check"></i> Označi sve
+            </button>
+          </h5>
+          
           <div style="padding-top: 10px;"></div>
-          <label>Forma prikaza matičnih podataka</label>
-          <select class="form-control col-4" [(ngModel)]="selectedTypeOfMainData" name="spaId">
-            <option value="withId" selected>Šifra matičnog podatka - naziv matičnog podatka</option>
-            <option value="withoutId">Naziv matičnog podatka</option>
-          </select>
-        </form> 
-        <div style="padding-bottom: 10px;"></div>
-        <div class="col-4" style="padding-right: 0px;">
-          <button
-            type="button"
-            class="btn btn-primary collapsing-button shadow-none"
-            style="float: right;"
-            (click)="saveChangeSAP()"
-          >
-            <i class="fa fa-save" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Sačuvaj
-          </button>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-  <div *ngIf="accountSettingsBool" class="animated fadeInDown">  
-    <mat-tab-group [selectedIndex]="selectedIndex">
-      <mat-tab >
-        <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">supervisor_account</mat-icon>
-          &nbsp;Pregled naloga
-        </ng-template>
-        <div style="padding-top: 50px;"></div>
-        <div class="row card-group">
-          <div class="col-3" *ngFor="let user of users">
-            <div class="flip-card">
-              <div class="flip-card-inner">
-                <div class="flip-card-front">
-                  <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/active.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                  <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/deactive.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                  <div class="card-body">
-                    <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
+          <div class="row card-group">
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCrop()"
+              [ngClass]="clickedCrop ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/crop.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Usevi
+                        </h4>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="flip-card-back">
-                  <h1>{{user.name}} {{user.surname}}</h1>
-                  <table style="margin: auto">
-                    <tr>
-                      <th><i class="fa fa-envelope"></i></th>
-                      <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
-                    </tr>
-                    <tr>
-                      <th><i class="fa fa-phone"></i></th>
-                      <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
-                    </tr>
-                    <tr>
-                      <th><i class="fas fa-fingerprint"></i></th>
-                      <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
-                    </tr>
-                    <tr *ngFor="let role of user.roles; let i = index">
-                      <th><i class="fa fa-user" *ngIf="i==0"></i></th>
-                      <td style="text-align: left; padding-left: 5px;">
-                        <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
-                      </td>
-                    </tr>
-                  </table>
-                  <div style="position: absolute; bottom: 5px; left: 70px;">
-                    <button *ngIf="user.enabled == false" class="btn" (click)="activateUser(user.id)"><i class="fa fa-check fa-lg" style="color: white;" title="Aktiviraj nalog"></i></button>
-                    <button *ngIf="user.enabled == true" class="btn" (click)="deactivateUser(user.id)"><i class="fa fa-times fa-lg" style="color: white;" title="Deaktiviraj nalog"></i></button>
-                    <button class="btn" (click)="nextStep(user)"><i class="fa fa-edit fa-lg" style="color: white;" title="Izmeni"></i></button>
-                    <button class="btn" (click)="deleteUser(user.id)"><i class="fa fa-trash fa-lg" style="color: white;" title="Obriši"></i></button>
+                <img class="buttonChecked" *ngIf="clickedCrop" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickMachine()"
+              [ngClass]="clickedMachine ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/tractor.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Mašine
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedMachine" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickEmployee()"
+              [ngClass]="clickedEmployee ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/farmer.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Zaposleni
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedEmployee" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickFieldGroup()"
+              [ngClass]="clickedFieldGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/fieldGroup.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Potezi
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedFieldGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickField()"
+              [ngClass]="clickedField ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/field1.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Parcele
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedField" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickMachineGroup()"
+              [ngClass]="clickedMachineGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/tractor.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe mašina
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedMachineGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickOperationGroup()"
+              [ngClass]="clickedOperationGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/shovel.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe ATM
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedOperationGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickOperation()"
+              [ngClass]="clickedOperation ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/shovel.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          ATM
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedOperation" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCultureGroup()"
+              [ngClass]="clickedCultureGroup ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/crops.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Grupe kultura
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedCultureGroup" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickCulture()"
+              [ngClass]="clickedCulture ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/wheat.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Kulture
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedCulture" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card mb-3" style="width: 27rem; height: 8.5rem;" (click)="clickVariety()"
+                [ngClass]="clickedVariety ? 'card-border' : 'null'">
+                <div class="card-body">
+                  <div class="row">
+                    <div
+                      class="col-md-auto"
+                      style="width: fit-content; "
+                    >
+                      <img
+                        class="card-img-right"
+                        src="../../../assets/seed.png"
+                        style="width: auto; height: 70px;"
+                      />
+                    </div>
+                    <div class="col">
+                      <div class="card-text">
+                        <h4 class="card-title">
+                          Sorte
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <img class="buttonChecked" *ngIf="clickedVariety" src="../../../assets/checked.png"  />
+              </div>
+            </div>
+          </div> 
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div *ngIf="accountSettingsBool" class="animated fadeInDown">  
+      <mat-tab-group [selectedIndex]="selectedIndex">
+        <mat-tab >
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">supervisor_account</mat-icon>
+            &nbsp;Pregled naloga
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <div class="row card-group">
+            <div class="col-3" *ngFor="let user of users">
+              <div class="flip-card">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/active.jpg" alt="Avatar" style="width: 250px; height: 200px;">
+                    <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/deactive.jpg" alt="Avatar" style="width: 250px; height: 200px;">
+                    <div class="card-body">
+                      <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
+                    </div>
+                  </div>
+                  <div class="flip-card-back">
+                    <h1>{{user.name}} {{user.surname}}</h1>
+                    <table style="margin: auto">
+                      <tr>
+                        <th><i class="fa fa-envelope"></i></th>
+                        <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
+                      </tr>
+                      <tr>
+                        <th><i class="fa fa-phone"></i></th>
+                        <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
+                      </tr>
+                      <tr>
+                        <th><i class="fas fa-fingerprint"></i></th>
+                        <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
+                      </tr>
+                      <tr *ngFor="let role of user.roles; let i = index">
+                        <th><i class="fa fa-user" *ngIf="i==0"></i></th>
+                        <td style="text-align: left; padding-left: 5px;">
+                          <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
+                        </td>
+                      </tr>
+                    </table>
+                    <div style="position: absolute; bottom: 5px; left: 70px;">
+                      <button *ngIf="user.enabled == false" class="btn" (click)="activateUser(user.id)"><i class="fa fa-check fa-lg" style="color: white;" title="Aktiviraj nalog"></i></button>
+                      <button *ngIf="user.enabled == true" class="btn" (click)="deactivateUser(user.id)"><i class="fa fa-times fa-lg" style="color: white;" title="Deaktiviraj nalog"></i></button>
+                      <button class="btn" (click)="nextStep(user)"><i class="fa fa-edit fa-lg" style="color: white;" title="Izmeni"></i></button>
+                      <button class="btn" (click)="deleteUser(user.id)"><i class="fa fa-trash fa-lg" style="color: white;" title="Obriši"></i></button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">person_add</mat-icon>
-          &nbsp;Kreiranje naloga
-        </ng-template>
-        <div style="padding-top: 50px;"></div>
-        <form #addNewUserForm="ngForm">
-          <div class="row">
-            <div class="col-5">
-              <label for="inputEmail4"><i class="fa fa-user"></i> Ime</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                [(ngModel)]="newUser.name" 
-                name="ime" 
-                placeholder="Unesite ime korisnika" 
-                required
-                #name="ngModel"
-              >
-              <div *ngIf="name.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite ime korisnika.
-              </div>
-            </div>
-            <div class="col-5">
-              <label for="inputPassword4"><i class="fa fa-user"></i> Prezime</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                [(ngModel)]="newUser.surname" 
-                name="prezime" 
-                placeholder="Unesite prezime korisnika"
-                required
-                #surname="ngModel"
-              >
-              <div *ngIf="surname.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite prezime korisnika.
-              </div>
-            </div>
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <div class="row">
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">person_add</mat-icon>
+            &nbsp;Kreiranje naloga
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <form #addNewUserForm="ngForm">
+            <div class="row">
               <div class="col-5">
-                  <label for="exampleInputEmail1"><i class="fa fa-envelope"></i> Email adresa</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    required 
-                    [(ngModel)]="newUser.email" 
-                    #mail="ngModel" 
-                    name="email" 
-                    aria-describedby="emailHelp" 
-                    placeholder="Unesite mail korisnika"
-                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
-                  >
-                  <div *ngIf="mail.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                    Unesite email korisnika.
-                  </div>
-                  <div *ngIf="mail.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                    Email nije validan.
-                  </div>
-                  <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
-              </div>
-                  <div class="col-5">
-                      <label for="exampleInputEmail1"><i class="fa fa-phone"></i> Broj telefona</label>
-                      <div class="input-group mb-2">
-                          <div class="input-group-prepend">
-                              <div class="input-group-text" >+381</div>
-                          </div>
-                          <input 
-                            type="text" 
-                            pattern="[0-9]+"
-                            minlength="6"
-                            class="form-control" 
-                            [(ngModel)]="newUser.telephone" 
-                            required 
-                            name="telephone" 
-                            placeholder="Unesite broj telefona"
-                            #number="ngModel"
-                          >
-                      </div>
-                      <div *ngIf="number.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                        Unesite broj telefona korisnika.
-                      </div>
-                      <div *ngIf="number.errors?.minlength && clickAddNewUser" style="color: red; font-weight: normal">
-                        Broj telefona mora biti duži od pet cifara.
-                      </div>
-                      <div *ngIf="number.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                        Broj telefona nije validan.
-                      </div>
-                  </div>
-              
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <div class="row">
-            <div class="col-5">
-              <label><i class="fas fa-fingerprint"></i> SAP ID</label>
-              <input 
-                type="text"
-                pattern="^[0-9]{1,8}"
-                class="form-control" 
-                [(ngModel)]="newUser.sapUserId"
-                name="sapId"
-                #sapId="ngModel"
-                required
-                placeholder="Unesite SAP ID korisnika"
-              >
-              
-              <div *ngIf="sapId.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite SAP ID korisnika.
-              </div>
-              <div *ngIf="sapId.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                Nevalidan SAP ID. SAP ID može imati najviše 8 cifara.
-              </div>
-           <!--
-            <div class="col-5">
-              <label><i class="fa fa-calendar"></i> Datum rođenja</label>
-              <input 
-                ngbDatepicker 
-                #datum="ngbDatepicker" 
-                (click)="datum.toggle()"
-                class="form-control" 
-                [(ngModel)]="newUser.dateOfBirth"
-                name="dateOfBirth"
-                #birth="ngModel"
-                required
-                placeholder="Izaberite datum rođenja"
-              >
-              
-              <div *ngIf="birth.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Izaberite datum rođenja korisnika.
-              </div>
-              -->
-            </div>
-            <div class="col-5">
-              <label><i class="fa fa-user"></i> Role korisnika</label><br>
-                <ng-multiselect-dropdown 
-                  name="rol"   
-                  [placeholder]="'Izaberite role'" 
-                  [data]="roles" 
-                  [settings]="dropdownSettings"
-                  [(ngModel)]="selectedRolesNewUser" 
-                  value=selectedRolesNewUser 
-                  #role="ngModel"
+                <label for="inputEmail4"><i class="fa fa-user"></i> Ime</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="newUser.name" 
+                  name="ime" 
+                  placeholder="Unesite ime korisnika" 
                   required
+                  #name="ngModel"
                 >
-              </ng-multiselect-dropdown>
-              <div *ngIf="role.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Izaberite rolu korisnika.
-              </div>
-            </div>
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <div class="row">
-            <div class="col-5">
-              <div class="form-group">
-                <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Lozinka</label>
-                <input 
-                  type="password" 
-                  class="form-control" 
-                  [(ngModel)]="newUser.password" 
-                  required 
-                  placeholder="Unesite lozinku" 
-                  name="lozinka"
-                  #pass="ngModel"
-                >
-                <div *ngIf="pass.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                  Unesite lozinku korisnika.
+                <div *ngIf="name.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite ime korisnika.
                 </div>
               </div>
-            </div>
-            <div class="col-5">
-              <div class="form-group">
-                <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Ponovite lozinku</label>
-                <input 
-                  type="password" 
-                  class="form-control" 
-                  [(ngModel)]="newUser.confirmPassword" 
-                  required 
-                  placeholder="Potvrdite lozinku" 
-                  name="lozinkaPonovo"
-                  #confirmPass="ngModel"
-                >
-                <div *ngIf="confirmPass.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                  Unesite lozinku korisnika.
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="col-10" style="padding-right: 5px;">
-          <button
-            type="button"
-            class="btn btn-primary collapsing-button shadow-none"
-            style="float: right;"
-            (click)="addNewUser(addNewUserForm.valid)"
-          >
-            <i class="fa fa-plus" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Kreiraj
-          </button>
-        </div>
-      </mat-tab>
-      <mat-tab *ngIf="isUpdate">
-        <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">border_color</mat-icon>
-          &nbsp;Izmena naloga
-        </ng-template>
-        <div style="padding-top: 50px;"></div>
-        <form #addNewUserForm="ngForm">
-          <div class="row">
-            <div class="col-5">
-              <label for="inputEmail4"><i class="fa fa-user"></i> Ime</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                [(ngModel)]="user.name" 
-                name="ime" 
-                placeholder="Unesite ime korisnika" 
-                required
-                #name="ngModel"
-              >
-              <div *ngIf="name.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite ime korisnika.
-              </div>
-            </div>
-            <div class="col-5">
-              <label for="inputPassword4"><i class="fa fa-user"></i> Prezime</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                [(ngModel)]="user.surname" 
-                name="prezime" 
-                placeholder="Unesite prezime korisnika"
-                required
-                #surname="ngModel"
-              >
-              <div *ngIf="surname.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite prezime korisnika.
-              </div>
-            </div>
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <div class="row">
               <div class="col-5">
-                  <label for="exampleInputEmail1"><i class="fa fa-envelope"></i> Email adresa</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    required 
-                    [(ngModel)]="user.email" 
-                    #mail="ngModel" 
-                    name="email" 
-                    aria-describedby="emailHelp" 
-                    placeholder="Unesite mail korisnika"
-                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
-                  >
-                  <div *ngIf="mail.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                    Unesite email korisnika.
-                  </div>
-                  <div *ngIf="mail.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                    Email nije validan.
-                  </div>
-                  <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
-              </div>
-                  <div class="col-5">
-                      <label for="exampleInputEmail1"><i class="fa fa-phone"></i> Broj telefona</label>
-                      <div class="input-group mb-2">
-                          <div class="input-group-prepend">
-                              <div class="input-group-text" >+381</div>
-                          </div>
-                          <input 
-                            type="text" 
-                            pattern="[0-9]+"
-                            minlength="6"
-                            class="form-control" 
-                            [(ngModel)]="user.telephone" 
-                            required 
-                            name="telephone" 
-                            placeholder="Unesite broj telefona"
-                            #number="ngModel"
-                          >
-                      </div>
-                      <div *ngIf="number.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                        Unesite broj telefona korisnika.
-                      </div>
-                      <div *ngIf="number.errors?.minlength && clickAddNewUser" style="color: red; font-weight: normal">
-                        Broj telefona mora biti duži od pet cifara.
-                      </div>
-                      <div *ngIf="number.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                        Broj telefona nije validan.
-                      </div>
-                  </div>
-              
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <div class="row">
-            <div class="col-5">
-              <label><i class="fas fa-fingerprint"></i> SAP ID</label>
-              <input 
-                type="text"
-                class="form-control" 
-                pattern="^[0-9]{1,8}"
-                [(ngModel)]="user.sapUserId"
-                name="sapId"
-                #sapId="ngModel"
-                required
-                placeholder="Unesite SAP ID korisnika"
-              >
-              
-              <div *ngIf="sapId.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Unesite SAP ID korisnika.
-              </div>
-              <div *ngIf="sapId.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
-                Nevalidan SAP ID. SAP ID može imati najviše 8 cifara.
-              </div>
-            </div>
-           <!--
-            <div class="col-5">
-              <label><i class="fa fa-calendar"></i> Datum rođenja</label>
-              <input 
-                ngbDatepicker 
-                #datum="ngbDatepicker" 
-                (click)="datum.toggle()"
-                class="form-control" 
-                [(ngModel)]="user.dateOfBirth"
-                name="dateOfBirth"
-                #birth="ngModel"
-                required
-                placeholder="Izaberite datum rođenja"
-              >
-              <div *ngIf="birth.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Izaberite datum rođenja korisnika.
-              </div>
-            </div>
-          -->
-            <div class="col-5">
-              <label><i class="fa fa-user"></i> Role korisnika</label><br>
-                <ng-multiselect-dropdown 
-                  name="rol"   
-                  [placeholder]="'Izaberite role'" 
-                  [data]="roles" 
-                  [settings]="dropdownSettings"
-                  [(ngModel)]="selectedRolesUser" 
-                  value=selectedRolesUser 
-                  #role="ngModel"
+                <label for="inputPassword4"><i class="fa fa-user"></i> Prezime</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="newUser.surname" 
+                  name="prezime" 
+                  placeholder="Unesite prezime korisnika"
                   required
+                  #surname="ngModel"
                 >
-              </ng-multiselect-dropdown>
-              <div *ngIf="role.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
-                Izaberite rolu korisnika.
+                <div *ngIf="surname.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite prezime korisnika.
+                </div>
               </div>
             </div>
-          </div>
-          <div style="padding-bottom: 10px;"></div>
-          <!--Change password-->
-          <div class="row">
-            <div class="col-5">
-              <div class="form-group">
-                <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Nova lozinka</label>
+            <div style="padding-bottom: 10px;"></div>
+            <div class="row">
+                <div class="col-5">
+                    <label for="exampleInputEmail1"><i class="fa fa-envelope"></i> Email adresa</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      required 
+                      [(ngModel)]="newUser.email" 
+                      #mail="ngModel" 
+                      name="email" 
+                      aria-describedby="emailHelp" 
+                      placeholder="Unesite mail korisnika"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    >
+                    <div *ngIf="mail.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                      Unesite email korisnika.
+                    </div>
+                    <div *ngIf="mail.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                      Email nije validan.
+                    </div>
+                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                </div>
+                    <div class="col-5">
+                        <label for="exampleInputEmail1"><i class="fa fa-phone"></i> Broj telefona</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" >+381</div>
+                            </div>
+                            <input 
+                              type="text" 
+                              pattern="[0-9]+"
+                              minlength="6"
+                              class="form-control" 
+                              [(ngModel)]="newUser.telephone" 
+                              required 
+                              name="telephone" 
+                              placeholder="Unesite broj telefona"
+                              #number="ngModel"
+                            >
+                        </div>
+                        <div *ngIf="number.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                          Unesite broj telefona korisnika.
+                        </div>
+                        <div *ngIf="number.errors?.minlength && clickAddNewUser" style="color: red; font-weight: normal">
+                          Broj telefona mora biti duži od pet cifara.
+                        </div>
+                        <div *ngIf="number.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                          Broj telefona nije validan.
+                        </div>
+                    </div>
+                
+            </div>
+            <div style="padding-bottom: 10px;"></div>
+            <div class="row">
+              <div class="col-5">
+                <label><i class="fas fa-fingerprint"></i> SAP ID</label>
                 <input 
-                  type="password" 
+                  type="text"
+                  pattern="^[0-9]{1,8}"
                   class="form-control" 
-                  [(ngModel)]="newPassword" 
-                  placeholder="Unesite novu lozinku" 
-                  name="lozinka"
+                  [(ngModel)]="newUser.sapUserId"
+                  name="sapId"
+                  #sapId="ngModel"
+                  required
+                  placeholder="Unesite SAP ID korisnika"
                 >
-              </div>
-            </div>
-            <div class="col-5">
-              <div class="form-group">
-                <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Ponovite lozinku</label>
+                
+                <div *ngIf="sapId.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite SAP ID korisnika.
+                </div>
+                <div *ngIf="sapId.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                  Nevalidan SAP ID. SAP ID može imati najviše 8 cifara.
+                </div>
+            <!--
+              <div class="col-5">
+                <label><i class="fa fa-calendar"></i> Datum rođenja</label>
                 <input 
-                  type="password" 
+                  ngbDatepicker 
+                  #datum="ngbDatepicker" 
+                  (click)="datum.toggle()"
                   class="form-control" 
-                  [(ngModel)]="confirmNewPassword" 
-                  placeholder="Potvrdite lozinku" 
-                  name="lozinkaPonovo"
+                  [(ngModel)]="newUser.dateOfBirth"
+                  name="dateOfBirth"
+                  #birth="ngModel"
+                  required
+                  placeholder="Izaberite datum rođenja"
                 >
+                
+                <div *ngIf="birth.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Izaberite datum rođenja korisnika.
+                </div>
+                -->
+              </div>
+              <div class="col-5">
+                <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <ng-multiselect-dropdown 
+                    name="rol"   
+                    [placeholder]="'Izaberite role'" 
+                    [data]="roles" 
+                    [settings]="dropdownSettings"
+                    [(ngModel)]="selectedRolesNewUser" 
+                    value=selectedRolesNewUser 
+                    #role="ngModel"
+                    required
+                  >
+                </ng-multiselect-dropdown>
+                <div *ngIf="role.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Izaberite rolu korisnika.
+                </div>
               </div>
             </div>
+            <div style="padding-bottom: 10px;"></div>
+            <div class="row">
+              <div class="col-5">
+                <div class="form-group">
+                  <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Lozinka</label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    [(ngModel)]="newUser.password" 
+                    required 
+                    placeholder="Unesite lozinku" 
+                    name="lozinka"
+                    #pass="ngModel"
+                  >
+                  <div *ngIf="pass.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                    Unesite lozinku korisnika.
+                  </div>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Ponovite lozinku</label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    [(ngModel)]="newUser.confirmPassword" 
+                    required 
+                    placeholder="Potvrdite lozinku" 
+                    name="lozinkaPonovo"
+                    #confirmPass="ngModel"
+                  >
+                  <div *ngIf="confirmPass.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                    Unesite lozinku korisnika.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="col-10" style="padding-right: 5px;">
+            <button
+              type="button"
+              class="btn btn-primary collapsing-button shadow-none"
+              style="float: right;"
+              (click)="addNewUser(addNewUserForm.valid)"
+            >
+              <i class="fa fa-plus"></i> Kreiraj
+            </button>
           </div>
-        </form>
-        <div class="col-10" style="padding-right: 5px;">
-          <button
-            *ngIf="isUpdate"
-            type="button"
-            class="btn btn-primary collapsing-button shadow-none"
-            style="float: right;"
-            (click)="updateUser(addNewUserForm.valid)"
-          >
-            <i class="fa fa-save" *ngIf="loading==false"></i> <i class="fa fa-spinner fa-spin" *ngIf="loading==true"></i> Sačuvaj
-          </button>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-   
+        </mat-tab>
+        <mat-tab *ngIf="isUpdate">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">border_color</mat-icon>
+            &nbsp;Izmena naloga
+          </ng-template>
+          <div style="padding-top: 50px;"></div>
+          <form #addNewUserForm="ngForm">
+            <div class="row">
+              <div class="col-5">
+                <label for="inputEmail4"><i class="fa fa-user"></i> Ime</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="user.name" 
+                  name="ime" 
+                  placeholder="Unesite ime korisnika" 
+                  required
+                  #name="ngModel"
+                >
+                <div *ngIf="name.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite ime korisnika.
+                </div>
+              </div>
+              <div class="col-5">
+                <label for="inputPassword4"><i class="fa fa-user"></i> Prezime</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="user.surname" 
+                  name="prezime" 
+                  placeholder="Unesite prezime korisnika"
+                  required
+                  #surname="ngModel"
+                >
+                <div *ngIf="surname.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite prezime korisnika.
+                </div>
+              </div>
+            </div>
+            <div style="padding-bottom: 10px;"></div>
+            <div class="row">
+                <div class="col-5">
+                    <label for="exampleInputEmail1"><i class="fa fa-envelope"></i> Email adresa</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      required 
+                      [(ngModel)]="user.email" 
+                      #mail="ngModel" 
+                      name="email" 
+                      aria-describedby="emailHelp" 
+                      placeholder="Unesite mail korisnika"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    >
+                    <div *ngIf="mail.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                      Unesite email korisnika.
+                    </div>
+                    <div *ngIf="mail.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                      Email nije validan.
+                    </div>
+                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                </div>
+                    <div class="col-5">
+                        <label for="exampleInputEmail1"><i class="fa fa-phone"></i> Broj telefona</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" >+381</div>
+                            </div>
+                            <input 
+                              type="text" 
+                              pattern="[0-9]+"
+                              minlength="6"
+                              class="form-control" 
+                              [(ngModel)]="user.telephone" 
+                              required 
+                              name="telephone" 
+                              placeholder="Unesite broj telefona"
+                              #number="ngModel"
+                            >
+                        </div>
+                        <div *ngIf="number.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                          Unesite broj telefona korisnika.
+                        </div>
+                        <div *ngIf="number.errors?.minlength && clickAddNewUser" style="color: red; font-weight: normal">
+                          Broj telefona mora biti duži od pet cifara.
+                        </div>
+                        <div *ngIf="number.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                          Broj telefona nije validan.
+                        </div>
+                    </div>
+                
+            </div>
+            <div style="padding-bottom: 10px;"></div>
+            <div class="row">
+              <div class="col-5">
+                <label><i class="fas fa-fingerprint"></i> SAP ID</label>
+                <input 
+                  type="text"
+                  class="form-control" 
+                  pattern="^[0-9]{1,8}"
+                  [(ngModel)]="user.sapUserId"
+                  name="sapId"
+                  #sapId="ngModel"
+                  required
+                  placeholder="Unesite SAP ID korisnika"
+                >
+                
+                <div *ngIf="sapId.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Unesite SAP ID korisnika.
+                </div>
+                <div *ngIf="sapId.errors?.pattern && clickAddNewUser" style="color: red; font-weight: normal">
+                  Nevalidan SAP ID. SAP ID može imati najviše 8 cifara.
+                </div>
+              </div>
+            <!--
+              <div class="col-5">
+                <label><i class="fa fa-calendar"></i> Datum rođenja</label>
+                <input 
+                  ngbDatepicker 
+                  #datum="ngbDatepicker" 
+                  (click)="datum.toggle()"
+                  class="form-control" 
+                  [(ngModel)]="user.dateOfBirth"
+                  name="dateOfBirth"
+                  #birth="ngModel"
+                  required
+                  placeholder="Izaberite datum rođenja"
+                >
+                <div *ngIf="birth.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Izaberite datum rođenja korisnika.
+                </div>
+              </div>
+            -->
+              <div class="col-5">
+                <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <ng-multiselect-dropdown 
+                    name="rol"   
+                    [placeholder]="'Izaberite role'" 
+                    [data]="roles" 
+                    [settings]="dropdownSettings"
+                    [(ngModel)]="selectedRolesUser" 
+                    value=selectedRolesUser 
+                    #role="ngModel"
+                    required
+                  >
+                </ng-multiselect-dropdown>
+                <div *ngIf="role.errors?.required && clickAddNewUser" style="color: red; font-weight: normal">
+                  Izaberite rolu korisnika.
+                </div>
+              </div>
+            </div>
+            <div style="padding-bottom: 10px;"></div>
+            <!--Change password-->
+            <div class="row">
+              <div class="col-5">
+                <div class="form-group">
+                  <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Nova lozinka</label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    [(ngModel)]="newPassword" 
+                    placeholder="Unesite novu lozinku" 
+                    name="lozinka"
+                  >
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <label for="exampleInputPassword1"><i class="fa fa-lock"></i> Ponovite lozinku</label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    [(ngModel)]="confirmNewPassword" 
+                    placeholder="Potvrdite lozinku" 
+                    name="lozinkaPonovo"
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="col-10" style="padding-right: 5px;">
+            <button
+              *ngIf="isUpdate"
+              type="button"
+              class="btn btn-primary collapsing-button shadow-none"
+              style="float: right;"
+              (click)="updateUser(addNewUserForm.valid)"
+            >
+              <i class="fa fa-save"></i> Sačuvaj
+            </button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <ngx-spinner></ngx-spinner>
   </div>
 </div>
-</div>
+
+

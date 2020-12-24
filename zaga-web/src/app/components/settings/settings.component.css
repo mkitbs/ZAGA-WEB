@@ -54,11 +54,11 @@ h3 {
 }
 
 :host ::ng-deep .mat-tab-body-wrapper {
-  height: 500px;
+  height: 1000px;
 }
 
 :host ::ng-deep .mat-tab-body.mat-tab-body-active {
-  height: 500px;
+  height: 1000px;
 }
 
 .collapsing-button {
@@ -81,4 +81,40 @@ h3 {
   background-color: white;
   width: 100%;
   height: 100%;
+}
+
+.card-border {
+  border-style: solid;
+  border-color: #5c7495;
+  border-width: medium;
+}
+
+.buttonChecked {
+  top: 2px;
+  right: 2px;
+  position: absolute;
+}
+
+.collapsing-button {
+  width: fit-content;
+  text-align: center;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #33490b !important;
+  -webkit-box-shadow: none;
+}
+
+.dismiss {
+  background-color: #f68901;
+}
+
+.select {
+  background-color: #5c7495;
 }

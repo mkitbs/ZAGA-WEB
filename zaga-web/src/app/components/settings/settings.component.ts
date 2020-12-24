@@ -3,8 +3,10 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Roles } from 'src/app/models/Roles';
+import { Setting } from 'src/app/models/Setting';
 import { SignupRequest } from 'src/app/models/SignupRequest';
 import { User } from 'src/app/models/User';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
 @Component({
@@ -17,7 +19,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private authService: AuthService
   ) { 
     this.dropdownSettings = {
       singleSelection: false,
@@ -40,11 +43,13 @@ export class SettingsComponent implements OnInit {
   newUser: SignupRequest = new SignupRequest();
   roles: Roles[] = [];
   user: SignupRequest = new SignupRequest();
+  setting: Setting = new Setting();
 
   selectedRolesNewUser = [];
   selectedRolesUser = [];
   clickAddNewUser;
-  selectedTypeOfMainData = localStorage.getItem("idSetting");
+  selectedTypeOfMainData;
+  useSap;
   newPassword;
   confirmNewPassword;
 
@@ -52,12 +57,26 @@ export class SettingsComponent implements OnInit {
 
   selectedIndex = 0;
 
+  clickedCrop = false;
+  clickedMachine = false;
+  clickedEmployee = false;
+  clickedField = false;
+  clickedFieldGroup = false;
+  clickedMachineGroup = false;
+  clickedOperationGroup = false;
+  clickedOperation = false;
+  clickedCulture = false;
+  clickedCultureGroup = false;
+  clickedVariety = false;
+
   ngOnInit() {
     this.getAllUsers();
 
     this.userService.getAllRoles().subscribe(data => {
       this.roles = data;
     })
+
+    this.getUserSettings();
   }
 
   getAllUsers(){
@@ -117,10 +136,13 @@ export class SettingsComponent implements OnInit {
         this.selectedRolesNewUser = [];
       },error=>{
         this.loading = false;
+        this.spinner.hide();
         if(error.status === 409){
           this.toastr.error("Uneti email se već koristi.");
         } else if(error.status === 400){
           this.toastr.error("Datum rođenja mora biti u prošlosti.")
+        } else if(error.status === 406){
+          this.toastr.error("SAP ID se već koristi.")
         } else {
           this.toastr.error("Trenutno nije moguće kreirati korisnika.")
         }
@@ -131,9 +153,15 @@ export class SettingsComponent implements OnInit {
   }
 
   saveChangeSAP(){
-    console.log(this.selectedTypeOfMainData)
-    localStorage.setItem('idSetting', this.selectedTypeOfMainData);
-    this.toastr.success("Promene su sačuvane.")
+    this.setting.useSap = this.useSap;
+    this.setting.masterDataFormat = this.selectedTypeOfMainData;
+    console.log(this.setting)
+    this.authService.updateUserSettings(this.setting.tenantId, this.setting).subscribe(res => {
+      this.toastr.success("Promene su sačuvane.")
+    }, error => {
+      this.toastr.error("Trenutno nije moguće izvršiti promene.")
+    })
+   
   }
 
   nextStep(user) {
@@ -204,11 +232,15 @@ export class SettingsComponent implements OnInit {
       */
       this.user.roles = [];
       this.user.roles = this.selectedRolesUser;
+      console.log(this.user)
+      this.spinner.show();
       this.userService.updateUser(this.user).subscribe(res => {
+        this.spinner.hide();
         this.selectedIndex = 0;
         this.user = new SignupRequest();
         this.toastr.success("Korisnik je uspešno sačuvan.")
       }, error => {
+        this.spinner.hide();
         this.toastr.error("Došlo je do greške. Trenutno nije moguće sačuvati promene.")
       })
     }
@@ -245,5 +277,107 @@ export class SettingsComponent implements OnInit {
   languageSettings(){
     this.toastr.info("Nije implementirano.")
   }
+
+  getUserSettings(){
+    this.authService.getUserSettings().subscribe(data => {
+      this.setting = data;
+      this.selectedTypeOfMainData = this.setting.masterDataFormat;
+      this.useSap = this.setting.useSap;
+    })
+  }
+
+  clickCrop(){
+    this.clickedCrop = !this.clickedCrop;
+  }
+
+  clickMachine(){
+    this.clickedMachine = !this.clickedMachine;
+  }
+
+  clickEmployee(){
+    this.clickedEmployee = !this.clickedEmployee;
+  }
+
+  clickFieldGroup(){
+    this.clickedFieldGroup = !this.clickedFieldGroup;
+  }
+
+  clickField(){
+    this.clickedField = !this.clickedField;
+  }
+
+  clickMachineGroup(){
+    this.clickedMachineGroup = !this.clickedMachineGroup;
+  }
+
+  clickOperationGroup(){
+    this.clickedOperationGroup = !this.clickedOperationGroup;
+  }
+
+  clickOperation(){
+    this.clickedOperation = !this.clickedOperation;
+  }
+
+  clickCultureGroup(){
+    this.clickedCultureGroup = !this.clickedCultureGroup;
+  }
+
+  clickCulture(){
+    this.clickedCulture = !this.clickedCulture;
+  }
+
+  clickVariety(){
+    this.clickedVariety = !this.clickedVariety;
+  }
+
+  dismissAll(){
+    this.clickedCrop = false;
+    this.clickedMachine = false;
+    this.clickedEmployee = false;
+    this.clickedField = false;
+    this.clickedFieldGroup = false;
+    this.clickedMachineGroup = false;
+    this.clickedOperationGroup = false;
+    this.clickedOperation = false;
+    this.clickedCulture = false;
+    this.clickedCultureGroup = false;
+    this.clickedVariety = false;
+  }
+
+  selectAll(){
+    this.clickedCrop = true;
+    this.clickedMachine = true;
+    this.clickedEmployee = true;
+    this.clickedField = true;
+    this.clickedFieldGroup = true;
+    this.clickedMachineGroup = true;
+    this.clickedOperationGroup = true;
+    this.clickedOperation = true;
+    this.clickedCulture = true;
+    this.clickedCultureGroup = true;
+    this.clickedVariety = true;
+  }
+
+  sync(){
+    if(
+      this.clickedCrop == false &&
+      this.clickedMachine == false &&
+      this.clickedEmployee == false &&
+      this.clickedField == false &&
+      this.clickedFieldGroup == false &&
+      this.clickedMachineGroup == false &&
+      this.clickedOperationGroup == false &&
+      this.clickedOperation == false &&
+      this.clickedCulture == false &&
+      this.clickedCultureGroup == false &&
+      this.clickedVariety == false
+      ){
+        this.toastr.error("Ni jedan matični podatak nije označen.")
+      } else {
+        this.toastr.info("Nije implementirano.")
+        this.dismissAll();
+      }
+  }
+
 
 }

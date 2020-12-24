@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MachineGroup } from 'src/app/models/MachineGroup';
 import { MachineGroupService } from 'src/app/service/machine-group.service';
 
@@ -10,15 +11,23 @@ import { MachineGroupService } from 'src/app/service/machine-group.service';
 })
 export class MachineGroupComponent implements OnInit {
 
-  constructor(private machineGroupService:MachineGroupService) { }
+  constructor(private machineGroupService:MachineGroupService, private spinner: NgxSpinnerService,) { }
 
   machineGroups: MachineGroup[] = [];
   machineGroupFC: FormControl = new FormControl("")
 
+  loading;
+
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.machineGroupService.getAll().subscribe(data => {
+      this.spinner.hide();
+      this.loading = false;
       this.machineGroups = data;
       console.log(this.machineGroups)
+    }, error =>{
+      this.spinner.hide();
     })
   }
 

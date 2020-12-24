@@ -119,8 +119,20 @@ public class CultureService {
 		case "G": 
 			oldCulture.setType(CultureType.VITICULTURE);
 			break;
+		case "":
+			oldCulture.setType(CultureType.OTHER);
 		default: 
 			break;
+		}
+		switch(newCulture.getOrgCon()) {
+		case "K":
+			oldCulture.setOrgCon(OrgCon.CONVENTIONAL);
+			break;
+		case "O":
+			oldCulture.setOrgCon(OrgCon.ORGANIC);
+			break;
+		case "":
+			oldCulture.setOrgCon(OrgCon.OTHER);
 		}
 		cultureRepo.save(oldCulture);
 	}

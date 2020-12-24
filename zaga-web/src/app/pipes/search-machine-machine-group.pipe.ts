@@ -7,8 +7,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SearchMachineMachineGroupPipe implements PipeTransform {
 
   transform(machines: any[], query): any {
-    return machines.filter(machine =>
+    if(!query){
+      return machines;
+    }
+    var result = machines.filter(machine =>
       machine.machineGroupName.toLowerCase().includes(query.toLowerCase()));
+    
+    if(result.length === 0){
+      return[-1]
+    }
+    return result;
   }
 
 }

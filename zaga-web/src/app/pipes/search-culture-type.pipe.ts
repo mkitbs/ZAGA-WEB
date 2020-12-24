@@ -7,8 +7,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SearchCultureTypePipe implements PipeTransform {
 
   transform(cultures: any[], query): any {
-    return cultures.filter(culture =>
+    if(!query){
+      return cultures;
+    }
+    var result = cultures.filter(culture =>
       culture.Type.toLowerCase().includes(query.toLowerCase()));
+
+    if(result.length === 0){
+      return[-1]
+    }
+    return result;
   }
 
 }

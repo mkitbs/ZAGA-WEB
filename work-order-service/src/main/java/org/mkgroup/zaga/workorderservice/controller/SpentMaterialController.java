@@ -7,6 +7,7 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
@@ -15,6 +16,7 @@ import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.service.SpentMaterialService;
+import org.mkgroup.zaga.workorderservice.service.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +41,9 @@ public class SpentMaterialController {
 	
 	@Autowired
 	MaterialRepository materialRepo;
+	
+	@Autowired
+	WorkOrderService workOrderService;
 	
 	@Autowired
 	SpentMaterialService spentMaterialService;
@@ -68,7 +74,17 @@ public class SpentMaterialController {
 	@DeleteMapping("deleteSpentMaterial/{id}")
 	public ResponseEntity<?> deleteSpentMaterial(@PathVariable UUID id){
 		spentMaterialService.deleteSpentMaterial(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		SpentMaterial sp = spentMaterialRepo.getOne(id);
+		try {
+			SAPResponse response = workOrderService.updateDataWorkOrder(sp.getWorkOrder());
+			return new ResponseEntity<SAPResponse>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			SAPResponse response = new SAPResponse();
+			response.setSuccess(false);
+			response.getMessage().add(e.getMessage());
+			return new ResponseEntity<SAPResponse>(response, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("updateSpentMaterialBasicInfo/{id}")
@@ -83,8 +99,8 @@ public class SpentMaterialController {
 	}
 	
 	@GetMapping("getDataForReport")
-	public ResponseEntity<?> getDataForReport(){
-		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport();
+	public ResponseEntity<?> getDataForReport(@RequestHeader("SapUserId") String sapuserid){
+		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport(sapuserid);
 		return new ResponseEntity<List<MaterialReportDTO>>(data, HttpStatus.OK);
 	}
 }

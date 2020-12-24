@@ -10,11 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
@@ -30,12 +33,15 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -83,7 +89,7 @@ public class WorkOrderWorkerService {
 	
 	public void deleteWow(UUID id) {
 		try {
-			wowRepo.deleteById(id);
+			wowRepo.deleteWorker(id);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -430,20 +436,37 @@ public class WorkOrderWorkerService {
 
 	}
 	
-	public List<WorkerReportDTO> getWorkersForReport(){
-		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByWorkerId();
+	public List<WorkerReportDTO> getWorkersForReport(String sapUserId){
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
+		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByWorkerId(user.getBody().getTenant().getId());
 		WorkerReportDTO report = new WorkerReportDTO();
 		List<WorkerReportDTO> retValues = new ArrayList<WorkerReportDTO>();
 		if(wows.size() > 0) {
 			report.setWorker(new EmployeeDTO(wows.get(0).getUser()));
 			report.getWorkOrders().add(new WorkOrderDTO(wows.get(0).getWorkOrder(), wows.get(0).getUser().getPerNumber()));
+			
 			if(wows.size() == 1) {
 				retValues.add(report);
 			}
 		}
 		for(int i = 0; i<wows.size()-1; i++) {
 			if(wows.get(i).getUser().getId().equals(wows.get(i+1).getUser().getId())) {
-				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
+				if(!wows.get(i).getWorkOrder().equals(wows.get(i+1).getWorkOrder())){
+					report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
+				}
+				
 				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
@@ -452,7 +475,8 @@ public class WorkOrderWorkerService {
 				report = new WorkerReportDTO();
 				report.setWorker(new EmployeeDTO(wows.get(i+1).getUser()));
 				report.getWorkOrders().add(new WorkOrderDTO(wows.get(i+1).getWorkOrder(), wows.get(i+1).getUser().getPerNumber()));
-				if(i+1 == wows.size()) {
+				
+				if(i+1 == wows.size()-1) {
 					retValues.add(report);
 				}
 			}
