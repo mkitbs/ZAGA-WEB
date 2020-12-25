@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.mkgroup.zaga.workorderservice.dto.TimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
+import org.mkgroup.zaga.workorderservice.model.TimeTrackingType;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.model.WorkerTimeTracking;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
@@ -36,6 +37,42 @@ public class WorkerTimeTrackingService {
 		retValue.setTimes(timesDTO);
 		return retValue;
 		
+	}
+	
+	public boolean setTracking(TimeTrackingDTO timeTracking) {
+		if(timeTracking.getId() == null || timeTracking.getId().equals("")) {
+			WorkerTimeTracking wtt = new WorkerTimeTracking();
+			wtt.setStartTime(timeTracking.getStartTime());
+			wtt.setEndTime(timeTracking.getEndTime());
+			if(timeTracking.getType().equals("RN")) {
+				wtt.setType(TimeTrackingType.RN);
+			}else if(timeTracking.getType().equals("PAUSE_WORK")) {
+				wtt.setType(TimeTrackingType.PAUSE_WORK);
+			}else if(timeTracking.getType().equals("PAUSE_SERVICE")) {
+				wtt.setType(TimeTrackingType.PAUSE_SERVICE);
+			}else if(timeTracking.getType().equals("PAUSE_FUEL")) {
+				wtt.setType(TimeTrackingType.PAUSE_FUEL);
+			}
+			WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
+			wtt.setWorkOrderWorker(wo);
+			timeTrackingRepo.save(wtt);
+			return true;
+		}else {
+			WorkerTimeTracking wtt = timeTrackingRepo.getOne(timeTracking.getId());
+			wtt.setStartTime(timeTracking.getStartTime());
+			wtt.setEndTime(timeTracking.getEndTime());
+			if(timeTracking.getType().equals("RN")) {
+				wtt.setType(TimeTrackingType.RN);
+			}else if(timeTracking.getType().equals("PAUSE_WORK")) {
+				wtt.setType(TimeTrackingType.PAUSE_WORK);
+			}else if(timeTracking.getType().equals("PAUSE_SERVICE")) {
+				wtt.setType(TimeTrackingType.PAUSE_SERVICE);
+			}else if(timeTracking.getType().equals("PAUSE_FUEL")) {
+				wtt.setType(TimeTrackingType.PAUSE_FUEL);
+			}
+			timeTrackingRepo.save(wtt);
+			return true;
+		}
 		
 	}
 }

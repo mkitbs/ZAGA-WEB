@@ -18,11 +18,13 @@ public class TimeTrackingDTO {
 	private Date endTime;
 	private String type;
 	private UUID wowId;
+	private UUID id;
 	
 	public TimeTrackingDTO(WorkerTimeTracking time) {
 		this.startTime = time.getStartTime();
 		this.endTime = time.getEndTime();
 		this.type = time.getType().toString();
 		this.wowId = time.getWorkOrderWorker().getId();
+		this.id = time.getId();
 	}
 }
