@@ -19,6 +19,8 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
@@ -508,6 +510,18 @@ public class WorkOrderWorkerService {
 			w.setWorkPeriodSum(workPeriodSum);
 		}
 		
+		return retValues;
+	}
+	
+	public List<WorkOrderTractorDriverDTO> getWorkOrdersForTractorDriver(UUID workerId){
+		List<WorkOrderWorker> result = wowRepo.findAllWoWByWorker(workerId);
+		List<WorkOrderTractorDriverDTO> retValues = new ArrayList<WorkOrderTractorDriverDTO>();
+		for(WorkOrderWorker wow : result) {
+			if(!wow.getMachine().getErpId().equals("BEZ-MASINE")) {
+				WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow);
+				retValues.add(wowDTO);
+			}
+		}
 		return retValues;
 	}
 	

@@ -99,6 +99,14 @@ public class AuthController {
 	            token
 	        );
     		
+    		User user = userRepository.findByEmail(loginRequest.getEmail()).get();
+    		List<RoleDTO> roles = new ArrayList<RoleDTO>();
+    		for(Role role : user.getRoles()) {
+    			RoleDTO r = new RoleDTO();
+    			r.setName(role.getName());
+    			roles.add(r);
+    		}
+    		
     		/*
     		String email = authentication.getName();
     		List<String> authorities = authentication.getAuthorities().stream()
@@ -109,7 +117,7 @@ public class AuthController {
     		String jwt = jwtProvider.generateToken(authentication);
     		
     		
-	        return new ResponseEntity<LoginResponseDTO>(new LoginResponseDTO(jwt), HttpStatus.OK);
+	        return new ResponseEntity<LoginResponseDTO>(new LoginResponseDTO(jwt, roles), HttpStatus.OK);
 		} catch (AuthenticationException e) {
 
 			return new ResponseEntity<ExceptionResponseDTO>(

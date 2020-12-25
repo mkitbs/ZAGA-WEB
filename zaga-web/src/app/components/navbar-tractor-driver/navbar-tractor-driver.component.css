@@ -1,0 +1,40 @@
+.navigation {
+  background-color: #5c7495;
+  font-size: 16px;
+}
+
+.logo {
+  max-height: 5vh;
+}
+
+a {
+  color: white !important;
+}
+
+.navigation a:hover {
+  color: #f68901 !important;
+}
+
+.dropdown-menu > a:hover {
+  background-color: #f68901 !important;
+  color: white !important;
+}
+
+.dropdown-menu {
+  background-color: #5c7495;
+  color: orange;
+}
+
+@media (min-width: 979px) {
+  ul.navbar-nav li.dropdown:hover > div.dropdown-menu {
+    display: block;
+  }
+}
+
+.topnav-right {
+  float: right;
+}
+
+.navbar-toggler-icon {
+  color: white;
+}
