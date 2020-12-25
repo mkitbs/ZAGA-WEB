@@ -100,6 +100,8 @@ import { AdminGuardGuard } from "./service/admin-guard.guard"
 import { CookieService } from 'ngx-cookie-service';
 import { WorkOrderTractorDriverComponent } from './components/work-order-tractor-driver/work-order-tractor-driver.component';
 import { NavbarTractorDriverComponent } from './components/navbar-tractor-driver/navbar-tractor-driver.component';
+import { TimeTrackingComponent } from "./components/time-tracking/time-tracking.component";
+import { CdTimerModule } from "angular-cd-timer";
 
 declare var require: any;
 var config = require("config");
@@ -128,6 +130,7 @@ const routes: Routes = [
   { path: "report/employee", component: ReportEmployeeComponent, canActivate: [AuthGuardGuard] },
   { path: "settings", component: SettingsComponent, canActivate: [AdminGuardGuard] },
   { path: "workOrderTractorDriver", component: WorkOrderTractorDriverComponent, canActivate: [AuthGuardGuard] },
+  { path: "timeTracking/:id", component: TimeTrackingComponent },
   { path: "404", component: NotFoundComponent },
   { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
   { path: "**", component: NotFoundComponent }
@@ -204,6 +207,7 @@ const routes: Routes = [
     SettingsComponent,
     WorkOrderTractorDriverComponent,
     NavbarTractorDriverComponent,
+    TimeTrackingComponent,
   ],
   imports: [
     BrowserModule,
@@ -225,6 +229,7 @@ const routes: Routes = [
     MatIconModule,
     FormsModule,
     ChartsModule,
+    CdTimerModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
       libraries: ["drawing", "geometry", "places"],
