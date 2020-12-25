@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,5 +30,8 @@ public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker
 	@Transactional
 	@Query(value = "UPDATE work_order_worker SET deleted = true WHERE id = ?1", nativeQuery = true)
 	void deleteWorker(UUID id);
+	
+	@Query(value = "SELECT * FROM work_order_worker AS wow WHERE wow.worker_id=?1 AND wow.deleted=false", nativeQuery = true)
+	List<WorkOrderWorker> findAllWoWByWorker(UUID workerId);
 
 }
