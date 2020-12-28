@@ -39,7 +39,7 @@ public class WorkerTimeTrackingService {
 		
 	}
 	
-	public boolean setTracking(TimeTrackingDTO timeTracking) {
+	public UUID setTracking(TimeTrackingDTO timeTracking) {
 		if(timeTracking.getId() == null || timeTracking.getId().equals("")) {
 			WorkerTimeTracking wtt = new WorkerTimeTracking();
 			wtt.setStartTime(timeTracking.getStartTime());
@@ -55,12 +55,13 @@ public class WorkerTimeTrackingService {
 			}
 			WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
 			wtt.setWorkOrderWorker(wo);
-			timeTrackingRepo.save(wtt);
-			return true;
+			wtt = timeTrackingRepo.save(wtt);
+			return wtt.getId();
 		}else {
 			WorkerTimeTracking wtt = timeTrackingRepo.getOne(timeTracking.getId());
-			wtt.setStartTime(timeTracking.getStartTime());
+			//wtt.setStartTime(timeTracking.getStartTime());
 			wtt.setEndTime(timeTracking.getEndTime());
+			/*
 			if(timeTracking.getType().equals("RN")) {
 				wtt.setType(TimeTrackingType.RN);
 			}else if(timeTracking.getType().equals("PAUSE_WORK")) {
@@ -70,8 +71,9 @@ public class WorkerTimeTrackingService {
 			}else if(timeTracking.getType().equals("PAUSE_FUEL")) {
 				wtt.setType(TimeTrackingType.PAUSE_FUEL);
 			}
-			timeTrackingRepo.save(wtt);
-			return true;
+			*/
+			wtt = timeTrackingRepo.save(wtt);
+			return wtt.getId();
 		}
 		
 	}

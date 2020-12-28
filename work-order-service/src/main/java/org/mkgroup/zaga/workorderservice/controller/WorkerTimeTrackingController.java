@@ -30,10 +30,12 @@ public class WorkerTimeTrackingController {
 	
 	@PostMapping("setTracking")
 	public ResponseEntity<?> setTracking(@RequestBody TimeTrackingDTO timeTracking){
-		if(wtService.setTracking(timeTracking)) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}else {
+		UUID timeTrackingId = wtService.setTracking(timeTracking);
+		if(timeTrackingId != null) {
+			return new ResponseEntity<UUID>(timeTrackingId, HttpStatus.OK);
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-	}
+	}	
+		
 }

@@ -7,7 +7,9 @@
                     <h5>Radni nalog:</h5>
                 </th>
                 <td>
-                    <h5>dsasdad</h5>
+                    <h5>{{workerTimeTracking.headerInfo.workOrderSapId}}, 
+                        {{workerTimeTracking.headerInfo.workOrderDate | date:'dd.mm.yyyy.'}}
+                    </h5>
                 </td>
             </tr>
             <tr>
@@ -15,7 +17,7 @@
                     <h5>Izvršilac:</h5>
                 </th>
                 <td>
-                    <h5>dsasdad</h5>
+                    <h5>{{workerTimeTracking.headerInfo.worker}}</h5>
                 </td>
             </tr>
             <tr>
@@ -23,7 +25,7 @@
                     <h5>Parcela/usev:</h5>
                 </th>
                 <td>
-                    <h5>dsasdad</h5>
+                    <h5>{{workerTimeTracking.headerInfo.crop}}</h5>
                 </td>
             </tr>
             <tr>
@@ -31,7 +33,7 @@
                     <h5>ATM:</h5>
                 </th>
                 <td>
-                    <h5>dsasdadd dsa dsa</h5>
+                    <h5>{{workerTimeTracking.headerInfo.operation}}</h5>
                 </td>
             </tr>
             <tr>
