@@ -1,20 +1,25 @@
+<app-navbar-tractor-driver></app-navbar-tractor-driver>
 <div class="container">
     <div>
-        <h2 style="margin-bottom: 30px;">Pregled radnog naloga</h2>
+        <h3 style="margin-top: 70px; margin-bottom: 30px;">Pregled radnog naloga</h3>
         <table>
             <tr>
                 <th>
-                    <h5>Radni nalog:</h5>
+                    <h5>
+                        <i class="fa fa-tasks"></i> <span style="padding-left: 5px;">Radni nalog:</span>
+                    </h5>
                 </th>
                 <td>
                     <h5>{{workerTimeTracking.headerInfo.workOrderSapId}}, 
-                        {{workerTimeTracking.headerInfo.workOrderDate | date:'dd.mm.yyyy.'}}
+                        {{workerTimeTracking.headerInfo.workOrderDate | date:'dd.MM.yyyy.'}}
                     </h5>
                 </td>
             </tr>
             <tr>
                 <th>
-                    <h5>Izvršilac:</h5>
+                    <h5>
+                        <i class="fa fa-user"></i> <span style="padding-left: 7px;">Izvršilac:</span>
+                    </h5>
                 </th>
                 <td>
                     <h5>{{workerTimeTracking.headerInfo.worker}}</h5>
@@ -22,7 +27,9 @@
             </tr>
             <tr>
                 <th>
-                    <h5>Parcela/usev:</h5>
+                    <h5>
+                        <i class="fa fa-map-marker"></i> <span style="padding-left: 8px;">Parcela/usev:</span>
+                    </h5>
                 </th>
                 <td>
                     <h5>{{workerTimeTracking.headerInfo.crop}}</h5>
@@ -30,7 +37,9 @@
             </tr>
             <tr>
                 <th>
-                    <h5>ATM:</h5>
+                    <h5>
+                        <i class="fa fa-file mr-2"></i> <span style="padding-left: 4px;">ATM:</span>
+                    </h5>
                 </th>
                 <td>
                     <h5>{{workerTimeTracking.headerInfo.operation}}</h5>
@@ -38,7 +47,7 @@
             </tr>
             <tr>
                 <th>
-                    <h5>Status:</h5>
+                    <h5><i class="fas fa-bell"></i> <span style="padding-left: 7px;">Status:</span></h5>
                 </th>
                 <td>
                     <h5><b>{{status}}</b></h5>
@@ -47,7 +56,7 @@
         </table>
     </div>
 </div>
-<div class="container">
+<div style="margin:auto; width: 50%;">
     <div class="row" [ngStyle]="{'visibility':isTicking == true ? 'visible' : 'hidden' }">
         <div class="col-6 ">
             <cd-timer format="hms" class="bootstrap-timer" #basicTimer [autoStart]="false" [startTime]="startTime">
@@ -56,10 +65,21 @@
     </div>
 
     <div class="d-inline">
-        <button class="btn btn-success" *ngIf="startFlag" (click)="startTimer()">Start</button>
-        <button class="btn btn-warning" *ngIf="pauseFlag" data-toggle="modal" data-target="#exampleModal">Pauza</button>
-        <button class="btn btn-info" *ngIf="continueFlag" (click)="continueTimer()">Nastavak rada</button>
-        <button class="btn btn-danger" *ngIf="endFlag" (click)="endTimer()">Završi</button>
+        <button class="btn btn-success" style="background-color: #ffc803; border: none" *ngIf="backFlag" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Radni nalozi
+        </button>
+        <button class="btn btn-success" style="background-color: #33590b; border: none" *ngIf="startFlag" (click)="startTimer()">
+            <i class="fa fa-play"></i> Start
+        </button>
+        <button class="btn btn-warning" style="background-color: #f68901; border: none; color: white" *ngIf="pauseFlag" data-toggle="modal" data-target="#exampleModal" (click)="setPuase()">
+            <i class="fa fa-pause"></i> Pauza
+        </button>
+        <button class="btn btn-info" style="background-color: #5c7495; border: none" *ngIf="continueFlag" (click)="continueTimer()">
+            <i class="fa fa-repeat"></i> Nastavak rada
+        </button>
+        <button class="btn btn-danger" style="background-color: #bd362f; border: none" *ngIf="endFlag" (click)="endTimer()">
+            <i class="fa fa-stop"></i> Završi
+        </button>
     </div>
 </div>
 
@@ -76,18 +96,42 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1">Tip pauze</label>
-                    <select [formControl]="pause" class="form-control" id="exampleFormControlSelect1">
-                        <option value="PAUSE_WORK">Pauza za odmor</option>
-                        <option value="PAUSE_SERVICE">Servisna pauza</option>
-                        <option value="PAUSE_FUEL">Sipanje goriva</option>
-                    </select>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <label>
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_WORK"/>
+                                <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
+                                    <i class="fas fa-undo"></i> Pauza za odmor
+                                </span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label>
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_SERVICE" />
+                                <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
+                                    <i class="fas fa-screwdriver"></i> Servisna pauza
+                                </span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label>
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_FUEL"/>
+                                <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
+                                    <i class="fas fa-gas-pump"></i> Sipanje goriva
+                                </span>
+                            </label>
+                        </li>
+                      </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="pauseTimer()">Startuj
-                    pauzu</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901; border: none">
+                    <i class="fa fa-window-close"></i> Odustani
+                </button>
+                <button type="button" class="btn btn-success" style="background-color: #33590b; border: none" data-dismiss="modal"
+                    (click)="pauseTimer()">
+                    <i class="fa fa-hourglass-start"></i> Startuj pauzu
+                </button>
             </div>
         </div>
     </div>

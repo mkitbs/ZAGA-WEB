@@ -1,20 +1,53 @@
 td {
-    padding-left: 6px;
+  padding-left: 6px;
+}
+
+th {
+  width: 150px;
+}
+
+h3 {
+  color: #5c7495;
 }
 
 .btn {
-    margin-left: 4px;
-    margin-right: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .bootstrap-timer {
-    color: #303030;
-    background-color: #eee;
-    padding: 10px 15px;
-    margin-bottom: 20px;
-    border: 1px solid #c9c9c9;
-    border-radius: 8px;
-    display: inline-block;
-    font-weight: 700;
-    font-size: 2rem;
+  color: #303030;
+  background-color: transparent;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.btn-date {
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
+  color: white;
+}
+
+[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[type="radio"] + .btn-date {
+  cursor: pointer;
+}
+
+[type="radio"]:checked + .btn-date {
+  background-color: #5c7495;
+}
+
+.modal {
+  width: auto;
 }

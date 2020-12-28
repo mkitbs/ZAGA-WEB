@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CdTimerComponent } from 'angular-cd-timer';
 import { TimeTracking } from 'src/app/models/TimeTracking';
 import { WorkerTimeTracking } from 'src/app/models/WorkerTimeTracking';
@@ -16,12 +16,13 @@ import { WorkerTimeTrackingService } from 'src/app/service/worker-time-tracking.
 export class TimeTrackingComponent implements OnInit {
   @ViewChild('basicTimer', null) basicTimer;
   constructor(private workerTimeTrackingService: WorkerTimeTrackingService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute, private router: Router) { }
 
   startTime = 0;
   startFlag = false;
   pauseFlag = false;
   continueFlag = false;
+  backFlag = true;
   endFlag = false;
   status = "Nije započet"
   isTicking = false;
@@ -63,6 +64,7 @@ export class TimeTrackingComponent implements OnInit {
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
       this.rnId = data;
       this.isTicking = true;
+      this.backFlag = false;
       this.basicTimer.start();
       this.pauseFlag = true;
       this.status = "U radu"
@@ -97,7 +99,7 @@ export class TimeTrackingComponent implements OnInit {
     var timeTracking: TimeTracking = new TimeTracking();
     //timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
-    timeTracking.type = "RN";
+    timeTracking.type = this.pause.value;
     timeTracking.id = this.timeTrackingId;
     timeTracking.endTime = new Date();
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
@@ -117,7 +119,7 @@ export class TimeTrackingComponent implements OnInit {
     var timeTracking: TimeTracking = new TimeTracking();
     //timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
-    timeTracking.type = "RN";
+    timeTracking.type = "FINISHED";
     timeTracking.id = this.rnId;
     timeTracking.endTime = new Date();
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
@@ -126,7 +128,21 @@ export class TimeTrackingComponent implements OnInit {
       this.continueFlag = false;
       this.startFlag = false;
       this.status = "Završeno"
+      this.backFlag = true;
     })
+  }
+
+  getPause(pause){
+    this.pause.setValue(pause);
+    console.log(this.pause.value)
+  }
+
+  setPuase(){
+    this.pause = new FormControl("");
+  }
+
+  goBack(){
+    this.router.navigateByUrl("/workOrderTractorDriver")
   }
 
 

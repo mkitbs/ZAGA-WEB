@@ -34,6 +34,10 @@ export class WorkOrderTractorDriverComponent implements OnInit {
       this.workOrders = data;
       if(this.workOrders.length == 0){
         this.empty = true;
+      } else if(this.workOrders.length == 1){
+        this.workOrders.forEach(wo => {
+          this.router.navigateByUrl("/timeTracking/" + wo.wowId);
+        })
       } else {
         this.empty = false;
         this.workOrders.forEach(wo => {

@@ -28,6 +28,7 @@ import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorkerStatus;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
@@ -517,7 +518,7 @@ public class WorkOrderWorkerService {
 		List<WorkOrderWorker> result = wowRepo.findAllWoWByWorker(workerId);
 		List<WorkOrderTractorDriverDTO> retValues = new ArrayList<WorkOrderTractorDriverDTO>();
 		for(WorkOrderWorker wow : result) {
-			if(!wow.getMachine().getErpId().equals("BEZ-MASINE")) {
+			if(!wow.getMachine().getErpId().equals("BEZ-MASINE") && !wow.getStatus().equals(WorkOrderWorkerStatus.FINISHED)) {
 				WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow);
 				retValues.add(wowDTO);
 			}

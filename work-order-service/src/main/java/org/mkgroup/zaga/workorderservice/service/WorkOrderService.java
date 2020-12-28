@@ -993,9 +993,6 @@ public class WorkOrderService {
 		
 		for(WorkOrder workOrder : workOrders) {
 			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
-				for(WorkOrderWorker wow : workOrder.getWorkers()) {
-					
-				}
 				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
