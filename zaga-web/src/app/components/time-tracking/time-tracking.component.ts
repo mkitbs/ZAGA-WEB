@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdTimerComponent } from 'angular-cd-timer';
+import { Observable, interval } from 'rxjs';
 import { TimeTracking } from 'src/app/models/TimeTracking';
 import { WorkerTimeTracking } from 'src/app/models/WorkerTimeTracking';
 import { WorkerTimeTrackingService } from 'src/app/service/worker-time-tracking.service';
+import { resolve } from 'url';
 
 @Component({
   selector: 'app-time-tracking',
@@ -16,7 +18,11 @@ import { WorkerTimeTrackingService } from 'src/app/service/worker-time-tracking.
 export class TimeTrackingComponent implements OnInit {
   @ViewChild('basicTimer', null) basicTimer;
   constructor(private workerTimeTrackingService: WorkerTimeTrackingService,
-    private activatedRoute: ActivatedRoute, private router: Router) { }
+    private activatedRoute: ActivatedRoute, private router: Router) { 
+//    this.sub = interval(10000).subscribe((val) => {
+//      console.log('called'); 
+//    });
+    }
 
   startTime = 0;
   startFlag = false;
@@ -31,6 +37,8 @@ export class TimeTrackingComponent implements OnInit {
   workerTimeTracking: WorkerTimeTracking = new WorkerTimeTracking();
   timeTrackingId;
   rnId;
+  pauseType;
+  sub;
   
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params.id;
@@ -52,8 +60,11 @@ export class TimeTrackingComponent implements OnInit {
 
       }
     })
-
+    this.seePositon();
+    console.log(new Date())
   }
+
+  
 
   startTimer() {
     var timeTracking: TimeTracking = new TimeTracking();
@@ -134,6 +145,13 @@ export class TimeTrackingComponent implements OnInit {
 
   getPause(pause){
     this.pause.setValue(pause);
+    if(this.pause.value == "PAUSE_WORK"){
+      this.pauseType = "Odmor"
+    } else if(this.pause.value == "PAUSE_SERVICE"){
+      this.pauseType = "Servis";
+    } else {
+      this.pauseType = "Sipanje goriva"
+    }
     console.log(this.pause.value)
   }
 
@@ -143,6 +161,23 @@ export class TimeTrackingComponent implements OnInit {
 
   goBack(){
     this.router.navigateByUrl("/workOrderTractorDriver")
+  }
+
+  getPosition() : Promise<any> {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resp => {
+        resolve({lng: resp.coords.longitude, lat: resp.coords.latitude});
+      }, error => {
+        reject(error);
+      })
+    })
+  }
+
+  seePositon(){
+    this.getPosition().then(pos => {
+      console.log("Positon: " + pos.lat + "-" + pos.lng)
+    })
+    
   }
 
 

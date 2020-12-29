@@ -22,8 +22,9 @@ public class WorkOrderTractorDriverDTO {
 	private String operation;
 	private UUID wowId;
 	private String wowStatus;
+	private boolean inProgress;
 	
-	public WorkOrderTractorDriverDTO(WorkOrderWorker wow) {
+	public WorkOrderTractorDriverDTO(WorkOrderWorker wow, boolean inProgress) {
 		this.workOrderSapId = wow.getWorkOrder().getErpId();
 		this.workOrderDate = wow.getWorkOrder().getDate();
 		this.worker = wow.getUser().getName();
@@ -32,5 +33,6 @@ public class WorkOrderTractorDriverDTO {
 		this.operation = wow.getOperation().getName();
 		this.wowId = wow.getId();
 		this.wowStatus = wow.getStatus().toString();
+		this.inProgress = inProgress;
 	}
 }

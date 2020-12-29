@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -519,8 +520,14 @@ public class WorkOrderWorkerService {
 		List<WorkOrderTractorDriverDTO> retValues = new ArrayList<WorkOrderTractorDriverDTO>();
 		for(WorkOrderWorker wow : result) {
 			if(!wow.getMachine().getErpId().equals("BEZ-MASINE") && !wow.getStatus().equals(WorkOrderWorkerStatus.FINISHED)) {
-				WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow);
-				retValues.add(wowDTO);
+				if(wow.getStatus().equals(WorkOrderWorkerStatus.STARTED) || wow.getStatus().equals(WorkOrderWorkerStatus.PAUSED)){
+					WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow, true);
+					retValues.add(wowDTO);
+				} else {
+					WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow, false);
+					retValues.add(wowDTO);
+				}
+				
 			}
 		}
 		return retValues;
