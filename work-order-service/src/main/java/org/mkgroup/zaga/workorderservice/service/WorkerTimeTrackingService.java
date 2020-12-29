@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
+import org.mkgroup.zaga.workorderservice.dto.ResponseTimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.TimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
@@ -33,6 +34,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class WorkerTimeTrackingService {
@@ -73,55 +78,56 @@ public class WorkerTimeTrackingService {
 		
 	}
 	
-	public UUID setTracking(TimeTrackingDTO timeTracking, String sapUserId) {
-		if(timeTracking.getId() == null || timeTracking.getId().equals("")) {
-			WorkerTimeTracking wtt = new WorkerTimeTracking();
-			
-			WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
-			wtt.setWorkOrderWorker(wo);
-			wtt.setStartTime(timeTracking.getStartTime());
-			wtt.setEndTime(timeTracking.getEndTime());
-			if(timeTracking.getType().equals("RN")) {
-				wtt.setType(TimeTrackingType.RN);
-				wo.setStatus(WorkOrderWorkerStatus.STARTED);
-			}else if(timeTracking.getType().equals("PAUSE_WORK")) {
-				wtt.setType(TimeTrackingType.PAUSE_WORK);
-				wo.setStatus(WorkOrderWorkerStatus.PAUSED);
-			}else if(timeTracking.getType().equals("PAUSE_SERVICE")) {
-				wtt.setType(TimeTrackingType.PAUSE_SERVICE);
-				wo.setStatus(WorkOrderWorkerStatus.PAUSED);
-			}else if(timeTracking.getType().equals("PAUSE_FUEL")) {
-				wtt.setType(TimeTrackingType.PAUSE_FUEL);
-				wo.setStatus(WorkOrderWorkerStatus.PAUSED);
-			}
-			wtt = timeTrackingRepo.save(wtt);
-			try {
-				sendTrackingToSAP(wtt, sapUserId);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			wowRepo.save(wo);
-			return wtt.getId();
-		}else {
-			WorkerTimeTracking wtt = timeTrackingRepo.getOne(timeTracking.getId());
-			WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
-			wtt.setEndTime(timeTracking.getEndTime());
-			if(timeTracking.getType().startsWith("PAUSE")) {
-				wo.setStatus(WorkOrderWorkerStatus.STARTED);
-			} else {
-				wtt.setType(TimeTrackingType.FINISHED);
-				wo.setStatus(WorkOrderWorkerStatus.FINISHED);
-			}
-			wtt = timeTrackingRepo.save(wtt);
-			try {
-				sendTrackingToSAP(wtt, sapUserId);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			wowRepo.save(wo);
-			return wtt.getId();
+	public ResponseTimeTrackingDTO setTracking(TimeTrackingDTO timeTracking, String sapUserId) {
+		WorkerTimeTracking wtt = new WorkerTimeTracking();
+		WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
+		wtt.setWorkOrderWorker(wo);
+		wtt.setStartTime(timeTracking.getStartTime());
+		wtt.setEndTime(timeTracking.getEndTime());
+		if(timeTracking.getType().equals("RN")) {
+			wtt.setType(TimeTrackingType.RN);
+			wo.setStatus(WorkOrderWorkerStatus.STARTED);
+		}else if(timeTracking.getType().equals("PAUSE_WORK")) {
+			wtt.setType(TimeTrackingType.PAUSE_WORK);
+			wo.setStatus(WorkOrderWorkerStatus.PAUSED);
+		}else if(timeTracking.getType().equals("PAUSE_SERVICE")) {
+			wtt.setType(TimeTrackingType.PAUSE_SERVICE);
+			wo.setStatus(WorkOrderWorkerStatus.PAUSED);
+		}else if(timeTracking.getType().equals("PAUSE_FUEL")) {
+			wtt.setType(TimeTrackingType.PAUSE_FUEL);
+			wo.setStatus(WorkOrderWorkerStatus.PAUSED);
 		}
-		
+		long id = 1;
+		wtt.setErpId(id);
+		wtt = timeTrackingRepo.save(wtt);
+		try {
+			sendTrackingToSAP(wtt, sapUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		wowRepo.save(wo);
+		ResponseTimeTrackingDTO retValue = new ResponseTimeTrackingDTO(wtt);
+		return retValue;
+	}
+	
+	public UUID updateTracking(TimeTrackingDTO timeTracking, String sapUserId) {
+		WorkerTimeTracking wtt = timeTrackingRepo.getOne(timeTracking.getId());
+		WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
+		wtt.setEndTime(timeTracking.getEndTime());
+		if(timeTracking.getType().startsWith("PAUSE")) {
+			wo.setStatus(WorkOrderWorkerStatus.STARTED);
+		} else {
+			wtt.setType(TimeTrackingType.FINISHED);
+			wo.setStatus(WorkOrderWorkerStatus.FINISHED);
+		}
+		wtt = timeTrackingRepo.save(wtt);
+		try {
+			sendUpdateTrackingToSAP(wtt, sapUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		wowRepo.save(wo);
+		return wtt.getId();
 	}
 	
 	public void sendTrackingToSAP(WorkerTimeTracking wtt, String sapUserId) throws Exception {
@@ -142,7 +148,7 @@ public class WorkerTimeTrackingService {
 		String companyCode = user.getBody().getTenant().getCompanyCode();
 		
 		TimeTrackingToSAP timeTracking = new TimeTrackingToSAP(wtt, companyCode);
-		System.out.println(timeTracking);
+		System.out.println("Time tracking to SAP(set) => " + timeTracking);
 		
 		Map<String, String> headerValues = getHeaderValues(wtt);
 		String csrfToken = headerValues.get("csrf");
@@ -168,6 +174,79 @@ public class WorkerTimeTrackingService {
 				timeTrackingRepo.delete(wtt);
 			}
 			
+			System.out.println("Rest Template Testing SAP: " + response.getBody().toString());
+		
+			
+		    
+		    
+		    
+	    if(response == null) {
+	    	timeTrackingRepo.delete(wtt);
+			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
+	    } else {
+	    	String oDataString = response.getBody().toString().replace(":", "-");
+		    String formatted = formatJSON(oDataString);
+	    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    	//System.out.println("CONVERTED => " + convertedObject.getAsString());
+	    	JsonObject obj = convertedObject.get("d").getAsJsonObject();
+	    	wtt.setErpId(obj.get("RecordNumber").getAsLong());
+	    	timeTrackingRepo.save(wtt);
+	    }
+	    
+	}
+	
+	public void sendUpdateTrackingToSAP(WorkerTimeTracking wtt, String sapUserId) throws Exception {
+		//get logged user
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		System.out.println(user.getBody());
+		String companyCode = user.getBody().getTenant().getCompanyCode();
+		
+		TimeTrackingToSAP timeTracking = new TimeTrackingToSAP(wtt, companyCode);
+		System.out.println("Time tracking to SAP(update) => " + timeTracking);
+		
+		Map<String, String> headerValues = getHeaderValues(wtt);
+		String csrfToken = headerValues.get("csrf");
+		String authHeader = headerValues.get("authHeader");
+		String cookies = headerValues.get("cookies");
+	    
+	    log.info("Sending time tracking to SAP started");
+	    
+	    HttpHeaders headersRestTemplate = new HttpHeaders();
+			headersRestTemplate.set("Authorization", "Basic " + authHeader);
+			headersRestTemplate.set("X-CSRF-Token", csrfToken);
+			headersRestTemplate.set("X-Requested-With", "XMLHttpRequest");
+			headersRestTemplate.set("Cookie", cookies);
+			System.out.println("Token:" + csrfToken);
+			System.out.println(headersRestTemplate.toString());
+			HttpEntity entity = new HttpEntity(timeTracking, headersRestTemplate);
+
+			ResponseEntity<Object> response = null;
+			String keyForUpdate = String.format(
+					"(CompanyCode='%s',WorkOrderNumber='%s',"
+					+ "WorkOrderEmployeeNumber='%s',RecordNumber='%s')",
+					timeTracking.getCompanyCode(), timeTracking.getWorkOrderNumber(),
+					timeTracking.getWorkOrderEmployeeNumber(), timeTracking.getRecordNumber());
+			String url = sapS4Hurl.concat(keyForUpdate);
+			System.out.println("URL FOR UPDATE => " + url);
+			
+			try {
+				response = restTemplate.exchange(
+			  		    url, HttpMethod.PUT, entity, Object.class);
+			} catch(Exception e) {
+				timeTrackingRepo.delete(wtt);
+			}
+			
 	  	
 		System.out.println("Rest Template Testing SAP: " + response.getBody().toString());
 	    
@@ -175,7 +254,9 @@ public class WorkerTimeTrackingService {
 	    	timeTrackingRepo.delete(wtt);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 	    }
+	    
 	}
+	
 	
 	public Map<String, String> getHeaderValues(WorkerTimeTracking wtt) throws Exception {
 		log.info("Getting X-CSRF-Token started");
@@ -221,4 +302,17 @@ public class WorkerTimeTrackingService {
 		return results;
 	}
 	
+	public String formatJSON(String json) {
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
+		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
+		//System.out.println(json);
+		
+		return json;
+
+	}
 }

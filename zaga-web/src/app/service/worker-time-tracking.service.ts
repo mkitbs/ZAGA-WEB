@@ -17,4 +17,8 @@ export class WorkerTimeTrackingService {
   setTracking(timeTracking): Observable<any> {
     return this.http.post(environment.gatewayWorkOrderURL + "api/timeTracking/setTracking", timeTracking);
   }
+
+  updateTracking(timeTracking): Observable<any> {
+    return this.http.put(environment.gatewayWorkOrderURL + "api/timeTracking/updateTracking", timeTracking);
+  }
 }

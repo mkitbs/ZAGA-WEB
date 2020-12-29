@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdTimerComponent } from 'angular-cd-timer';
 import { Observable, interval } from 'rxjs';
+import { ResponseTimeTracking } from 'src/app/models/ResponseTimeTracking';
 import { TimeTracking } from 'src/app/models/TimeTracking';
 import { WorkerTimeTracking } from 'src/app/models/WorkerTimeTracking';
 import { WorkerTimeTrackingService } from 'src/app/service/worker-time-tracking.service';
@@ -35,8 +36,12 @@ export class TimeTrackingComponent implements OnInit {
   id;
   pause = new FormControl('');
   workerTimeTracking: WorkerTimeTracking = new WorkerTimeTracking();
+  responseTimeTracking: ResponseTimeTracking = new ResponseTimeTracking();
   timeTrackingId;
   rnId;
+  rnErpId;
+  pauseId;
+  pauseErpId;
   pauseType;
   sub;
   
@@ -73,7 +78,9 @@ export class TimeTrackingComponent implements OnInit {
     timeTracking.type = "RN";
     timeTracking.id = "";
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
-      this.rnId = data;
+      this.responseTimeTracking = data;
+      this.rnId = this.responseTimeTracking.dbId;
+      this.rnErpId = this.responseTimeTracking.erpId;
       this.isTicking = true;
       this.backFlag = false;
       this.basicTimer.start();
@@ -95,7 +102,10 @@ export class TimeTrackingComponent implements OnInit {
     timeTracking.type = this.pause.value;
     timeTracking.id = "";
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
-      this.timeTrackingId = data;
+      //this.timeTrackingId = data;
+      this.responseTimeTracking = data;
+      this.pauseId = this.responseTimeTracking.dbId;
+      this.pauseErpId = this.responseTimeTracking.erpId;
       this.pauseFlag = false;
       this.continueFlag = true;
       this.endFlag = false;
@@ -111,9 +121,9 @@ export class TimeTrackingComponent implements OnInit {
     //timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
     timeTracking.type = this.pause.value;
-    timeTracking.id = this.timeTrackingId;
+    timeTracking.id = this.pauseId;
     timeTracking.endTime = new Date();
-    this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
+    this.workerTimeTrackingService.updateTracking(timeTracking).subscribe(data => {
       this.endFlag = true;
       this.pauseFlag = true;
       this.continueFlag = false;
@@ -133,7 +143,7 @@ export class TimeTrackingComponent implements OnInit {
     timeTracking.type = "FINISHED";
     timeTracking.id = this.rnId;
     timeTracking.endTime = new Date();
-    this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
+    this.workerTimeTrackingService.updateTracking(timeTracking).subscribe(data => {
       this.endFlag = false;
       this.pauseFlag = false;
       this.continueFlag = false;

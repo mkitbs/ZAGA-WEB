@@ -9,6 +9,7 @@ import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.model.TimeTrackingType;
 import org.mkgroup.zaga.workorderservice.model.WorkerTimeTracking;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -38,6 +39,9 @@ public class TimeTrackingToSAP {
 	
 	@JsonProperty("Username")
 	private String username;
+	
+	@JsonProperty("RecordNumber")
+	private String recordNumber;
 	
 	public TimeTrackingToSAP(WorkerTimeTracking wtt, String companyCode) {
 		this.companyCode = companyCode;
@@ -80,5 +84,9 @@ public class TimeTrackingToSAP {
 		}
 		
 		this.username = "MKATIC";
+		if(String.valueOf(wtt.getErpId()) != null) {
+			this.recordNumber = String.valueOf(wtt.getErpId());
+		}
+		
 	}
 }

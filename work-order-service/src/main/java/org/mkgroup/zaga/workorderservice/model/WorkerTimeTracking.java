@@ -33,6 +33,9 @@ public class WorkerTimeTracking {
 	
 	private Date endTime;
 	
+	@Column(nullable = true)
+	private long erpId;
+	
 	@Enumerated(EnumType.STRING)
 	private TimeTrackingType type;
 	
