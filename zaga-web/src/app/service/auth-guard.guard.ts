@@ -27,7 +27,7 @@ export class AuthGuardGuard implements CanActivate {
         this.authservice.getLogged().subscribe(data => {
           this.roles = data.roles;
           let index = this.roles.findIndex(x => x.name === "ROLE_TRACTOR_DRIVER");
-          if(index != -1){
+          if (index != -1) {
             this.router.navigateByUrl('/workOrderTractorDriver')
           }
         })

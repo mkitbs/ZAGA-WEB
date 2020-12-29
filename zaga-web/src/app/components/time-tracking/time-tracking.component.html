@@ -10,7 +10,7 @@
                     </h5>
                 </th>
                 <td>
-                    <h5>{{workerTimeTracking.headerInfo.workOrderSapId}}, 
+                    <h5>{{workerTimeTracking.headerInfo.workOrderSapId}},
                         {{workerTimeTracking.headerInfo.workOrderDate | date:'dd.MM.yyyy.'}}
                     </h5>
                 </td>
@@ -65,19 +65,24 @@
     </div>
 
     <div class="d-inline">
-        <button class="btn btn-success" style="background-color: #ffc803; border: none" *ngIf="backFlag" (click)="goBack()">
+        <button class="btn btn-success" style="background-color: #ffc803; border: none" *ngIf="backFlag"
+            (click)="goBack()">
             <i class="fa fa-arrow-left"></i> Radni nalozi
         </button>
-        <button class="btn btn-success" style="background-color: #33590b; border: none" *ngIf="startFlag" (click)="startTimer()">
+        <button class="btn btn-success" style="background-color: #33590b; border: none" *ngIf="startFlag"
+            (click)="startTimer()">
             <i class="fa fa-play"></i> Start
         </button>
-        <button class="btn btn-warning" style="background-color: #f68901; border: none; color: white" *ngIf="pauseFlag" data-toggle="modal" data-target="#exampleModal" (click)="setPuase()">
+        <button class="btn btn-warning" style="background-color: #f68901; border: none; color: white" *ngIf="pauseFlag"
+            data-toggle="modal" data-target="#exampleModal" (click)="setPuase()">
             <i class="fa fa-pause"></i> Pauza
         </button>
-        <button class="btn btn-info" style="background-color: #5c7495; border: none" *ngIf="continueFlag" (click)="continueTimer()">
+        <button class="btn btn-info" style="background-color: #5c7495; border: none" *ngIf="continueFlag"
+            (click)="continueTimer()">
             <i class="fa fa-repeat"></i> Nastavak rada
         </button>
-        <button class="btn btn-danger" style="background-color: #bd362f; border: none" *ngIf="endFlag" (click)="endTimer()">
+        <button class="btn btn-danger" style="background-color: #bd362f; border: none" *ngIf="endFlag"
+            (click)="endTimer()">
             <i class="fa fa-stop"></i> Završi
         </button>
     </div>
@@ -99,7 +104,8 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <label>
-                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_WORK"/>
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)"
+                                    value="PAUSE_WORK" />
                                 <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
                                     <i class="fas fa-undo"></i> Pauza za odmor
                                 </span>
@@ -107,7 +113,8 @@
                         </li>
                         <li class="list-group-item">
                             <label>
-                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_SERVICE" />
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)"
+                                    value="PAUSE_SERVICE" />
                                 <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
                                     <i class="fas fa-screwdriver"></i> Servisna pauza
                                 </span>
@@ -115,21 +122,23 @@
                         </li>
                         <li class="list-group-item">
                             <label>
-                                <input type="radio" name="pause" (change)="getPause($event.target.value)" value="PAUSE_FUEL"/>
+                                <input type="radio" name="pause" (change)="getPause($event.target.value)"
+                                    value="PAUSE_FUEL" />
                                 <span class="btn btn-primary btn-date mr-2" style="width: 150px;">
                                     <i class="fas fa-gas-pump"></i> Sipanje goriva
                                 </span>
                             </label>
                         </li>
-                      </ul>
+                    </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901; border: none">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                    style="background-color: #f68901; border: none">
                     <i class="fa fa-window-close"></i> Odustani
                 </button>
-                <button type="button" class="btn btn-success" style="background-color: #33590b; border: none" data-dismiss="modal"
-                    (click)="pauseTimer()">
+                <button type="button" class="btn btn-success" style="background-color: #33590b; border: none"
+                    data-dismiss="modal" (click)="pauseTimer()">
                     <i class="fa fa-hourglass-start"></i> Startuj pauzu
                 </button>
             </div>
