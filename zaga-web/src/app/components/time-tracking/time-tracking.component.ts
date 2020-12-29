@@ -17,14 +17,15 @@ import { resolve } from 'url';
 
 export class TimeTrackingComponent implements OnInit {
   @ViewChild('basicTimer', null) basicTimer;
-  constructor(private workerTimeTrackingService: WorkerTimeTrackingService,
-    private activatedRoute: ActivatedRoute, private router: Router) { 
-//    this.sub = interval(10000).subscribe((val) => {
-//      console.log('called'); 
-//    });
-    }
 
-  startTime = 0;
+  constructor(private workerTimeTrackingService: WorkerTimeTrackingService,
+    private activatedRoute: ActivatedRoute, private router: Router) {
+    //    this.sub = interval(10000).subscribe((val) => {
+    //      console.log('called'); 
+    //    });
+  }
+
+  startTime;
   startFlag = false;
   pauseFlag = false;
   continueFlag = false;
@@ -39,7 +40,7 @@ export class TimeTrackingComponent implements OnInit {
   rnId;
   pauseType;
   sub;
-  
+
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params.id;
     this.workerTimeTrackingService.getWorkerTask(this.id).subscribe(data => {
@@ -51,20 +52,49 @@ export class TimeTrackingComponent implements OnInit {
         //this.startTime = 300;
         //this.basicTimer.start();
       } else if (this.workerTimeTracking.headerInfo.wowStatus == "STARTED") { //ako bude u toku
+        var inProgress = this.workerTimeTracking.times.findIndex(x => x.type === "RN");
+        var now: Date = new Date();
+        var started: Date = new Date(this.workerTimeTracking.times[inProgress].startTime);
+        console.log(now.getTime())
+        console.log(started.getTime())
+        var razlika = (now.getTime() - started.getTime()) / 1000;
+
         this.pauseFlag = true;
         this.endFlag = true;
+        this.basicTimer.startTime = razlika;
+        this.status = "U radu"
         this.isTicking = true;
+        this.basicTimer.start();
       } else if (this.workerTimeTracking.headerInfo.wowStatus == "PAUSED") {
+        var paused = this.workerTimeTracking.times.findIndex(x => (x.type === "PAUSE_FUEL"
+          || x.type === "PAUSE_WORK"
+          || x.type === "PAUSE_SERVICE") && x.endTime === null);
+        let pauseType = this.workerTimeTracking.times[paused].type;
+        var pauseStarted = new Date(this.workerTimeTracking.times[paused].startTime);
+        console.log(pauseStarted)
+        var now: Date = new Date();
+        var razlika = (now.getTime() - pauseStarted.getTime()) / 1000;
+        this.continueFlag = true;
+        this.isTicking = true;
+        if (pauseType === "PAUSE_FUEL") {
+          this.status = "Pauza za gorivo";
+        } else if (pauseType === "PAUSE_SERVICE") {
+          this.status = "Servisna pauza";
+        } else if (pauseType === "PAUSE_WORK") {
+          this.status = "Pauza - odmor";
+        }
 
+        this.basicTimer.startTime = razlika;
+        this.basicTimer.start();
       } else if (this.workerTimeTracking.headerInfo.wowStatus == "FINISHED") {
-
+        this.status = "Završen"
       }
     })
     this.seePositon();
     console.log(new Date())
   }
 
-  
+
 
   startTimer() {
     var timeTracking: TimeTracking = new TimeTracking();
@@ -87,8 +117,6 @@ export class TimeTrackingComponent implements OnInit {
   }
 
   pauseTimer() {
-    this.basicTimer.start();
-    console.log(this.basicTimer.get())
     var timeTracking: TimeTracking = new TimeTracking();
     timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
@@ -100,12 +128,14 @@ export class TimeTrackingComponent implements OnInit {
       this.continueFlag = true;
       this.endFlag = false;
       this.status = "Pauza";
+      this.basicTimer.reset();
+      this.basicTimer.start();
       console.log(this.pause.value)
     })
   }
 
   continueTimer() {
-    this.basicTimer.start();
+    //this.basicTimer.start();
     console.log(this.basicTimer.get())
     var timeTracking: TimeTracking = new TimeTracking();
     //timeTracking.startTime = new Date();
@@ -118,6 +148,8 @@ export class TimeTrackingComponent implements OnInit {
       this.pauseFlag = true;
       this.continueFlag = false;
       this.status = "U radu"
+      this.basicTimer.reset();
+      //this.basicTimer.startTime = this.getSeconds()
     })
   }
 
@@ -143,11 +175,11 @@ export class TimeTrackingComponent implements OnInit {
     })
   }
 
-  getPause(pause){
+  getPause(pause) {
     this.pause.setValue(pause);
-    if(this.pause.value == "PAUSE_WORK"){
+    if (this.pause.value == "PAUSE_WORK") {
       this.pauseType = "Odmor"
-    } else if(this.pause.value == "PAUSE_SERVICE"){
+    } else if (this.pause.value == "PAUSE_SERVICE") {
       this.pauseType = "Servis";
     } else {
       this.pauseType = "Sipanje goriva"
@@ -155,29 +187,43 @@ export class TimeTrackingComponent implements OnInit {
     console.log(this.pause.value)
   }
 
-  setPuase(){
+  setPuase() {
     this.pause = new FormControl("");
   }
 
-  goBack(){
+  goBack() {
     this.router.navigateByUrl("/workOrderTractorDriver")
   }
 
-  getPosition() : Promise<any> {
+  getPosition(): Promise<any> {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resp => {
-        resolve({lng: resp.coords.longitude, lat: resp.coords.latitude});
+        resolve({ lng: resp.coords.longitude, lat: resp.coords.latitude });
       }, error => {
         reject(error);
       })
     })
   }
 
-  seePositon(){
+  seePositon() {
     this.getPosition().then(pos => {
       console.log("Positon: " + pos.lat + "-" + pos.lng)
     })
-    
+  }
+
+  getSeconds(times: TimeTracking[]) {
+    var now: Date = new Date();
+    var started = times.findIndex(x => x.type === "RN");
+    var startedTime = times[started].startTime;
+    var razlika = (now.getTime() - startedTime.getTime()) / 1000;
+    times.forEach(el => {
+      if (el.type !== "RN" && el.type !== "FINISHED") {
+        let subt = (el.endTime.getTime() - el.startTime.getTime()) / 1000;
+        razlika = razlika - subt;
+        subt = 0;
+      }
+    })
+    return razlika;
   }
 
 
