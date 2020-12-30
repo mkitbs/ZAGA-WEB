@@ -149,7 +149,7 @@ export class TimeTrackingComponent implements OnInit {
       } else if (this.pause.value === "PAUSE_SERVICE") {
         this.status = "Servisna pauza";
       } else if (this.pause.value === "PAUSE_WORK") {
-        this.status = "Pauza - odmor";
+        this.status = "Pauza za odmor";
       }
       this.basicTimer.reset();
       this.basicTimer.startTime = 0;
