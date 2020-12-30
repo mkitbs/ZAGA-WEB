@@ -47,8 +47,3 @@ h3 {
 [type="radio"]:checked + .btn-date {
   background-color: #5c7495;
 }
-
-.modal {
-  width: auto;
-  margin: auto;
-}
