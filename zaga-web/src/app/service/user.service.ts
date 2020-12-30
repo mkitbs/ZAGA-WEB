@@ -76,4 +76,10 @@ export class UserService {
     )
   }
 
+  getUserByPerNumber(perNumber): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/employee/getUserByPerNumber/" + perNumber
+    )
+  }
+
 }

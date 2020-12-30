@@ -310,9 +310,9 @@ public class WorkOrderService {
 		    	for(int i = 0; i <arrayMaterial.size(); i++) {
 		    		if(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString().equals("")) {
 		    			SpentMaterial sm = new SpentMaterial();
-		    			//long id = 10000049;
-		    			//Material material = materialRepo.findByErpId(id).get();
-		    			Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
+		    			long id = 10000049;
+		    			Material material = materialRepo.findByErpId(id).get();
+		    			//Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
 		    			sm.setMaterial(material);
 		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
 		    			spentMaterialRepo.save(sm);

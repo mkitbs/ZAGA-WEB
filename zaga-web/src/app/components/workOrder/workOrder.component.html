@@ -5,8 +5,10 @@
   <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
     data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
     Filteri
-    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
-    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ></i>
   </button>
   <br />
   <form action="" class="collapse mb-4" id="collapseExample">

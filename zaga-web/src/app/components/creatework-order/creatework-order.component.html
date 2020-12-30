@@ -279,10 +279,10 @@
       aria-controls="collapseExampleMachines">
       <i class="fa fa-user mr-2"></i>
       <i class="fa fa-truck mr-2"></i>
-      Radnici/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows" (click)="expandMachines()"
+      Radnici/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"
         data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"
-        (click)="expandMachines()" data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
+        data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i>
     </button>
     <div class="collapse" id="collapseExampleMachines">
@@ -854,23 +854,23 @@
           <div class="col-12">
             <div class="input-group">
               <p *ngIf="wows.length == 0 && new">Nema dodatih radnika i mašina, dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                   <i class="fa fa-plus"></i>
                 </button>
               </p>
               <p *ngIf="wows.length > 0 && new">Dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                   <i class="fa fa-plus"></i>
                 </button>
               </p>
               <p *ngIf="workOrder.workers.length == 0 && !new">Nema dodatih radnika i mašina, dodajte nove i potvrdite
                 klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                   <i class="fa fa-plus"></i>
                 </button>
               </p>
               <p *ngIf="workOrder.workers.length > 0 && !new">Dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                   <i class="fa fa-plus"></i>
                 </button>
               </p>
@@ -886,9 +886,9 @@
       data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
       aria-controls="collapseExampleMachines">
       <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"
-        (click)="expandMaterials()" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+         data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"
-        (click)="expandMaterials()" data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+       data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i>
     </button>
     <div class="collapse" id="collapseExampleMaterials">
@@ -1215,12 +1215,12 @@
                 <div class="input-group">
                   <p *ngIf="workOrder.materials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na
                     dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                    <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                       <i class="fa fa-plus"></i>
                     </button>
                   </p>
                   <p *ngIf="workOrder.materials.length > 0">Dodajte novi i potvrdite klikom na dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
+                    <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
                       <i class="fa fa-plus"></i>
                     </button>
                   </p>

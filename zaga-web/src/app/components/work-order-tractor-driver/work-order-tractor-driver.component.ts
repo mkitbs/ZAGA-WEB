@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/app/models/User';
 import { WorkOrderTractorDriver } from 'src/app/models/WorkOrderTractorDriver';
+import { AuthService } from 'src/app/service/auth/auth.service';
+import { UserService } from 'src/app/service/user.service';
 import { WorkOrderWorkerService } from 'src/app/service/work-order-worker.service';
 
 @Component({
@@ -16,7 +19,9 @@ export class WorkOrderTractorDriverComponent implements OnInit {
     private wowService: WorkOrderWorkerService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
   workOrders: WorkOrderTractorDriver[] = [];
@@ -24,9 +29,11 @@ export class WorkOrderTractorDriverComponent implements OnInit {
   loading;
   inProgress;
   woInProgress: WorkOrderTractorDriver = new WorkOrderTractorDriver();
+  logged: User = new User();
 
   ngOnInit() {
     this.getWorkOrders();
+    this.getTractorDriver();
   }
 
   getWorkOrders(){
@@ -81,6 +88,16 @@ export class WorkOrderTractorDriverComponent implements OnInit {
       this.toastr.info("Ne možete započeti novi radni nalog dok ne završite započeti.")
     }
     
+  }
+
+  getTractorDriver(){
+    this.authService.getLogged().subscribe(data => {
+      var id = data.sapUserId;
+      this.userService.getUserByPerNumber(id).subscribe(data => {
+        this.logged = data;
+        console.log(this.logged)
+      })
+    })
   }
 
 }

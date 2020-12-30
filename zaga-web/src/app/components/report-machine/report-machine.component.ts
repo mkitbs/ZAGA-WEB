@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MachineReport } from 'src/app/models/MachineReport';
 import { MachineService } from 'src/app/service/machine.service';
 
@@ -12,7 +13,8 @@ export class ReportMachineComponent implements OnInit {
 
   constructor(
     private machineService: MachineService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   machines: MachineReport[] = [];
@@ -21,8 +23,14 @@ export class ReportMachineComponent implements OnInit {
   dates: any  = { dateFrom: "", dateTo: "" };
   filters: any = { namdateFrome: "", dateTo: "" };
 
+  loading;
+
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.machineService.getDataForReport().subscribe(data =>{
+      this.spinner.hide();
+      this.loading = false;
       this.machines = data;
       this.machines.forEach(machine => {
         var date = "";
@@ -45,6 +53,9 @@ export class ReportMachineComponent implements OnInit {
           }
         })
       })
+    }, error => {
+      this.spinner.hide();
+      this.loading = false;
     })
   }
 

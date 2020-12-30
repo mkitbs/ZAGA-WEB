@@ -65,4 +65,16 @@ public class EmployeeController {
 		empService.editUser(emp);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@GetMapping("getUserByPerNumber/{perNumber}")
+	public ResponseEntity<?> getUserByPerNumber(@PathVariable long perNumber){
+		User user = userRepo.findByPerNumber(perNumber).get();
+		if(user != null) {
+			EmployeeDTO retValue = new EmployeeDTO(user);
+			return new ResponseEntity<EmployeeDTO>(retValue, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
 }
