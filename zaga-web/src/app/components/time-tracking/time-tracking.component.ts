@@ -21,9 +21,11 @@ export class TimeTrackingComponent implements OnInit {
 
   constructor(private workerTimeTrackingService: WorkerTimeTrackingService,
     private activatedRoute: ActivatedRoute, private router: Router) {
-    //    this.sub = interval(10000).subscribe((val) => {
-    //      console.log('called'); 
-    //    });
+/*      this.sub = interval(10000).subscribe((val) => {
+        console.log('called'); 
+        this.seePositon();
+       });
+*/
   }
 
   startTime;
@@ -45,6 +47,7 @@ export class TimeTrackingComponent implements OnInit {
   pauseErpId;
   pauseType;
   sub;
+  locations: any[] = [];
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.params.id;
@@ -98,7 +101,7 @@ export class TimeTrackingComponent implements OnInit {
         this.status = "Završen"
       }
     })
-    this.seePositon();
+    //this.seePositon();
     console.log(new Date())
   }
 
@@ -120,7 +123,7 @@ export class TimeTrackingComponent implements OnInit {
       this.status = "U radu"
       this.startFlag = false;
       this.endFlag = true;
-
+      //this.sub.unsubscribe();
     })
 
   }
@@ -224,10 +227,12 @@ export class TimeTrackingComponent implements OnInit {
     this.router.navigateByUrl("/workOrderTractorDriver")
   }
 
+/*
   getPosition(): Promise<any> {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resp => {
         resolve({ lng: resp.coords.longitude, lat: resp.coords.latitude });
+        this.locations.push({ lng: resp.coords.longitude.toFixed(4), lat: resp.coords.latitude.toFixed(4) })
       }, error => {
         reject(error);
       })
@@ -237,8 +242,11 @@ export class TimeTrackingComponent implements OnInit {
   seePositon() {
     this.getPosition().then(pos => {
       console.log("Positon: " + pos.lat + "-" + pos.lng)
+
     })
+    console.log(this.locations)
   }
+*/
 
   getSeconds(times: TimeTracking[]) {
     var now: Date = new Date();
@@ -255,6 +263,5 @@ export class TimeTrackingComponent implements OnInit {
     })
     return razlika;
   }
-
 
 }

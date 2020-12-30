@@ -7,4 +7,5 @@ export class WorkOrderTractorDriver {
 	operation;
 	wowId;
 	wowStatus;
+	inProgress;
 }

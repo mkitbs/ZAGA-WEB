@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { WorkOrderTractorDriver } from 'src/app/models/WorkOrderTractorDriver';
 import { WorkOrderWorkerService } from 'src/app/service/work-order-worker.service';
 
@@ -14,12 +15,15 @@ export class WorkOrderTractorDriverComponent implements OnInit {
   constructor(
     private wowService: WorkOrderWorkerService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
   ) { }
 
   workOrders: WorkOrderTractorDriver[] = [];
   empty;
   loading;
+  inProgress;
+  woInProgress: WorkOrderTractorDriver = new WorkOrderTractorDriver();
 
   ngOnInit() {
     this.getWorkOrders();
@@ -52,15 +56,31 @@ export class WorkOrderTractorDriverComponent implements OnInit {
           }
         })
       }
+      if(!this.empty){
+        let index = this.workOrders.findIndex(x => x.inProgress === true);
+        if(index != -1){
+          this.inProgress = true;
+          this.woInProgress = this.workOrders[index];
+          console.log(this.woInProgress)
+        } else {
+          this.inProgress = false;
+        }
+      }
       console.log(this.workOrders)
+      console.log(this.inProgress)
     }, error => {
       this.spinner.hide();
       this.loading = false;
     })
   }
 
-  changeRoute(id){
-    this.router.navigateByUrl("/timeTracking/" + id)
+  changeRoute(wo){
+    if((this.inProgress && wo.inProgress) || !this.inProgress){
+      this.router.navigateByUrl("/timeTracking/" + wo.wowId)
+    } else {
+      this.toastr.info("Ne možete započeti novi radni nalog dok ne završite započeti.")
+    }
+    
   }
 
 }

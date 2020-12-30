@@ -9,8 +9,34 @@
         <h4 style="text-align: center; width: 150px;">Nema kreiranih naloga</h4>
     </div>
     <div style="padding-top: 20px"></div>
+    <div *ngIf="inProgress" class="card mb-4" style="border: none;">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <div class="wrapper">
+              <div class="bell" id="bell-1">
+                <div class="anchor material-icons layer-1">notifications_active</div>
+                <div class="anchor material-icons layer-2">notifications</div>
+                <div class="anchor material-icons layer-3">notifications</div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-text">
+              <h5 class="card-title">
+                Radni nalog #{{woInProgress.workOrderSapId}} je u izvršenju
+              </h5>
+              Nastavite sa izvršenjem radnog naloga klikom na dugme nastavi. 
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary continue-btn" (click)="changeRoute(woInProgress)">
+        Nastavi <i class="fa fa-caret-right"></i>
+      </button>
+    </div>
     <div class="row card-group">
-    <div class="card mb-3" *ngFor="let workOrder of workOrders; let j = index" (click)="changeRoute(workOrder.wowId)"
+    <div class="card mb-3" *ngFor="let workOrder of workOrders; let j = index" (click)="changeRoute(workOrder)"
       style="border: 1px solid #5c7495; border-radius: 5px; font-size: 15px; margin-left: 10px; margin-right: 10px;">
       <div class="card-body" style="background-color: #5c7495">
         <h4 class="card-title" style="color: white; text-align: center; font-weight: bold;">
@@ -43,4 +69,5 @@
     </div>
     </div>
     <ngx-spinner></ngx-spinner>
+    
   </div>
