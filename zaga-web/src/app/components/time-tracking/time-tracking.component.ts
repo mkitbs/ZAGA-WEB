@@ -57,6 +57,7 @@ export class TimeTrackingComponent implements OnInit {
       if (this.workerTimeTracking.headerInfo.wowStatus == "NOT_STARTED") { //ako bude nezapoceto
         this.startFlag = true;
         this.isTicking = false;
+        this.backFlag = true;
         //this.startTime = 300;
         //this.basicTimer.start();
       } else if (this.workerTimeTracking.headerInfo.wowStatus == "STARTED") { //ako bude u toku
@@ -162,7 +163,8 @@ export class TimeTrackingComponent implements OnInit {
     console.log(this.basicTimer.get())
     var timeTracking: TimeTracking = new TimeTracking();
     //timeTracking.startTime = new Date();
-    timeTracking.wowId = this.id;
+    timeTracking.wowId = this.id
+    console.log(this.workerTimeTracking.times)
     let index = this.workerTimeTracking.times.findIndex(x => (x.type === "PAUSE_FUEL"
       || x.type === "PAUSE_WORK"
       || x.type === "PAUSE_SERVICE") && x.endTime === null);
