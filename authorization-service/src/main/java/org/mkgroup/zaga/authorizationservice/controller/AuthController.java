@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -20,11 +21,13 @@ import org.mkgroup.zaga.authorizationservice.dto.SignupRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.UserDTO;
 import org.mkgroup.zaga.authorizationservice.exception.InvalidJTWTokenException;
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
+import org.mkgroup.zaga.authorizationservice.model.PasswordResetToken;
 import org.mkgroup.zaga.authorizationservice.model.Role;
 import org.mkgroup.zaga.authorizationservice.model.RoleName;
 import org.mkgroup.zaga.authorizationservice.model.Setting;
 import org.mkgroup.zaga.authorizationservice.model.Tenant;
 import org.mkgroup.zaga.authorizationservice.model.User;
+import org.mkgroup.zaga.authorizationservice.repository.PasswordResetTokenRepository;
 import org.mkgroup.zaga.authorizationservice.repository.RoleRepository;
 import org.mkgroup.zaga.authorizationservice.repository.SettingRepository;
 import org.mkgroup.zaga.authorizationservice.repository.TenantRepository;
@@ -81,6 +84,9 @@ public class AuthController {
     
     @Autowired
     SettingRepository settingRepository;
+    
+    @Autowired
+    PasswordResetTokenRepository passwordResetRepo;
     
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
@@ -360,5 +366,21 @@ public class AuthController {
     		 return new ResponseEntity<>("Fail ->No logged user",
                      HttpStatus.BAD_REQUEST);
     	}   
+    }
+    
+    @PostMapping("resetPassword/{email}")
+    public ResponseEntity<?> resetPassword(@PathVariable String email){
+    	User user = userRepository.findByEmail(email).get();
+    	if(user != null) {
+    		String token = UUID.randomUUID().toString();
+    		PasswordResetToken prt = new PasswordResetToken();
+    		prt.setToken(token);
+    		Date now = new Date();
+    		prt.setExpiryDate(new Date(now.getTime() + 10800000));
+    		prt.setUser(user);
+    		return new ResponseEntity<>(HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
     }
 }

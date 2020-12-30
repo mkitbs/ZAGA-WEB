@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -68,6 +69,9 @@ public class User {
     
     @ManyToOne
     private Tenant tenant;
+    
+    @OneToOne(mappedBy = "user")
+    private PasswordResetToken passwordResetToken;
 	
 	public User() {
 		this.enabled = false;
