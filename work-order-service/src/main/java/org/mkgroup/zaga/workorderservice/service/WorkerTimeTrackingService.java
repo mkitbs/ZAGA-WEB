@@ -78,7 +78,7 @@ public class WorkerTimeTrackingService {
 		
 	}
 	
-	public ResponseTimeTrackingDTO setTracking(TimeTrackingDTO timeTracking, String sapUserId) {
+	public List<TimeTrackingDTO> setTracking(TimeTrackingDTO timeTracking, String sapUserId) {
 		WorkerTimeTracking wtt = new WorkerTimeTracking();
 		WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
 		wtt.setWorkOrderWorker(wo);
@@ -106,11 +106,16 @@ public class WorkerTimeTrackingService {
 			e.printStackTrace();
 		}
 		wowRepo.save(wo);
-		ResponseTimeTrackingDTO retValue = new ResponseTimeTrackingDTO(wtt);
+		//ResponseTimeTrackingDTO retValue = new ResponseTimeTrackingDTO(wtt);
+		List<TimeTrackingDTO> retValue = new ArrayList<TimeTrackingDTO>();
+		for(WorkerTimeTracking wt : wo.getWorkersTimeTracking()) {
+			TimeTrackingDTO tt = new TimeTrackingDTO(wt);
+			retValue.add(tt);
+		}
 		return retValue;
 	}
 	
-	public UUID updateTracking(TimeTrackingDTO timeTracking, String sapUserId) {
+	public List<TimeTrackingDTO> updateTracking(TimeTrackingDTO timeTracking, String sapUserId) {
 		WorkerTimeTracking wtt = timeTrackingRepo.getOne(timeTracking.getId());
 		WorkOrderWorker wo = wowRepo.getOne(timeTracking.getWowId());
 		wtt.setEndTime(timeTracking.getEndTime());
@@ -127,7 +132,12 @@ public class WorkerTimeTrackingService {
 			e.printStackTrace();
 		}
 		wowRepo.save(wo);
-		return wtt.getId();
+		List<TimeTrackingDTO> retValue = new ArrayList<TimeTrackingDTO>();
+		for(WorkerTimeTracking wt : wo.getWorkersTimeTracking()) {
+			TimeTrackingDTO tt = new TimeTrackingDTO(wt);
+			retValue.add(tt);
+		}
+		return retValue;
 	}
 	
 	public void sendTrackingToSAP(WorkerTimeTracking wtt, String sapUserId) throws Exception {
@@ -248,12 +258,12 @@ public class WorkerTimeTrackingService {
 			}
 			
 	  	
-		System.out.println("Rest Template Testing SAP: " + response.getBody().toString());
+		/*System.out.println("Rest Template Testing SAP: " + response.getBody().toString());
 	    
 	    if(response == null) {
 	    	timeTrackingRepo.delete(wtt);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
-	    }
+	    }*/
 	    
 	}
 	

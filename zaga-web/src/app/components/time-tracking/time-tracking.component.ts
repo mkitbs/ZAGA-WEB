@@ -30,7 +30,7 @@ export class TimeTrackingComponent implements OnInit {
   startFlag = false;
   pauseFlag = false;
   continueFlag = false;
-  backFlag = true;
+  backFlag = false;
   endFlag = false;
   status = "Nije započet"
   isTicking = false;
@@ -60,13 +60,14 @@ export class TimeTrackingComponent implements OnInit {
         var inProgress = this.workerTimeTracking.times.findIndex(x => x.type === "RN");
         var now: Date = new Date();
         var started: Date = new Date(this.workerTimeTracking.times[inProgress].startTime);
-        console.log(now.getTime())
-        console.log(started.getTime())
-        var razlika = (now.getTime() - started.getTime()) / 1000;
 
+        var razlika = (now.getTime() - started.getTime()) / 1000;
+        var saPaz = this.getSeconds(this.workerTimeTracking.times);
+        console.log(razlika + "STARO")
+        console.log(saPaz + "ODUZETE PAUZE");
         this.pauseFlag = true;
         this.endFlag = true;
-        this.basicTimer.startTime = razlika;
+        this.basicTimer.startTime = saPaz;
         this.status = "U radu"
         this.isTicking = true;
         this.basicTimer.start();
@@ -75,6 +76,8 @@ export class TimeTrackingComponent implements OnInit {
           || x.type === "PAUSE_WORK"
           || x.type === "PAUSE_SERVICE") && x.endTime === null);
         let pauseType = this.workerTimeTracking.times[paused].type;
+        console.log(this.workerTimeTracking.times)
+        console.log(pauseType)
         var pauseStarted = new Date(this.workerTimeTracking.times[paused].startTime);
         console.log(pauseStarted)
         var now: Date = new Date();
@@ -108,9 +111,8 @@ export class TimeTrackingComponent implements OnInit {
     timeTracking.type = "RN";
     timeTracking.id = "";
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
-      this.responseTimeTracking = data;
-      this.rnId = this.responseTimeTracking.dbId;
-      this.rnErpId = this.responseTimeTracking.erpId;
+      this.workerTimeTracking.times = data;
+      //this.rnId = this.responseTimeTracking.dbId;
       this.isTicking = true;
       this.backFlag = false;
       this.basicTimer.start();
@@ -131,14 +133,22 @@ export class TimeTrackingComponent implements OnInit {
     timeTracking.id = "";
     this.workerTimeTrackingService.setTracking(timeTracking).subscribe(data => {
       //this.timeTrackingId = data;
-      this.responseTimeTracking = data;
-      this.pauseId = this.responseTimeTracking.dbId;
-      this.pauseErpId = this.responseTimeTracking.erpId;
+      this.workerTimeTracking.times = data;
+      //this.responseTimeTracking = data;
+      //this.pauseId = this.responseTimeTracking.dbId;
+      //this.pauseErpId = this.responseTimeTracking.erpId;
       this.pauseFlag = false;
       this.continueFlag = true;
       this.endFlag = false;
-      this.status = "Pauza";
+      if (this.pause.value === "PAUSE_FUEL") {
+        this.status = "Pauza za gorivo";
+      } else if (this.pause.value === "PAUSE_SERVICE") {
+        this.status = "Servisna pauza";
+      } else if (this.pause.value === "PAUSE_WORK") {
+        this.status = "Pauza - odmor";
+      }
       this.basicTimer.reset();
+      this.basicTimer.startTime = 0;
       this.basicTimer.start();
       console.log(this.pause.value)
     })
@@ -150,16 +160,24 @@ export class TimeTrackingComponent implements OnInit {
     var timeTracking: TimeTracking = new TimeTracking();
     //timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
-    timeTracking.type = this.pause.value;
-    timeTracking.id = this.pauseId;
+    let index = this.workerTimeTracking.times.findIndex(x => (x.type === "PAUSE_FUEL"
+      || x.type === "PAUSE_WORK"
+      || x.type === "PAUSE_SERVICE") && x.endTime === null);
+    console.log(this.workerTimeTracking.times)
+    console.log(index)
+    timeTracking.type = this.workerTimeTracking.times[index].type;
+    timeTracking.id = this.workerTimeTracking.times[index].id;
     timeTracking.endTime = new Date();
     this.workerTimeTrackingService.updateTracking(timeTracking).subscribe(data => {
+      this.workerTimeTracking.times = data;
+      var razlika = this.getSeconds(data);
       this.endFlag = true;
       this.pauseFlag = true;
       this.continueFlag = false;
       this.status = "U radu"
       this.basicTimer.reset();
-      //this.basicTimer.startTime = this.getSeconds()
+      this.basicTimer.startTime = razlika;
+      this.basicTimer.start();
     })
   }
 
@@ -173,7 +191,8 @@ export class TimeTrackingComponent implements OnInit {
     //timeTracking.startTime = new Date();
     timeTracking.wowId = this.id;
     timeTracking.type = "FINISHED";
-    timeTracking.id = this.rnId;
+    let index = this.workerTimeTracking.times.findIndex(x => x.type === "RN");
+    timeTracking.id = this.workerTimeTracking.times[index].id;
     timeTracking.endTime = new Date();
     this.workerTimeTrackingService.updateTracking(timeTracking).subscribe(data => {
       this.endFlag = false;
@@ -223,12 +242,13 @@ export class TimeTrackingComponent implements OnInit {
 
   getSeconds(times: TimeTracking[]) {
     var now: Date = new Date();
+    console.log(times)
     var started = times.findIndex(x => x.type === "RN");
-    var startedTime = times[started].startTime;
+    var startedTime = new Date(times[started].startTime);
     var razlika = (now.getTime() - startedTime.getTime()) / 1000;
     times.forEach(el => {
       if (el.type !== "RN" && el.type !== "FINISHED") {
-        let subt = (el.endTime.getTime() - el.startTime.getTime()) / 1000;
+        let subt = (new Date(el.endTime).getTime() - new Date(el.startTime).getTime()) / 1000;
         razlika = razlika - subt;
         subt = 0;
       }

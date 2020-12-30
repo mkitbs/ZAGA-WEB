@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.ResponseTimeTrackingDTO;
@@ -33,9 +34,9 @@ public class WorkerTimeTrackingController {
 	
 	@PostMapping("setTracking")
 	public ResponseEntity<?> setTracking(@RequestBody TimeTrackingDTO timeTracking, @RequestHeader("SapUserId") String sapUserId){
-		ResponseTimeTrackingDTO retValue = wtService.setTracking(timeTracking, sapUserId);
+		List<TimeTrackingDTO> retValue = wtService.setTracking(timeTracking, sapUserId);
 		if(retValue != null) {
-			return new ResponseEntity<ResponseTimeTrackingDTO>(retValue, HttpStatus.OK);
+			return new ResponseEntity<List<TimeTrackingDTO>>(retValue, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -43,12 +44,8 @@ public class WorkerTimeTrackingController {
 	
 	@PutMapping("updateTracking")
 	public ResponseEntity<?> updateTracking(@RequestBody TimeTrackingDTO timeTracking, @RequestHeader("SapUserId") String sapUserId){
-		UUID timeTrackingId = wtService.updateTracking(timeTracking, sapUserId);
-		if(timeTrackingId != null) {
-			return new ResponseEntity<UUID>(timeTrackingId, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		List<TimeTrackingDTO> retValue = wtService.updateTracking(timeTracking, sapUserId);
+			return new ResponseEntity<List<TimeTrackingDTO>>(retValue, HttpStatus.OK);
 	}
 		
 }
