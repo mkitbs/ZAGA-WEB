@@ -17,32 +17,35 @@ h3 {
 
 .bootstrap-timerInProgress {
   color: #33490b;
-  background-color: transparent;
+  background-color: #e2e7e2;
   padding: 10px 15px;
   margin-bottom: 20px;
   display: inline-block;
   font-weight: 700;
   font-size: 2rem;
+  border-radius: 5px;
 }
 
 .bootstrap-timerPause {
   color: #f68901;
-  background-color: transparent;
+  background-color: #e2e7e2;
   padding: 10px 15px;
   margin-bottom: 20px;
   display: inline-block;
   font-weight: 700;
   font-size: 2rem;
+  border-radius: 5px;
 }
 
 .bootstrap-timerFinished {
   color: #bd362f;
-  background-color: transparent;
+  background-color: #e2e7e2;
   padding: 10px 15px;
   margin-bottom: 20px;
   display: inline-block;
   font-weight: 700;
   font-size: 2rem;
+  border-radius: 5px;
 }
 
 .btn-date {

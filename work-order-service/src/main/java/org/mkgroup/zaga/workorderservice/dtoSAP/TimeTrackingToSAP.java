@@ -1,6 +1,8 @@
 package org.mkgroup.zaga.workorderservice.dtoSAP;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -43,6 +45,12 @@ public class TimeTrackingToSAP {
 	@JsonProperty("RecordNumber")
 	private String recordNumber;
 	
+	@JsonProperty("StartDate")
+	private String startDate;
+	
+	@JsonProperty("EndDate")
+	private String endDate;
+	
 	public TimeTrackingToSAP(WorkerTimeTracking wtt, String companyCode) {
 		this.companyCode = companyCode;
 		this.workOrderNumber = wtt.getWorkOrderWorker().getWorkOrder().getErpId().toString();
@@ -61,24 +69,30 @@ public class TimeTrackingToSAP {
 		String startTime2Send = "";
 		String endTime2Send = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		if(wtt.getStartTime() != null) {
 			String strStartTime = sdf.format(wtt.getStartTime());
+			String startDate = dateFormat.format(wtt.getStartTime());
 			startTime2Send += "PT" + strStartTime.split(":")[0] + 
 					"H" + strStartTime.split(":")[1] + 
 					"M" + strStartTime.split(":")[2] +
 					"S";
 			this.startTime = startTime2Send;
+			this.startDate = startDate;
 		} else {
 			this.startTime = "PT00H00M00S";
+			this.startDate = "";
 		}
 		
 		if(wtt.getEndTime() != null) {
 			String strEndTime = sdf.format(wtt.getEndTime());
+			String endDate = dateFormat.format(wtt.getEndTime());
 			endTime2Send += "PT" + strEndTime.split(":")[0] + 
 					"H" + strEndTime.split(":")[1] + 
 					"M" + strEndTime.split(":")[2] +
 					"S";
 			this.endTime = endTime2Send;
+			this.endDate = endDate;
 		} else {
 			this.endTime = "PT00H00M00S";
 		}
@@ -87,6 +101,5 @@ public class TimeTrackingToSAP {
 		if(String.valueOf(wtt.getErpId()) != null) {
 			this.recordNumber = String.valueOf(wtt.getErpId());
 		}
-		
 	}
 }
