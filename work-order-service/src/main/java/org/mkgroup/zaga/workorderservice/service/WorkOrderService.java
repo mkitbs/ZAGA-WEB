@@ -34,6 +34,7 @@ import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorkerStatus;
 import org.mkgroup.zaga.workorderservice.repository.MaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.SpentMaterialRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderMachineRepository;
@@ -202,6 +203,7 @@ public class WorkOrderService {
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
 				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
+				wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 				
 				if(!wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
@@ -309,6 +311,7 @@ public class WorkOrderService {
 		    		if(arrayMaterial.get(i).getAsJsonObject().get("WebBackendId").getAsString().equals("")) {
 		    			SpentMaterial sm = new SpentMaterial();
 		    			//long id = 10000049;
+		    			//Material material = materialRepo.findByErpId(id).get();
 		    			Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
 		    			sm.setMaterial(material);
 		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
@@ -968,6 +971,33 @@ public class WorkOrderService {
 		results.put("authHeader", authHeader);
 		results.put("cookies", cookies);
 		return results;
+	}
+	
+	public List<WorkOrderDTO> getAllForTractorDriver(String sapUserId, HttpServletRequest request, HttpServletResponse response){
+		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+	    
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
+		for(WorkOrder workOrder : workOrders) {
+			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
+				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
+			}
+		}
+		return workOrdersDTO;
 	}
 	
 }

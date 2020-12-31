@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.Path;
+
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
+import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
@@ -103,5 +107,13 @@ public class WorkOrderWorkerController {
 	public ResponseEntity<?> getDataForReport(@RequestHeader("SapUserId") String sapuserid){
 		List<WorkerReportDTO> data = wowService.getWorkersForReport(sapuserid);
 		return new ResponseEntity<List<WorkerReportDTO>>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("getWorkOrdersForTractorDriver")
+	public ResponseEntity<?> getWorkOrdersForTractorDriver(@RequestHeader("SapUserId") String sapUserId){
+		System.out.println("SAP ID ->" + sapUserId);
+		User user = userRepo.findByPerNumber(Long.parseLong(sapUserId)).get();
+		List<WorkOrderTractorDriverDTO> data = wowService.getWorkOrdersForTractorDriver(user.getId());
+		return new ResponseEntity<List<WorkOrderTractorDriverDTO>>(data, HttpStatus.OK);
 	}
 }

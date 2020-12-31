@@ -1,0 +1,71 @@
+<app-navbar-tractor-driver></app-navbar-tractor-driver>
+
+<div class="container">
+    <div style="margin-top: 70px;"></div>
+    <h2 class="mt-2 mb-2">Pregled naloga</h2>
+    <br />
+    <h4><i class="fa fa-user" style="font-size: 20px; vertical-align: top; color: #5c7495"></i>
+      <span style="vertical-align: bottom;"> {{logged.Name}}</span>
+    </h4>
+    <div *ngIf="empty && loading == false" class="center">
+        <img src="../../../assets/work-order-not-found.png" width="150px" height="150px" />
+        <h4 style="text-align: center; width: 150px;">Nema kreiranih naloga</h4>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div *ngIf="inProgress" class="card mb-4" style="border: none; background-color: transparent;">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <div class="wrapper">
+              <div class="bell" id="bell-1">
+                <div class="anchor material-icons layer-1">notifications_active</div>
+                <div class="anchor material-icons layer-2">notifications</div>
+                <div class="anchor material-icons layer-3">notifications</div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-text">
+              <h5 class="card-title">
+                Radni nalog #{{woInProgress.workOrderSapId}} je u izvršenju
+              </h5>
+              Nastavite sa izvršenjem radnog naloga klikom na dugme nastavi. 
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary continue-btn" (click)="changeRoute(woInProgress)">
+        Nastavi <i class="fa fa-caret-right"></i>
+      </button>
+    </div>
+    <div class="row card-group">
+    <div class="card mb-3" *ngFor="let workOrder of workOrders; let j = index" (click)="changeRoute(workOrder)"
+      style="border: 1px solid #5c7495; border-radius: 5px; font-size: 15px; margin-left: 10px; margin-right: 10px;">
+      <div class="card-body" style="background-color: #5c7495">
+        <h4 class="card-title" style="color: white; font-weight: bold;">
+          <span style="text-align: left;">#{{ workOrder.workOrderSapId }}</span>
+          <span style="float: right;">{{ workOrder.workOrderDate | date:'dd.MM.yyyy.'}}</span>
+        </h4>
+        <ul class="list-group">
+          <li class="list-group-item list-group-item">
+            <i class="fa fa-map-marker" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+            <span style="padding-left: 9px; vertical-align: middle">
+             {{ workOrder.crop }}
+            </span>
+          </li>
+          <li class="list-group-item list-group-item">
+            <i class="fa fa-file" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+            <span style="padding-left: 8px; vertical-align: middle">
+             {{ workOrder.operation }}
+            </span>
+          </li>
+          <li class="list-group-item list-group-item">
+            <i class="fas fa-bell" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+             <span style="padding-left: 7px;"> {{ workOrder.wowStatus }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+    <ngx-spinner></ngx-spinner>
+  </div>

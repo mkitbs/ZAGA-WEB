@@ -9,9 +9,34 @@
     </div>
 </div>
 -->
-
-<div class="container">
-    <div style="padding-top: 50px;"></div>
-  <img src="../../../assets/notFound.png" style="width:100%">
-  <button class="btn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Vrati se nazad</button>
+<div class="d-none d-xl-block">
+    <div class="container">
+        <div style="padding-top: 50px;"></div>
+        <img src="../../../assets/notFound.png" style="width:100%">
+        <button class="btn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Vrati se nazad</button>
+    </div>
+</div>
+<!--laptop version-->
+<div class="d-none d-lg-block d-xl-none">
+    <div class="container">
+        <div style="padding-top: 50px;"></div>
+        <img src="../../../assets/notFound.png" style="width:100%">
+        <button class="btnLaptop" (click)="goBack()"><i class="fa fa-arrow-left"></i> Vrati se nazad</button>
+    </div>
+</div>
+<!--tablet version-->
+<div class="d-none d-md-block d-lg-none">
+    <div class="container">
+        <div style="padding-top: 50px;"></div>
+        <img src="../../../assets/notFound.png" style="width:100%">
+        <button class="btnTablet" (click)="goBack()"><i class="fa fa-arrow-left"></i> Vrati se nazad</button>
+    </div>
+</div>
+<!--moblie version-->
+<div class="container d-md-none">
+    <div class="container">
+        <div style="padding-top: 50px;"></div>
+        <img src="../../../assets/notFound.png" style="width:100%">
+        <button class="btnMobile" (click)="goBack()"><i class="fa fa-arrow-left"></i> Vrati se nazad</button>
+    </div>
 </div>

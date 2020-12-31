@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,8 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
@@ -26,6 +29,7 @@ import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderWorkerStatus;
 import org.mkgroup.zaga.workorderservice.repository.MachineRepository;
 import org.mkgroup.zaga.workorderservice.repository.OperationRepository;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
@@ -508,6 +512,24 @@ public class WorkOrderWorkerService {
 			w.setWorkPeriodSum(workPeriodSum);
 		}
 		
+		return retValues;
+	}
+	
+	public List<WorkOrderTractorDriverDTO> getWorkOrdersForTractorDriver(UUID workerId){
+		List<WorkOrderWorker> result = wowRepo.findAllWoWByWorker(workerId);
+		List<WorkOrderTractorDriverDTO> retValues = new ArrayList<WorkOrderTractorDriverDTO>();
+		for(WorkOrderWorker wow : result) {
+			if(!wow.getMachine().getErpId().equals("BEZ-MASINE") && !wow.getStatus().equals(WorkOrderWorkerStatus.FINISHED)) {
+				if(wow.getStatus().equals(WorkOrderWorkerStatus.STARTED) || wow.getStatus().equals(WorkOrderWorkerStatus.PAUSED)){
+					WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow, true);
+					retValues.add(wowDTO);
+				} else {
+					WorkOrderTractorDriverDTO wowDTO = new WorkOrderTractorDriverDTO(wow, false);
+					retValues.add(wowDTO);
+				}
+				
+			}
+		}
 		return retValues;
 	}
 	

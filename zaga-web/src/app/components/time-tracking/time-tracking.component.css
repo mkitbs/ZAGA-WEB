@@ -1,0 +1,84 @@
+td {
+  padding-left: 6px;
+}
+
+th {
+  width: 150px;
+}
+
+h3 {
+  color: #5c7495;
+}
+
+.btn {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.bootstrap-timerInProgress {
+  color: #33490b;
+  background-color: #e2e7e2;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 5px;
+}
+
+.bootstrap-timerPause {
+  color: #f68901;
+  background-color: #e2e7e2;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 5px;
+}
+
+.bootstrap-timerFinished {
+  color: #bd362f;
+  background-color: #e2e7e2;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 5px;
+}
+
+.btn-date {
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
+  color: white;
+}
+
+[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[type="radio"] + .btn-date {
+  cursor: pointer;
+}
+
+[type="radio"]:checked + .btn-date {
+  background-color: #5c7495;
+}
+
+.statusInProgress {
+  color: #33490b;
+}
+
+.statusPause {
+  color: #f68901;
+}
+
+.statusFinished {
+  color: #bd362f;
+}

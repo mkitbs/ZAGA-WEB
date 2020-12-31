@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MaterialReport } from 'src/app/models/MaterialReport';
 import { WorkOrder } from 'src/app/models/WorkOrder';
 import { SpentMaterialService } from 'src/app/service/spent-material.service';
@@ -14,7 +15,8 @@ export class ReportMaterialComponent implements OnInit {
 
   constructor(
     private spentMaterialService:SpentMaterialService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   materials: MaterialReport[] = [];
@@ -23,9 +25,14 @@ export class ReportMaterialComponent implements OnInit {
   dates: any  = { dateFrom: "", dateTo: "" };
   filters: any = { namdateFrome: "", dateTo: "" };
 
+  loading;
 
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.spentMaterialService.getDataForReport().subscribe(data => {
+      this.spinner.hide();
+      this.loading = false;
       this.materials = data;
       console.log(this.materials)
       this.materials.forEach(material => {
@@ -47,9 +54,12 @@ export class ReportMaterialComponent implements OnInit {
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
           }
+        })
       })
+    }, error => {
+      this.spinner.hide();
+      this.loading = false;
     })
-  })
   }
 
   changeRoute(id) {

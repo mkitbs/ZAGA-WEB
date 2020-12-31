@@ -48,4 +48,11 @@ export class WorkOrderWorkerService {
       "api/workOrderWorker/getDataForReport"
     )
   }
+
+  getWorkOrderForTractorDriver(): Observable<any>{
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getWorkOrdersForTractorDriver"
+    )
+  }
 }

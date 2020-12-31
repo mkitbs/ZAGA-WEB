@@ -2,6 +2,7 @@ import { convertActionBinding } from '@angular/compiler/src/compiler_util/expres
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { WorkerReport } from 'src/app/models/WorkerReport';
 import { WorkOrder } from 'src/app/models/WorkOrder';
 import { WorkOrderWorkerService } from 'src/app/service/work-order-worker.service';
@@ -15,7 +16,8 @@ export class ReportEmployeeComponent implements OnInit {
 
   constructor(
     private wowService: WorkOrderWorkerService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   workers: WorkerReport[] = [];
@@ -25,9 +27,14 @@ export class ReportEmployeeComponent implements OnInit {
   filters: any = { namdateFrome: "", dateTo: "" };
 
   empty;
+  loading;
  
   ngOnInit() {
+    this.spinner.show();
+    this.loading = true;
     this.wowService.getDataForReport().subscribe(data => {
+      this.spinner.hide();
+      this.loading = false;
       this.workers = data;
       this.workers.forEach(worker => {
         var date = "";
@@ -50,6 +57,9 @@ export class ReportEmployeeComponent implements OnInit {
           }
         })
       })
+    }, error => {
+      this.spinner.hide();
+      this.loading = false;
     })
   }
 

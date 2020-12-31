@@ -15,4 +15,5 @@ public class TenantAuthDTO {
 	private String name;
 	private SettingAuthDTO setting;
 	private List<UserAuthDTO> users;
+	private String companyCode;
 }

@@ -19,12 +19,14 @@ public class TenantDTO {
 	private String name;
 	private SettingDTO setting;
 	private List<UserDTO> users;
+	private String companyCode;
 	
 	public TenantDTO(Tenant t) {
 		id = t.getId();
 		name = t.getName();
 		setting = new SettingDTO(t.getSetting());
 		users = new ArrayList<UserDTO>();
+		companyCode = t.getCompanyCode();
 		for(User u : t.getUsers()) {
 			users.add(new UserDTO(u.getSapUserId()));
 		}
