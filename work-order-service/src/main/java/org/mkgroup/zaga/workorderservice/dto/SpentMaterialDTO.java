@@ -30,6 +30,8 @@ public class SpentMaterialDTO {
 	
 	private boolean deleted;
 	
+	private boolean isFuel;
+	
 	public SpentMaterialDTO(SpentMaterial sm) {
 		this.id = sm.getId();
 		this.quantity = sm.getQuantity();
@@ -38,5 +40,6 @@ public class SpentMaterialDTO {
 		this.spentPerHectar = sm.getSpentPerHectar();
 		this.material = new MaterialDTO(sm.getMaterial());
 		this.deleted = sm.isDeleted();
+		this.isFuel = sm.isFuel();
 	}
 }

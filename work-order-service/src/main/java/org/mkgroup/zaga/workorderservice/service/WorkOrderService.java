@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
+import org.mkgroup.zaga.workorderservice.model.Machine;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.Operation;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -161,6 +163,7 @@ public class WorkOrderService {
 			
 			UUID workOrderId = workOrder.getId();
 			
+			Map<Long, Boolean> fuelsMap = new HashMap<Long, Boolean>();
 			for(WorkOrderWorkerDTO wowDTO : workOrderDTO.getWorkers()) {
 				WorkOrderWorker wow = new WorkOrderWorker();
 				
@@ -202,8 +205,13 @@ public class WorkOrderService {
 				}
 				wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 				wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
-				wow.setMachine(machineService.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
+				Machine machine = machineService.getOne(UUID.fromString(wowDTO.getMachine().getDbid()));
+				wow.setMachine(machine);
 				wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
+				
+				if(!fuelsMap.containsKey(machine.getFuelErpId())) {
+					fuelsMap.put(machine.getFuelErpId(), true);
+				}
 				
 				if(!wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 					wow.setConnectingMachine(machineService.getOne(UUID.fromString(wowDTO.getConnectingMachine().getDbid())));
@@ -233,6 +241,24 @@ public class WorkOrderService {
 				workOrder.getMaterials().add(material);
 				workOrder = workOrderRepo.save(workOrder);
 			}
+			
+			Iterator it = fuelsMap.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		        System.out.println(pair.getKey() + " = " + pair.getValue());
+		        SpentMaterial sm = new SpentMaterial();
+		        sm.setMaterial(materialRepo.findByErpId((Long) pair.getKey()).get());
+		        sm.setQuantity(-1.0);
+				sm.setSpent(-1.0);
+				sm.setSpentPerHectar(-1.0);
+				sm.setFuel(true);
+				sm.setWorkOrder(workOrder);
+				sm = spentMaterialRepo.save(sm);
+				workOrder.getMaterials().add(sm);
+				workOrder = workOrderRepo.save(workOrder);
+		        it.remove(); // avoids a ConcurrentModificationException
+		    }
+			
 			WorkOrder wo = getOneW(workOrderId);
 			
 			log.info("Work order creation successfuly finished");
@@ -297,7 +323,8 @@ public class WorkOrderService {
 		    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 		    	JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 			    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
-			    System.out.println(arrayMaterial);
+			    System.out.println("WorkOrderToMaterialNavigation =>" + arrayMaterial);
+			    System.out.println("WorkOrderToEmployeeNavigation => " + array);
 		    	
 		    	for(int i = 0; i <array.size(); i++) {
 		    		UUID uid = UUID.fromString(array.get(i).getAsJsonObject().get("WebBackendId").getAsString());
@@ -312,8 +339,8 @@ public class WorkOrderService {
 		    			SpentMaterial sm = new SpentMaterial();
 		    			//long id = 10000049;
 		    			//Material material = materialRepo.findByErpId(id).get();
-		    			Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsLong()).get();
-		    			sm.setMaterial(material);
+		    			//Material material = materialRepo.findByErpId(arrayMaterial.get(i).getAsJsonObject().get("MaterialId").getAsLong()).get();
+		    			//sm.setMaterial(material);
 		    			sm.setErpId(arrayMaterial.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsInt());
 		    			spentMaterialRepo.save(sm);
 		    		} else {

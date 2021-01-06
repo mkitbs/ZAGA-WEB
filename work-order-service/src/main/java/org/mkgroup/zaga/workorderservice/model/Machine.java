@@ -40,6 +40,8 @@ public class Machine {
 	
 	private String erpId;
 	
+	private long fuelErpId;
+	
 	@Enumerated(EnumType.STRING)
 	private MachineType type;
 	
@@ -62,6 +64,7 @@ public class Machine {
 		this.name = m.getName();
 		this.companyCode = m.getCompanyCode();
 		this.orgUnit = m.getOrgUnit();
+		this.fuelErpId = m.getFuelErpId();
 		
 		if(m.getType().equals("PG")) {
 			this.type = MachineType.PROPULSION;

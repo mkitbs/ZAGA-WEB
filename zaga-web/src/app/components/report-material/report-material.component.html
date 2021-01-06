@@ -145,11 +145,14 @@
           | ReportMaterialSapId: searchWorkOrder.value
           | SearchWoBetweenDates: filters; 
           let j = index">
-          <ng-container *ngFor="let mat of workOrder.materials">
+          <ng-container *ngFor="let mat of workOrder.materials; let z = index">
             <ng-container *ngIf="mat.deleted == false">
               <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
               <ng-template #elseBlockName><td></td></ng-template>
-              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
+                {{ workOrder.sapId }}
+              </td>
+              <ng-template #elseBlockSapId><td></td></ng-template>
               <td>{{ workOrder.operationName }}</td>
               <td>{{ workOrder.date }}</td>
               <td>{{ workOrder.table }}</td>

@@ -92,7 +92,7 @@
                 <mat-autocomplete #autoField="matAutocomplete" [displayWith]="displayFnField" place>
                   <mat-option *ngFor="
                       let field of fields | SearchFields: searchField.value
-                    " [value]="field" (click)="getCulture(field.dbId)">
+                    " [value]="field" (click)="getCulture()">
                     {{field.Id}} - {{ field.Name }}
                   </mat-option>
                 </mat-autocomplete>
@@ -106,7 +106,7 @@
                   <mat-autocomplete #autoFieldWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
                     <mat-option *ngFor="
                         let field of fields | SearchFields: searchFieldWithoutId.value
-                      " [value]="field" (click)="getCulture(field.dbId)">
+                      " [value]="field" (click)="getCulture()">
                       {{ field.Name }}
                     </mat-option>
                   </mat-autocomplete>
@@ -217,14 +217,14 @@
           </td>
           <td class="right-col-header">
             <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
-              *ngIf="!new; else elseBlockYear">
+              *ngIf="!new; else elseBlockYear" (click)="getCulture()">
               <option value="{{previousYear}}">{{previousYear}}</option>
               <option value="{{currentYear}}" selected>{{currentYear}}</option>
               <option value="{{nextYear}}">{{nextYear}}</option>
             </select>
             <ng-template #elseBlockYear>
               <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
-                required>
+                required (click)="getCulture()">
                 <option value="{{previousYear}}">{{previousYear}}</option>
                 <option value="{{currentYear}}" selected>{{currentYear}}</option>
                 <option value="{{nextYear}}">{{nextYear}}</option>
@@ -950,13 +950,11 @@
                 <td>
                   <div class="form-group">
                     <div class="input-group mb-3">
-                      <input [(ngModel)]="quantityEntered" onKeyPress="if(this.value.length==7) return false;"
-                        type="number" name="quantityEnter" id="" class="form-control" #quantity="ngModel" required />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">{{
-                          unit
-                          }}</span>
-                      </div>
+                      <mat-form-field class="inputAuto">
+                        <input [(ngModel)]="quantityEntered" onKeyPress="if(this.value.length==7) return false;"
+                          type="number" name="quantityEnter" placeholder="Unesite količinu" id="" matInput #quantity="ngModel" required />
+                          <span matSuffix>{{unit}}</span>
+                      </mat-form-field>
                       <div *ngIf="(quantityEntered == null || quantityEntered == undefined) && clickAddMaterial"
                         style="color: red">
                         Unesite količinu.
@@ -975,14 +973,17 @@
                 <td *ngIf="!new">
                   <div class="form-group">
                     <div class="input-group mb-3">
-                      <input *ngIf="new; else elseBlockQuantity" [(ngModel)]="quantityEntered / crop.Area" type="number"
-                        name="quantityPerHectar" id="" class="form-control" disabled />
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">{{ unit }}/ha</span>
-                      </div>
+                      <mat-form-field class="inputAuto" *ngIf="new; else elseBlockQuantity">
+                        <input  [(ngModel)]="quantityEntered / crop.Area" type="number"
+                        name="quantityPerHectar" id="" matInput disabled />
+                        <span matSuffix>{{unit}}/ha</span>
+                      </mat-form-field>
                       <ng-template #elseBlockQuantity>
-                        <input [(ngModel)]="quantityEntered / workOrder.treated" type="number" name="quantityPerHectar"
-                          id="" class="form-control" disabled />
+                        <mat-form-field class="inputAuto">
+                          <input [(ngModel)]="quantityEntered / workOrder.treated" type="number" name="quantityPerHectar"
+                            id="" matInput disabled />
+                          <span matSuffix *ngIf="unit != null">{{unit}}/ha</span>
+                        </mat-form-field>
                       </ng-template>
                     </div>
                   </div>
@@ -1051,13 +1052,11 @@
                   <td>
                     <div class="form-group">
                       <div class="input-group mb-3">
+                        <mat-form-field class="inputAuto">
                         <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
-                          name="{{ material.quantity }}" id="" class="form-control" />
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2">{{
-                            material.material.Unit
-                            }}</span>
-                        </div>
+                          name="{{ material.quantity }}" id="" matInput />
+                          <span matSuffix>{{material.material.Unit}}</span>
+                      </mat-form-field>
                       </div>
                     </div>
                   </td>
@@ -1125,7 +1124,7 @@
                         <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockExDbWoMaterial">
                           <input type="text" matInput [(ngModel)]="material.material"
                             [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterial"
-                            #searchExDbWoMaterial required />
+                            #searchExDbWoMaterial required  [disabled]="material.fuel" />
 
                           <mat-autocomplete #autoExDbWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial"
                             place>
@@ -1141,7 +1140,7 @@
                           <mat-form-field class="inputAuto">
                             <input type="text" matInput [(ngModel)]="material.material"
                               [ngModelOptions]="{ standalone: true }" [matAutocomplete]="autoExDbWoMaterialWithoutId"
-                              #searchExDbWoMaterialWithoutId required />
+                              #searchExDbWoMaterialWithoutId required  [disabled]="material.fuel"/>
 
                             <mat-autocomplete #autoExDbWoMaterialWithoutId="matAutocomplete"
                               [displayWith]="displayFnWithoutId" place>
@@ -1158,14 +1157,12 @@
                     <td>
                       <div class="form-group">
                         <div class="input-group mb-3">
-                          <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
-                            name="{{ material.quantity }}" id="" class="form-control"
-                            onKeyPress="if(this.value.length==7) return false;" />
-                          <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">{{
-                              material.material.Unit
-                              }}</span>
-                          </div>
+                          <mat-form-field>
+                            <input [(ngModel)]="material.quantity" [ngModelOptions]="{ standalone: true }" type="number"
+                              name="{{ material.quantity }}" id="" matInput  [disabled]="material.fuel"
+                              onKeyPress="if(this.value.length==7) return false;" />
+                            <span matSuffix>{{material.material.Unit}}</span>
+                          </mat-form-field>
                         </div>
                         <div *ngIf="validQuantity == false && clickUpdateMaterial && idForValidQuantity == material.id"
                           style="color: red">
@@ -1176,11 +1173,11 @@
                     <td>
                       <div class="form-group">
                         <div class="input-group mb-3">
-                          <input [(ngModel)]="quantityPerHectar" [ngModelOptions]="{ standalone: true }" type="number"
-                            name="{{ material.quantityPerHectar }}" id="" class="form-control" disabled />
-                          <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">{{ material.material.Unit }}/ha</span>
-                          </div>
+                          <mat-form-field>
+                            <input [(ngModel)]="material.quantity/workOrder.treated" [ngModelOptions]="{ standalone: true }" type="number"
+                              name="{{ material.quantityPerHectar }}" id="" matInput disabled />
+                            <span matSuffix>{{material.material.Unit}}/ha</span>
+                          </mat-form-field>
                         </div>
                       </div>
                     </td>
@@ -1188,14 +1185,14 @@
                       <div class="form-group">
                         <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
                           (click)="editMaterial(material)" id="{{ material.id }}" [ngClass]="material.spent == null || 
-                        material.spent == -1 ? 'warning' : 'ok'">
+                        material.spent == -1 ? 'warning' : 'ok'"  [disabled]="material.fuel">
                           <i class="fa fa-ellipsis-v"></i>
                         </button>
                       </div>
                     </td>
                     <td>
                       <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
-                        [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
+                        [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser || material.fuel">
                         <i class="fa fa-check"></i>
                       </button>
                     </td>
@@ -1205,7 +1202,7 @@
                           data-toggle="modal" 
                           data-target="#deleteMaterialModal" 
                           (click)="setMaterialId(material.id)"
-                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
+                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser || material.fuel">
                           <i class="fa fa-minus"></i>
                         </button>
                       </div>

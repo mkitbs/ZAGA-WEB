@@ -6,25 +6,29 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import javax.ws.rs.Path;
 
+import org.joda.time.LocalDate;
 import org.mkgroup.zaga.authorizationservice.dto.ExceptionResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginResponseDTO;
+import org.mkgroup.zaga.authorizationservice.dto.ResetPasswordDTO;
 import org.mkgroup.zaga.authorizationservice.dto.RoleDTO;
 import org.mkgroup.zaga.authorizationservice.dto.SettingDTO;
 import org.mkgroup.zaga.authorizationservice.dto.SignupRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.UserDTO;
 import org.mkgroup.zaga.authorizationservice.exception.InvalidJTWTokenException;
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
+import org.mkgroup.zaga.authorizationservice.model.PasswordResetToken;
 import org.mkgroup.zaga.authorizationservice.model.Role;
 import org.mkgroup.zaga.authorizationservice.model.RoleName;
 import org.mkgroup.zaga.authorizationservice.model.Setting;
 import org.mkgroup.zaga.authorizationservice.model.Tenant;
 import org.mkgroup.zaga.authorizationservice.model.User;
+import org.mkgroup.zaga.authorizationservice.repository.PasswordResetTokenRepository;
 import org.mkgroup.zaga.authorizationservice.repository.RoleRepository;
 import org.mkgroup.zaga.authorizationservice.repository.SettingRepository;
 import org.mkgroup.zaga.authorizationservice.repository.TenantRepository;
@@ -81,6 +85,9 @@ public class AuthController {
     
     @Autowired
     SettingRepository settingRepository;
+    
+    @Autowired
+    PasswordResetTokenRepository passwordResetRepo;
     
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
@@ -361,4 +368,42 @@ public class AuthController {
                      HttpStatus.BAD_REQUEST);
     	}   
     }
+    
+    @GetMapping("requestResetPassword/{email}")
+    public ResponseEntity<?> requestResetPassword(@PathVariable String email) throws MessagingException, IOException{
+    	User user = userRepository.findByEmail(email).orElse(null);
+    	if(user != null) {
+    		PasswordResetToken passToken = passwordResetRepo.findByUser(user.getId()).orElse(null);
+    		if(passToken != null) {
+    			passwordResetRepo.delete(passToken);
+    		}
+    		String token = UUID.randomUUID().toString();
+    		PasswordResetToken prt = new PasswordResetToken();
+    		prt.setToken(token);
+    		Date now = new Date();
+    		prt.setExpiryDate(new Date(now.getTime() + 10800000));
+    		prt.setUser(user);
+    		prt = passwordResetRepo.save(prt);
+    		mailNotification.sendEmailPasswordReset(user.getEmail(), token);
+    		return new ResponseEntity<>(HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
+    }
+    
+    @PostMapping("resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO rp){
+    	PasswordResetToken prt = passwordResetRepo.findByToken(rp.getToken());
+    	Date now = new Date();
+    	if(prt != null && now.before(prt.getExpiryDate())) {
+    		User user = prt.getUser();
+    		user.setPassword(encoder.encode(rp.getPassword()));
+    		userRepository.save(user);
+    		passwordResetRepo.delete(prt);
+    		return new ResponseEntity<>(HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
+    }
+    
 }

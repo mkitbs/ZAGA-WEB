@@ -102,6 +102,7 @@ import { WorkOrderTractorDriverComponent } from './components/work-order-tractor
 import { NavbarTractorDriverComponent } from './components/navbar-tractor-driver/navbar-tractor-driver.component';
 import { TimeTrackingComponent } from "./components/time-tracking/time-tracking.component";
 import { CdTimerModule } from "angular-cd-timer";
+import { PasswordResetComponent } from './components/password-reset/password-reset.component'
 
 declare var require: any;
 var config = require("config");
@@ -131,6 +132,7 @@ const routes: Routes = [
   { path: "settings", component: SettingsComponent, canActivate: [AdminGuardGuard] },
   { path: "workOrderTractorDriver", component: WorkOrderTractorDriverComponent, canActivate: [AuthGuardGuard] },
   { path: "timeTracking/:id", component: TimeTrackingComponent },
+  { path: "passwordReset/:token", component: PasswordResetComponent },
   { path: "404", component: NotFoundComponent },
   { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
   { path: "**", component: NotFoundComponent }
@@ -208,6 +210,7 @@ const routes: Routes = [
     WorkOrderTractorDriverComponent,
     NavbarTractorDriverComponent,
     TimeTrackingComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,

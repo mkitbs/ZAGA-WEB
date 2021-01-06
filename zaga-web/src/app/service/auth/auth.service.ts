@@ -37,4 +37,17 @@ export class AuthService {
   updateUserSettings(tenantId, setting): Observable<any> {
     return this.http.put(environment.authURL + "updateSettings/" + tenantId, setting);
   }
+
+  requestResetPassword(email): Observable<any> {
+    return this.http.get(
+      environment.authURL + "requestResetPassword/" + email
+    )
+  }
+
+  resetPassword(resetPassword): Observable<any> {
+    return this.http.post(
+      environment.authURL + "resetPassword", resetPassword
+    )
+  }
+
 }
