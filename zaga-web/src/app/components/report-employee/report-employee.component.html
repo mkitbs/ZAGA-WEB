@@ -167,9 +167,10 @@
         <tr *ngFor="let wo of workOrder.workers; let z = index">
             <td *ngIf="z==0 && j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
             <ng-template #elseBlockName><td></td></ng-template>
-            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
+            <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
               {{ workOrder.sapId }}
             </td>
+            <ng-template #elseBlockSapId><td></td></ng-template>
             <td>{{ wo.operation.Name }}</td>
             <td>{{ workOrder.date }}</td>
             <td>{{ workOrder.table }}</td>

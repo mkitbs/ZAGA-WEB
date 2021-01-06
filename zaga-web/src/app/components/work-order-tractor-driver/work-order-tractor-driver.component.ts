@@ -29,7 +29,7 @@ export class WorkOrderTractorDriverComponent implements OnInit {
   loading;
   inProgress;
   woInProgress: WorkOrderTractorDriver = new WorkOrderTractorDriver();
-  logged: User = new User();
+  logged;
 
   ngOnInit() {
     this.getWorkOrders();
@@ -94,7 +94,7 @@ export class WorkOrderTractorDriverComponent implements OnInit {
     this.authService.getLogged().subscribe(data => {
       var id = data.sapUserId;
       this.userService.getUserByPerNumber(id).subscribe(data => {
-        this.logged = data;
+        this.logged = data.Name;
         console.log(this.logged)
       })
     })

@@ -235,10 +235,10 @@ export class CreateworkOrderComponent implements OnInit {
 
         if (this.workOrder.materials.length != 0) {
           this.workOrder.materials.forEach(material => {
-            if (material.quantity == -1) {
+            if (material.quantity < 0) {
               material.quantity = null;
             }
-            if (material.quantityPerHectar == -1) {
+            if (material.quantityPerHectar < -1) {
               material.quantityPerHectar = null;
             }
             if(material.deleted == true){
@@ -395,10 +395,11 @@ export class CreateworkOrderComponent implements OnInit {
     });
   }
 
-  getCulture(fieldId) {
+  getCulture() {
     if (this.new) {
+      console.log(this.fieldFC.value)
       this.cropService
-        .getAllByFieldAndYear(fieldId, this.selectedYear)
+        .getAllByFieldAndYear(this.fieldFC.value.dbId, this.selectedYear)
         .subscribe((data) => {
           this.isGetCulture = true;
           console.log(data);
@@ -406,7 +407,7 @@ export class CreateworkOrderComponent implements OnInit {
         });
     } else {
       this.cropService
-        .getAllByFieldAndYear(fieldId, this.workOrder.year)
+        .getAllByFieldAndYear(this.fieldFC.value.dbId, this.workOrder.year)
         .subscribe((data) => {
           console.log(data);
           this.crops = data;
@@ -586,6 +587,9 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.id = wow.id;
     this.wow = wow;
     console.log(this.wow);
+    console.log(this.allEmployees.find(
+      (x) => x.userId == this.wow.user.userId
+    ))
     this.wow.user.Name = this.allEmployees.find(
       (x) => x.userId == this.wow.user.userId
     ).name;
@@ -741,6 +745,16 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.workOrder.treated == 0) {
           this.workOrder.treated = null;
         }
+        if (this.workOrder.materials.length != 0) {
+          this.workOrder.materials.forEach(material => {
+            if (material.quantity < 0) {
+              material.quantity = null;
+            }
+            if (material.quantityPerHectar < -1) {
+              material.quantityPerHectar = null;
+            }
+          })
+        }
 
       });
     }, err => {
@@ -786,6 +800,7 @@ export class CreateworkOrderComponent implements OnInit {
     if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel) {
       this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
+        this.wow = new WorkOrderWorker();
         this.toastr.success("Uspešno sačuvane promene.");
         this.spinner.hide();
         this.workOrderService.getOne(this.workId).subscribe((data) => {
@@ -829,6 +844,7 @@ export class CreateworkOrderComponent implements OnInit {
         });
       }, error => {
         this.spinner.hide();
+        this.wow = new WorkOrderWorker();
       });
       this.closeButtonWowModal.nativeElement.click();
     } else {
@@ -1055,6 +1071,9 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.treated = null;
             }
           });
+        }, error => {
+          this.spinner.hide();
+          this.toastr.error("Trenutno nije moguće dodati novi materijal.")
         });
     }
 
@@ -1407,6 +1426,35 @@ export class CreateworkOrderComponent implements OnInit {
   }
   */
 
+  getWorkOrder(){
+    this.workOrderService.getOne(this.workId).subscribe((data) => {
+      this.workOrder = data;
+      if (this.workOrder.status == "NEW") {
+        this.workOrder.status = "Novi";
+      } else if (this.workOrder.status == "IN_PROGRESS") {
+        this.workOrder.status = "U radu";
+      } else if (this.workOrder.status == "CLOSED") {
+        this.workOrder.status = "Zatvoren";
+      }
+
+      this.workOrder.date = {
+        day: +this.workOrder.date.day,
+        month: +this.workOrder.date.month,
+        year: +this.workOrder.date.year,
+      };
+
+      this.cropService
+        .getAllByFieldAndYear(data.tableId, data.year)
+        .subscribe((res) => {
+          this.crops = res;
+        });
+
+      if (this.workOrder.treated == 0) {
+        this.workOrder.treated = null;
+      }
+    });
+  }
+
   //delete methods
 
   deleteExistingWorkOrderWorker(id) {
@@ -1414,6 +1462,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wowService.deleteWorkOrderWorker(id).subscribe((res) => {
       let dataa = this.workOrder.workers.filter(item => item.id == id);
       dataa[0].deleted = true;
+      this.getWorkOrder();
       this.spinner.hide();
       this.toastr.success("Uspešno ste izbrisali radnika")
       

@@ -44,6 +44,9 @@ public class MachineDTO {
 	@JsonProperty("MachineGroupId")
 	private Long machineGroupId;
 	
+	@JsonProperty("FuelMaterial")
+	private Long fuelErpId;
+	
 	private UUID machineGroup;
 	
 	private String machineGroupName;
@@ -57,6 +60,7 @@ public class MachineDTO {
 		erpId = machine.getErpId();
 		machineGroupName = machine.getMachineGroupId().getName();
 		machineGroupId = machine.getMachineGroupId().getErpId();
+		fuelErpId = machine.getFuelErpId();
 	}
 
 	public MachineDTO(String name) {

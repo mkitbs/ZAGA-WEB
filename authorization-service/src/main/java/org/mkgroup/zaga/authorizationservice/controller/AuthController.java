@@ -10,9 +10,8 @@ import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import javax.ws.rs.Path;
 
-import org.mkgroup.zaga.authorizationservice.config.QuartzConfig;
+import org.joda.time.LocalDate;
 import org.mkgroup.zaga.authorizationservice.dto.ExceptionResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginRequestDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginResponseDTO;
@@ -36,16 +35,11 @@ import org.mkgroup.zaga.authorizationservice.repository.TenantRepository;
 import org.mkgroup.zaga.authorizationservice.repository.UserRepository;
 import org.mkgroup.zaga.authorizationservice.service.CheckTokenAndPermissions;
 import org.mkgroup.zaga.authorizationservice.service.MailNotification;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -94,12 +88,6 @@ public class AuthController {
     
     @Autowired
     PasswordResetTokenRepository passwordResetRepo;
-    
-    @Autowired
-	QuartzConfig quartzConfig;
-	
-	@Autowired
-	Scheduler scheduler;
     
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	
@@ -382,9 +370,13 @@ public class AuthController {
     }
     
     @GetMapping("requestResetPassword/{email}")
-    public ResponseEntity<?> requestResetPassword(@PathVariable String email) throws MessagingException, IOException, SchedulerException{
+    public ResponseEntity<?> requestResetPassword(@PathVariable String email) throws MessagingException, IOException{
     	User user = userRepository.findByEmail(email).orElse(null);
     	if(user != null) {
+    		PasswordResetToken passToken = passwordResetRepo.findByUser(user.getId()).orElse(null);
+    		if(passToken != null) {
+    			passwordResetRepo.delete(passToken);
+    		}
     		String token = UUID.randomUUID().toString();
     		PasswordResetToken prt = new PasswordResetToken();
     		prt.setToken(token);
@@ -393,9 +385,6 @@ public class AuthController {
     		prt.setUser(user);
     		prt = passwordResetRepo.save(prt);
     		mailNotification.sendEmailPasswordReset(user.getEmail(), token);
-    		JobDetail jobDetail = quartzConfig.buildJobDetail(prt.getId());
-			Trigger trigger = quartzConfig.buildJobTrigger(jobDetail, new Date(now.getTime() + 10800000));
-			scheduler.scheduleJob(jobDetail, trigger);
     		return new ResponseEntity<>(HttpStatus.OK);
     	} else {
     		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -410,6 +399,7 @@ public class AuthController {
     		User user = prt.getUser();
     		user.setPassword(encoder.encode(rp.getPassword()));
     		userRepository.save(user);
+    		passwordResetRepo.delete(prt);
     		return new ResponseEntity<>(HttpStatus.OK);
     	} else {
     		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

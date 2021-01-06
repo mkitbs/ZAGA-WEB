@@ -171,7 +171,10 @@
          
               <td *ngIf="j==0 && y==0; else elseBlockName" style="font-weight: bold;">{{wo.machine.Name}}</td>
               <ng-template #elseBlockName><td></td></ng-template>
-              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">{{ workOrder.sapId }}</td>
+              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="y==0; else elseBlockSapId">
+                {{ workOrder.sapId }}
+              </td>
+              <ng-template #elseBlockSapId><td></td></ng-template>
               <td>{{ wo.operation.Name }}</td>
               <td>{{ workOrder.date }}</td>
               <td>{{ workOrder.table }}</td>

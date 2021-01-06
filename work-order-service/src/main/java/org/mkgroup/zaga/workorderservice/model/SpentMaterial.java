@@ -32,6 +32,8 @@ public class SpentMaterial {
 	
 	private Double spentPerHectar = -1.0;
 	
+	private boolean isFuel = false;
+	
 	@ManyToOne
 	private Material material;
 	

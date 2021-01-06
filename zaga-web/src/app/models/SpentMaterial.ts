@@ -9,4 +9,5 @@ export class SpentMaterial {
   material: Material = new Material();
   smObjectId;
   deleted: boolean;
+  fuel;
 }

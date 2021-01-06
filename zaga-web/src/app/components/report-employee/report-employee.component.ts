@@ -33,6 +33,7 @@ export class ReportEmployeeComponent implements OnInit {
     this.spinner.show();
     this.loading = true;
     this.wowService.getDataForReport().subscribe(data => {
+      console.log(data)
       this.spinner.hide();
       this.loading = false;
       this.workers = data;
