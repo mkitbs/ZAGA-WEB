@@ -15,14 +15,37 @@ h3 {
   margin-right: 4px;
 }
 
-.bootstrap-timer {
-  color: #303030;
-  background-color: transparent;
+.bootstrap-timerInProgress {
+  color: #33490b;
+  background-color: #e2e7e2;
   padding: 10px 15px;
   margin-bottom: 20px;
   display: inline-block;
   font-weight: 700;
   font-size: 2rem;
+  border-radius: 5px;
+}
+
+.bootstrap-timerPause {
+  color: #f68901;
+  background-color: #e2e7e2;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 5px;
+}
+
+.bootstrap-timerFinished {
+  color: #bd362f;
+  background-color: #e2e7e2;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 5px;
 }
 
 .btn-date {
@@ -46,4 +69,16 @@ h3 {
 
 [type="radio"]:checked + .btn-date {
   background-color: #5c7495;
+}
+
+.statusInProgress {
+  color: #33490b;
+}
+
+.statusPause {
+  color: #f68901;
+}
+
+.statusFinished {
+  color: #bd362f;
 }

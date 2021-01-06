@@ -45,44 +45,52 @@
                     <h5>{{workerTimeTracking.headerInfo.operation}}</h5>
                 </td>
             </tr>
-            <tr>
-                <th>
-                    <h5><i class="fas fa-bell"></i> <span style="padding-left: 7px;">Status:</span></h5>
-                </th>
-                <td>
-                    <h5><b>{{status}}</b></h5>
-                </td>
-            </tr>
         </table>
     </div>
 </div>
-<div style="margin:auto; width: 60%;">
+<div style="padding-top: 20px;"></div>
+<div class="container">
+    <div *ngIf="isTicking" style="text-align: center;">
+        <h2 [ngClass]="[
+            status == 'U radu' ? 'statusInProgress' : '',
+            status == 'Pauza za gorivo' ? 'statusPause' : '',
+            status == 'Servisna pauza' ? 'statusPause' : '',
+            status == 'Pauza za odmor' ? 'statusPause' : '',
+            status == 'Završeno' ? 'statusFinished' : ''
+          ]">{{status}}</h2>
+    </div>
     <div class="row" [ngStyle]="{'visibility':isTicking == true ? 'visible' : 'hidden' }">
-        <div class="col-6 ">
-            <cd-timer format="hms" class="bootstrap-timer" #basicTimer [autoStart]="false" [startTime]="startTime">
+        <div class="col d-flex justify-content-around">
+            <cd-timer format="hms" [ngClass]="[
+            status == 'U radu' ? 'bootstrap-timerInProgress' : '',
+            status == 'Pauza za gorivo' ? 'bootstrap-timerPause' : '',
+            status == 'Servisna pauza' ? 'bootstrap-timerPause' : '',
+            status == 'Pauza za odmor' ? 'bootstrap-timerPause' : '',
+            status == 'Završeno' ? 'bootstrap-timerFinished' : ''
+          ]" #basicTimer [autoStart]="false" [startTime]="startTime" style="font-size: 2.7rem;">
             </cd-timer>
         </div>
     </div>
 
-    <div class="d-inline">
-        <button class="btn btn-success" style="background-color: #ffc803; border: none" *ngIf="backFlag"
+    <div class="d-flex justify-content-around">
+        <button class="btn btn-success" style="background-color: #ffc803; border: none; width: 50%; font-size: medium;" *ngIf="backFlag"
             (click)="goBack()">
             <i class="fa fa-arrow-left"></i> Radni nalozi
         </button>
-        <button class="btn btn-success" style="background-color: #33590b; border: none" *ngIf="startFlag"
+        <button class="btn btn-success" style="background-color: #33490b; border: none; width: 50%; font-size: medium;" *ngIf="startFlag"
             (click)="startTimer()">
             <i class="fa fa-play"></i> Start
         </button>
-        <button class="btn btn-warning" style="background-color: #f68901; border: none; color: white" *ngIf="pauseFlag"
+        <button class="btn btn-warning" style="background-color: #f68901; border: none; color: white; width: 50%; font-size: medium;" *ngIf="pauseFlag"
             data-toggle="modal" data-target="#exampleModal" (click)="setPuase()">
             <i class="fa fa-pause"></i> Pauza
         </button>
-        <button class="btn btn-info" style="background-color: #5c7495; border: none" *ngIf="continueFlag"
+        <button class="btn btn-info" style="background-color: #5c7495; border: none; width: 50%; font-size: medium;" *ngIf="continueFlag"
             (click)="continueTimer()">
             <i class="fa fa-repeat"></i> Nastavak rada
         </button>
-        <button class="btn btn-danger" style="background-color: #bd362f; border: none" *ngIf="endFlag"
-            (click)="endTimer()">
+        <button class="btn btn-danger" style="background-color: #bd362f; border: none; width: 50%; font-size: medium;" *ngIf="endFlag"
+            data-toggle="modal" data-target="#exampleModalFinished">
             <i class="fa fa-stop"></i> Završi
         </button>
     </div>
@@ -141,6 +149,30 @@
                     data-dismiss="modal" (click)="pauseTimer()">
                     <i class="fa fa-hourglass-start"></i> Startuj pauzu
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal finished-->
+<div class="modal fade" id="exampleModalFinished" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Da li ste sigurni da želite da završite rad?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                style="background-color: #f68901; border: none">
+                <i class="fa fa-window-close"></i> Odustani
+            </button>
+            <button type="button" class="btn btn-success" style="background-color: #33590b; border: none"
+                data-dismiss="modal" (click)="endTimer()">
+                <i class="fa fa-check"></i> Potvrdi
+            </button>
             </div>
         </div>
     </div>
