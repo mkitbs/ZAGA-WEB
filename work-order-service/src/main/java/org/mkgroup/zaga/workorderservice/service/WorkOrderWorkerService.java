@@ -657,6 +657,7 @@ public class WorkOrderWorkerService {
 				sm.setQuantityPerHectar(sm.getQuantityPerHectar() - wow.getFuel());
 				sm.setSpent(sm.getSpent() - wow.getFuel());
 				sm.setSpentPerHectar(sm.getSpentPerHectar() - wow.getFuel());
+				sm.setFuel(true);
 				spentMaterialRepo.save(sm);
 			}
 			
@@ -688,6 +689,7 @@ public class WorkOrderWorkerService {
 					sm.setSpent(-1.0);
 					sm.setSpentPerHectar(-1.0);
 				}
+				sm.setFuel(true);
 				sm.setWorkOrder(workOrder);
 				sm = spentMaterialRepo.save(sm);
 				workOrder.getMaterials().add(sm);
@@ -699,6 +701,7 @@ public class WorkOrderWorkerService {
 						spentMat.setQuantityPerHectar(spentMat.getQuantityPerHectar() + wowDTO.getFuel());
 						spentMat.setSpent(spentMat.getSpent() + wowDTO.getFuel());
 						spentMat.setSpentPerHectar(spentMat.getSpentPerHectar() + wowDTO.getFuel());
+						spentMat.setFuel(true);
 						spentMaterialRepo.save(spentMat);
 					}
 					
