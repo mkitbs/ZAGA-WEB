@@ -185,11 +185,7 @@ public class WorkerTimeTrackingService {
 			}
 			
 			System.out.println("Rest Template Testing SAP: " + response.getBody().toString());
-		
-			
-		    
-		    
-		    
+
 	    if(response == null) {
 	    	timeTrackingRepo.delete(wtt);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
