@@ -64,7 +64,12 @@ public class Machine {
 		this.name = m.getName();
 		this.companyCode = m.getCompanyCode();
 		this.orgUnit = m.getOrgUnit();
-		this.fuelErpId = m.getFuelErpId();
+		if(m.getFuelErpId() != null) {
+			this.fuelErpId = m.getFuelErpId();
+		} else {
+			this.fuelErpId = 0;
+		}
+		
 		
 		if(m.getType().equals("PG")) {
 			this.type = MachineType.PROPULSION;

@@ -52,7 +52,7 @@
                   style="width: fit-content; padding-bottom: 10px"
                 >
                   <img
-                    *ngIf="employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
+                    *ngIf="employee.name != '' && employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
                     class="card-img-right"
                     src="../../../assets/farmerW.png"
                     width="80px"
@@ -154,7 +154,7 @@
                   style="width: fit-content; padding-bottom: 10px"
                 >
                   <img
-                    *ngIf="employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
+                    *ngIf="employee.name != '' && employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
                     class="card-img-right"
                     src="../../../assets/farmerW.png"
                     width="80px"
@@ -259,7 +259,7 @@
                   style="width: fit-content; padding-bottom: 10px"
                 >
                   <img
-                    *ngIf="employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
+                    *ngIf="employee.name != '' && employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
                     class="card-img-right"
                     src="../../../assets/farmerW.png"
                     width="80px"

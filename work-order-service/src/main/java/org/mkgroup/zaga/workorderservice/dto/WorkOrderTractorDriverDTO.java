@@ -25,7 +25,11 @@ public class WorkOrderTractorDriverDTO {
 	private boolean inProgress;
 	
 	public WorkOrderTractorDriverDTO(WorkOrderWorker wow, boolean inProgress) {
-		this.workOrderSapId = wow.getWorkOrder().getErpId();
+		if(wow.getWorkOrder().getErpId() != null) {
+			this.workOrderSapId = wow.getWorkOrder().getErpId();
+		} else {
+			this.workOrderSapId = 0;
+		}
 		this.workOrderDate = wow.getWorkOrder().getDate();
 		this.worker = wow.getUser().getName();
 		this.field = wow.getWorkOrder().getCrop().getField().getName();
