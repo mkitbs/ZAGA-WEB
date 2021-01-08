@@ -246,16 +246,20 @@ public class WorkOrderService {
 		    while (it.hasNext()) {
 		        Map.Entry pair = (Map.Entry)it.next();
 		        System.out.println(pair.getKey() + " = " + pair.getValue());
+		        System.out.println((Long) pair.getKey());
 		        SpentMaterial sm = new SpentMaterial();
-		        sm.setMaterial(materialRepo.findByErpId((Long) pair.getKey()).get());
-		        sm.setQuantity(-1.0);
-				sm.setSpent(-1.0);
-				sm.setSpentPerHectar(-1.0);
-				sm.setFuel(true);
-				sm.setWorkOrder(workOrder);
-				sm = spentMaterialRepo.save(sm);
-				workOrder.getMaterials().add(sm);
-				workOrder = workOrderRepo.save(workOrder);
+		        if((Long) pair.getKey() != 0) {
+		        	sm.setMaterial(materialRepo.findByErpId((Long) pair.getKey()).get());
+			        sm.setQuantity(-1.0);
+					sm.setSpent(-1.0);
+					sm.setSpentPerHectar(-1.0);
+					sm.setFuel(true);
+					sm.setWorkOrder(workOrder);
+					sm = spentMaterialRepo.save(sm);
+					workOrder.getMaterials().add(sm);
+					workOrder = workOrderRepo.save(workOrder);
+		        }
+		        
 		        it.remove(); // avoids a ConcurrentModificationException
 		    }
 			

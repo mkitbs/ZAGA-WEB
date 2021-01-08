@@ -342,49 +342,52 @@ public class WorkOrderWorkerService {
 		Machine machine = machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid()));
 		wow.setMachine(machine);
 		wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
-		Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-		SpentMaterial spentMat = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
-		boolean exist;
-		if(spentMat != null) {
-			exist = true;
-		} else {
-			exist = false;
-		}
-		if(!exist) {
-			SpentMaterial sm = new SpentMaterial();
-			sm.setMaterial(materialRepo.findByErpId(machine.getFuelErpId()).get());
-			if(wowDTO.getFuel() != null) {
-				sm.setQuantity(wowDTO.getFuel());
-				sm.setSpentPerHectar(wowDTO.getFuel());
-				sm.setSpent(wowDTO.getFuel());
-				sm.setSpentPerHectar(wowDTO.getFuel());
-				sm.setWorkOrder(workOrder);
+		if(wow.getMachine().getFuelErpId() != 0) {
+			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
+			SpentMaterial spentMat = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
+			boolean exist;
+			if(spentMat != null) {
+				exist = true;
 			} else {
-				sm.setQuantity(-1.0);
-				sm.setSpentPerHectar(-1.0);
-				sm.setSpent(-1.0);
-				sm.setSpentPerHectar(-1.0);
-				sm.setWorkOrder(workOrder);
+				exist = false;
 			}
-			sm.setFuel(true);
-			sm = spentMaterialRepo.save(sm);
-			workOrder.getMaterials().add(sm);
-			workOrder = workOrderRepo.save(workOrder);
-		} else {
-			if(wowDTO.getFuel() != null) {
-				spentMat.setQuantity(spentMat.getQuantity() + wowDTO.getFuel());
-				spentMat.setQuantityPerHectar(spentMat.getQuantityPerHectar() + wowDTO.getFuel());
-				spentMat.setSpent(spentMat.getSpent() + wowDTO.getFuel());
-				spentMat.setSpentPerHectar(spentMat.getSpentPerHectar() + wowDTO.getFuel());
+			if(!exist) {
+				SpentMaterial sm = new SpentMaterial();
+				sm.setMaterial(materialRepo.findByErpId(machine.getFuelErpId()).get());
+				if(wowDTO.getFuel() != null) {
+					sm.setQuantity(wowDTO.getFuel());
+					sm.setSpentPerHectar(wowDTO.getFuel());
+					sm.setSpent(wowDTO.getFuel());
+					sm.setSpentPerHectar(wowDTO.getFuel());
+					sm.setWorkOrder(workOrder);
+				} else {
+					sm.setQuantity(-1.0);
+					sm.setSpentPerHectar(-1.0);
+					sm.setSpent(-1.0);
+					sm.setSpentPerHectar(-1.0);
+					sm.setWorkOrder(workOrder);
+				}
+				sm.setFuel(true);
+				sm = spentMaterialRepo.save(sm);
+				workOrder.getMaterials().add(sm);
+				workOrder = workOrderRepo.save(workOrder);
 			} else {
-				spentMat.setQuantity(spentMat.getQuantity());
-				spentMat.setQuantityPerHectar(spentMat.getQuantityPerHectar());
-				spentMat.setSpent(spentMat.getSpent());
-				spentMat.setSpentPerHectar(spentMat.getSpentPerHectar());
+				if(wowDTO.getFuel() != null) {
+					spentMat.setQuantity(spentMat.getQuantity() + wowDTO.getFuel());
+					spentMat.setQuantityPerHectar(spentMat.getQuantityPerHectar() + wowDTO.getFuel());
+					spentMat.setSpent(spentMat.getSpent() + wowDTO.getFuel());
+					spentMat.setSpentPerHectar(spentMat.getSpentPerHectar() + wowDTO.getFuel());
+				} else {
+					spentMat.setQuantity(spentMat.getQuantity());
+					spentMat.setQuantityPerHectar(spentMat.getQuantityPerHectar());
+					spentMat.setSpent(spentMat.getSpent());
+					spentMat.setSpentPerHectar(spentMat.getSpentPerHectar());
+				}
+				
+				spentMaterialRepo.save(spentMat);
 			}
-			
-			spentMaterialRepo.save(spentMat);
 		}
+		
 		if(wowDTO.getConnectingMachine().getDbid().equals("-1")) {
 			wow.setConnectingMachine(null);
 		}else {
@@ -647,21 +650,27 @@ public class WorkOrderWorkerService {
 			}
 		}
 		if(count > 1) {
-			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-			SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
-			sm.setQuantity(sm.getQuantity() - wow.getFuel());
-			sm.setQuantityPerHectar(sm.getQuantityPerHectar() - wow.getFuel());
-			sm.setSpent(sm.getSpent() - wow.getFuel());
-			sm.setSpentPerHectar(sm.getSpentPerHectar() - wow.getFuel());
-			spentMaterialRepo.save(sm);
+			if(wow.getMachine().getFuelErpId() != 0) {
+				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
+				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
+				sm.setQuantity(sm.getQuantity() - wow.getFuel());
+				sm.setQuantityPerHectar(sm.getQuantityPerHectar() - wow.getFuel());
+				sm.setSpent(sm.getSpent() - wow.getFuel());
+				sm.setSpentPerHectar(sm.getSpentPerHectar() - wow.getFuel());
+				spentMaterialRepo.save(sm);
+			}
+			
 			
 		} else {
-			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-			SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
-			sm.setDeleted(true);
-			spentMaterialRepo.save(sm);
+			if(wow.getMachine().getFuelErpId() != 0) {
+				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
+				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
+				sm.setDeleted(true);
+				spentMaterialRepo.save(sm);
+			}
+			
 		}
-		if(wow.getMachine().getFuelErpId() != wowDTO.getMachine().getFuelErpId()) {
+		if(wow.getMachine().getFuelErpId() != wowDTO.getMachine().getFuelErpId() && wowDTO.getMachine().getFuelErpId() != 0) {
 			Material material = materialRepo.findByErpId(wowDTO.getMachine().getFuelErpId()).get();
 			SpentMaterial spentMat = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
 			if(spentMat == null) {
@@ -708,18 +717,23 @@ public class WorkOrderWorkerService {
 			}
 		}
 		if(count > 1) {
-			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-			SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
-			sm.setQuantity(sm.getQuantity() - wow.getFuel());
-			sm.setQuantityPerHectar(sm.getQuantityPerHectar() - wow.getFuel());
-			sm.setSpent(sm.getSpent() - wow.getFuel());
-			sm.setSpentPerHectar(sm.getSpentPerHectar() - wow.getFuel());
-			spentMaterialRepo.save(sm);
+			if(wow.getMachine().getFuelErpId() != 0) {
+				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
+				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
+				sm.setQuantity(sm.getQuantity() - wow.getFuel());
+				sm.setQuantityPerHectar(sm.getQuantityPerHectar() - wow.getFuel());
+				sm.setSpent(sm.getSpent() - wow.getFuel());
+				sm.setSpentPerHectar(sm.getSpentPerHectar() - wow.getFuel());
+				spentMaterialRepo.save(sm);
+			}
 		} else {
-			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-			SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
-			sm.setDeleted(true);
-			spentMaterialRepo.save(sm);
+			if(wow.getMachine().getFuelErpId() != 0) {
+				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
+				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
+				sm.setDeleted(true);
+				spentMaterialRepo.save(sm);
+			}
+			
 		}
 	}
 	

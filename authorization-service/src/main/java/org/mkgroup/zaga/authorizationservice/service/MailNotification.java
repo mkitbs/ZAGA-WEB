@@ -243,7 +243,7 @@ public class MailNotification {
         		"                                            Resetovanje lozinke bi&#263;e dostupno naredna 3 sata, nakon &#269;ega &#263;ete morati\r\n" + 
         		"                                            ponovo zatra&#382;iti resetovanje lozinke.\r\n" + 
         		"                                        </p>\r\n" + 
-        		"                                        <a href=\"http://localhost:4200/#/passwordReset/" + token +"\"\"\r\n" +
+        		"                                        <a href=\"http://10.15.1.73/#/passwordReset/" + token +"\"\"\r\n" +
         		"                                            style=\"background:#44973E;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;\">Resetuj\r\n" + 
         		"                                            Lozinku</a>\r\n" + 
         		"                                    </td>\r\n" + 
