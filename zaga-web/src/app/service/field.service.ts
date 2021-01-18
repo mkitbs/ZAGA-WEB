@@ -32,4 +32,10 @@ export class FieldService {
         data
     )
   } 
+
+  syncField(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/field/"
+    )
+  }
 }

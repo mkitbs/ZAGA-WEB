@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { env } from "process";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 
@@ -54,6 +55,12 @@ export class MachineService {
   getAllGroupByType(): Observable<any> {
     return this.http.get(
       environment.gatewayWorkOrderURL + "api/machine/getAllGroupByType"
+    )
+  }
+
+  syncMachine(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/"
     )
   }
 }

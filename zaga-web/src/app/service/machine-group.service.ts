@@ -13,4 +13,10 @@ export class MachineGroupService {
   getAll() : Observable<any>{
     return this.http.get(environment.gatewayWorkOrderURL + "api/machine/group/getAll");
   }
+
+  syncMachineGroup(): Observable<any>{
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/machine/group/"
+    )
+  }
 }

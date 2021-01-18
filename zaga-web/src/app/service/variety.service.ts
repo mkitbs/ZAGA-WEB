@@ -15,4 +15,10 @@ export class VarietyService {
       environment.gatewayWorkOrderURL + "api/variety/getAll"
     );
   }
+
+  syncVariety(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/variety/"
+    )
+  }
 }

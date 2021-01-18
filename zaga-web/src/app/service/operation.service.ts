@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { EmitterVisitorContext } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,12 @@ export class OperationService {
   getAllGroupByType(): Observable<any> {
     return this.http.get(
       environment.gatewayWorkOrderURL + "api/operation/getAllGroupByType"
+    )
+  }
+
+  syncOperation(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/"
     )
   }
 }

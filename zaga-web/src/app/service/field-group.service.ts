@@ -21,4 +21,10 @@ export class FieldGroupService {
       fieldGroup
     );
   }
+
+  syncFieldGroup(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/field/group/"
+    )
+  }
 }

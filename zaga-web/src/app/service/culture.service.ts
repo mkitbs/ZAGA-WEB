@@ -90,4 +90,10 @@ export class CultureService {
       environment.gatewayWorkOrderURL + "api/culture/getAllGroupByProductionType"
     )
   }
+
+  syncCulture(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/culture/"
+    )
+  }
 }
