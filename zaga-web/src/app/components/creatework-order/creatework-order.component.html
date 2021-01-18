@@ -30,7 +30,7 @@
           </button>
 
           <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(infoWorkOrderForm)">
-            <i class="fa fa-plus mr-2"></i>Kreiraj
+            <i class="fa fa-save mr-2"></i> Sačuvaj
           </button>
         </div>
       </div>
@@ -79,6 +79,26 @@
               </div>
             </form>
           </td>
+          <!--Datum-->
+          <td class="left-col-header">
+            <i class="fa fa-calendar mr-2"></i>Datum radnog naloga:
+          </td>
+          <td class="right-col-header">
+            <div class="input-group mb-3">
+              <input [(ngModel)]="workOrder.date" name="poc" ngbDatepicker #od="ngbDatepicker" (click)="od.toggle()"
+                class="form-control" #dateFrom="ngModel" required />
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+              </div>
+            </div>
+
+            <div *ngIf="dateFrom == null && clickAddWorkOrder" style="color: red; font-weight: normal">
+              Izaberite datum.
+            </div>
+          </td>
+        </tr>
+        <!--Parcela-->
+        <tr>
           <td class="left-col-header">
             <i class="fa fa-database mr-2"></i>Parcela:
           </td>
@@ -117,24 +137,70 @@
               </div>
             </form>
           </td>
+          <!--Kultura-->
+          <td class="left-col-header"><i class="fa fa-cubes"></i> Kultura:</td>
+          <td class="right-col-header">
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockCulture">
+                <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
+                  required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
+
+                <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
+                  <mat-option *ngFor="
+                    let crop of crops | SearchCultures: searchCulture.value
+                    " [value]="crop" (click)="getArea(crop.id)">
+                    {{crop.Id}} - {{ crop.Name.split(",")[1] }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockCulture>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutId"
+                    #searchCultureWithoutId required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
+
+                  <mat-autocomplete #autoCultureWithoutId="matAutocomplete" [displayWith]="displayFnCultureWithoutId"
+                    place>
+                    <mat-option *ngFor="
+                      let crop of crops | SearchCultures: searchCultureWithoutId.value
+                      " [value]="crop" (click)="getArea(crop.id)">
+                      {{ crop.Name.split(",")[1] }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="cultureFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite kulturu.
+              </div>
+            </form>
+          </td>
         </tr>
+        <!--Godina-->
         <tr>
           <td class="left-col-header">
-            <i class="fa fa-calendar mr-2"></i>Datum radnog naloga:
+            <i class="fa fa-tasks mr-2"></i>Godina:
           </td>
           <td class="right-col-header">
-            <div class="input-group mb-3">
-              <input [(ngModel)]="workOrder.date" name="poc" ngbDatepicker #od="ngbDatepicker" (click)="od.toggle()"
-                class="form-control" #dateFrom="ngModel" required />
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="od.toggle()" type="button"></button>
+            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
+              *ngIf="!new; else elseBlockYear" (click)="getCulture()">
+              <option value="{{previousYear}}">{{previousYear}}</option>
+              <option value="{{currentYear}}" selected>{{currentYear}}</option>
+              <option value="{{nextYear}}">{{nextYear}}</option>
+            </select>
+            <ng-template #elseBlockYear>
+              <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
+                required (click)="getCulture()">
+                <option value="{{previousYear}}">{{previousYear}}</option>
+                <option value="{{currentYear}}" selected>{{currentYear}}</option>
+                <option value="{{nextYear}}">{{nextYear}}</option>
+              </select>
+              <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite godinu.
               </div>
-            </div>
-
-            <div *ngIf="dateFrom == null && clickAddWorkOrder" style="color: red; font-weight: normal">
-              Izaberite datum.
-            </div>
+            </ng-template>
           </td>
+          <!--Odgovorna osoba-->
           <td class="left-col-header">
             <i class="fa fa-user mr-2"></i>Odgovorna osoba:
           </td>
@@ -174,67 +240,7 @@
             </form>
           </td>
         </tr>
-        <tr>
-          <td class="left-col-header"><i class="fa fa-cubes"></i> Kultura:</td>
-          <td class="right-col-header">
-            <form>
-              <!--WITH SAP ID-->
-              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockCulture">
-                <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
-                  required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
-
-                <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
-                  <mat-option *ngFor="
-                    let crop of crops | SearchCultures: searchCulture.value
-                    " [value]="crop" (click)="getArea(crop.id)">
-                    {{crop.Id}} - {{ crop.Name.split(",")[1] }}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <!--WITHOUT SAP ID-->
-              <ng-template #elseBlockCulture>
-                <mat-form-field class="inputAuto">
-                  <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutId"
-                    #searchCultureWithoutId required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
-
-                  <mat-autocomplete #autoCultureWithoutId="matAutocomplete" [displayWith]="displayFnCultureWithoutId"
-                    place>
-                    <mat-option *ngFor="
-                      let crop of crops | SearchCultures: searchCultureWithoutId.value
-                      " [value]="crop" (click)="getArea(crop.id)">
-                      {{ crop.Name.split(",")[1] }}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-              </ng-template>
-              <div *ngIf="cultureFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite kulturu.
-              </div>
-            </form>
-          </td>
-          <td class="left-col-header">
-            <i class="fa fa-tasks mr-2"></i>Godina:
-          </td>
-          <td class="right-col-header">
-            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
-              *ngIf="!new; else elseBlockYear" (click)="getCulture()">
-              <option value="{{previousYear}}">{{previousYear}}</option>
-              <option value="{{currentYear}}" selected>{{currentYear}}</option>
-              <option value="{{nextYear}}">{{nextYear}}</option>
-            </select>
-            <ng-template #elseBlockYear>
-              <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
-                required (click)="getCulture()">
-                <option value="{{previousYear}}">{{previousYear}}</option>
-                <option value="{{currentYear}}" selected>{{currentYear}}</option>
-                <option value="{{nextYear}}">{{nextYear}}</option>
-              </select>
-              <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite godinu.
-              </div>
-            </ng-template>
-          </td>
-        </tr>
+        <!--Povrsina-->
         <tr>
           <td class="left-col-header"><i class="fa fa-clone"></i> Površina:</td>
           <td class="right-col-header">
@@ -279,7 +285,7 @@
       aria-controls="collapseExampleMachines">
       <i class="fa fa-user mr-2"></i>
       <i class="fa fa-truck mr-2"></i>
-      Radnici/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"
+        Izvršioci/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"
         data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"
         data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
@@ -290,10 +296,10 @@
         <form #wowForm="ngForm">
           <table class="table table-input">
             <thead>
-              <th>Radnik*</th>
+              <th>Izvršioc*</th>
               <th>ATM*</th>
-              <th>Mašina</th>
-              <th>Priključna mašina</th>
+              <th>Mašina*</th>
+              <th>Priključna mašina*</th>
               <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
               <th style="text-align: right !important">Dodaj/Potvrdi</th>
               <th style="text-align: right !important" *ngIf="wows.length > 0 || (workOrder.workers.length > 0 && !emptyWow)">
@@ -308,7 +314,7 @@
                       <!--WITH SAP ID-->
                       <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorker">
                         <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorker"
-                          #searchWorker required placeholder="Izaberite radnika" />
+                          #searchWorker required placeholder="Izaberite izvršioca" />
 
                         <mat-autocomplete #autoWorker="matAutocomplete" [displayWith]="displayFn" place>
                           <mat-option *ngFor="
@@ -322,7 +328,7 @@
                       <ng-template #elseBlockWorker>
                         <mat-form-field class="inputAuto">
                           <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorkerWithoutId"
-                            #searchWorkerWithoutId required placeholder="Izaberite radnika" />
+                            #searchWorkerWithoutId required placeholder="Izaberite izvršioca" />
 
                           <mat-autocomplete #autoWorkerWithoutId="matAutocomplete" [displayWith]="displayFnResponsible"
                             place>
@@ -335,8 +341,8 @@
                         </mat-form-field>
                       </ng-template>
                       <div *ngIf="workerFC.invalid && clickAddWorkerMachine == true"
-                        style="color: red; font-weight: normal">
-                        Izaberite radnika.
+                        style="color: red; font-weight: normal; text-align: left;">
+                        Izvršioc je obavezno polje.<br> Popunite ga.
                       </div>
                     </form>
                   </div>
@@ -375,8 +381,8 @@
                         </mat-form-field>
                       </ng-template>
                       <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true"
-                        style="color: red; font-weight: normal">
-                        Izaberite agrotehničku meru.
+                        style="color: red; font-weight: normal; text-align: left;">
+                        ATM je obavezno polje.<br>Popunite ga.
                       </div>
                     </form>
                   </div>
@@ -416,8 +422,8 @@
                         </mat-form-field>
                       </ng-template>
                       <div *ngIf="workerMachineFC.invalid && clickAddWorkerMachine == true"
-                        style="color: red; font-weight: normal">
-                        Izaberite mašinu.
+                        style="color: red; font-weight: normal; text-align: left;">
+                        Mašina je obavezno polje.<br>Popunite ga.
                       </div>
                     </form>
                   </div>
@@ -463,8 +469,8 @@
                         </mat-form-field>
                       </ng-template>
                       <div *ngIf="workerCoMachineFC.invalid && clickAddWorkerMachine == true"
-                        style="color: red; font-weight: normal">
-                        Izaberite priključnu mašinu.
+                        style="color: red; font-weight: normal; text-align: left;">
+                        Priključna mašina je obavezno polje.<br>Popunite ga.
                       </div>
                     </form>
                   </div>
@@ -853,27 +859,8 @@
           </table>
           <div class="col-12">
             <div class="input-group">
-              <p *ngIf="wows.length == 0 && new">Nema dodatih radnika i mašina, dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                  <i class="fa fa-plus"></i>
-                </button>
-              </p>
-              <p *ngIf="wows.length > 0 && new">Dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                  <i class="fa fa-plus"></i>
-                </button>
-              </p>
-              <p *ngIf="workOrder.workers.length == 0 && !new">Nema dodatih radnika i mašina, dodajte nove i potvrdite
-                klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                  <i class="fa fa-plus"></i>
-                </button>
-              </p>
-              <p *ngIf="workOrder.workers.length > 0 && !new">Dodajte nove i potvrdite klikom na dugme
-                <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                  <i class="fa fa-plus"></i>
-                </button>
-              </p>
+              <i *ngIf="wows.length == 0 && new">Dodajte izvršioce (i mašine)</i>
+              <i *ngIf="workOrder.workers.length == 0 && !new">Dodajte izvršioce (i mašine)</i>
             </div>
           </div>
         </form>
@@ -940,8 +927,8 @@
                           </mat-autocomplete>
                         </mat-form-field>
                       </ng-template>
-                      <div *ngIf="materialFC.invalid && clickAddMaterial" style="color: red">
-                        Izaberite materijal.
+                      <div *ngIf="materialFC.invalid && clickAddMaterial" style="color: red; text-align: left;">
+                        Materijal je obavezno polje. <br>Popunite ga.
                       </div>
                     </form>
                   </div>
@@ -956,8 +943,8 @@
                           <span matSuffix>{{unit}}</span>
                       </mat-form-field>
                       <div *ngIf="(quantityEntered == null || quantityEntered == undefined) && clickAddMaterial"
-                        style="color: red">
-                        Unesite količinu.
+                        style="color: red; text-align: left;">
+                        Planirana količina je obavezno polje.<br>Popunite ga.
                       </div>
                       <div
                         *ngIf="(validMaterialQuantity == false && clickAddNewMaterial) || (validMaterialQuantity == false && clickAddMaterial)"
@@ -1101,17 +1088,10 @@
                     </div>
                   </td>
                 </tr>
-                <div class="input-group">
-                  <p *ngIf="woMaterials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </p>
-                  <p *ngIf="woMaterials.length > 0">Dodajte novi i potvrdite klikom na dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important;" disabled>
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </p>
+                <div class="col-12">
+                  <div class="input-group">
+                    <i *ngIf="woMaterials.length == 0">Dodajte materijale</i>
+                  </div>
                 </div>
               </ng-container>
               <!--editable table materials existing wo-->
@@ -1209,18 +1189,10 @@
                     </td>
                   </ng-container>
                 </tr>
-                <div class="input-group">
-                  <p *ngIf="workOrder.materials.length == 0">Nema dodatih materijala, dodajte novi i potvrdite klikom na
-                    dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </p>
-                  <p *ngIf="workOrder.materials.length > 0">Dodajte novi i potvrdite klikom na dugme
-                    <button class="btn btn-primary" style="background-color:#33590b !important; border: none;" disabled>
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </p>
+                <div class="col-12">
+                  <div class="input-group">
+                    <i *ngIf="workOrder.materials.length == 0">Dodajte materijale</i>
+                  </div>
                 </div>
               </ng-template>
             </tbody>
@@ -1244,7 +1216,7 @@
 
     <button class="btn btn-primary btn-add mr-2" *ngIf="new && machine && materials"
       (click)="addWorkOrder(infoWorkOrderForm)">
-      <i class="fa fa-plus mr-2"></i>Kreiraj
+      <i class="fa fa-save mr-2"></i> Sačuvaj
     </button>
   </div>
   <br />
@@ -1273,7 +1245,7 @@
           <i class="fa fa-save mr-2"></i>Sačuvaj
         </button>
         <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(workOrderInfoMobForm.valid)">
-          <i class="fa fa-plus mr-2"></i>Kreiraj
+          <i class="fa fa-save mr-2"></i> Sačuvaj
         </button>
       </div>
     </div>

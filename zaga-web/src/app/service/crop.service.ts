@@ -57,4 +57,10 @@ export class CropService {
       crop
     );
   }
+
+  syncCrop(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/crop/"
+    )
+  }
 }

@@ -396,6 +396,9 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getCulture() {
+    this.crops = [];
+    this.cultureFC = new FormControl("");
+    console.log(this.selectedYear);
     if (this.new) {
       console.log(this.fieldFC.value)
       this.cropService
@@ -404,6 +407,9 @@ export class CreateworkOrderComponent implements OnInit {
           this.isGetCulture = true;
           console.log(data);
           this.crops = data;
+          if(this.crops.length == 1){
+            this.cultureFC.setValue(this.crops[0])
+          }
         });
     } else {
       this.cropService

@@ -17,4 +17,10 @@ export class MaterialService {
   getOne(id) : Observable<any>{
     return this.http.get(environment.gatewayWorkOrderURL + "api/material/getMaterial/" + id)
   }
+
+  syncMaterial(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/material/"
+    )
+  }
 }

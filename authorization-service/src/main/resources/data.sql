@@ -23,7 +23,7 @@ values (1, 'Milan', 'Katic', 'katic@gmail.com', '12', 1, '$2a$10$tlHY4ACO1oM5KR5
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 
 values (2, 'Milos', 'Vrgovic', 'vrgovicm@gmail.com', '13', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1998-01-19', '06012345', 2);
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 
-values (3, 'Pera', 'Peric', 'traktorista@gmail.com', '5', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1990-01-20', '060000000', 2);
+values (3, 'Pera', 'Peric', 'traktorista@gmail.com', '5', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1990-01-20', '060000000', 1);
 
 insert into user_roles (user_id, role_id) values (1,1);
 insert into user_roles (user_id, role_id) values (2,1);

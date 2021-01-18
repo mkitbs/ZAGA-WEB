@@ -14,4 +14,10 @@ export class CultureGroupService {
       environment.gatewayWorkOrderURL + "api/culture/group/getAll"
     );
   }
+
+  syncCultureGroup(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/culture/group/"
+    )
+  }
 }

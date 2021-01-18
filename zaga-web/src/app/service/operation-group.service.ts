@@ -14,4 +14,10 @@ export class OperationGroupService {
     return this.http.get(
       environment.gatewayWorkOrderURL + "api/operation/group/getAll");
   }
+
+  syncOperationGroup(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/group/"
+    )
+  }
 }

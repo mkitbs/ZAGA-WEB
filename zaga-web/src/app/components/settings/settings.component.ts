@@ -7,7 +7,17 @@ import { Setting } from 'src/app/models/Setting';
 import { SignupRequest } from 'src/app/models/SignupRequest';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/service/auth/auth.service';
+import { CropService } from 'src/app/service/crop.service';
+import { CultureGroupService } from 'src/app/service/culture-group.service';
+import { CultureService } from 'src/app/service/culture.service';
+import { FieldGroupService } from 'src/app/service/field-group.service';
+import { FieldService } from 'src/app/service/field.service';
+import { MachineGroupService } from 'src/app/service/machine-group.service';
+import { MachineService } from 'src/app/service/machine.service';
+import { OperationGroupService } from 'src/app/service/operation-group.service';
+import { OperationService } from 'src/app/service/operation.service';
 import { UserService } from 'src/app/service/user.service';
+import { VarietyService } from 'src/app/service/variety.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,7 +30,17 @@ export class SettingsComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cropService: CropService,
+    private machineService: MachineService,
+    private fieldService: FieldService,
+    private fieldGroupService: FieldGroupService,
+    private machineGroupService: MachineGroupService,
+    private operationGroupService: OperationGroupService,
+    private operationService: OperationService,
+    private cultureGroupService: CultureGroupService,
+    private culutreService: CultureService,
+    private varietyService: VarietyService
   ) { 
     this.dropdownSettings = {
       singleSelection: false,
@@ -68,6 +88,30 @@ export class SettingsComponent implements OnInit {
   clickedCulture = false;
   clickedCultureGroup = false;
   clickedVariety = false;
+
+  loadingCrop = true;
+  loadingMachine = true;
+  loadingEmployee = true;
+  loadingField = true;
+  loadingFieldGroup = true;
+  loadingMachineGroup = true;
+  loadingOperationGroup = true;
+  loadingOperation = true;
+  loadingCulture = true;
+  loadingCultureGroup = true;
+  loadingVariety = true;
+
+  syncedCrop;
+  syncedMachine;
+  syncedEmployee;
+  syncedField;
+  syncedFieldGroup;
+  syncedMachineGroup;
+  syncedOperationGroup;
+  syncedOperation;
+  syncedCulture;
+  syncedCultureGroup;
+  syncedVariety;
 
   ngOnInit() {
     this.getAllUsers();
@@ -374,8 +418,128 @@ export class SettingsComponent implements OnInit {
       ){
         this.toastr.error("Ni jedan matični podatak nije označen.")
       } else {
-        this.toastr.info("Nije implementirano.")
-        this.dismissAll();
+        if(this.clickedCrop){
+          this.cropService.syncCrop().subscribe(data => {
+            this.loadingCrop = false;
+            this.syncedCrop = true;
+            console.log("Crops", data);
+          }, error => {
+            this.loadingCrop = false;
+            this.syncedCrop = false;
+            console.log("Crops error", error);
+          })
+        }
+        if(this.clickedMachine){
+          this.machineService.syncMachine().subscribe(data => {
+            this.loadingMachine = false;
+            this.syncedMachine = true;
+            console.log("Machines", data);
+          }, error => {
+            this.loadingMachine = false;
+            this.syncedMachine = false;
+            console.log("Machine error", error);
+          })
+        }
+        if(this.clickedEmployee){
+          this.userService.syncEmployee().subscribe(data => {
+            this.loadingEmployee = false;
+            this.syncedEmployee = true;
+            console.log("Employees", data);
+          }, error => {
+            this.loadingEmployee = false;
+            this.syncedEmployee = false;
+            console.log("Employee error", error);
+          })
+        }
+        if(this.clickedField){
+          this.fieldService.syncField().subscribe(data => {
+            this.loadingField = false;
+            this.syncedField = true;
+            console.log("Fields", data);
+          }, error => {
+            this.loadingField = false;
+            this.syncedField = false;
+            console.log("Fields error", error);
+          })
+        }
+        if(this.clickedFieldGroup){
+          this.fieldGroupService.syncFieldGroup().subscribe(data => {
+            this.loadingFieldGroup = false;
+            this.syncedFieldGroup = true;
+            console.log("Field groups", data);
+          }, error => {
+            this.loadingFieldGroup = false;
+            this.syncedFieldGroup = false;
+            console.log("Field groups error", error);
+          })
+        }
+        if(this.clickedMachineGroup){
+          this.machineGroupService.syncMachineGroup().subscribe(data => {
+            this.loadingMachineGroup = false;
+            this.syncedMachineGroup = true;
+            console.log("Machine groups", data);
+          }, error => {
+            this.loadingMachineGroup = false;
+            this.syncedMachineGroup = false;
+            console.log("Machine groups error", error);
+          })
+        }
+        if(this.clickedOperationGroup){
+          this.operationGroupService.syncOperationGroup().subscribe(data => {
+            this.loadingOperationGroup = false;
+            this.syncedOperationGroup = true;
+            console.log("Operation groups", data);
+          }, error => {
+            this.loadingOperationGroup = false;
+            this.syncedOperationGroup = false;
+            console.log("Operation groups error", error);
+          })
+        }
+        if(this.clickedOperation){
+          this.operationService.syncOperation().subscribe(data => {
+            this.loadingOperation = false;
+            this.syncedOperation = true;
+            console.log("Operations", data);
+          }, error => {
+            this.loadingOperation = false;
+            this.syncedOperation = false;
+            console.log("Operations error", error);
+          })
+        }
+        if(this.clickedCulture){
+          this.culutreService.syncCulture().subscribe(data => {
+            this.loadingCulture = false;
+            this.syncedCulture = true;
+            console.log("Cultures", data);
+          }, error => {
+            this.loadingCulture = false;
+            this.syncedCulture = false;
+            console.log("Cultures error", error)
+          })
+        }
+        if(this.clickedCultureGroup){
+          this.cultureGroupService.syncCultureGroup().subscribe(data => {
+            this.loadingCultureGroup = false;
+            this.syncedCultureGroup = true;
+            console.log("Culture groups", data);
+          }, error => {
+            this.loadingCultureGroup = false;
+            this.syncedCultureGroup = false;
+            console.log("Culture groups error", error);
+          })
+        }
+        if(this.clickedVariety){
+          this.varietyService.syncVariety().subscribe(data => {
+            this.loadingVariety = false;
+            this.syncedVariety = true;
+            console.log("Varieties", data);
+          }, error => {
+            this.loadingVariety = false;
+            this.syncedVariety = false;
+            console.log("Varieties error", error);
+          })
+        }
+        //this.dismissAll();
       }
   }
 

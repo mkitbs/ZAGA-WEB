@@ -213,7 +213,7 @@
           <h5>Označite matične podatke koje želite da sinhronizujete. 
            
             <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none"
-             (click)="sync()">
+             (click)="sync()" data-toggle="modal" data-target="#syncStatusModal">
               <i class="fa fa-refresh"></i> Sinhronizuj
             </button>
             <button style="float: right; margin-right: 20px;" class="btn btn-primary collapsing-button shadow-none dismiss"
@@ -977,6 +977,102 @@
       </mat-tab-group>
     </div>
     <ngx-spinner></ngx-spinner>
+  </div>
+</div>
+<!--Modal sync status-->
+<div class="modal fade" id="syncStatusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">
+          <i class="fas fa-sync"></i> Status sinhronizacije
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="dismissAll()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group list-group-flush">
+          <li *ngIf="clickedCrop" class="list-group-item">
+            <i *ngIf="loadingCrop" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingCrop && syncedCrop" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingCrop && !syncedCrop" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija useva
+          </li>
+          <li *ngIf="clickedMachine" class="list-group-item">
+            <i *ngIf="loadingMachine" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingMachine && syncedMachine" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingMachine && !syncedMachine" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija mašina
+          </li>
+          <li *ngIf="clickedEmployee" class="list-group-item">
+            <i *ngIf="loadingEmployee" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingEmployee && syncedEmployee" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingEmployee && !syncedEmployee" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija zaposlenih
+          </li>
+          <li *ngIf="clickedFieldGroup" class="list-group-item">
+            <i *ngIf="loadingFieldGroup" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingFieldGroup && syncedFieldGroup" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingFieldGroup && !syncedFieldGroup" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija poteza
+          </li>
+          <li *ngIf="clickedField" class="list-group-item">
+            <i *ngIf="loadingField" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingField && syncedField" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingField && !syncedField" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija parcela
+          </li>
+          <li *ngIf="clickedMachineGroup" class="list-group-item">
+            <i *ngIf="loadingMachineGroup" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingMachineGroup && syncedMachineGroup" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingMachineGroup && !syncedMachineGroup" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija grupa mašina
+          </li>
+          <li *ngIf="clickedOperationGroup" class="list-group-item">
+            <i *ngIf="loadingOperationGroup" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingOperationGroup && syncedOperationGroup" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingOperationGroup && !syncedOperationGroup" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija grupa agrotehničkih mera
+          </li>
+          <li *ngIf="clickedOperation" class="list-group-item">
+            <i *ngIf="loadingOperation" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingOperation && syncedOperation" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingOperation && !syncedOperation" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija agrotehničkih mera
+          </li>
+          <li *ngIf="clickedCultureGroup" class="list-group-item">
+            <i *ngIf="loadingCultureGroup" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingCultureGroup && syncedCultureGroup" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingCultureGroup && !syncedCultureGroup" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija grupa kultura
+          </li>
+          <li *ngIf="clickedCulture" class="list-group-item">
+            <i *ngIf="loadingCulture" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingCulture && syncedCulture" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingCulture && !syncedCulture" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija kultura
+          </li>
+          <li *ngIf="clickedVariety" class="list-group-item">
+            <i *ngIf="loadingVariety" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loadingVariety && syncedVariety" class="fa fa-check" style="color: #33590b;"></i>
+            <i *ngIf="!loadingVariety && !syncedVariety" class="fa fa-times" style="color: #bd362f;"></i>
+            Sinhronizacija sorti
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901; border: none"
+          (click)="dismissAll()">
+          <i class="fa fa-window-close"></i> Zatvori
+        </button>
+        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
+          (click)="sync()">
+          <i class="fa fa-save"></i> Ponovi
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

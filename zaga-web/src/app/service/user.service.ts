@@ -82,4 +82,10 @@ export class UserService {
     )
   }
 
+  syncEmployee(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/employee/"
+    )
+  }
+
 }
