@@ -58,5 +58,11 @@ export class WorkOrderService {
       environment.gatewayWorkOrderURL + "workOrder/getMyWorkOrders"
     )
   }
+
+  getMyByStatus(status): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "workOrder/getMyWoByStatus/" + status
+    )
+  }
   
 }

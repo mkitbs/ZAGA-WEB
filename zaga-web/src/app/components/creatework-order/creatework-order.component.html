@@ -1,4 +1,6 @@
-<navbar></navbar>
+<div class="container" style="margin-bottom: 3%;">
+  <navbar></navbar>
+</div>
 <div class="container mt-4 d-none d-md-block" style="padding-top: 40px;">
   <div class="col-12 mb-3">
     <div class="button-group">
@@ -38,47 +40,9 @@
   </div>
   <!--header info-->
   <div class="header-info">
-    <form #infoWorkOrderForm="ngForm">
-      <table class="table header-table">
+    <form #infoWorkOrderForm="ngForm" >
+      <table class="table header-table"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
         <tr>
-          <td class="left-col-header">
-            <i class="fa fa-file mr-2"></i>ATM:
-          </td>
-          <td class="right-col-header">
-            <form>
-              <!--WITH SAP ID-->
-              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockOp">
-                <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp required
-                  placeholder="Izaberite agrotehničku meru" />
-
-                <mat-autocomplete #autoOp="matAutocomplete" [displayWith]="displayFnOperation" place>
-                  <mat-option *ngFor="
-                      let op of operations | SearchOperations: searchOp.value
-                    " [value]="op" (click)="getOperation(op)">
-                    {{op.Id}} - {{ op.Name }}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <!--WITHOUT SAP ID-->
-              <ng-template #elseBlockOp>
-                <mat-form-field class="inputAuto">
-                  <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpWithoutId"
-                    #searchOpWithoutId required placeholder="Izaberite agrotehničku meru" />
-
-                  <mat-autocomplete #autoOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
-                    <mat-option *ngFor="
-                        let op of operations | SearchOperations: searchOpWithoutId.value
-                      " [value]="op" (click)="getOperation(op)">
-                      {{ op.Name }}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-              </ng-template>
-              <div *ngIf="operationFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite agrotehničku meru.
-              </div>
-            </form>
-          </td>
           <!--Datum-->
           <td class="left-col-header">
             <i class="fa fa-calendar mr-2"></i>Datum radnog naloga:
@@ -96,9 +60,36 @@
               Izaberite datum.
             </div>
           </td>
+          <!--Godina-->
+          <td class="left-col-header">
+            <i class="fa fa-tasks mr-2"></i>Godina:
+          </td>
+          <td class="right-col-header">
+            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
+              *ngIf="!new; else elseBlockYear" (change)="getCulture()">
+              <option value="{{previousYear}}">{{previousYear}}</option>
+              <option value="{{currentYear}}" selected>{{currentYear}}</option>
+              <option value="{{nextYear}}">{{nextYear}}</option>
+            </select>
+            <ng-template #elseBlockYear>
+              <select name="selYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
+                required (change)="getCulture()">
+                <option value="{{previousYear}}">{{previousYear}}</option>
+                <option value="{{currentYear}}" selected>{{currentYear}}</option>
+                <option value="{{nextYear}}">{{nextYear}}</option>
+              </select>
+              <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite godinu.
+              </div>
+            </ng-template>
+          </td>
+         
+          
         </tr>
-        <!--Parcela-->
+       
         <tr>
+          
+          <!--Parcela-->
           <td class="left-col-header">
             <i class="fa fa-database mr-2"></i>Parcela:
           </td>
@@ -138,19 +129,19 @@
             </form>
           </td>
           <!--Kultura-->
-          <td class="left-col-header"><i class="fa fa-cubes"></i> Kultura:</td>
+          <td class="left-col-header"><i class="fa fa-cubes"></i> Usev:</td>
           <td class="right-col-header">
             <form>
               <!--WITH SAP ID-->
               <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockCulture">
                 <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCulture" #searchCulture
-                  required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
+                  required placeholder="Izaberite usev, nakon što izaberete parcelu" />
 
                 <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnCulture" place>
                   <mat-option *ngFor="
                     let crop of crops | SearchCultures: searchCulture.value
                     " [value]="crop" (click)="getArea(crop.id)">
-                    {{crop.Id}} - {{ crop.Name.split(",")[1] }}
+                    {{crop.Id}} - {{ crop.Name }}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -158,48 +149,65 @@
               <ng-template #elseBlockCulture>
                 <mat-form-field class="inputAuto">
                   <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutId"
-                    #searchCultureWithoutId required placeholder="Izaberite kulturu, nakon što izaberete parcelu" />
+                    #searchCultureWithoutId required placeholder="Izaberite usev, nakon što izaberete parcelu" />
 
                   <mat-autocomplete #autoCultureWithoutId="matAutocomplete" [displayWith]="displayFnCultureWithoutId"
                     place>
                     <mat-option *ngFor="
                       let crop of crops | SearchCultures: searchCultureWithoutId.value
                       " [value]="crop" (click)="getArea(crop.id)">
-                      {{ crop.Name.split(",")[1] }}
+                      {{ crop.Name }}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
               </ng-template>
               <div *ngIf="cultureFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite kulturu.
+                Izaberite usev.
               </div>
             </form>
           </td>
         </tr>
-        <!--Godina-->
         <tr>
-          <td class="left-col-header">
-            <i class="fa fa-tasks mr-2"></i>Godina:
+           <!--ATM-->
+           <td class="left-col-header">
+            <i class="fa fa-file mr-2"></i>ATM:
           </td>
           <td class="right-col-header">
-            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
-              *ngIf="!new; else elseBlockYear" (click)="getCulture()">
-              <option value="{{previousYear}}">{{previousYear}}</option>
-              <option value="{{currentYear}}" selected>{{currentYear}}</option>
-              <option value="{{nextYear}}">{{nextYear}}</option>
-            </select>
-            <ng-template #elseBlockYear>
-              <select name="selectedYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
-                required (click)="getCulture()">
-                <option value="{{previousYear}}">{{previousYear}}</option>
-                <option value="{{currentYear}}" selected>{{currentYear}}</option>
-                <option value="{{nextYear}}">{{nextYear}}</option>
-              </select>
-              <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
-                Izaberite godinu.
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockOp">
+                <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOp" #searchOp required
+                  placeholder="Izaberite agrotehničku meru" />
+
+                <mat-autocomplete #autoOp="matAutocomplete" [displayWith]="displayFnOperation" place>
+                  <mat-option *ngFor="
+                      let op of operations | SearchOperations: searchOp.value
+                    " [value]="op" (click)="getOperation(op)">
+                    {{op.Id}} - {{ op.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockOp>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpWithoutId"
+                    #searchOpWithoutId required placeholder="Izaberite agrotehničku meru" />
+
+                  <mat-autocomplete #autoOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                    <mat-option *ngFor="
+                        let op of operations | SearchOperations: searchOpWithoutId.value
+                      " [value]="op" (click)="getOperation(op)">
+                      {{ op.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="operationFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+                Izaberite agrotehničku meru.
               </div>
-            </ng-template>
+            </form>
           </td>
+          
           <!--Odgovorna osoba-->
           <td class="left-col-header">
             <i class="fa fa-user mr-2"></i>Odgovorna osoba:
@@ -294,14 +302,14 @@
     <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
         <form #wowForm="ngForm">
-          <table class="table table-input">
+          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
             <thead>
               <th>Izvršioc*</th>
               <th>ATM*</th>
               <th>Mašina*</th>
               <th>Priključna mašina*</th>
-              <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
-              <th style="text-align: right !important">Dodaj/Potvrdi</th>
+              <th style="text-align: right !important" *ngIf="!new">Učinci</th>
+              <th style="text-align: right !important"></th>
               <th style="text-align: right !important" *ngIf="wows.length > 0 || (workOrder.workers.length > 0 && !emptyWow)">
                 Obriši
               </th>
@@ -487,16 +495,19 @@
                   <div *ngIf="new" class="form-group">
                     <button class="btn btn-primary btn-add mr-2" (click)="addWorkerAndMachine(wowForm.valid)"
                       [disabled]="workOrder.status == 'Zatvoren'">
-                      <i class="fa fa-plus"></i>
+                      <i class="fa fa-plus"></i> Dodaj
                     </button>
                   </div>
                   <div *ngIf="!new" class="form-group">
                     <button class="btn btn-primary btn-add mr-2" (click)="addNewWorkerAndMachine()"
                       [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                      <i class="fa fa-plus"></i>
+                      <i class="fa fa-plus"></i> Dodaj
                     </button>
                   </div>
                 </td>
+              </tr>
+              <tr>
+                <td colspan="7"><hr style="height:2px;border-width:0;color:gray;background-color:#33590b"></td>
               </tr>
               <!--editable table worker/machine new wo-->
               <ng-container *ngIf="new; else elseBlockMachineState">
@@ -660,7 +671,7 @@
                   -->
                   <td>
                     <button class="btn btn-primary btn-add mr-2" (click)="editExistingWorkerAndMachine(wow)">
-                      <i class="fa fa-check"></i>
+                      <i class="fa fa-check"></i> Sačuvaj
                     </button>
                   </td>
                   <td>
@@ -827,12 +838,18 @@
                     </td>
                     <td>
                       <div class="form-group">
-                        <button class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                        <button *ngIf="wow.machine.Id=='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
                           data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
-                          [ngClass]="!withoutMachine && (wow.dayPeriod == null || 
+                          [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
+                            'warning' : 'ok'">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <button *ngIf="wow.machine.Id!='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                          [ngClass]="wow.dayPeriod == null || 
                         wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
                         wow.fuel == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 || 
-                        wow.initialState == -1 || wow.finalState == -1 || wow.fuel == -1) ? 
+                        wow.initialState == -1 || wow.finalState == -1 || wow.fuel == -1 ? 
                         'warning' : 'ok'">
                           <i class="fa fa-ellipsis-v"></i>
                         </button>
@@ -841,7 +858,7 @@
                     <td>
                       <button class="btn btn-primary btn-add mr-2" (click)="updateWOWBasicInfo(wow)"
                         [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                        <i class="fa fa-check"></i>
+                        <i class="fa fa-check"></i> Sačuvaj
                       </button>
                     </td>
                     <td>
@@ -881,13 +898,13 @@
     <div class="collapse" id="collapseExampleMaterials">
       <div class="card card-body collapse-card">
         <form #materialForm="ngForm">
-          <table class="table table-input">
+          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
             <thead>
               <th>Materijal*</th>
               <th style="width: 150px">Planirana količina*</th>
               <th *ngIf="!new" style="width: 180px">Planirana količina / ha*</th>
-              <th style="text-align: right !important" *ngIf="!new">Dodatno</th>
-              <th style="text-align: right !important">Dodaj/Potrvdi</th>
+              <th style="text-align: right !important" *ngIf="!new">Učinci</th>
+              <th style="text-align: right !important"></th>
               <th style="text-align: right !important" *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0">
                 Obriši
               </th>
@@ -986,16 +1003,19 @@
                 <td>
                   <div *ngIf="new" class="form-group">
                     <button class="btn btn-primary btn-add mr-2" (click)="addMaterial(materialForm.valid)">
-                      <i class="fa fa-plus"></i>
+                      <i class="fa fa-plus"></i> Dodaj
                     </button>
                   </div>
                   <div *ngIf="!new" class="form-group">
                     <button class="btn btn-primary btn-add mr-2" (click)="addNewMaterial()"
                       [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                      <i class="fa fa-plus"></i>
+                      <i class="fa fa-plus"></i> Dodaj
                     </button>
                   </div>
                 </td>
+              </tr>
+              <tr>
+                <td colspan="7"><hr style="height:2px;border-width:0;color:gray;background-color:#33590b"></td>
               </tr>
               <!--editable table materials new wo-->
               <ng-container *ngIf="new; else elseBlockSpentMaterial">
@@ -1077,7 +1097,7 @@
                   -->
                   <td>
                     <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial(material)">
-                      <i class="fa fa-check"></i>
+                      <i class="fa fa-check"></i> Sačuvaj
                     </button>
                   </td>
                   <td>
@@ -1173,7 +1193,7 @@
                     <td>
                       <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
                         [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser || material.fuel">
-                        <i class="fa fa-check"></i>
+                        <i class="fa fa-check"></i> Sačuvaj
                       </button>
                     </td>
                     <td>
@@ -1202,19 +1222,19 @@
     </div>
   </div>
   <br />
-  <div class="col" style="float: right">
-    <button class="btn btn-primary btn-edit"
+  <div class="col" style="float: right;">
+    <button class="btn btn-primary btn-edit" style="margin-bottom: 5px;"
       *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser" data-toggle="modal"
       data-target="#closeWOModal">
       <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
     </button>
-    <button class="btn btn-primary btn-add mr-2"
+    <button class="btn btn-primary btn-add mr-2" style="margin-bottom: 5px;"
       *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser"
       (click)="updateWorkOrder()">
       <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
     </button>
 
-    <button class="btn btn-primary btn-add mr-2" *ngIf="new && machine && materials"
+    <button class="btn btn-primary btn-add mr-2" *ngIf="new && machine && materials" style="margin-bottom: 5px;"
       (click)="addWorkOrder(infoWorkOrderForm)">
       <i class="fa fa-save mr-2"></i> Sačuvaj
     </button>
@@ -1323,15 +1343,15 @@
     </div>
     <hr class="solid" />
     <div class="row mt-2">
-      <div class="col-6"><i class="fa fa-cubes"></i> Kultura:</div>
+      <div class="col-6"><i class="fa fa-cubes"></i> Usev:</div>
       <div class="col-6">
         <select name="culture" [(ngModel)]="workOrder.cropId" class="form-control" id="" #culture="ngModel" required>
           <option value="{{ crop.id }}" *ngFor="let crop of crops">
-            {{ crop.Name.split(",")[1] }}
+            {{ crop.Name }}
           </option>
         </select>
         <div *ngIf="culture.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite kulturu.
+          Izaberite usev.
         </div>
       </div>
     </div>
@@ -1950,7 +1970,7 @@
             <div class="input-group mb-3">
               <input [(ngModel)]="spentMaterial.spent" type="number" name="quantity" id="quantity" class="form-control"
                 #quantity="ngModel" required onKeyPress="if(this.value.length==7) return false;"
-                (change)="calculateSpentPerHectar()" />
+                (change)="calculateSpentPerHectar(spentMaterial.spent)" />
               <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2" *ngIf="new; else elseBlockSpentMaterialModal">{{ unit
                   }}</span>
@@ -1980,7 +2000,8 @@
                 <span class="input-group-text" id="basic-addon2">{{ unit }}/ha</span>
               </div>
               <ng-template #elseBlockSpentPerHectar>
-                <input [(ngModel)]="spentPerHectar" type="number" name="spentPerHectar" id="" class="form-control"
+                
+                <input [(ngModel)]="spentMaterial.spent/workOrder.treated" type="number" name="spentPerHectar" id="" class="form-control"
                   readonly />
                 <div class="input-group-append">
                   <span class="input-group-text" id="basic-addon2">{{ spentMaterial.material.Unit }}/ha</span>

@@ -448,6 +448,7 @@ public class WorkOrderWorkerService {
 	    
 	    String oDataString = response.getBody().toString().replace(":", "-");
 	    String formatted = formatJSON(oDataString);
+	    System.out.println("FORMATED => " + formatted);
 	    JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 	    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();

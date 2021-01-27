@@ -1,6 +1,6 @@
 <navbar></navbar>
 <div class="container d-none d-md-block" style="padding-top: 70px;">
-  <h3 class="mt-2 mb-2">Pregled naloga</h3>
+  <h3 class="mt-2 mb-2">Pregled naloga > <span *ngIf="my">Moji radni nalozi</span><span *ngIf="!my">Svi radni nalozi</span></h3>
 
   <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
     data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
@@ -57,18 +57,30 @@
     <button *ngIf="!my" class="btn btn-primary button-all shadow-none" style="float: left; width: 68px;" (click)="getMyWorkOrders()">
       <i class="fa fa-tasks"></i> Moji
     </button>
-    <button *ngIf="!empty" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
+    <button *ngIf="!my" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
       (click)="getAllWorkOrdersByStatus('NEW')">
       <i class="fa fa-tasks"></i> Novi
     </button>
-    <button *ngIf="!empty" class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
+    <button *ngIf="!my" class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('IN_PROGRESS')">
       <i class="fa fa-tasks"></i> U radu
     </button>
-    <button *ngIf="!empty" class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
+    <button *ngIf="!my" class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
       (click)="getAllWorkOrdersByStatus('CLOSED')">
       <i class="fa fa-tasks"></i> Zatvoreni
     </button>
+    <button *ngIf="my" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
+    (click)="getMyWorkOrdersByStatus('NEW')">
+    <i class="fa fa-tasks"></i> Novi
+  </button>
+  <button *ngIf="my" class="btn btn-primary button-in-progress shadow-none" style="margin-left: 10px; float: left"
+    (click)="getMyWorkOrdersByStatus('IN_PROGRESS')">
+    <i class="fa fa-tasks"></i> U radu
+  </button>
+  <button *ngIf="my" class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
+    (click)="getMyWorkOrdersByStatus('CLOSED')">
+    <i class="fa fa-tasks"></i> Zatvoreni
+  </button>
   </div>
   <br />
   <div *ngIf="empty && !my && !loading" class="center">

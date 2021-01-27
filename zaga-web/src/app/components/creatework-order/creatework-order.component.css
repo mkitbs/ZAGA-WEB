@@ -171,3 +171,15 @@ button.calendar {
   background-repeat: repeat;
   background-size: 115vw;
 }
+
+.disableAll {
+  pointer-events: none;
+}
+
+.disableAll input {
+  opacity: 0.5;
+}
+
+.disableAll :hover {
+  cursor: no-drop !important;
+}
