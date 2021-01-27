@@ -65,4 +65,12 @@ public class UserController {
 		UserDTO userDTO = new UserDTO(user);
 		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 	}
+	
+
+	@GetMapping("getUserById/{id}")
+	public ResponseEntity<?> getUserById(@PathVariable Long id){
+		User user = userRepo.getOne(id);
+		UserDTO userDTO = new UserDTO(user);
+		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+	}
 }

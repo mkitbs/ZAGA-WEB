@@ -420,8 +420,22 @@ public class WorkOrderService {
 		return workOrdersDTO;
 	}
 	
-	public List<WorkOrderDTO> getMyWorkOrders(String sapUserId){
-		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId));
+	public List<WorkOrderDTO> getMyWorkOrders(Long userId, String sapUserId){
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserById/"+userId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		
+		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId), user.getBody().getTenant().getId());
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 	    
 		for(WorkOrder workOrder : workOrders) {
@@ -649,7 +663,7 @@ public class WorkOrderService {
 			wow.setUser(worker.getUser());
 			wow.setOperation(worker.getOperation());
 			wow.setConnectingMachine(worker.getConnectingMachine());
-			
+			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 			wowRepo.save(wow);
 			copy.getWorkers().add(wow);
 			copy = workOrderRepo.save(copy);
@@ -777,9 +791,14 @@ public class WorkOrderService {
 
 	public CloseWorkOrderResponse closeWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 			log.info("Work order closing started");
+			
+			updateWorkOrder(workOrderDTO);
+			
 			CloseWorkOrderResponse closeWorkOrder = new CloseWorkOrderResponse();
 			
 			WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
+			workOrder.setTreated(workOrderDTO.getTreated());
+			workOrderRepo.save(workOrder);
 			CloseWorkOrderDTO closeWorkORder = new CloseWorkOrderDTO(workOrder);
 			
 			Map<String, String> headerValues = getHeaderValuesClose();
@@ -855,8 +874,21 @@ public class WorkOrderService {
 			//workOrderRepo.save(workOrder);
 	}
 	
-	public List<WorkOrderDTO> getAllByStatus(WorkOrderStatus status){
-		List<WorkOrder> workOrders = workOrderRepo.findAllByStatus(status);
+	public List<WorkOrderDTO> getAllByStatus(Long userId, WorkOrderStatus status){
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserById/"+userId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		List<WorkOrder> workOrders = workOrderRepo.findWoByStatus(user.getBody().getTenant().getId(), status.toString());
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 		for(WorkOrder workOrder : workOrders) {
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
@@ -1028,6 +1060,31 @@ public class WorkOrderService {
 				workOrdersDTO.add(workOrderDTO);
 			}
 		}
+		return workOrdersDTO;
+	}
+	
+	public List<WorkOrderDTO> getMyWoByStatus(Long userId, WorkOrderStatus status){
+		RestTemplate rest = new RestTemplate();
+		HttpServletRequest requesthttp = 
+		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
+		                .getRequest();
+
+		String token = (requesthttp.getHeader("Token"));
+		System.out.println(token);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + token);
+		HttpEntity<String> request2send = new HttpEntity<String>(headers);
+		ResponseEntity<UserAuthDTO> user = rest.exchange(
+				"http://localhost:8091/user/getUserById/"+userId, 
+				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+		System.out.println(user.getBody().getTenant().getId() + " -> " + Long.parseLong(user.getBody().getSapUserId()) + " -> " + status);
+		List<WorkOrder> workOrders = workOrderRepo.findMyWoByStatus(user.getBody().getTenant().getId(), Long.parseLong(user.getBody().getSapUserId()), status.toString());
+		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		for(WorkOrder workOrder : workOrders) {
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			workOrdersDTO.add(workOrderDTO);
+		}
+		System.out.println(workOrdersDTO);
 		return workOrdersDTO;
 	}
 	

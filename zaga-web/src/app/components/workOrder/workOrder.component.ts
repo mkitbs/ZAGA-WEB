@@ -117,6 +117,9 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getAllWorkOrdersByStatus(status) {
+    console.log("GET ALL BY STATUS")
+    console.log("STATUS = " + status)
+    console.log("MY = " + this.my);
     this.spinner.show();
     this.workOrderService.getAllByStatus(status).subscribe((res) => {
       this.spinner.hide();
@@ -124,10 +127,8 @@ export class WorkOrderComponent implements OnInit {
 
       if (this.workOrders.length == 0) {
         this.empty = true;
-        this.my = true;
       } else {
         this.empty = false;
-        this.my = false;
         this.workOrders.forEach((workOrder) => {
           var date = "";
           date =
@@ -205,6 +206,7 @@ export class WorkOrderComponent implements OnInit {
       this.loading = false;
       this.spinner.hide();
       this.workOrders = data;
+      console.log(this.workOrders)
       if (this.workOrders.length == 0) {
         this.empty = true;
       } else {
@@ -236,4 +238,46 @@ export class WorkOrderComponent implements OnInit {
       this.spinner.hide();
     })
   }
+
+  getMyWorkOrdersByStatus(status) {
+    console.log("GET MY BY STATUS")
+    console.log("STATUS = " + status)
+    console.log("MY = " + this.my);
+    this.spinner.show();
+    this.workOrderService.getMyByStatus(status).subscribe((res) => {
+      this.spinner.hide();
+      this.workOrders = res;
+
+      if (this.workOrders.length == 0) {
+        this.empty = true;
+      } else {
+        this.empty = false;
+        this.workOrders.forEach((workOrder) => {
+          var date = "";
+          date =
+            workOrder.date.day.split(" ")[0] +
+            "." +
+            workOrder.date.month +
+            "." +
+            workOrder.date.year +
+            ".";
+          workOrder.date = date;
+          if (workOrder.status == "NEW") {
+            workOrder.status = "Novi";
+          } else if (workOrder.status == "IN_PROGRESS") {
+            workOrder.status = "U radu";
+          } else if (workOrder.status == "CLOSED") {
+            workOrder.status = "Zatvoren";
+          }
+          if(workOrder.sapId == 0){
+            workOrder.sapId = null;
+          }
+        });
+      }
+      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+    }, error => {
+      this.spinner.hide();
+    });
+  }
+
 }

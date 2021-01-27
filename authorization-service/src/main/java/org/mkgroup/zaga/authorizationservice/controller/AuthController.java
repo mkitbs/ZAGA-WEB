@@ -164,6 +164,19 @@ public class AuthController {
     	return null;
     }
 	
+	@GetMapping("/check/{token}/userId")
+    public ResponseEntity<?> getTenant(@PathVariable String token) throws InvalidJTWTokenException{
+    	if(permissions.validateJwtToken(token)) {
+    		try {
+				return new ResponseEntity<Long>(jwtProvider.getUserPrincipal(token).getId(), HttpStatus.OK);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	return null;
+    }
+	
 	@GetMapping("/getLogged")
     public ResponseEntity<?> getLogged() {
     	

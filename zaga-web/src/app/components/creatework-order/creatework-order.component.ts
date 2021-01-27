@@ -102,7 +102,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   selectedWorkerForMachine;
   selectedTable;
-  selectedYear = 2020;
+  selectedYear;
   selectedCrop;
   selectedWorker;
   selectedOperation;
@@ -182,6 +182,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   emptyMaterial;
   emptyWow;
+  loading;
 
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
@@ -213,8 +214,11 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.new = false;
       this.today = new Date();
-
+      this.loading = true;
+      this.spinner.show();
       this.workOrderService.getOne(this.workId).subscribe((data) => {
+        this.loading = false;
+        this.spinner.hide();
         this.workOrder = data;
         console.log(this.workOrder.treated)
         if (this.workOrder.treated != undefined) {
@@ -281,6 +285,9 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.treatedEntered == 0) {
           this.treatedEntered = null;
         }
+      }, error => {
+        this.loading = false;
+        this.spinner.hide();
       });
       this.userService.getAll().subscribe((data) => {
         this.allEmployees = data.content;
@@ -365,6 +372,7 @@ export class CreateworkOrderComponent implements OnInit {
 
     var now = new Date();
     this.currentYear = now.getFullYear();
+    this.selectedYear = this.currentYear;
     this.nextYear = now.getFullYear() + 1;
     this.previousYear = now.getFullYear() - 1;
   }
@@ -373,6 +381,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   getArea(id) {
     console.log(id)
+    this.workOrder.area = null;
     this.cropService.getOne(id).subscribe((data) => {
       this.crop = data;
       this.crop.Area = data.Area;
@@ -396,6 +405,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   getCulture() {
+    this.workOrder.area = null;
     this.crops = [];
     this.cultureFC = new FormControl("");
     console.log(this.selectedYear);
@@ -408,7 +418,9 @@ export class CreateworkOrderComponent implements OnInit {
           console.log(data);
           this.crops = data;
           if(this.crops.length == 1){
+            console.log(this.crops[0])
             this.cultureFC.setValue(this.crops[0])
+            this.workOrder.area = this.crops[0].Area;
           }
         });
     } else {
@@ -428,14 +440,18 @@ export class CreateworkOrderComponent implements OnInit {
     })
   }
 
-  calculateSpentPerHectar() {
+  calculateSpentPerHectar(spent) {
+    console.log(spent)
+    console.log(this.workOrder.treated)
     if (this.workOrder.treated != undefined) {
       this.workOrder.materials.forEach(mat => {
         this.spentPerHectar = mat.spent / this.workOrder.treated
         console.log(this.spentPerHectar)
       })
     } else {
-      this.spentPerHectar = this.spentMaterial.spent / this.treatedEntered;
+      console.log(this.spentMaterial.spent)
+      console.log(this.treatedEntered)
+      this.spentPerHectar = this.spentMaterial.spent / this.workOrder.treated;
     }
 
   }
@@ -494,7 +510,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnCulture(culture: Crop): string {
-    return culture && culture.Id + " - " + culture.Name.split(",")[1]
+    return culture && culture.Id + " - " + culture.Name
   }
 
   displayFnMachine(machine: Machine): string {
@@ -533,7 +549,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnCultureWithoutId(culture: Crop): string {
-    return culture && culture.Name.split(",")[1]
+    return culture && culture.Name
   }
 
   //methods for work order workers, operations and machines
@@ -1076,6 +1092,21 @@ export class CreateworkOrderComponent implements OnInit {
             if (this.workOrder.treated == 0) {
               this.workOrder.treated = null;
             }
+            if (this.workOrder.materials.length != 0) {
+              this.workOrder.materials.forEach(material => {
+                if (material.quantity < 0) {
+                  material.quantity = null;
+                }
+                if (material.quantityPerHectar < -1) {
+                  material.quantityPerHectar = null;
+                }
+                if(material.deleted == true){
+                  this.emptyMaterial = true;
+                } else {
+                  this.emptyMaterial = false;
+                }
+              })
+            }
           });
         }, error => {
           this.spinner.hide();
@@ -1126,6 +1157,22 @@ export class CreateworkOrderComponent implements OnInit {
               .subscribe((res) => {
                 this.crops = res;
               });
+
+              if (this.workOrder.materials.length != 0) {
+                this.workOrder.materials.forEach(material => {
+                  if (material.quantity < 0) {
+                    material.quantity = null;
+                  }
+                  if (material.quantityPerHectar < -1) {
+                    material.quantityPerHectar = null;
+                  }
+                  if(material.deleted == true){
+                    this.emptyMaterial = true;
+                  } else {
+                    this.emptyMaterial = false;
+                  }
+                })
+              }
 
             if (this.workOrder.treated == 0) {
               this.workOrder.treated = null;
@@ -1184,6 +1231,21 @@ export class CreateworkOrderComponent implements OnInit {
 
             if (this.workOrder.treated == 0) {
               this.workOrder.treated = null;
+            }
+            if (this.workOrder.materials.length != 0) {
+              this.workOrder.materials.forEach(material => {
+                if (material.quantity < 0) {
+                  material.quantity = null;
+                }
+                if (material.quantityPerHectar < -1) {
+                  material.quantityPerHectar = null;
+                }
+                if(material.deleted == true){
+                  this.emptyMaterial = true;
+                } else {
+                  this.emptyMaterial = false;
+                }
+              })
             }
           });
         }, err => {
@@ -1300,6 +1362,22 @@ export class CreateworkOrderComponent implements OnInit {
             .subscribe((res) => {
               this.crops = res;
             });
+
+            if (this.workOrder.materials.length != 0) {
+              this.workOrder.materials.forEach(material => {
+                if (material.quantity < 0) {
+                  material.quantity = null;
+                }
+                if (material.quantityPerHectar < -1) {
+                  material.quantityPerHectar = null;
+                }
+                if(material.deleted == true){
+                  this.emptyMaterial = true;
+                } else {
+                  this.emptyMaterial = false;
+                }
+              })
+            }
 
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
