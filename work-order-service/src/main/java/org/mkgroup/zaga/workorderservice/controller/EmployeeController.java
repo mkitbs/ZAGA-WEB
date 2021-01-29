@@ -51,7 +51,7 @@ public class EmployeeController {
 
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAllUsers(){
-		List<User> users = userRepo.findAll();
+		List<User> users = userRepo.findByOrderByPerNumberAsc();
 		List<EmployeeDTO> retValues = new ArrayList<EmployeeDTO>();
 		for(User user : users) {
 			EmployeeDTO emp = new EmployeeDTO(user);

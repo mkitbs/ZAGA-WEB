@@ -184,7 +184,8 @@
             <td [ngClass]="{
                 statusNovi: workOrder.status == 'Novi',
                 statusURadu: workOrder.status == 'U radu',
-                statusZatvoren: workOrder.status == 'Zatvoren'
+                statusZatvoren: workOrder.status == 'Zatvoren',
+                statusStorniran: workOrder.status == 'Storniran'
                 }" 
             >
               {{ workOrder.status }}

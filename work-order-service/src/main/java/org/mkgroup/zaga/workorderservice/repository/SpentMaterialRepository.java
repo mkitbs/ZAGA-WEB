@@ -27,6 +27,6 @@ public interface SpentMaterialRepository extends JpaRepository<SpentMaterial, UU
 	@Query(value = "UPDATE spent_material SET deleted = true WHERE id = ?1", nativeQuery = true)
 	void deleteMaterial(UUID id);
 	
-	@Query(value = "SELECT * FROM spent_material sm WHERE sm.work_order_id=?1 AND sm.material_id=?2 AND sm.deleted=false", nativeQuery = true)
+	@Query(value = "SELECT * FROM spent_material sm WHERE sm.work_order_id=?1 AND sm.material_id=?2 AND sm.deleted=false AND sm.is_fuel=true", nativeQuery = true)
 	Optional<SpentMaterial> findByWoAndMaterial(UUID woId, UUID materialId);
 }

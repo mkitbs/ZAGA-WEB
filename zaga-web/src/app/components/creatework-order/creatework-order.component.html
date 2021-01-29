@@ -5,32 +5,37 @@
   <div class="col-12 mb-3">
     <div class="button-group">
       <div class="row">
-        <div class="col">
+        <div class="col-3">
           <h3 *ngIf="new">Kreiranje naloga</h3>
           <h3 *ngIf="!new">Informacije o nalogu</h3>
           <span>Status: </span><span [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
-              statusZatvoren: workOrder.status == 'Zatvoren'
+              statusZatvoren: workOrder.status == 'Zatvoren',
+              statusStorniran: workOrder.status == 'Storniran'
             }">{{ workOrder.status }}</span>
           <br>
           <span *ngIf="!new">Br. radnog naloga (SAP): {{workOrder.sapId}}</span><br>
           <span *ngIf="!new">Radni nalog kreirao: {{userCreator.name}} {{userCreator.surname}}</span>
         </div>
-        <div class="col" style="float: right">
+        <div class="col" style="float: right;">
           <button class="btn btn-danger" data-toggle="modal" data-target=".bd-example-modal-lg"
             style="margin-left: 6px; float: right; border: none;" *ngIf="error">
             <i class="fa fa-exclamation-triangle"></i>
           </button>
-          <button class="btn btn-primary btn-edit" *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser"
-            data-toggle="modal" data-target="#closeWOModal">
+          <button class="btn btn-primary btn-cancellation mr-2"
+            *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran'" (click)="cancellationWorkOrder()">
+            <i class="fa fa-ban"></i> Storniraj radni nalog
+          </button>
+          <button class="btn btn-primary btn-edit" 
+            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'"
+            data-toggle="modal" data-target="#closeWOModal" style="margin-right: 5px;">
             <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
           </button>
           <button class="btn btn-primary btn-add mr-2"
-            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser" (click)="updateWorkOrder()">
-            <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
+            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'" (click)="updateWorkOrder()">
+            <i class="fa fa-save mr-2"></i> Sačuvaj radni nalog
           </button>
-
           <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(infoWorkOrderForm)">
             <i class="fa fa-save mr-2"></i> Sačuvaj
           </button>
@@ -41,7 +46,7 @@
   <!--header info-->
   <div class="header-info">
     <form #infoWorkOrderForm="ngForm" >
-      <table class="table header-table"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
+      <table class="table header-table"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
         <tr>
           <!--Datum-->
           <td class="left-col-header">
@@ -302,7 +307,7 @@
     <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
         <form #wowForm="ngForm">
-          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
+          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
             <thead>
               <th>Izvršioc*</th>
               <th>ATM*</th>
@@ -871,14 +876,18 @@
                     </td>
                   </ng-container>
                 </tr>
+
               </ng-template>
             </tbody>
           </table>
           <div class="col-12">
-            <div class="input-group">
+            
               <i *ngIf="wows.length == 0 && new">Dodajte izvršioce (i mašine)</i>
-              <i *ngIf="workOrder.workers.length == 0 && !new">Dodajte izvršioce (i mašine)</i>
-            </div>
+              <br>
+             
+              <i *ngIf="workOrder.workers.length == 0 && !new">Dodajte izvršioce (i mašine)</i><br>
+              <i *ngIf="!new">*Polja koja su obavezna za unos</i>
+            
           </div>
         </form>
       </div>
@@ -898,11 +907,11 @@
     <div class="collapse" id="collapseExampleMaterials">
       <div class="card card-body collapse-card">
         <form #materialForm="ngForm">
-          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' ? 'disableAll' : null">
+          <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
             <thead>
               <th>Materijal*</th>
               <th style="width: 150px">Planirana količina*</th>
-              <th *ngIf="!new" style="width: 180px">Planirana količina / ha*</th>
+              <th *ngIf="!new" style="width: 150px">Planirana količina / ha<span style="color: #f68901;">*</span></th>
               <th style="text-align: right !important" *ngIf="!new">Učinci</th>
               <th style="text-align: right !important"></th>
               <th style="text-align: right !important" *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0">
@@ -974,18 +983,19 @@
                     </div>
                   </div>
                 </td>
-                <td *ngIf="!new">
+                <td *ngIf="!new" style="width: 100px;">
                   <div class="form-group">
                     <div class="input-group mb-3">
-                      <mat-form-field class="inputAuto" *ngIf="new; else elseBlockQuantity">
-                        <input  [(ngModel)]="quantityEntered / crop.Area" type="number"
-                        name="quantityPerHectar" id="" matInput disabled />
-                        <span matSuffix>{{unit}}/ha</span>
-                      </mat-form-field>
+                        <mat-form-field class="inputAuto" *ngIf="new; else elseBlockQuantity">
+                          <input  [(ngModel)]="quantityEntered / crop.Area" type="number"
+                            name="quantityPerHectar" id="" matInput disabled />
+                          <span matSuffix>{{unit}}/ha</span>
+                        </mat-form-field>
+                     
                       <ng-template #elseBlockQuantity>
-                        <mat-form-field class="inputAuto">
+                        <mat-form-field class="inputAuto" style="width: 100px;">
                           <input [(ngModel)]="quantityEntered / workOrder.treated" type="number" name="quantityPerHectar"
-                            id="" matInput disabled />
+                            id="" matInput disabled  />
                           <span matSuffix *ngIf="unit != null">{{unit}}/ha</span>
                         </mat-form-field>
                       </ng-template>
@@ -1096,7 +1106,7 @@
                   </td>
                   -->
                   <td>
-                    <button class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial(material)">
+                    <button style="width: max-content;" class="btn btn-primary btn-add mr-2" (click)="editExistingMaterial(material)">
                       <i class="fa fa-check"></i> Sačuvaj
                     </button>
                   </td>
@@ -1191,7 +1201,7 @@
                       </div>
                     </td>
                     <td>
-                      <button class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
+                      <button style="width: max-content;" class="btn btn-primary btn-add mr-2" (click)="updateMaterialBasicInfo(material)"
                         [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser || material.fuel">
                         <i class="fa fa-check"></i> Sačuvaj
                       </button>
@@ -1210,9 +1220,11 @@
                   </ng-container>
                 </tr>
                 <div class="col-12">
-                  <div class="input-group">
-                    <i *ngIf="workOrder.materials.length == 0">Dodajte materijale</i>
-                  </div>
+                
+                    <i *ngIf="workOrder.materials.length == 0">Dodajte materijale</i><br>
+                    <i>*Polja koja su obavezna za unos</i><br>
+                    <i *ngIf="!new"><span style="color: #f68901;">*</span>Polja koja će se automatski popuniti</i>
+                
                 </div>
               </ng-template>
             </tbody>
@@ -1223,7 +1235,11 @@
   </div>
   <br />
   <div class="col" style="float: right;">
-    <button class="btn btn-primary btn-edit" style="margin-bottom: 5px;"
+    <button class="btn btn-primary btn-cancellation mr-2"
+            *ngIf="machines == true && materials == true && !new && creator==loggedUser" (click)="cancellationWorkOrder()">
+            <i class="fa fa-ban"></i> Storniraj radni nalog
+    </button>
+    <button class="btn btn-primary btn-edit" style="margin-bottom: 5px; margin-right: 5px;"
       *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser" data-toggle="modal"
       data-target="#closeWOModal">
       <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal

@@ -50,7 +50,7 @@ public class CropController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		List<Crop> crops = cropRepo.findByOrderByNameAsc();
+		List<Crop> crops = cropRepo.findByOrderByErpIdAsc();
 		List<CropDTO> retValues = new ArrayList<CropDTO>();
 		for(Crop crop : crops) {
 			CropDTO c = new CropDTO(crop);

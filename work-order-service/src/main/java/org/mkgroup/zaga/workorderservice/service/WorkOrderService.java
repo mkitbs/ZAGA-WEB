@@ -800,7 +800,10 @@ public class WorkOrderService {
 			workOrder.setTreated(workOrderDTO.getTreated());
 			workOrderRepo.save(workOrder);
 			CloseWorkOrderDTO closeWorkORder = new CloseWorkOrderDTO(workOrder);
-			
+			if(workOrderDTO.isCancellation()) {
+				closeWorkORder.setCancellation("X");
+			} 
+			System.out.println("CLOSE WO => " + closeWorkORder);
 			Map<String, String> headerValues = getHeaderValuesClose();
 			String csrfToken = headerValues.get("csrf");
 			String authHeader = headerValues.get("authHeader");
@@ -858,8 +861,12 @@ public class WorkOrderService {
 				closeWorkOrder.setStatus(true);
 				//this.updateWorkOrder(workOrderDTO);
 				workOrder.setTreated(workOrderDTO.getTreated());
-				workOrder.setStatus(WorkOrderStatus.CLOSED);
-				workOrder.setClosed(true);
+				if(workOrderDTO.isCancellation()) {
+					workOrder.setStatus(WorkOrderStatus.CANCELLATION);
+				} else {
+					workOrder.setStatus(WorkOrderStatus.CLOSED);
+					workOrder.setClosed(true);
+				}
 				workOrderRepo.save(workOrder);
 				
 				return closeWorkOrder;

@@ -105,7 +105,7 @@ public class OperationService {
 	
 	public List<OperationDTO> getAll() {
 		
-		List<Operation> operations = operationRepo.findByOrderByNameAsc();
+		List<Operation> operations = operationRepo.findByOrderByErpIdAsc();
 		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
 		for(Operation operation : operations) {
 			OperationDTO op = new OperationDTO(operation);

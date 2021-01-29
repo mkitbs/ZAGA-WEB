@@ -51,9 +51,9 @@
                 <div class="col">
                   <div class="card-text">
                     <h5 class="card-title">
-                      Nalozi
+                     Korisnički nalozi
                     </h5>
-                    <p>Pregled naloga, kreiranje novih naloga</p>
+                    <p>Pregled korisničkih naloga, kreiranje novih korisničkih naloga</p>
                   </div>
                 </div>
               </div>
@@ -134,9 +134,9 @@
                 <div class="col">
                   <div class="card-text">
                     <h5 class="card-title">
-                      Nalozi
+                      Korisniči nalozi
                     </h5>
-                    <p>Pregled naloga, kreiranje novih naloga</p>
+                    <p>Pregled korisničkih naloga, kreiranje novih korisničkih naloga</p>
                   </div>
                 </div>
               </div>
@@ -1067,9 +1067,13 @@
           (click)="dismissAll()">
           <i class="fa fa-window-close"></i> Zatvori
         </button>
-        <button type="button" class="btn btn-success" style="background-color: #33590b" data-dismiss="modal"
-          (click)="sync()">
-          <i class="fa fa-save"></i> Ponovi
+        <button *ngIf="(!this.loadingCrop || !this.loadingCulture || !this.loadingCultureGroup || !this.loadingEmployee || this.syncedField
+        || !this.loadingFieldGroup || !this.loadingMachine || !this.loadingMachineGroup || !this.loadingOperation 
+        || !this.loadingOperationGroup || !this.loadingVariety) && (!this.syncedCrop || !this.syncedCulture || !this.syncedCultureGroup || !this.syncedEmployee || this.syncedField
+        || !this.syncedFieldGroup || !this.syncedMachine || !this.syncedMachineGroup || !this.syncedOperation 
+        || !this.syncedOperationGroup || !this.syncedVariety)" type="button" class="btn btn-success" style="background-color: #33590b" 
+          (click)="repeatSync()">
+          <i class="fa fa-repeat"></i> Ponovi
         </button>
       </div>
     </div>

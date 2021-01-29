@@ -35,7 +35,7 @@ public class MaterialController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		List<Material> materials = materialRepo.findByOrderByNameAsc();
+		List<Material> materials = materialRepo.findByOrderByErpIdAsc();
 		List<MaterialDTO> retValues = new ArrayList<MaterialDTO>();
 		for(Material material : materials) {
 			MaterialDTO mat = new MaterialDTO(material);

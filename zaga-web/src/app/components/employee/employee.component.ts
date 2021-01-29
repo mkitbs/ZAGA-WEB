@@ -26,6 +26,7 @@ export class EmployeeComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
       this.allEmployees = data.content;
+      this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
       console.log(this.allEmployees)
     }, error =>{
       this.spinner.hide();

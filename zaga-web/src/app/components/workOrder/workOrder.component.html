@@ -15,6 +15,11 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchNumber placeholder="Pretražite po šifri radnog naloga" />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
           <input 
             ngbDatepicker 
             #day="ngbDatepicker" 
@@ -25,21 +30,29 @@
           />
         </mat-form-field>
       </div>
+    </div>
+    <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
           <input type="text" matInput #searchTable placeholder="Pretražite po parceli" />
         </mat-form-field>
       </div>
-    </div>
-    <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
           <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" />
         </mat-form-field>
       </div>
+      
+    </div>
+    <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
           <input type="text" matInput #searchOperation placeholder="Pretražite po operaciji" />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchResponsible placeholder="Pretražite po odgovornoj osobi" />
         </mat-form-field>
       </div>
     </div>
@@ -69,6 +82,10 @@
       (click)="getAllWorkOrdersByStatus('CLOSED')">
       <i class="fa fa-tasks"></i> Zatvoreni
     </button>
+    <button *ngIf="!my" class="btn btn-primary button-cancellation shadow-none" style="margin-left: 10px; float: left"
+      (click)="getAllWorkOrdersByStatus('CANCELLATION')">
+      <i class="fa fa-tasks"></i> Stornirani
+    </button>
     <button *ngIf="my" class="btn btn-primary button-new shadow-none" style="margin-left: 10px; float: left; width: 68px;"
     (click)="getMyWorkOrdersByStatus('NEW')">
     <i class="fa fa-tasks"></i> Novi
@@ -80,6 +97,10 @@
   <button *ngIf="my" class="btn btn-primary button-closed shadow-none" style="margin-left: 10px; float: left"
     (click)="getMyWorkOrdersByStatus('CLOSED')">
     <i class="fa fa-tasks"></i> Zatvoreni
+  </button>
+  <button *ngIf="my" class="btn btn-primary button-cancellation shadow-none" style="margin-left: 10px; float: left"
+    (click)="getMyWorkOrdersByStatus('CANCELLATION')">
+    <i class="fa fa-tasks"></i> Stornirani
   </button>
   </div>
   <br />
@@ -95,6 +116,8 @@
   | SearchWorkOrdersTable: searchTable.value
   | SearchWorkOrdersDate: searchDate.value
   | SearchWorkOrdersCrop: searchCrop.value
+  | SearchWorkOrderNumber: searchNumber.value
+  | SearchWorkOrderResponsible: searchResponsible.value
   | SearchWorkOrdersOperation: searchOperation.value; let i = index">
     <div *ngIf="workOrder === -1" class="center">
       <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
@@ -121,7 +144,9 @@
             | SearchWorkOrdersTable: searchTable.value
             | SearchWorkOrdersDate: searchDate.value
             | SearchWorkOrdersCrop: searchCrop.value
-            | SearchWorkOrdersOperation: searchOperation.value;
+            | SearchWorkOrdersOperation: searchOperation.value
+            | SearchWorkOrderNumber: searchNumber.value
+            | SearchWorkOrderResponsible: searchResponsible.value;
             let j = index" style="cursor: pointer">
           <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
           <td (click)="changeRoute(workOrder.id)">
@@ -142,7 +167,8 @@
           <td [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
-              statusZatvoren: workOrder.status == 'Zatvoren'
+              statusZatvoren: workOrder.status == 'Zatvoren',
+              statusStorniran: workOrder.status == 'Storniran'
             }" (click)="changeRoute(workOrder.id)">
             {{ workOrder.status }}
           </td>

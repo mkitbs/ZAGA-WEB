@@ -35,6 +35,10 @@ th {
   color: #73964a;
 }
 
+.statusStorniran {
+  color: #bd362f;
+}
+
 .collapsing-button {
   width: fit-content;
   text-align: center;

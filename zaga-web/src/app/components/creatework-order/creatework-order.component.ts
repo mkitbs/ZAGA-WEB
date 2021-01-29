@@ -28,7 +28,7 @@ import { WorkOrderWorkerService } from "src/app/service/work-order-worker.servic
 import { WorkOrderMachine } from "src/app/models/WorkOrderMachine";
 import { SpentMaterialService } from "src/app/service/spent-material.service";
 import { Renderer2 } from "@angular/core";
-import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+import { MatSnackBar, throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { User } from 'src/app/models/User';
@@ -63,7 +63,8 @@ export class CreateworkOrderComponent implements OnInit {
     private wowService: WorkOrderWorkerService,
     private spentMaterialService: SpentMaterialService,
     private spinner: NgxSpinnerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -209,6 +210,7 @@ export class CreateworkOrderComponent implements OnInit {
       };
       this.userService.getAll().subscribe((data) => {
         this.allEmployees = data.content;
+        this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
         console.log(this.allEmployees)
       });
     } else {
@@ -235,6 +237,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
+        } else if (this.workOrder.status == "CANCELLATION"){
+          this.workOrder.status = "Storniran";
         }
 
         if (this.workOrder.materials.length != 0) {
@@ -285,61 +289,58 @@ export class CreateworkOrderComponent implements OnInit {
         if (this.treatedEntered == 0) {
           this.treatedEntered = null;
         }
+        this.userService.getAll().subscribe((data) => {
+          this.allEmployees = data.content;
+          console.log(this.allEmployees)
+          var comparableId = this.workOrder.responsibleId;
+          var filterById = function (element) {
+            if (element.userId == comparableId) {
+              console.log(element)
+              return element;
+            }
+          };
+          this.nameFC.setValue(this.allEmployees.filter(filterById)[0]);
+        });
+  
+        this.operationService.getAll().subscribe((data) => {
+          this.operations = data;
+          var comparableId = this.workOrder.operationId;
+          var filterById = function (element) {
+            if (element.dbid == comparableId) {
+              console.log(element)
+              return element;
+            }
+          };
+          this.operationFC.setValue(this.operations.filter(filterById)[0])
+        })
+  
+        this.fieldService.getAll().subscribe(data => {
+          this.fields = data;
+          console.log(this.fields)
+          var comparableId = this.workOrder.tableId;
+          var filterById = function (element) {
+            if (element.dbId == comparableId) {
+              return element;
+            }
+          }
+          this.fieldFC.setValue(this.fields.filter(filterById)[0])
+        })
+  
+        this.cropService.getAll().subscribe(data => {
+          this.crops = data;
+          console.log(this.crops)
+          var comparableId = this.workOrder.cropId;
+          var filterById = function (element) {
+            if (element.id == comparableId) {
+              return element;
+            }
+          }
+          this.cultureFC.setValue(this.crops.filter(filterById)[0])
+        })
       }, error => {
         this.loading = false;
         this.spinner.hide();
       });
-      this.userService.getAll().subscribe((data) => {
-        this.allEmployees = data.content;
-        console.log(this.allEmployees)
-        var comparableId = this.workOrder.responsibleId;
-        var filterById = function (element) {
-          if (element.userId == comparableId) {
-            console.log(element)
-            return element;
-          }
-        };
-        this.nameFC.setValue(this.allEmployees.filter(filterById)[0]);
-      });
-
-      this.operationService.getAll().subscribe((data) => {
-        this.operations = data;
-        var comparableId = this.workOrder.operationId;
-        var filterById = function (element) {
-          if (element.dbid == comparableId) {
-            console.log(element)
-            return element;
-          }
-        };
-        this.operationFC.setValue(this.operations.filter(filterById)[0])
-      })
-
-      this.fieldService.getAll().subscribe(data => {
-        this.fields = data;
-        console.log(this.fields)
-        var comparableId = this.workOrder.tableId;
-        var filterById = function (element) {
-          if (element.dbId == comparableId) {
-            return element;
-          }
-        }
-        this.fieldFC.setValue(this.fields.filter(filterById)[0])
-      })
-
-      this.cropService.getAll().subscribe(data => {
-        this.crops = data;
-        console.log(this.crops)
-        var comparableId = this.workOrder.cropId;
-        var filterById = function (element) {
-          if (element.id == comparableId) {
-            return element;
-          }
-        }
-        this.cultureFC.setValue(this.crops.filter(filterById)[0])
-      })
-
-
-
     }
 
     this.operationService.getAll().subscribe((data) => {
@@ -750,6 +751,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
+        } else if (this.workOrder.status == "CANCELLATION"){
+          this.workOrder.status = "Storniran";
         }
 
         this.workOrder.date = {
@@ -835,6 +838,8 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "U radu";
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
+          } else if (this.workOrder.status == "CANCELLATION"){
+            this.workOrder.status = "Storniran";
           }
 
           if (this.workOrder.materials.length != 0) {
@@ -890,6 +895,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
+        } else if (this.workOrder.status == "CANCELLATION"){
+          this.workOrder.status = "Storniran";
         }
 
         if (this.workOrder.materials.length != 0) {
@@ -1075,6 +1082,8 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
+            } else if (this.workOrder.status == "CANCELLATION"){
+              this.workOrder.status = "Storniran";
             }
 
             this.workOrder.date = {
@@ -1144,6 +1153,8 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
+            } else if (this.workOrder.status == "CANCELLATION"){
+              this.workOrder.status = "Storniran";
             }
 
             this.workOrder.date = {
@@ -1215,6 +1226,8 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
+            } else if (this.workOrder.status == "CANCELLATION"){
+              this.workOrder.status = "Storniran";
             }
 
             this.workOrder.date = {
@@ -1349,6 +1362,8 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "U radu";
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
+          } else if (this.workOrder.status == "CANCELLATION"){
+            this.workOrder.status = "Storniran";
           }
 
           this.workOrder.date = {
@@ -1472,6 +1487,7 @@ export class CreateworkOrderComponent implements OnInit {
       console.log(this.validWow)
       this.spinner.show();
       this.workOrder.treated = this.treatedEntered;
+      this.workOrder.cancellation = false;
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
         this.spinner.hide();
@@ -1519,6 +1535,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.status = "U radu";
       } else if (this.workOrder.status == "CLOSED") {
         this.workOrder.status = "Zatvoren";
+      } else if (this.workOrder.status == "CANCELLATION"){
+        this.workOrder.status = "Storniran";
       }
 
       this.workOrder.date = {
@@ -1613,5 +1631,29 @@ export class CreateworkOrderComponent implements OnInit {
   setMaterialId(id){
     this.materialId = id;
     console.log(this.materialId);
+  }
+
+  cancellationWorkOrder() {
+    this.workOrder.cancellation = true;
+    console.log(this.workOrder)
+    this.spinner.show();
+    this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
+      console.log(res);
+      this.spinner.hide();
+      this.error = true;
+      this.toastr.success("Uspešno storniran radni nalog.");
+      this.router.navigate(["/workOrder"]);
+    },
+      err => {
+        console.log(err);
+        this.spinner.hide();
+        if (err.status == 400) {
+          this.toastr.error("Došlo je do greške prilikom storniranja.");
+          this.error = true;
+          this.errors = err.error;
+        } else {
+          this.toastr.error("Radni nalog nije storniran.");
+        }
+      });
   }
 }

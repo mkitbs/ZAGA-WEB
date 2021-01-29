@@ -14,7 +14,7 @@ import feign.Param;
 @Repository
 public interface CropRepository extends JpaRepository<Crop, UUID>{
 	
-	List<Crop> findByOrderByNameAsc();
+	List<Crop> findByOrderByErpIdAsc();
 	Optional<Crop> findByErpId(Long id);
 	
 	@Query(value = "SELECT * FROM crop c WHERE c.field_id=:fieldId AND c.year=:year", nativeQuery = true)

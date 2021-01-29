@@ -60,6 +60,8 @@ export class WorkOrderTractorDriverComponent implements OnInit {
             wo.wowStatus = "Pauziran"
           } else if(wo.wowStatus == "FINISHED"){
             wo.wowStatus = "Završen"
+          } else if (wo.wowStatus == "CANCELLATION"){
+            wo.wowStatus = "Storniran"
           }
         })
       }

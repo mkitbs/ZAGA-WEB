@@ -278,7 +278,7 @@ public class MailNotification {
         msg.setContent(htmlMsg,"text/html");
         
         MimeMessageHelper helper = new MimeMessageHelper(msg, false, "utf-8");
-        helper.setTo("vrgovicm@gmail.com");
+        helper.setTo(mail);
         helper.setFrom("noreplay@mkgroup.rs");
         helper.setSubject("ZAGA APP - resetovanje lozinke");
         javaMailSender.send(msg);
