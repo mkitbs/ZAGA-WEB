@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, UUID> {
 
-	List<Material> findByOrderByNameAsc();
+	List<Material> findByOrderByErpIdAsc();
 	Optional<Material> findByErpId(Long id);
 }

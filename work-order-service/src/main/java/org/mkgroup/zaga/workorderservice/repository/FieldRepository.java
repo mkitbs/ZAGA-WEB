@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface FieldRepository extends JpaRepository<Field, UUID>{
 	
 	Optional<Field> findByErpId(Long id);
-	List<Field> findByOrderByNameAsc();
+	List<Field> findByOrderByErpIdAsc();
 }

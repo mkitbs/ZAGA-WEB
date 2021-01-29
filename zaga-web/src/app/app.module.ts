@@ -21,6 +21,7 @@ import {
   MatAutocompleteModule,
   MatFormFieldModule,
   MatInputModule,
+  MatSnackBar,
   MatTooltipModule,
   yearsPerPage,
 } from "@angular/material";
@@ -102,7 +103,9 @@ import { WorkOrderTractorDriverComponent } from './components/work-order-tractor
 import { NavbarTractorDriverComponent } from './components/navbar-tractor-driver/navbar-tractor-driver.component';
 import { TimeTrackingComponent } from "./components/time-tracking/time-tracking.component";
 import { CdTimerModule } from "angular-cd-timer";
-import { PasswordResetComponent } from './components/password-reset/password-reset.component'
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { SearchWorkOrderNumberPipe } from './pipes/search-work-order-number.pipe';
+import { SearchWorkOrderResponsiblePipe } from './pipes/search-work-order-responsible.pipe'
 
 declare var require: any;
 var config = require("config");
@@ -211,6 +214,8 @@ const routes: Routes = [
     NavbarTractorDriverComponent,
     TimeTrackingComponent,
     PasswordResetComponent,
+    SearchWorkOrderNumberPipe,
+    SearchWorkOrderResponsiblePipe,
   ],
   imports: [
     BrowserModule,
@@ -245,6 +250,7 @@ const routes: Routes = [
       useClass: AuthInterceptor,
       multi: true,
     },
+    MatSnackBar,
     DeviceDetectorService,
     CookieService,
     { provide: NgbDateParserFormatter, useClass: NgbDateParser },

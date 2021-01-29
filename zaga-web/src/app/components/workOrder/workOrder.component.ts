@@ -145,6 +145,8 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          } else if (workOrder.status == "CANCELLATION"){
+            workOrder.status = "Storniran";
           }
           if(workOrder.sapId == 0){
             workOrder.sapId = null;
@@ -186,6 +188,8 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          } else if (workOrder.status == "CANCELLATION"){
+            workOrder.status = "Storniran";
           }
           if(workOrder.sapId == 0){
             workOrder.sapId = null;
@@ -227,6 +231,8 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          } else if (workOrder.status == "CANCELLATION"){
+            workOrder.status = "Storniran";
           }
           if(workOrder.sapId == 0){
             workOrder.sapId = null;
@@ -268,6 +274,8 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          } else if (workOrder.status == "CANCELLATION"){
+            workOrder.status = "Storniran";
           }
           if(workOrder.sapId == 0){
             workOrder.sapId = null;

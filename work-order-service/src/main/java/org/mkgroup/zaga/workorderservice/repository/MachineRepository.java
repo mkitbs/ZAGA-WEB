@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MachineRepository extends JpaRepository<Machine, UUID> {
 
-	List<Machine> findByOrderByNameAsc();
+	List<Machine> findByOrderByErpIdAsc();
 	Optional<Machine> findByErpId(String id);
 	
-	@Query(value = "select * from machine where type = ?1 order by name asc", nativeQuery = true)
+	@Query(value = "select * from machine where type = ?1 order by erp_id asc", nativeQuery = true)
 	List<Machine> getMachines(String string);
 	
 	@Query(value = "SELECT * FROM machine m WHERE m.machine_group_id_id=:id", nativeQuery = true)

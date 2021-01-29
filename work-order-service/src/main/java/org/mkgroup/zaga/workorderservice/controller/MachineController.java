@@ -40,7 +40,7 @@ public class MachineController {
 	
 	@GetMapping("getAll")
 	public ResponseEntity<?> getAll(){
-		List<Machine> machines = machineRepo.findByOrderByNameAsc();
+		List<Machine> machines = machineRepo.findByOrderByErpIdAsc();
 		List<MachineDTO> retValues = new ArrayList<MachineDTO>();
 		for(Machine machine : machines) {
 			MachineDTO m = new MachineDTO(machine);

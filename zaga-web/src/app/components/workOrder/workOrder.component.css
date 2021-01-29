@@ -66,6 +66,10 @@ th {
   color: #73964a;
 }
 
+.statusStorniran {
+  color: #bd362f;
+}
+
 .card-title {
   font-weight: bold;
   text-align: center;
@@ -91,6 +95,14 @@ th {
   width: fit-content;
   text-align: center;
   background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+.button-cancellation {
+  width: fit-content;
+  text-align: center;
+  background-color: #bd362f;
   border: none;
   box-shadow: none;
 }

@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface OperationRepository extends JpaRepository<Operation, UUID>{
 
-	List<Operation> findByOrderByNameAsc();
+	List<Operation> findByOrderByErpIdAsc();
 	Optional<Operation> findByErpId(Long id);
 	
 	@Query(value = "SELECT * FROM operation o WHERE o.type=:type AND o.operation_group_id=:groupId", nativeQuery = true)

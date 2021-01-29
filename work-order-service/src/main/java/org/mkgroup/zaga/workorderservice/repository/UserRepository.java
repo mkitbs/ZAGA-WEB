@@ -13,5 +13,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByPerNumber(Long id);
 	List<User> findByOrderByNameAsc();
+	List<User> findByOrderByPerNumberAsc();
 }
 

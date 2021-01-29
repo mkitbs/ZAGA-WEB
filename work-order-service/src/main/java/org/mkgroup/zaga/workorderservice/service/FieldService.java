@@ -122,7 +122,7 @@ public class FieldService {
 	}
 	
 	public List<FieldDTO> getAll() {
-		List<Field> fields = fieldRepo.findByOrderByNameAsc();
+		List<Field> fields = fieldRepo.findByOrderByErpIdAsc();
 		List<FieldDTO> retValues = new ArrayList<FieldDTO>();
 		for(Field field : fields) {
 			FieldDTO f = new FieldDTO(field);

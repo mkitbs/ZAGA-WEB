@@ -70,6 +70,13 @@ label {
   box-shadow: none;
 }
 
+.btn-cancellation {
+  float: right;
+  background-color: #bd362f;
+  border: none;
+  box-shadow: none;
+}
+
 .centered {
   position: fixed;
   /* or absolute */
@@ -108,6 +115,10 @@ button.calendar {
 
 .statusZatvoren {
   color: #73964a;
+}
+
+.statusStorniran {
+  color: #bd362f;
 }
 
 .inputFillFalse {
@@ -180,6 +191,38 @@ button.calendar {
   opacity: 0.5;
 }
 
+.disableAll select {
+  opacity: 0.5;
+}
+
+.disableAll button {
+  opacity: 0.5;
+}
+
 .disableAll :hover {
   cursor: no-drop !important;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

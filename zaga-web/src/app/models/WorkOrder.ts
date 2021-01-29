@@ -20,4 +20,5 @@ export class WorkOrder {
   sapId;
   table;
   userCreatedId;
+  cancellation;
 }

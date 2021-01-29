@@ -55,6 +55,8 @@ export class ReportEmployeeComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
+          } else if (workOrder.status == "CANCELLATION"){
+            workOrder.status = "Storniran";
           }
         })
       })
