@@ -133,7 +133,7 @@
               </div>
             </form>
           </td>
-          <!--Kultura-->
+          <!--Usev-->
           <td class="left-col-header"><i class="fa fa-cubes"></i> Usev:</td>
           <td class="right-col-header">
             <form>
@@ -1258,9 +1258,9 @@
   <br />
   <ngx-spinner></ngx-spinner>
 </div>
-
+<!--Mobile version-->
 <div class="container d-md-none">
-  <div class="row" style="margin-top: 10px">
+  <div class="row" style="margin-top: 80px">
     <div class="col-8">
       <h3 *ngIf="new">Kreiranje naloga</h3>
       <h3 *ngIf="!new">Informacije o nalogu</h3>
@@ -1274,11 +1274,11 @@
       <div class="btn-group-vertical" style="float: right">
         <button class="btn btn-primary btn-edit mb-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
           (click)="closeWorkOrder()">
-          <i class="fa fa-window-close mr-2"></i>Zatvori
+          <i class="fa fa-window-close mr-2"></i>Zatvori RN i proknjiži materijal
         </button>
         <button class="btn btn-primary btn-add mr-2" [disabled]="workOrder.status == 'Zatvoren'" *ngIf="!new"
           (click)="updateWorkOrder()">
-          <i class="fa fa-save mr-2"></i>Sačuvaj
+          <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
         </button>
         <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(workOrderInfoMobForm.valid)">
           <i class="fa fa-save mr-2"></i> Sačuvaj
@@ -1286,110 +1286,227 @@
       </div>
     </div>
   </div>
+  <hr class="solid" />
   <form #workOrderInfoMobForm="ngForm">
     <div class="row" style="margin-top: 10px">
-      <div class="col-4">
-        <i class="fa fa-file mr-2" style="vertical-align: middle"></i><span style="vertical-align: bottom">
-          Operacija:</span>
+      <!--Datum-->
+      <div class="col-4" style="vertical-align: bottom;">
+        <i class="fa fa-calendar mr-2" style="vertical-align: middle"></i>Datum radnog naloga:
       </div>
       <div class="col-8">
-        <select name="operation" [(ngModel)]="workOrder.operationId" class="form-control" id="" #operation="ngModel"
-          required>
-          <option value="{{ op.dbid }}" *ngFor="let op of operations">
-            {{ op.name }}
-          </option>
-        </select>
-        <div *ngIf="operation.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite operaciju.
+        <div class="input-group mb-3">
+        <input [(ngModel)]="workOrder.date" id="from" ngbDatepicker #odMob="ngbDatepicker"
+          (click)="from.toggle()" class="form-control" name="dateFrom" #dateFromMob="ngModel" required />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="odMob.toggle()" type="button"></button>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-4">
-        <i class="fa fa-database mr-2" style="vertical-align: middle"></i>Tabla:
-      </div>
-      <div class="col-4">
-        <select name="selectedTable" [(ngModel)]="workOrder.tableId" class="form-control" id="" #table="ngModel"
-          required>
-          <option value="{{ table.id }}" *ngFor="let table of fields">
-            {{ table.Name }}
-          </option>
-        </select>
-        <div *ngIf="table.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite tablu.
-        </div>
-      </div>
-    </div>
-    <hr class="solid" />
-    <div class="row mt-2">
-      <div class="col-12">
-        <i class="fa fa-calendar mr-2" style="vertical-align: middle"></i>Datum:
-      </div>
-      <div class="col-6">
-        <input type="date" [(ngModel)]="workOrder.date" id="from" ngbDatepicker #from="ngbDatepicker"
-          (click)="from.toggle()" class="form-control" name="dateFrom" #dateFrom="ngModel" required />
         <div *ngIf="dateFrom.invalid && clickAddWorkOrder" style="color: red">
           Izaberite datum.
         </div>
       </div>
+    
     </div>
-    <div class="row mt-4">
-      <div class="col-6" style="margin-top: 5%">
-        <i class="fa fa-user mr-2"></i>Odgovorna osoba:
+    <div class="row mt-2">
+       <!--Godina-->
+       <div class="col-4" style="margin-top: 7px;"><i class="fa fa-tasks mr-2"></i>Godina:</div>
+       <div class="col-8">
+        <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
+        *ngIf="!new; else elseBlockYearMob" (change)="getCulture()">
+        <option value="{{previousYear}}">{{previousYear}}</option>
+        <option value="{{currentYear}}" selected>{{currentYear}}</option>
+        <option value="{{nextYear}}">{{nextYear}}</option>
+      </select>
+      <ng-template #elseBlockYearMob>
+        <select name="selYear" [(ngModel)]="selectedYear" id="" class="form-control" #yearMob="ngModel"
+          required (change)="getCulture()">
+          <option value="{{previousYear}}">{{previousYear}}</option>
+          <option value="{{currentYear}}" selected>{{currentYear}}</option>
+          <option value="{{nextYear}}">{{nextYear}}</option>
+        </select>
+        <div *ngIf="yearMob.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+          Izaberite godinu.
+        </div>
+      </ng-template>
+    </div>
+      
+    </div>
+    <hr class="solid" />
+    <div class="row mt-2">
+      <!--Parcela-->
+      <div class="col-4">
+        <i class="fa fa-database mr-2" style="margin-top: 17px;"></i>Parcela:
       </div>
-      <div class="col-6">
-        <mat-form-field style="width: 100%">
-          <input class="form-control inputAuto" type="text" aria-label="Number" matInput [matAutocomplete]="autophone"
-            [formControl]="nameFC" #searchPhone required />
+      <div class="col-8">
+        <form>
+          <!--WITH SAP ID-->
+          <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockFieldMob">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldMob" #searchField required
+              placeholder="Izaberite parcelu" />
 
-          <mat-autocomplete autoActiveFirstOption [displayWith]="displayFn" #autophone="matAutocomplete"
-            class="inputAuto">
+            <mat-autocomplete #autoFieldMob="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                  let field of fields | SearchFields: searchField.value
+                " [value]="field" (click)="getCulture()">
+                {{field.Id}} - {{ field.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!--WITHOUT SAP ID-->
+          <ng-template #elseBlockFieldMob>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldWithoutIdMob"
+                #searchFieldWithoutId required placeholder="Izaberite parcelu" />
+
+              <mat-autocomplete #autoFieldWithoutIdMob="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                <mat-option *ngFor="
+                    let field of fields | SearchFields: searchFieldWithoutId.value
+                  " [value]="field" (click)="getCulture()">
+                  {{ field.Name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-template>
+          <div *ngIf="fieldFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+            Izaberite parcelu.
+          </div>
+        </form>
+      </div>
+      
+    </div>
+    <div class="row mt-2">
+        <!--Usev-->
+        <div class="col-4" style="margin-top: 17px;"><i class="fa fa-cubes"></i> Usev:</div>
+        <div class="col-8">
+          <form>
+            <!--WITH SAP ID-->
+            <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockCultureMob">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureMob" #searchCulture
+                required placeholder="Izaberite usev, nakon što izaberete parcelu" />
+
+              <mat-autocomplete #autoCultureMob="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let crop of crops | SearchCultures: searchCulture.value
+                  " [value]="crop" (click)="getArea(crop.id)">
+                  {{crop.Id}} - {{ crop.Name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <!--WITHOUT SAP ID-->
+            <ng-template #elseBlockCultureMob>
+              <mat-form-field class="inputAuto">
+                <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureWithoutIdMob"
+                  #searchCultureWithoutId required placeholder="Izaberite usev, nakon što izaberete parcelu" />
+
+                <mat-autocomplete #autoCultureWithoutIdMob="matAutocomplete" [displayWith]="displayFnCultureWithoutId"
+                  place>
+                  <mat-option *ngFor="
+                    let crop of crops | SearchCultures: searchCultureWithoutId.value
+                    " [value]="crop" (click)="getArea(crop.id)">
+                    {{ crop.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </ng-template>
+            <div *ngIf="cultureFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
+              Izaberite usev.
+            </div>
+          </form>
+        </div>
+      
+    </div>
+    <hr class="solid" />
+    <div class="row mt-2">
+      <!--ATM-->
+      <div class="col-4">
+        <i class="fa fa-file mr-2" style="margin-top: 17px;"></i>
+          ATM:
+      </div>
+      <div class="col-8">
+        <form>
+          <!--WITH SAP ID-->
+          <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockOpMob">
+            <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpMob" #searchOp required
+              placeholder="Izaberite agrotehničku meru" />
+
+            <mat-autocomplete #autoOpMob="matAutocomplete" [displayWith]="displayFnOperation" place>
+              <mat-option *ngFor="
+                  let op of operations | SearchOperations: searchOp.value
+                " [value]="op" (click)="getOperation(op)">
+                {{op.Id}} - {{ op.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <!--WITHOUT SAP ID-->
+          <ng-template #elseBlockOpMob>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="operationFC" [matAutocomplete]="autoOpWithoutIdMob"
+                #searchOpWithoutId required placeholder="Izaberite agrotehničku meru" />
+
+              <mat-autocomplete #autoOpWithoutIdMob="matAutocomplete" [displayWith]="displayFnWithoutId" place>
+                <mat-option *ngFor="
+                    let op of operations | SearchOperations: searchOpWithoutId.value
+                  " [value]="op" (click)="getOperation(op)">
+                  {{ op.Name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-template>
+          <div *ngIf="operationFC.invalid && clickAddWorkOrder" style="color: red; font-weight: normal">
+            Izaberite agrotehničku meru.
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row mt-2">
+     <!--Odgovorna osoba-->
+     <div class="col-4" style="margin-top: 3%">
+      <i class="fa fa-user mr-2"></i>Odgovorna osoba:
+    </div>
+    <div class="col-8">
+      <form>
+        <!--WITH SAP ID-->
+        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockResponsibleMob">
+          <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="autoMob" #search style="width: 100%"
+            required placeholder="Izaberite odgovornu osobu" />
+
+          <mat-autocomplete #autoMob="matAutocomplete" [displayWith]="displayFn" place>
             <mat-option *ngFor="
-                let emp of allEmployees
-                  | SearchEmployeesPhone: searchPhone.value
+                let emp of allEmployees | SearchEmployees: search.value
               " [value]="emp">
-              {{ emp.name }}
+              {{emp.perNumber}} - {{ emp.name }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <div *ngIf="nameFC.invalid && clickAddWorkOrder" style="color: red">
+        <!--WITHOUT SAP ID-->
+        <ng-template #elseBlockResponsibleMob>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="nameFC" [matAutocomplete]="autoWithoutIdMob" #searchWithoutId
+              required placeholder="Izaberite odgovornu osobu" />
+
+            <mat-autocomplete #autoWithoutIdMob="matAutocomplete" [displayWith]="displayFnResponsible" place>
+              <mat-option *ngFor="
+                  let emp of allEmployees | SearchEmployees: searchWithoutId.value
+                " [value]="emp">
+                {{ emp.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </ng-template>
+        <div *ngIf="nameFC.valid == false && clickAddWorkOrder" style="color: red; font-weight: normal">
           Izaberite odgovornu osobu.
         </div>
-      </div>
+      </form>
+    </div>
     </div>
     <hr class="solid" />
-    <div class="row mt-2">
-      <div class="col-6"><i class="fa fa-cubes"></i> Usev:</div>
-      <div class="col-6">
-        <select name="culture" [(ngModel)]="workOrder.cropId" class="form-control" id="" #culture="ngModel" required>
-          <option value="{{ crop.id }}" *ngFor="let crop of crops">
-            {{ crop.Name }}
-          </option>
-        </select>
-        <div *ngIf="culture.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite usev.
-        </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-6"><i class="fa fa-tasks mr-2"></i>Godina:</div>
-      <div class="col-6">
-        <select name="year" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel" required>
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-        </select>
-        <div *ngIf="year.invalid && clickAddWorkOrder" style="color: red">
-          Izaberite godinu.
-        </div>
-      </div>
-    </div>
-    <hr class="solid" />
-    <div class="row mt-2">
-      <div class="col-6"><i class="fa fa-clone"></i> Površina:</div>
-      <div class="col-6">
+    <div class="row mt-2" >
+      <!--Povrsina-->
+      <div class="col-4" style="margin-top: 7px;"><i class="fa fa-clone"></i> Površina:</div>
+      <div class="col-8">
         <div class="input-group">
           <input type="text" name="area" [(ngModel)]="workOrder.area" id="" class="form-control" #area="ngModel"
-            required />
+            required disabled />
           <div class="input-group-append">
             <span class="input-group-text" id="basic-addon2">ha</span>
           </div>
@@ -1400,10 +1517,11 @@
       </div>
     </div>
     <div class="row mt-2">
-      <div class="col-6">
+      <!--Obradjeno-->
+      <div class="col-4" style="margin-top: 5px;">
         <span *ngIf="!new"><i class="fa fa-flag mr-2"></i>Obrađeno:</span>
       </div>
-      <div class="col-6">
+      <div class="col-8">
         <span *ngIf="!new">
           <div class="input-group">
             <input type="text" name="treated" [(ngModel)]="workOrder.treated" id="" class="form-control" />
@@ -1596,7 +1714,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal new worker/machine mob -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -1612,18 +1730,84 @@
       <div class="modal-body">
         <form #workerModalForm="ngForm">
           <div class="form-group">
-            <label for="imePrz">Ime i prezime</label>
-            <select [(ngModel)]="selectedWorker" name="ime" id="imePrz" class="form-control" #worker="ngModel" required>
-              <option value="{{ emp.userId }}&{{ emp.name }}" *ngFor="let emp of allEmployees">
-                {{ emp.name }}
-              </option>
-            </select>
-            <div *ngIf="worker.invalid" style="color: red">
-              Izaberite radnika.
-            </div>
+            <label for="imePrz">Izvršioc</label>
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerMob">
+                <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorkerMob"
+                  #searchWorkerMob required placeholder="Izaberite izvršioca" />
+
+                <mat-autocomplete #autoWorkerMob="matAutocomplete" [displayWith]="displayFn" place>
+                  <mat-option *ngFor="
+                    let emp of allEmployees | SearchEmployees: searchWorkerMob.value
+                  " [value]="emp">
+                    {{emp.perNumber}} - {{ emp.name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockWorkerMob>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorkerWithoutIdMob"
+                    #searchWorkerWithoutIdMob required placeholder="Izaberite izvršioca" />
+
+                  <mat-autocomplete #autoWorkerWithoutIdMob="matAutocomplete" [displayWith]="displayFnResponsible"
+                    place>
+                    <mat-option *ngFor="
+                      let emp of allEmployees | SearchEmployees: searchWorkerWithoutIdMob.value
+                    " [value]="emp">
+                      {{ emp.name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="workerFC.invalid && clickAddWorkerMachine == true"
+                style="color: red; font-weight: normal; text-align: left;">
+                Izvršioc je obavezno polje.<br> Popunite ga.
+              </div>
+            </form>
           </div>
           <div class="form-group">
-            <label for="imePrz">Operacija</label>
+            <label for="imePrz">ATM</label>
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerOpMob">
+                <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp"
+                  #searchWorkerOp required placeholder="Izaberite agrotehničku meru" />
+
+                <mat-autocomplete #autoWorkerOpMob="matAutocomplete" [displayWith]="displayFnOperation" place>
+                  <mat-option *ngFor="
+                      let op of operations | SearchOperations: searchWorkerOp.value
+                    " [value]="op">
+                    {{ op.Id }} - {{ op.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockWorkerOpMob>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="workerOperationFC"
+                    [matAutocomplete]="autoWorkerOpWithoutId" #searchWorkerOpWithoutIdMob required
+                    placeholder="Izaberite agrotehničku meru" />
+
+                  <mat-autocomplete #autoWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId"
+                    place>
+                    <mat-option *ngFor="
+                        let op of operations | SearchOperations: searchWorkerOpWithoutIdMob.value
+                      " [value]="op">
+                      {{ op.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="workerOperationFC.invalid && clickAddWorkerMachine == true"
+                style="color: red; font-weight: normal; text-align: left;">
+                ATM je obavezno polje.<br>Popunite ga.
+              </div>
+            </form>
+          </div>
+          <div class="form-group">
+            <label for="imePrz">Mašina</label>
             <select name="ope" [(ngModel)]="selectedOperation" class="form-control" id="" #operation="ngModel" required>
               <option value="{{ op.dbid }}" *ngFor="let op of operations">
                 {{ op.name }}
@@ -1633,6 +1817,18 @@
               Izaberite operaciju.
             </div>
           </div>
+          <div class="form-group">
+            <label for="imePrz">Priključna mašina</label>
+            <select name="ope" [(ngModel)]="selectedOperation" class="form-control" id="" #operation="ngModel" required>
+              <option value="{{ op.dbid }}" *ngFor="let op of operations">
+                {{ op.name }}
+              </option>
+            </select>
+            <div *ngIf="operation.invalid" style="color: red">
+              Izaberite operaciju.
+            </div>
+          </div>
+          <!--
           <div class="form-group" *ngIf="!new">
             <label for="imePrz">Datum</label>
             <div class="input-group">
@@ -1670,6 +1866,7 @@
               </div>
             </div>
           </div>
+          -->
         </form>
       </div>
       <div class="modal-footer">

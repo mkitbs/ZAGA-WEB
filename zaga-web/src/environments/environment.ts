@@ -1,7 +1,7 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
+/*
 
 export const environment = {
   gatewayWorkOrderURL: "/proxy/work-order-service/",
@@ -10,9 +10,9 @@ export const environment = {
   userURL: "/login/user/",
   production: false
 };
+*/
 
 
-/*
 export const environment = {
   gatewayWorkOrderURL: "http://localhost:8765/work-order-service/",
   gatewayElasticURL: "http://localhost:8765/search-service/",
@@ -20,7 +20,7 @@ export const environment = {
   userURL: "http://localhost:8091/user/",
   production: false
 };
-*/
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

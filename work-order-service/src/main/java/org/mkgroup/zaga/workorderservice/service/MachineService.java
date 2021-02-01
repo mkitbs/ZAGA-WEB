@@ -84,6 +84,8 @@ public class MachineService {
 		String oDataString = machineSet.getBody().toString().replace(":", "-");
 		oDataString = formatJSON(oDataString);
 		
+		System.out.println("JSON2 => " + oDataString);
+		
 		//Map to specific object
 	    ArrayList<MachineDTO> machineList = 
 	    						convertObjectToLocalList(odataConvertor
@@ -123,7 +125,8 @@ public class MachineService {
 
 	public String formatJSON(String json) {
 		json = json.replace("=", ":");
-		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		System.out.println("JSON => " + json);
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,%':=\".()/_ -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
