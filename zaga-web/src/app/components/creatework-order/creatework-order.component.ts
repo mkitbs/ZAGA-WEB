@@ -93,7 +93,7 @@ export class CreateworkOrderComponent implements OnInit {
   crops: Crop[] = [];
   woMaterials: SpentMaterial[] = [];
   wows: WorkOrderWorker[] = [];
-  
+
   wow: WorkOrderWorker = new WorkOrderWorker();
   spentMaterial: SpentMaterial = new SpentMaterial();
   setting: Setting = new Setting();
@@ -190,7 +190,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.setting = data;
       this.sapId = this.setting.masterDataFormat;
     })
-    
+
     this.authService.getLogged().subscribe(data => {
       this.user = data;
       this.loggedUser = this.user.sapUserId;
@@ -237,7 +237,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
-        } else if (this.workOrder.status == "CANCELLATION"){
+        } else if (this.workOrder.status == "CANCELLATION") {
           this.workOrder.status = "Storniran";
         }
 
@@ -249,7 +249,7 @@ export class CreateworkOrderComponent implements OnInit {
             if (material.quantityPerHectar < -1) {
               material.quantityPerHectar = null;
             }
-            if(material.deleted == true){
+            if (material.deleted == true) {
               this.emptyMaterial = true;
             } else {
               this.emptyMaterial = false;
@@ -257,9 +257,9 @@ export class CreateworkOrderComponent implements OnInit {
           })
         }
 
-        if(this.workOrder.workers.length != 0){
+        if (this.workOrder.workers.length != 0) {
           this.workOrder.workers.forEach(wow => {
-            if(wow.deleted == true){
+            if (wow.deleted == true) {
               this.emptyWow = true;
             } else {
               this.emptyWow = false;
@@ -301,7 +301,7 @@ export class CreateworkOrderComponent implements OnInit {
           };
           this.nameFC.setValue(this.allEmployees.filter(filterById)[0]);
         });
-  
+
         this.operationService.getAll().subscribe((data) => {
           this.operations = data;
           var comparableId = this.workOrder.operationId;
@@ -313,7 +313,7 @@ export class CreateworkOrderComponent implements OnInit {
           };
           this.operationFC.setValue(this.operations.filter(filterById)[0])
         })
-  
+
         this.fieldService.getAll().subscribe(data => {
           this.fields = data;
           console.log(this.fields)
@@ -325,7 +325,7 @@ export class CreateworkOrderComponent implements OnInit {
           }
           this.fieldFC.setValue(this.fields.filter(filterById)[0])
         })
-  
+
         this.cropService.getAll().subscribe(data => {
           this.crops = data;
           console.log(this.crops)
@@ -422,7 +422,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.isGetCulture = true;
           console.log(data);
           this.crops = data;
-          if(this.crops.length == 1){
+          if (this.crops.length == 1) {
             console.log(this.crops[0])
             this.cultureFC.setValue(this.crops[0])
             this.workOrder.area = this.crops[0].Area;
@@ -497,7 +497,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   //autocomplete
   displayFn(emp: Employee): string {
-    if(emp != null){
+    if (emp != null) {
       if (emp.perNumber == undefined && emp.name == undefined) {
         return emp && emp.Id + " - " + emp.Name;
       } else {
@@ -519,14 +519,14 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnMachine(machine: Machine): string {
-    if(machine != null){
+    if (machine != null) {
       if (machine.Id == undefined) {
         return machine && "BEZ PRIKLJUČNE MAŠINE"
       } else {
         return machine && machine.Id + " - " + machine.Name
       }
     }
-    
+
   }
 
   displayFnMaterial(substance: Material): string {
@@ -761,7 +761,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
-        } else if (this.workOrder.status == "CANCELLATION"){
+        } else if (this.workOrder.status == "CANCELLATION") {
           this.workOrder.status = "Storniran";
         }
 
@@ -848,7 +848,7 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "U radu";
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
-          } else if (this.workOrder.status == "CANCELLATION"){
+          } else if (this.workOrder.status == "CANCELLATION") {
             this.workOrder.status = "Storniran";
           }
 
@@ -881,6 +881,11 @@ export class CreateworkOrderComponent implements OnInit {
         });
       }, error => {
         this.spinner.hide();
+        this.toastr.error("Došlo je do greške prilikom čuvanja.")
+        if (error.status == 400) {
+          this.error = true;
+          this.errors = error.error.message;
+        }
         this.wow = new WorkOrderWorker();
       });
       this.closeButtonWowModal.nativeElement.click();
@@ -905,7 +910,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "U radu";
         } else if (this.workOrder.status == "CLOSED") {
           this.workOrder.status = "Zatvoren";
-        } else if (this.workOrder.status == "CANCELLATION"){
+        } else if (this.workOrder.status == "CANCELLATION") {
           this.workOrder.status = "Storniran";
         }
 
@@ -1092,7 +1097,7 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
-            } else if (this.workOrder.status == "CANCELLATION"){
+            } else if (this.workOrder.status == "CANCELLATION") {
               this.workOrder.status = "Storniran";
             }
 
@@ -1119,7 +1124,7 @@ export class CreateworkOrderComponent implements OnInit {
                 if (material.quantityPerHectar < -1) {
                   material.quantityPerHectar = null;
                 }
-                if(material.deleted == true){
+                if (material.deleted == true) {
                   this.emptyMaterial = true;
                 } else {
                   this.emptyMaterial = false;
@@ -1163,7 +1168,7 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
-            } else if (this.workOrder.status == "CANCELLATION"){
+            } else if (this.workOrder.status == "CANCELLATION") {
               this.workOrder.status = "Storniran";
             }
 
@@ -1179,21 +1184,21 @@ export class CreateworkOrderComponent implements OnInit {
                 this.crops = res;
               });
 
-              if (this.workOrder.materials.length != 0) {
-                this.workOrder.materials.forEach(material => {
-                  if (material.quantity < 0) {
-                    material.quantity = null;
-                  }
-                  if (material.quantityPerHectar < -1) {
-                    material.quantityPerHectar = null;
-                  }
-                  if(material.deleted == true){
-                    this.emptyMaterial = true;
-                  } else {
-                    this.emptyMaterial = false;
-                  }
-                })
-              }
+            if (this.workOrder.materials.length != 0) {
+              this.workOrder.materials.forEach(material => {
+                if (material.quantity < 0) {
+                  material.quantity = null;
+                }
+                if (material.quantityPerHectar < -1) {
+                  material.quantityPerHectar = null;
+                }
+                if (material.deleted == true) {
+                  this.emptyMaterial = true;
+                } else {
+                  this.emptyMaterial = false;
+                }
+              })
+            }
 
             if (this.workOrder.treated == 0) {
               this.workOrder.treated = null;
@@ -1236,7 +1241,7 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "U radu";
             } else if (this.workOrder.status == "CLOSED") {
               this.workOrder.status = "Zatvoren";
-            } else if (this.workOrder.status == "CANCELLATION"){
+            } else if (this.workOrder.status == "CANCELLATION") {
               this.workOrder.status = "Storniran";
             }
 
@@ -1263,7 +1268,7 @@ export class CreateworkOrderComponent implements OnInit {
                 if (material.quantityPerHectar < -1) {
                   material.quantityPerHectar = null;
                 }
-                if(material.deleted == true){
+                if (material.deleted == true) {
                   this.emptyMaterial = true;
                 } else {
                   this.emptyMaterial = false;
@@ -1372,7 +1377,7 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "U radu";
           } else if (this.workOrder.status == "CLOSED") {
             this.workOrder.status = "Zatvoren";
-          } else if (this.workOrder.status == "CANCELLATION"){
+          } else if (this.workOrder.status == "CANCELLATION") {
             this.workOrder.status = "Storniran";
           }
 
@@ -1388,21 +1393,21 @@ export class CreateworkOrderComponent implements OnInit {
               this.crops = res;
             });
 
-            if (this.workOrder.materials.length != 0) {
-              this.workOrder.materials.forEach(material => {
-                if (material.quantity < 0) {
-                  material.quantity = null;
-                }
-                if (material.quantityPerHectar < -1) {
-                  material.quantityPerHectar = null;
-                }
-                if(material.deleted == true){
-                  this.emptyMaterial = true;
-                } else {
-                  this.emptyMaterial = false;
-                }
-              })
-            }
+          if (this.workOrder.materials.length != 0) {
+            this.workOrder.materials.forEach(material => {
+              if (material.quantity < 0) {
+                material.quantity = null;
+              }
+              if (material.quantityPerHectar < -1) {
+                material.quantityPerHectar = null;
+              }
+              if (material.deleted == true) {
+                this.emptyMaterial = true;
+              } else {
+                this.emptyMaterial = false;
+              }
+            })
+          }
 
           if (this.workOrder.treated == 0) {
             this.workOrder.treated = null;
@@ -1536,7 +1541,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
   */
 
-  getWorkOrder(){
+  getWorkOrder() {
     this.workOrderService.getOne(this.workId).subscribe((data) => {
       this.workOrder = data;
       if (this.workOrder.status == "NEW") {
@@ -1545,7 +1550,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.status = "U radu";
       } else if (this.workOrder.status == "CLOSED") {
         this.workOrder.status = "Zatvoren";
-      } else if (this.workOrder.status == "CANCELLATION"){
+      } else if (this.workOrder.status == "CANCELLATION") {
         this.workOrder.status = "Storniran";
       }
 
@@ -1577,7 +1582,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.getWorkOrder();
       this.spinner.hide();
       this.toastr.success("Uspešno ste izbrisali radnika")
-      
+
     },
       err => {
         console.log(err);
@@ -1633,12 +1638,12 @@ export class CreateworkOrderComponent implements OnInit {
     return output;
   }
 
-  setWowId(id){
+  setWowId(id) {
     this.workOrderWorkerId = id;
     console.log(this.workOrderWorkerId)
   }
 
-  setMaterialId(id){
+  setMaterialId(id) {
     this.materialId = id;
     console.log(this.materialId);
   }
