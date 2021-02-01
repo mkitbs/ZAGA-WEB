@@ -360,10 +360,14 @@ export class CreateworkOrderComponent implements OnInit {
       this.devicesCoupling = data;
     });
 
+    this.spinner.show();
     this.materialService.getAll().subscribe((data) => {
       //data = this.convertKeysToLowerCase(data);
+      this.spinner.hide();
       this.substances = data;
       console.log(this.substances)
+    }, error => {
+      this.spinner.hide();
     });
 
     this.fieldService.getAll().subscribe((data) => {
