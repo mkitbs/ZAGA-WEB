@@ -213,14 +213,32 @@ export class CreateworkOrderComponent implements OnInit {
         this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
         console.log(this.allEmployees)
       });
+      this.spinner.show();
+      this.materialService.getAll().subscribe((data) => {
+        //data = this.convertKeysToLowerCase(data);
+        this.spinner.hide();
+        this.substances = data;
+        console.log(this.substances)
+      }, error => {
+        this.spinner.hide();
+      });
     } else {
       this.new = false;
       this.today = new Date();
       this.loading = true;
       this.spinner.show();
       this.workOrderService.getOne(this.workId).subscribe((data) => {
+       
+        this.materialService.getAll().subscribe((data) => {
+          //data = this.convertKeysToLowerCase(data);
+          this.spinner.hide();
+          this.substances = data;
+          console.log(this.substances)
+        }, error => {
+          this.spinner.hide();
+        });
         this.loading = false;
-        this.spinner.hide();
+       
         this.workOrder = data;
         console.log(this.workOrder.treated)
         if (this.workOrder.treated != undefined) {
@@ -358,16 +376,6 @@ export class CreateworkOrderComponent implements OnInit {
     this.machineService.getAllCoupling().subscribe((data) => {
       // data = this.convertKeysToLowerCase(data);
       this.devicesCoupling = data;
-    });
-
-    this.spinner.show();
-    this.materialService.getAll().subscribe((data) => {
-      //data = this.convertKeysToLowerCase(data);
-      this.spinner.hide();
-      this.substances = data;
-      console.log(this.substances)
-    }, error => {
-      this.spinner.hide();
     });
 
     this.fieldService.getAll().subscribe((data) => {
