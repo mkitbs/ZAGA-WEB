@@ -95,6 +95,7 @@ export class CreateworkOrderComponent implements OnInit {
   wows: WorkOrderWorker[] = [];
   
   wow: WorkOrderWorker = new WorkOrderWorker();
+  wowMob: WorkOrderWorker = new WorkOrderWorker();
   spentMaterial: SpentMaterial = new SpentMaterial();
   setting: Setting = new Setting();
 
@@ -661,7 +662,12 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.workerFC.value)
         wow.user = this.workerFC.value;
         wow.machine = this.workerMachineFC.value;
-        wow.connectingMachine = this.workerCoMachineFC.value;
+        if(this.workerCoMachineFC.value == -1){
+          wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+        } else {
+          wow.connectingMachine = this.workerCoMachineFC.value;
+        }
+        
         wow.operation = this.workerOperationFC.value;
         /*
         wow.user.userId = this.allEmployees.find(
@@ -687,6 +693,7 @@ export class CreateworkOrderComponent implements OnInit {
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
          */
+        this.closeButtonWorkerModal.nativeElement.click();
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
       }
@@ -1680,7 +1687,8 @@ export class CreateworkOrderComponent implements OnInit {
 
   editWow(wow){
     console.log(wow)
-    this.wow = wow;
+    this.wowMob = wow;
+    console.log(this.wowMob)
     this.editWowMobFlag = true;
     this.workerFC.setValue(wow.user);
     this.workerOperationFC.setValue(wow.operation);
