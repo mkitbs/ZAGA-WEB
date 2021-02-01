@@ -105,7 +105,13 @@ public class MaterialService {
 	
 	public void updateMaterial(Material oldMaterial, MaterialDTO newMaterial) {
 		oldMaterial.setMaterialGroup(newMaterial.getGroup());
-		oldMaterial.setName(newMaterial.getName());
+		String newName = "";
+		if(newMaterial.getName() != null) {
+			newName = newMaterial.getName().replace("%22", "'");
+			oldMaterial.setName(newName);
+		}else {
+			oldMaterial.setName(newMaterial.getName());
+		}
 		oldMaterial.setUnit(newMaterial.getUnit());
 		materialRepo.save(oldMaterial);
 	}
