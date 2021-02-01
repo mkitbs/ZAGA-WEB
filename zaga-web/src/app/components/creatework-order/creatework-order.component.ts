@@ -652,6 +652,11 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingWorkerMachine = existing.wowObjectId;
     this.wows.forEach((wow) => {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
+        wow.user = this.workerFC.value;
+        wow.machine = this.workerMachineFC.value;
+        wow.connectingMachine = this.workerCoMachineFC.value;
+        wow.operation = this.workerOperationFC.value;
+        /*
         wow.user.userId = this.allEmployees.find(
           (x) => x.userId == wow.user.userId
         ).userId;
@@ -670,6 +675,7 @@ export class CreateworkOrderComponent implements OnInit {
         wow.initialState = this.wow.initialState;
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
+        */
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
       }
