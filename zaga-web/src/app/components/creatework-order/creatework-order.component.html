@@ -322,6 +322,7 @@
             <tbody>
               <tr>
                 <td>
+                   <!--Izvrsioc-->
                   <div class="form-group">
                     <form>
                       <!--WITH SAP ID-->
@@ -361,6 +362,7 @@
                   </div>
                 </td>
                 <td>
+                  <!--ATM-->
                   <div class="form-group">
                     <form>
                       <!--WITH SAP ID-->
@@ -401,6 +403,7 @@
                   </div>
                 </td>
                 <td>
+                  <!--Masina-->
                   <div class="form-group">
                     <form>
                       <!--WITH SAP ID-->
@@ -442,6 +445,7 @@
                   </div>
                 </td>
                 <td>
+                  <!--Prikljucna masina-->
                   <div class="form-group">
                     <form>
                       <!--WITH SAP ID-->
@@ -1537,60 +1541,89 @@
   <div class="workers">
     <button class="btn btn-primary collapsing-button shadow-none" (click)="expandWorkers()" type="button"
       data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-      <i class="fa fa-user mr-2"></i>Radnici<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
+      <i class="fa fa-user mr-2"></i>
+      <i class="fa fa-truck mr-2"></i>
+        Izvršioci/Mašine<i *ngIf="!workers" class="fa fa-arrow-down mr-2 mt-1 arrows"></i><i
         *ngIf="workers" class="fa fa-arrow-up mr-2 mt-1 arrows"></i>
     </button>
     <div class="collapse" id="collapseExample">
       <div class="card card-body collapse-card">
         <div class="col-12">
-          <button class="btn btn-primary" style="float: right; margin-top: 5px; background-color: #5c7495"
-            data-toggle="modal" data-target="#exampleModal">
-            <i class="fa fa-plus mr-2"></i>Novi radnik
+          <button class="btn btn-primary" style="float: right; margin-top: 5px; background-color: #5c7495; border: none"
+            data-toggle="modal" data-target="#exampleModal" (click)="addNewWowMob()">
+            <i class="fa fa-plus mr-2"></i>Dodaj izvršioca/mašinu
           </button>
         </div>
         <br />
-        <div class="card mb-3" style="border: 1px solid #5c7495; border-radius: 5px">
-          <div id="rad"></div>
-          <div class="card-body">
-            <h5 class="card-title"></h5>
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-info" *ngIf="!new">
-                <i class="fa fa-table" style="font-size: 20px"></i>
-                <span style="padding-left: 2px"> Datum: </span>
-              </li>
-              <li class="list-group-item list-group-item-info">
-                <i class="fa fa-suitcase" style="font-size: 20px; vertical-align: bottom"></i>
-                <span style="padding-left: 2px; vertical-align: middle">
-                  Operacija:
-                </span>
-              </li>
-              <li class="list-group-item list-group-item-info" *ngIf="!new">
-                <i class="fa fa-clock-o" style="font-size: 20px"></i>
-                <span style="padding-left: 3px">
-                  Redovan rad:
-                </span>
-              </li>
-              <li class="list-group-item list-group-item-info" *ngIf="!new">
-                <i class="fa fa-clock-o" style="font-size: 20px"></i>
-                <span style="padding-left: 3px">
-                  Noćni rad: </span>
-              </li>
-              <li class="list-group-item list-group-item-info" *ngIf="!new">
-                <i class="fa fa-plus" style="font-size: 20px"></i>
-                <span style="padding-left: 6px">Ukupan rad: h
-                </span>
-              </li>
-            </ul>
+        <ng-container *ngIf="new; else elseBlockMachineStateMob">
+          <div *ngFor="let wow of wows" class="card mb-3" style="border: 1px solid #5c7495; border-radius: 5px">
+            <div id="rad"></div>
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-info">
+                  <div class="row">
+                    <div class="col-1">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <div class="col">
+                       <b>Izvršioc:</b> {{wow.user.name}} 
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item list-group-item-info">
+                  <div class="row">
+                    <div class="col-1">
+                      <i class="fa fa-file mr-2"></i>
+                    </div>
+                    <div class="col">
+                      <b>ATM:</b> {{wow.operation.Name}}
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item list-group-item-info">
+                  <div class="row">
+                    <div class="col-1">
+                      <i class="fa fa-truck" ></i>
+                    </div>
+                    <div class="col">
+                      <b>Mašina:</b> {{wow.machine.Name}}
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item list-group-item-info">
+                  <div class="row">
+                    <div class="col-1">
+                      <i class="fa fa-truck" ></i>
+                    </div>
+                    <div class="col">
+                      <span *ngIf="wow.connectingMachine.dbid == -1">
+                        <b>Priključna mašina:</b> BEZ PRIKLJUČNE MAŠINE 
+                      </span>
+                      <span *ngIf="wow.connectingMachine.dbid != -1">
+                        <b>Priključna mašina:</b> {{wow.connectingMachine.Name}} 
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer" style="background-color: #acbacc3a">
+              <button class="btn btn-secondary btn-edit" style="float: right" data-toggle="modal" data-target="#exampleModal"
+                (click)="editWow(wow)">
+                <i class="fa fa-edit mr-2"></i>Izmeni
+              </button>
+            </div>
           </div>
-          <div class="card-footer" style="background-color: #acbacc3a">
-            <button class="btn btn-secondary" style="float: right" data-toggle="modal" data-target="#exampleModal">
-              <i class="fa fa-edit mr-2"></i>Izmeni
-            </button>
-          </div>
-        </div>
+        </ng-container>
+        <ng-template #elseBlockMachineStateMob>
+
+        </ng-template>
+        
       </div>
     </div>
   </div>
+  <!--
   <div class="machines mt-4">
     <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMachines()" type="button"
       data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
@@ -1650,6 +1683,7 @@
       </div>
     </div>
   </div>
+  -->
   <div class="machines mt-4">
     <button class="btn btn-primary collapsing-button shadow-none" (click)="expandMaterials()" type="button"
       data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
@@ -1703,7 +1737,7 @@
             </ul>
           </div>
           <div class="card-footer" style="background-color: #acbacc3a">
-            <button class="btn btn-secondary" style="float: right" data-toggle="modal" data-target="#materialModal"
+            <button class="btn btn-edit" style="float: right;" data-toggle="modal" data-target="#materialModal"
               (click)="editMaterial(material)">
               <i class="fa fa-edit mr-2"></i>Izmeni
             </button>
@@ -1712,6 +1746,7 @@
       </div>
     </div>
   </div>
+  <ngx-spinner></ngx-spinner>
 </div>
 
 <!-- Modal new worker/machine mob -->
@@ -1772,12 +1807,12 @@
             <form>
               <!--WITH SAP ID-->
               <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerOpMob">
-                <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOp"
-                  #searchWorkerOp required placeholder="Izaberite agrotehničku meru" />
+                <input type="text" matInput [formControl]="workerOperationFC" [matAutocomplete]="autoWorkerOpMob"
+                  #searchWorkerOpMob required placeholder="Izaberite agrotehničku meru" />
 
                 <mat-autocomplete #autoWorkerOpMob="matAutocomplete" [displayWith]="displayFnOperation" place>
                   <mat-option *ngFor="
-                      let op of operations | SearchOperations: searchWorkerOp.value
+                      let op of operations | SearchOperations: searchWorkerOpMob.value
                     " [value]="op">
                     {{ op.Id }} - {{ op.Name }}
                   </mat-option>
@@ -1787,10 +1822,10 @@
               <ng-template #elseBlockWorkerOpMob>
                 <mat-form-field class="inputAuto">
                   <input type="text" matInput [formControl]="workerOperationFC"
-                    [matAutocomplete]="autoWorkerOpWithoutId" #searchWorkerOpWithoutIdMob required
+                    [matAutocomplete]="autoWorkerOpWithoutIdMob" #searchWorkerOpWithoutIdMob required
                     placeholder="Izaberite agrotehničku meru" />
 
-                  <mat-autocomplete #autoWorkerOpWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId"
+                  <mat-autocomplete #autoWorkerOpWithoutIdMob="matAutocomplete" [displayWith]="displayFnWithoutId"
                     place>
                     <mat-option *ngFor="
                         let op of operations | SearchOperations: searchWorkerOpWithoutIdMob.value
@@ -1808,25 +1843,89 @@
           </div>
           <div class="form-group">
             <label for="imePrz">Mašina</label>
-            <select name="ope" [(ngModel)]="selectedOperation" class="form-control" id="" #operation="ngModel" required>
-              <option value="{{ op.dbid }}" *ngFor="let op of operations">
-                {{ op.name }}
-              </option>
-            </select>
-            <div *ngIf="operation.invalid" style="color: red">
-              Izaberite operaciju.
-            </div>
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerMachineMob">
+                <input type="text" matInput [formControl]="workerMachineFC"
+                  [matAutocomplete]="autoWorkerMachineMob" #searchWorkerMachineMob required
+                  placeholder="Izaberite mašinu" />
+
+                <mat-autocomplete #autoWorkerMachineMob="matAutocomplete" [displayWith]="displayFnMachine" place>
+                  <mat-option *ngFor="
+                  let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineMob.value
+                    " [value]="dev">
+                    {{dev.Id}} - {{ dev.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockWorkerMachineMob>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="workerMachineFC"
+                    [matAutocomplete]="autoWorkerMachineWithoutIdMob" #searchWorkerMachineWithoutIdMob required
+                    placeholder="Izaberite mašinu" />
+
+                  <mat-autocomplete #autoWorkerMachineWithoutIdMob="matAutocomplete"
+                    [displayWith]="displayFnMachineWithoutId" place>
+                    <mat-option *ngFor="
+                    let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutIdMob.value
+                      " [value]="dev">
+                      {{ dev.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="workerMachineFC.invalid && clickAddWorkerMachine == true"
+                style="color: red; font-weight: normal; text-align: left;">
+                Mašina je obavezno polje.<br>Popunite ga.
+              </div>
+            </form>
           </div>
           <div class="form-group">
             <label for="imePrz">Priključna mašina</label>
-            <select name="ope" [(ngModel)]="selectedOperation" class="form-control" id="" #operation="ngModel" required>
-              <option value="{{ op.dbid }}" *ngFor="let op of operations">
-                {{ op.name }}
-              </option>
-            </select>
-            <div *ngIf="operation.invalid" style="color: red">
-              Izaberite operaciju.
-            </div>
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorkerCoMachineMob">
+                <input type="text" matInput [formControl]="workerCoMachineFC"
+                  [matAutocomplete]="autoWorkerCoMachineMob" #searchWorkerCoMachineMob required
+                  placeholder="Izaberite priključnu mašinu" />
+
+                <mat-autocomplete #autoWorkerCoMachineMob="matAutocomplete" [displayWith]="displayFnMachine" place>
+                  <mat-option [value]="-1">
+                    BEZ PRIKLJUČNE MAŠINE
+                  </mat-option>
+                  <mat-option *ngFor="
+                  let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineMob.value
+                    " [value]="dev">
+                    {{dev.Id}} - {{ dev.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockWorkerCoMachineMob>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="workerCoMachineFC"
+                    [matAutocomplete]="autoWorkerCoMachineWithoutIdMob" #searchWorkerCoMachineWithoutIdMob required
+                    placeholder="Izaberite priključnu mašinu" />
+
+                  <mat-autocomplete #autoWorkerCoMachineWithoutIdMob="matAutocomplete"
+                    [displayWith]="displayFnMachineWithoutId" place>
+                    <mat-option [value]="-1">
+                      BEZ PRIKLJUČNE MAŠINE
+                    </mat-option>
+                    <mat-option *ngFor="
+                    let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutIdMob.value
+                      " [value]="dev">
+                      {{ dev.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="workerCoMachineFC.invalid && clickAddWorkerMachine == true"
+                style="color: red; font-weight: normal; text-align: left;">
+                Priključna mašina je obavezno polje.<br>Popunite ga.
+              </div>
+            </form>
           </div>
           <!--
           <div class="form-group" *ngIf="!new">
@@ -1873,9 +1972,14 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button type="button" class="btn btn-success" style="background-color: #33590b">
+        <button *ngIf="!editWowMobFlag" type="button" class="btn btn-success" style="background-color: #33590b"
+          (click)="addWorkerAndMachine(workerModalForm.valid)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
+        <button *ngIf="editWowMobFlag" type="button" class="btn btn-success" style="background-color: #33590b"
+          (click)="editExistingWorkerAndMachine(wow)">
+        <i class="fa fa-save"></i> Sačuvaj 
+      </button>
       </div>
     </div>
   </div>
@@ -1950,16 +2054,43 @@
         <form #materialModalForm="ngForm">
           <div class="form-group">
             <label for="materijal">Materijal</label>
-            <select id="materijal" class="form-control" name="materijal" [(ngModel)]="selectedMaterial"
-              #material="ngModel" required>
-              <option value="{{ sub.dbid }}&{{ sub.name }}" *ngFor="let sub of substances">
-                {{ sub.name }}
-              </option>
-            </select>
-            <div *ngIf="material.invalid && clickAddMaterial" style="color: red">
-              Izaberite materijal.
-            </div>
+            <form>
+              <!--WITH SAP ID-->
+              <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockMaterialMob">
+                <input type="text" matInput [formControl]="materialFC" [matAutocomplete]="autoMaterialMob"
+                  #searchMaterialMob required placeholder="Izaberite materijal" />
+
+                <mat-autocomplete #autoMaterialMob="matAutocomplete" [displayWith]="displayFnMaterial" place>
+                  <mat-option *ngFor="
+                  let sub of substances | SearchMaterials: searchMaterialMob.value
+                    " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
+                    {{sub.Id}} - {{ sub.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!--WITHOUT SAP ID-->
+              <ng-template #elseBlockMaterialMob>
+                <mat-form-field class="inputAuto">
+                  <input type="text" matInput [formControl]="materialFC"
+                    [matAutocomplete]="autoMaterialWithoutIdMob" #searchMaterialWithoutIdMob required
+                    placeholder="Izaberite materijal" />
+
+                  <mat-autocomplete #autoMaterialWithoutIdMob="matAutocomplete" [displayWith]="displayFnWithoutId"
+                    place>
+                    <mat-option *ngFor="
+                    let sub of substances | SearchMaterials: searchMaterialWithoutIdMob.value
+                      " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
+                      {{ sub.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-template>
+              <div *ngIf="materialFC.invalid && clickAddMaterial" style="color: red; text-align: left;">
+                Materijal je obavezno polje. <br>Popunite ga.
+              </div>
+            </form>
           </div>
+          <!--
           <div class="form-group">
             <label for="jm">Jedinica mere</label>
             <select name="jm" id="jm" class="form-control" [(ngModel)]="selectedMaterial" #matUnit="ngModel" required>
@@ -1971,19 +2102,30 @@
               Izaberite jedinicu mere.
             </div>
           </div>
+          -->
           <div class="form-group">
             <label for="quantity">Planirana količina</label>
             <div class="input-group mb-3">
-              <input [(ngModel)]="quantityEntered" type="number" name="quantity" id="quantity" class="form-control"
-                #quantity="ngModel" required />
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2"></span>
+              <mat-form-field class="inputAuto">
+                <input [(ngModel)]="quantityEntered" onKeyPress="if(this.value.length==7) return false;"
+                  type="number" name="quantityEnter" placeholder="Unesite količinu" id="" matInput #quantity="ngModel" required />
+                  <span matSuffix>{{unit}}</span>
+              </mat-form-field>
+              <div *ngIf="(quantityEntered == null || quantityEntered == undefined) && clickAddMaterial"
+                style="color: red; text-align: left;">
+                Planirana količina je obavezno polje.<br>Popunite ga.
+              </div>
+              <div
+                *ngIf="(validMaterialQuantity == false && clickAddNewMaterial) || (validMaterialQuantity == false && clickAddMaterial)"
+                style="color: red">
+                Uneta količina mora biti veća od nule.
+              </div>
+              <div *ngIf="quantity.errors && clickAddNewMaterial" style="color: red">
+                Uneta količina ne sme biti duža od 7 cifara.
               </div>
             </div>
-            <div *ngIf="quantity.invalid && clickAddMaterial" style="color: red">
-              Unesite količinu.
-            </div>
           </div>
+          <!--
           <div class="form-group">
             <label for="quantityPerHectar">Planirana količina / ha</label>
             <div class="input-group mb-3">
@@ -1994,6 +2136,7 @@
               </div>
             </div>
           </div>
+          -->
         </form>
       </div>
       <div class="modal-footer">

@@ -185,10 +185,13 @@ export class CreateworkOrderComponent implements OnInit {
   emptyWow;
   loading;
 
+  editWowMobFlag;
+
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
       this.setting = data;
       this.sapId = this.setting.masterDataFormat;
+      console.log(this.sapId)
     })
     
     this.authService.getLogged().subscribe(data => {
@@ -360,10 +363,14 @@ export class CreateworkOrderComponent implements OnInit {
       this.devicesCoupling = data;
     });
 
+    this.spinner.show();
     this.materialService.getAll().subscribe((data) => {
       //data = this.convertKeysToLowerCase(data);
+      this.spinner.hide();
       this.substances = data;
       console.log(this.substances)
+    }, error => {
+      this.spinner.hide();
     });
 
     this.fieldService.getAll().subscribe((data) => {
@@ -599,6 +606,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.wows)
         this.wow = new WorkOrderWorker();
         this.exists = false;
+        this.closeButtonWorkerModal.nativeElement.click();
       }
       this.exists = false;
       this.clickAddWorkerMachine = false;
@@ -645,19 +653,31 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editExistingWorkerAndMachine(existing) {
+    console.log(existing)
     this.idOfEditingWorkerMachine = existing.wowObjectId;
     this.wows.forEach((wow) => {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
+        console.log(wow)
+        console.log(this.workerFC.value)
+        wow.user = this.workerFC.value;
+        wow.machine = this.workerMachineFC.value;
+        wow.connectingMachine = this.workerCoMachineFC.value;
+        wow.operation = this.workerOperationFC.value;
+        /*
         wow.user.userId = this.allEmployees.find(
           (x) => x.userId == wow.user.userId
         ).userId;
+       
         wow.machine.dbid = this.devicesPropulsion.find(
           (x) => x.dbid == wow.machine.dbid
         ).dbid;
         console.log(this.devicesCoupling);
-        wow.connectingMachine.dbid = this.devicesCoupling.find(
-          (x) => x.dbid == wow.connectingMachine.dbid
-        ).dbid;
+        
+          wow.connectingMachine.dbid = this.devicesCoupling.find(
+            (x) => x.dbid == wow.connectingMachine.dbid
+          ).dbid;
+        
+       
         wow.operation.dbid = this.operations.find(
           (x) => x.dbid == wow.operation.dbid
         ).dbid;
@@ -666,6 +686,7 @@ export class CreateworkOrderComponent implements OnInit {
         wow.initialState = this.wow.initialState;
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
+         */
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
       }
@@ -1655,5 +1676,23 @@ export class CreateworkOrderComponent implements OnInit {
           this.toastr.error("Radni nalog nije storniran.");
         }
       });
+  }
+
+  editWow(wow){
+    console.log(wow)
+    this.wow = wow;
+    this.editWowMobFlag = true;
+    this.workerFC.setValue(wow.user);
+    this.workerOperationFC.setValue(wow.operation);
+    this.workerMachineFC.setValue(wow.machine);
+    this.workerCoMachineFC.setValue(wow.connectingMachine)
+  }
+
+  addNewWowMob(){
+    this.editWowMobFlag = false;
+    this.workerFC = new FormControl("");
+    this.workerOperationFC.setValue(this.operationFC.value);
+    this.workerMachineFC = new FormControl("");
+    this.workerCoMachineFC = new FormControl("");
   }
 }
