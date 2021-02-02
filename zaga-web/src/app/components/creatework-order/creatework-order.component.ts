@@ -240,7 +240,7 @@ export class CreateworkOrderComponent implements OnInit {
         //   this.spinner.hide();
         // });
         this.loading = false;
-
+        this.spinner.hide();
         this.workOrder = data;
         console.log(this.workOrder.treated)
         if (this.workOrder.treated != undefined) {
