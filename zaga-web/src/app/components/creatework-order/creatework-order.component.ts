@@ -89,6 +89,7 @@ export class CreateworkOrderComponent implements OnInit {
   devicesPropulsion: Machine[] = [];
   devicesCoupling: Machine[] = [];
   substances: Material[] = [];
+  substances$: Observable<Material[]>;
   fields: Field[] = [];
   crops: Crop[] = [];
   woMaterials: SpentMaterial[] = [];
@@ -228,7 +229,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.loading = true;
       this.spinner.show();
       this.workOrderService.getOne(this.workId).subscribe((data) => {
-       
+
         this.materialService.getAll().subscribe((data) => {
           //data = this.convertKeysToLowerCase(data);
           this.spinner.hide();
@@ -238,7 +239,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
         });
         this.loading = false;
-       
+
         this.workOrder = data;
         console.log(this.workOrder.treated)
         if (this.workOrder.treated != undefined) {
@@ -377,6 +378,18 @@ export class CreateworkOrderComponent implements OnInit {
       // data = this.convertKeysToLowerCase(data);
       this.devicesCoupling = data;
     });
+
+    this.spinner.show();
+    this.substances$ = this.materialService.getAll();
+    this.spinner.hide();
+    /*this.materialService.getAll().subscribe((data) => {
+      //data = this.convertKeysToLowerCase(data);
+      this.spinner.hide();
+      this.substances = data;
+      console.log(this.substances)
+    }, error => {
+      this.spinner.hide();
+    });*/
 
     this.fieldService.getAll().subscribe((data) => {
       this.fields = data;
@@ -674,7 +687,7 @@ export class CreateworkOrderComponent implements OnInit {
         ).dbid;
         console.log(this.devicesCoupling);
         console.log(wow.connectingMachine.dbid)
-        if(wow.connectingMachine.dbid != undefined){
+        if (wow.connectingMachine.dbid != undefined) {
           wow.connectingMachine.dbid = this.devicesCoupling.find(
             (x) => x.dbid == wow.connectingMachine.dbid
           ).dbid;
@@ -682,7 +695,7 @@ export class CreateworkOrderComponent implements OnInit {
           wow.connectingMachine = new Machine();
           wow.connectingMachine.dbid = -1;
         }
-      
+
         wow.operation.dbid = this.operations.find(
           (x) => x.dbid == wow.operation.dbid
         ).dbid;
