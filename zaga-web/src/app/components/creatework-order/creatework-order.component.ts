@@ -45,6 +45,7 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
   @ViewChild("closeButtonCloseWOModal", null) closeButtonCloseWOModal;
+  @ViewChild("closeButtonMaterialModalMob", null) closeButtonMaterialModalMob;
 
 
   constructor(
@@ -97,6 +98,7 @@ export class CreateworkOrderComponent implements OnInit {
   wow: WorkOrderWorker = new WorkOrderWorker();
   wowMob: WorkOrderWorker = new WorkOrderWorker();
   spentMaterial: SpentMaterial = new SpentMaterial();
+  materialMob: SpentMaterial = new SpentMaterial();
   setting: Setting = new Setting();
 
   crop: Crop = new Crop();
@@ -187,6 +189,8 @@ export class CreateworkOrderComponent implements OnInit {
   loading;
 
   editWowMobFlag;
+  editMaterialMobFlag;
+  mob = false;
 
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
@@ -660,39 +664,41 @@ export class CreateworkOrderComponent implements OnInit {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
         console.log(wow)
         console.log(this.workerFC.value)
-        wow.user = this.workerFC.value;
-        wow.machine = this.workerMachineFC.value;
-        if(this.workerCoMachineFC.value == -1){
-          wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+        if(this.mob){
+          wow.user = this.workerFC.value;
+          wow.machine = this.workerMachineFC.value;
+          if(this.workerCoMachineFC.value == -1){
+            wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+          } else {
+            wow.connectingMachine = this.workerCoMachineFC.value;
+          }
+          
+          wow.operation = this.workerOperationFC.value;
         } else {
-          wow.connectingMachine = this.workerCoMachineFC.value;
-        }
-        
-        wow.operation = this.workerOperationFC.value;
-        /*
-        wow.user.userId = this.allEmployees.find(
-          (x) => x.userId == wow.user.userId
-        ).userId;
-       
-        wow.machine.dbid = this.devicesPropulsion.find(
-          (x) => x.dbid == wow.machine.dbid
-        ).dbid;
-        console.log(this.devicesCoupling);
-        
-          wow.connectingMachine.dbid = this.devicesCoupling.find(
-            (x) => x.dbid == wow.connectingMachine.dbid
+          wow.user.userId = this.allEmployees.find(
+            (x) => x.userId == wow.user.userId
+          ).userId;
+         
+          wow.machine.dbid = this.devicesPropulsion.find(
+            (x) => x.dbid == wow.machine.dbid
           ).dbid;
-        
-       
-        wow.operation.dbid = this.operations.find(
-          (x) => x.dbid == wow.operation.dbid
-        ).dbid;
-        wow.dayPeriod = this.wow.dayPeriod;
-        wow.nightPeriod = this.wow.nightPeriod;
-        wow.initialState = this.wow.initialState;
-        wow.finalState = this.wow.finalState;
-        wow.fuel = this.wow.fuel;
-         */
+          console.log(this.devicesCoupling);
+          
+            wow.connectingMachine.dbid = this.devicesCoupling.find(
+              (x) => x.dbid == wow.connectingMachine.dbid
+            ).dbid;
+          
+         
+          wow.operation.dbid = this.operations.find(
+            (x) => x.dbid == wow.operation.dbid
+          ).dbid;
+          wow.dayPeriod = this.wow.dayPeriod;
+          wow.nightPeriod = this.wow.nightPeriod;
+          wow.initialState = this.wow.initialState;
+          wow.finalState = this.wow.finalState;
+          wow.fuel = this.wow.fuel;
+        }
+   
         this.closeButtonWorkerModal.nativeElement.click();
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
@@ -964,6 +970,7 @@ export class CreateworkOrderComponent implements OnInit {
   addMaterial(valid) {
     this.clickAddMaterial = true;
     console.log(this.quantityEntered);
+    console.log(valid)
     if (this.quantityEntered < 0) {
       this.validMaterialQuantity = false;
       console.log(this.validMaterialQuantity)
@@ -991,6 +998,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.materialFC = new FormControl("");
         this.spentMaterial = new SpentMaterial();
         this.exists = false;
+        this.closeButtonMaterialModalMob.nativeElement.click();
       }
       this.clickAddMaterial = false;
       this.exists = false;
@@ -1048,10 +1056,16 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingMaterial = existing.smObjectId;
     this.woMaterials.forEach((material) => {
       if (material.smObjectId == this.idOfEditingMaterial) {
-        material.material.dbid = this.substances.find(
-          (x) => x.dbid == material.material.dbid
-        ).dbid;
-        material.quantity = existing.quantity;
+        if(!this.mob){
+          material.material.dbid = this.substances.find(
+            (x) => x.dbid == material.material.dbid
+          ).dbid;
+          material.quantity = existing.quantity;
+        } else {
+          material.material = this.materialFC.value;
+          material.quantity = this.quantityEntered;
+          this.closeButtonMaterialModalMob.nativeElement.click();
+        }
       }
     });
     this.toastr.success("Uspešno izvršena promena.");
@@ -1688,6 +1702,7 @@ export class CreateworkOrderComponent implements OnInit {
   editWow(wow){
     console.log(wow)
     this.wowMob = wow;
+    this.mob = true;
     console.log(this.wowMob)
     this.editWowMobFlag = true;
     this.workerFC.setValue(wow.user);
@@ -1702,5 +1717,21 @@ export class CreateworkOrderComponent implements OnInit {
     this.workerOperationFC.setValue(this.operationFC.value);
     this.workerMachineFC = new FormControl("");
     this.workerCoMachineFC = new FormControl("");
+  }
+
+  addNewMaterialMob(){
+    this.mob = true;
+    this.editMaterialMobFlag = false;
+    this.materialFC = new FormControl("");
+    this.quantityEntered = null;
+  }
+
+  editMaterialMob(material){
+    this.materialMob = material;
+    this.mob = true;
+    this.editMaterialMobFlag = true;
+    this.idOfEditingMaterial = material.smObjectId;
+    this.materialFC.setValue(material.material);
+    this.quantityEntered = material.quantity;
   }
 }

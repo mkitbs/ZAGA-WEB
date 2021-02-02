@@ -1559,18 +1559,8 @@
           <div *ngFor="let wow of wows" class="card mb-3" style="border: 1px solid #5c7495; border-radius: 5px">
             <div id="rad"></div>
             <div class="card-body">
-              <h5 class="card-title"></h5>
+              <h5 class="card-title">{{wow.user.name}} </h5>
               <ul class="list-group">
-                <li class="list-group-item list-group-item-info">
-                  <div class="row">
-                    <div class="col-1">
-                      <i class="fa fa-user"></i>
-                    </div>
-                    <div class="col">
-                       <b>Izvršioc:</b> {{wow.user.name}} 
-                    </div>
-                  </div>
-                </li>
                 <li class="list-group-item list-group-item-info">
                   <div class="row">
                     <div class="col-1">
@@ -1694,9 +1684,9 @@
     <div class="collapse" id="collapseExampleMaterials">
       <div class="card card-body collapse-card">
         <div class="col-12">
-          <button class="btn btn-primary" style="float: right; margin-top: 5px; background-color: #5c7495"
-            data-toggle="modal" data-target="#materialModalMob">
-            <i class="fa fa-plus mr-2"></i>Novi materijal
+          <button class="btn btn-primary" style="float: right; margin-top: 5px; background-color: #5c7495; border:none"
+            data-toggle="modal" data-target="#materialModalMob" (click)="addNewMaterialMob()">
+            <i class="fa fa-plus mr-2"></i>Dodaj materijal
           </button>
         </div>
         <br />
@@ -1704,26 +1694,15 @@
           style="border: 1px solid #5c7495; border-radius: 5px">
           <div *ngIf="i == 0" id="mat"></div>
           <div class="card-body">
-            <h5 class="card-title">{{ material.material.name }}</h5>
+            <h5 class="card-title">{{ material.material.Name }}</h5>
             <ul class="list-group">
-              <li class="list-group-item list-group-item-info">
-                <i class="fa fa-calculator" style="font-size: 20px; vertical-align: bottom"></i>
-                <span style="padding-left: 2px; vertical-align: middle">
-                  Planirana količina po ha:
-                  {{ (material.quantity / crop.Area).toFixed(2) }}
-                  {{ material.material.unit }}/ha</span>
-              </li>
               <li class="list-group-item list-group-item-info">
                 <i class="fa fa-sort-amount-asc" style="font-size: 20px; vertical-align: bottom"></i>
                 <span style="padding-left: 3px; vertical-align: middle">
                   Planirana količina: {{ material.quantity }}
-                  {{ material.material.unit }}</span>
+                  {{ material.material.Unit }}</span>
               </li>
-              <li class="list-group-item list-group-item-info">
-                <i class="fa fa-balance-scale" style="font-size: 20px; vertical-align: bottom"></i>
-                <span style="padding-left: 3px; vertical-align: middle">
-                  Jedinica mere: {{ material.material.unit }}</span>
-              </li>
+              <!--
               <li class="list-group-item list-group-item-info" *ngIf="!new">
                 <i class="fa fa-plus" style="font-size: 20px"></i>
                 <span style="padding-left: 6px">Utrošeno / ha: {{ material.spent / workOrder.area }}
@@ -1734,11 +1713,12 @@
                 <span style="padding-left: 3px">
                   Utrošeno: {{ material.spent || 0 }} {{ material.unit }}</span>
               </li>
+              -->
             </ul>
           </div>
           <div class="card-footer" style="background-color: #acbacc3a">
-            <button class="btn btn-edit" style="float: right;" data-toggle="modal" data-target="#materialModal"
-              (click)="editMaterial(material)">
+            <button class="btn btn-secondary btn-edit" style="float: right;" data-toggle="modal" data-target="#materialModalMob"
+              (click)="editMaterialMob(material)">
               <i class="fa fa-edit mr-2"></i>Izmeni
             </button>
           </div>
@@ -2051,7 +2031,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #materialModalForm="ngForm">
+        <form #materialModalMobForm="ngForm">
           <div class="form-group">
             <label for="materijal">Materijal</label>
             <form>
@@ -2143,7 +2123,10 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button type="button" class="btn btn-success" style="background-color: #33590b">
+        <button *ngIf="!editMaterialMobFlag" type="button" class="btn btn-success" style="background-color: #33590b" (click)="addMaterial(materialModalMobForm.valid)">
+          <i class="fa fa-save"></i> Dodaj
+        </button>
+        <button *ngIf="editMaterialMobFlag" type="button" class="btn btn-success" style="background-color: #33590b" (click)="editExistingMaterial(materialMob)">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
       </div>
