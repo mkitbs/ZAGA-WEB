@@ -660,11 +660,12 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingWorkerMachine = existing.wowObjectId;
     this.wows.forEach((wow) => {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
+        /*
         wow.user = this.workerFC.value;
         wow.machine = this.workerMachineFC.value;
         wow.connectingMachine = this.workerCoMachineFC.value;
         wow.operation = this.workerOperationFC.value;
-        /*
+        */
         wow.user.userId = this.allEmployees.find(
           (x) => x.userId == wow.user.userId
         ).userId;
@@ -672,9 +673,16 @@ export class CreateworkOrderComponent implements OnInit {
           (x) => x.dbid == wow.machine.dbid
         ).dbid;
         console.log(this.devicesCoupling);
-        wow.connectingMachine.dbid = this.devicesCoupling.find(
-          (x) => x.dbid == wow.connectingMachine.dbid
-        ).dbid;
+        console.log(wow.connectingMachine.dbid)
+        if(wow.connectingMachine.dbid != undefined){
+          wow.connectingMachine.dbid = this.devicesCoupling.find(
+            (x) => x.dbid == wow.connectingMachine.dbid
+          ).dbid;
+        } else {
+          wow.connectingMachine = new Machine();
+          wow.connectingMachine.dbid = -1;
+        }
+      
         wow.operation.dbid = this.operations.find(
           (x) => x.dbid == wow.operation.dbid
         ).dbid;
@@ -683,7 +691,6 @@ export class CreateworkOrderComponent implements OnInit {
         wow.initialState = this.wow.initialState;
         wow.finalState = this.wow.finalState;
         wow.fuel = this.wow.fuel;
-        */
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
       }
