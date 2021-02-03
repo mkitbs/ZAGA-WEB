@@ -284,6 +284,101 @@
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2">Pregled sorti</h3>
+    </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <div class="form-row">
+        <div class="col-11">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="varietyFC" [matAutocomplete]="autoVarietyTablet" #searchVarietyTablet
+                placeholder="Pretražite po nazivu ili šifri sorte"/>
+              <mat-autocomplete #autoVarietyTablet="matAutocomplete" [displayWith]="displayFnVariety" place>
+                <mat-option *ngFor="
+                  let variety of varieties | SearchVariety: searchVarietyTablet.value
+                  " [value]="variety" >
+                  {{ variety.Id }} - {{variety.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-11">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureTablet" #searchCultureTablet
+                placeholder="Pretražite po nazivu ili šifri kulture"/>
+              <mat-autocomplete #autoCultureTablet="matAutocomplete" [displayWith]="displayFnCulture" place>
+                <mat-option *ngFor="
+                  let culture of cultures | SearchCulture: searchCultureTablet.value
+                  " [value]="culture" >
+                  {{ culture.Id }} - {{culture.Name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
+      <div class="center" *ngIf="varieties.length == 0 && loading == false">
+        <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
+      </div>
+      <div class="row card-group">
+        <div [ngClass]="variety === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let variety of varieties
+          | SearchVariety: searchVarietyTablet.value
+          | SearchVarietyCultureGroup: searchCultureTablet.value; let j = index">
+          <div *ngIf="variety === -1" class="center">
+            <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
+            <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
+          </div>
+          <div *ngIf="variety !== -1" class="card mb-4" style="width: 25rem; height: 90%;">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-bottom: 10px"
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/seed.png"
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ variety.Name }}
+                    </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ variety.Id }}</td>
+                      </tr>
+                      <tr title="Kultura" style="cursor: help">
+                        <th><i class="fa fa-cubes"></i></th>
+                        <td>{{ variety.cultureName }} </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getVariety(variety.dbId)" data-toggle="modal"
+            data-target="#editVarietydModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <ngx-spinner></ngx-spinner>
+</div>
 <!--Edit field modal-->
 <div class="modal fade" id="editVarietydModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">

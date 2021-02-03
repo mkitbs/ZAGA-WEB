@@ -70,7 +70,7 @@
         </div>
         <div *ngIf="machine !== -1" class="card mb-3" style="width: 30rem; height: 90%;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="word-break: break-word;">
               <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
                 <img *ngIf="machine.Type == 'POGONSKA'; else elseBlockMachineImage" class="card-img-right"
                   src="../../../assets/tractor.png" width="80px" height="80px" />
@@ -186,7 +186,7 @@
         </div>
         <div *ngIf="machine !== -1" class="card mb-3" style="width: 30rem; height: 90%;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="word-break: break-word;">
               <div
                 class="col-md-auto"
                 style="width: fit-content; padding-top: 12px"
@@ -310,7 +310,131 @@
         </div>
         <div *ngIf="machine !== -1" class="card mb-3" style="width: 30rem; height: 90%;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="word-break: break-word;">
+              <div
+                class="col-md-auto"
+                style="width: fit-content; padding-top: 12px"
+              >
+                <img
+                  *ngIf="machine.Type == 'POGONSKA'; else elseBlockMachineImage"
+                  class="card-img-right"
+                  src="../../../assets/tractor.png"
+                  width="80px"
+                  height="80px"
+                />
+                <ng-template #elseBlockMachineImage>
+                  <img class="card-img-right" src="../../../assets/trailer.png" width="80px" height="80px" />
+                </ng-template>
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ machine.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ machine.Id }}</td>
+                    </tr>
+                    <tr title="Tip" style="cursor: help">
+                      <th><i class="fas fa-cog"></i></th>
+                      <td>{{ machine.Type }}</td>
+                    </tr>
+                    <tr title="Gorivo" style="cursor: help">
+                      <th><i class="fas fa-gas-pump"></i></th>
+                      <td>{{ machine.FuelType }}</td>
+                    </tr>
+                    <tr title="Grupa" style="cursor: help">
+                      <th><i class="fa fa-truck"></i></th>
+                      <td>{{ machine.machineGroupName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getMachine(machine.id)" data-toggle="modal"
+            data-target="#editMachineModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled mašina</h3>
+    <div style="padding-top: 20px"></div>
+    <div class="form-row">
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineFC" [matAutocomplete]="autoMachineLaptop" #searchMachineLaptop
+              placeholder="Pretražite po nazivu ili šifri mašine"/>
+            <mat-autocomplete #autoMachineLaptop="matAutocomplete" [displayWith]="displayFnMachine" place>
+              <mat-option *ngFor="
+                let machine of machines | SearchMachine: searchMachineLaptop.value
+                " [value]="machine" >
+                  {{machine.Id}} - {{machine.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineTypeFC" [matAutocomplete]="autoMachineTypeLaptop" #searchMachineTypeLaptop
+              placeholder="Pretražite po tipu mašine"/>
+            <mat-autocomplete #autoMachineTypeLaptop="matAutocomplete" [displayWith]="displayFnMachineType" place>
+              <mat-option *ngFor="
+                let machine of machinesByType | SearchMachineType: searchMachineTypeLaptop.value
+                " [value]="machine" >
+                  {{machine.Type}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineGroupFC" [matAutocomplete]="autoMachineGroupLaptop" #searchMachineGroupLaptop
+              placeholder="Pretražite po grupi mašine"/>
+            <mat-autocomplete #autoMachineGroupLaptop="matAutocomplete" [displayWith]="displayFnMachineGroup" place>
+              <mat-option *ngFor="
+                let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupLaptop.value
+                " [value]="machineGroup" >
+                  {{machineGroup.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div *ngIf="machines.length == 0 && loading == false" class="center">
+      <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
+    </div>
+    <div class="row card-group">
+      <div [ngClass]="machine === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let machine of machines
+        | SearchMachineType: searchMachineTypeLaptop.value
+        | SearchMachineMachineGroup: searchMachineGroupLaptop.value
+        | SearchMachine: searchMachineLaptop.value; let j = index">
+        <div *ngIf="machine === -1" class="center">
+          <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
+        </div>
+        <div *ngIf="machine !== -1" class="card mb-3" style="width: 25rem; height: 90%;">
+          <div class="card-body">
+            <div class="row" style="word-break: break-word;">
               <div
                 class="col-md-auto"
                 style="width: fit-content; padding-top: 12px"

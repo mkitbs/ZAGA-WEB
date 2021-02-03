@@ -86,7 +86,7 @@ public class MachineGroupService {
 
 	public String formatJSON(String json) {
 		json = json.replace("=", ":");
-		System.out.println("AAA"+json);
+		System.out.println("JSON => " + json);
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");

@@ -245,6 +245,88 @@
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled parcela</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="form-row">
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldLaptop" #searchFieldLaptop
+             placeholder="Pretražite po nazivu ili šifri parcele"/>
+            <mat-autocomplete #autoFieldLaptop="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                let field of fields | SearchFields: searchFieldLaptop.value
+                " [value]="field" >
+                {{field.Id}} - {{ field.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+    <div class="center" *ngIf="fields.length == 0 && loading == false">
+      <img src="../../../assets/field-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema parcela za prikazivanje</h4>
+    </div>
+    <div class="row card-group">
+      <div [ngClass]="field === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let field of fields | SearchFields: searchFieldLaptop.value; let j = index">
+        <div *ngIf="field === -1" class="center">
+          <img src="../../../assets/field-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema parcela za prikazivanje</h4>
+        </div>
+        <div *ngIf="field !== -1" class="card mb-3" style="width: 25rem; height: 90%;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
+                <img class="card-img-right" src="../../../assets/field1.png" width="80px" height="80px" />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ field.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ field.Id }}</td>
+                    </tr>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td title="Površina">{{ field.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ field.Year }}</td>
+                    </tr>
+                    <tr title="Potez" style="cursor: help">
+                      <th><i class="fa fa-area-chart"></i></th>
+                      <td>{{ field.fieldGroupName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getField(field.dbId)" data-toggle="modal"
+            data-target="#editFieldModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="buttonEdit btn btn-primary btn-map" (click)="getField(field.dbId)" data-toggle="modal"
+          data-target="#mapFieldModal" title="Vidi parcelu na mapi">
+          <i class="fa fa-globe"></i>
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
 <!--Edit field modal-->
 <div class="modal fade" id="editFieldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">

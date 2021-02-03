@@ -45,6 +45,7 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonWorkerModal", null) closeButtonWorkerModal;
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
   @ViewChild("closeButtonCloseWOModal", null) closeButtonCloseWOModal;
+  @ViewChild("closeButtonMaterialModalMob", null) closeButtonMaterialModalMob;
 
 
   constructor(
@@ -96,7 +97,9 @@ export class CreateworkOrderComponent implements OnInit {
   wows: WorkOrderWorker[] = [];
 
   wow: WorkOrderWorker = new WorkOrderWorker();
+  wowMob: WorkOrderWorker = new WorkOrderWorker();
   spentMaterial: SpentMaterial = new SpentMaterial();
+  materialMob: SpentMaterial = new SpentMaterial();
   setting: Setting = new Setting();
 
   crop: Crop = new Crop();
@@ -186,10 +189,15 @@ export class CreateworkOrderComponent implements OnInit {
   emptyWow;
   loading;
 
+  editWowMobFlag;
+  editMaterialMobFlag;
+  mob = false;
+
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
       this.setting = data;
       this.sapId = this.setting.masterDataFormat;
+      console.log(this.sapId)
     })
 
     this.authService.getLogged().subscribe(data => {
@@ -380,17 +388,17 @@ export class CreateworkOrderComponent implements OnInit {
       this.devicesCoupling = data;
     });
 
-    //this.spinner.show();
+    this.spinner.show();
     this.substances$ = this.materialService.getAll();
     //this.spinner.hide();
-    /*this.materialService.getAll().subscribe((data) => {
+    this.materialService.getAll().subscribe((data) => {
       //data = this.convertKeysToLowerCase(data);
       this.spinner.hide();
       this.substances = data;
       console.log(this.substances)
     }, error => {
       this.spinner.hide();
-    });*/
+    });
 
     this.fieldService.getAll().subscribe((data) => {
       this.fields = data;
@@ -625,6 +633,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(this.wows)
         this.wow = new WorkOrderWorker();
         this.exists = false;
+        this.closeButtonWorkerModal.nativeElement.click();
       }
       this.exists = false;
       this.clickAddWorkerMachine = false;
@@ -671,40 +680,48 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editExistingWorkerAndMachine(existing) {
+    console.log(existing)
     this.idOfEditingWorkerMachine = existing.wowObjectId;
     this.wows.forEach((wow) => {
       if (wow.wowObjectId == this.idOfEditingWorkerMachine) {
-        /*
-        wow.user = this.workerFC.value;
-        wow.machine = this.workerMachineFC.value;
-        wow.connectingMachine = this.workerCoMachineFC.value;
-        wow.operation = this.workerOperationFC.value;
-        */
-        wow.user.userId = this.allEmployees.find(
-          (x) => x.userId == wow.user.userId
-        ).userId;
-        wow.machine.dbid = this.devicesPropulsion.find(
-          (x) => x.dbid == wow.machine.dbid
-        ).dbid;
-        console.log(this.devicesCoupling);
-        console.log(wow.connectingMachine.dbid)
-        if (wow.connectingMachine.dbid != undefined) {
-          wow.connectingMachine.dbid = this.devicesCoupling.find(
-            (x) => x.dbid == wow.connectingMachine.dbid
-          ).dbid;
+        console.log(wow)
+        console.log(this.workerFC.value)
+        if(this.mob){
+          wow.user = this.workerFC.value;
+          wow.machine = this.workerMachineFC.value;
+          if(this.workerCoMachineFC.value == -1){
+            wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+          } else {
+            wow.connectingMachine = this.workerCoMachineFC.value;
+          }
+          
+          wow.operation = this.workerOperationFC.value;
         } else {
-          wow.connectingMachine = new Machine();
-          wow.connectingMachine.dbid = -1;
+          wow.user.userId = this.allEmployees.find(
+            (x) => x.userId == wow.user.userId
+          ).userId;
+         
+          wow.machine.dbid = this.devicesPropulsion.find(
+            (x) => x.dbid == wow.machine.dbid
+          ).dbid;
+          console.log(this.devicesCoupling);
+          
+            wow.connectingMachine.dbid = this.devicesCoupling.find(
+              (x) => x.dbid == wow.connectingMachine.dbid
+            ).dbid;
+          
+         
+          wow.operation.dbid = this.operations.find(
+            (x) => x.dbid == wow.operation.dbid
+          ).dbid;
+          wow.dayPeriod = this.wow.dayPeriod;
+          wow.nightPeriod = this.wow.nightPeriod;
+          wow.initialState = this.wow.initialState;
+          wow.finalState = this.wow.finalState;
+          wow.fuel = this.wow.fuel;
         }
-
-        wow.operation.dbid = this.operations.find(
-          (x) => x.dbid == wow.operation.dbid
-        ).dbid;
-        wow.dayPeriod = this.wow.dayPeriod;
-        wow.nightPeriod = this.wow.nightPeriod;
-        wow.initialState = this.wow.initialState;
-        wow.finalState = this.wow.finalState;
-        wow.fuel = this.wow.fuel;
+   
+        this.closeButtonWorkerModal.nativeElement.click();
         this.toastr.success("Uspešno izvršena promena.");
         console.log(this.wows)
       }
@@ -773,9 +790,15 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.operation.dbid = this.workerOperationFC.value.dbid;
     this.wow.machine.dbid = this.workerMachineFC.value.dbid;
     this.spinner.show();
-    this.wow.connectingMachine.dbid = this.selectedCouplingMachine;
+    if(this.workerCoMachineFC.value == -1){
+      this.wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+    } else {
+      this.wow.connectingMachine.dbid = this.workerCoMachineFC.value.dbid;
+    }
+    
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
+      this.closeButtonWorkerModal.nativeElement.click();
       this.wow = new WorkOrderWorker();
       this.spinner.hide();
       this.workerFC = new FormControl("");
@@ -925,6 +948,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateWOWBasicInfo(workOrderWorker) {
+    console.log(workOrderWorker)
     this.wowService.updateWorkOrderWorkerBasicInfo(workOrderWorker.id, workOrderWorker).subscribe((res) => {
       console.log(res);
       this.toastr.success("Uspešno sačuvane promene.");
@@ -980,6 +1004,7 @@ export class CreateworkOrderComponent implements OnInit {
   addMaterial(valid) {
     this.clickAddMaterial = true;
     console.log(this.quantityEntered);
+    console.log(valid)
     if (this.quantityEntered < 0) {
       this.validMaterialQuantity = false;
       console.log(this.validMaterialQuantity)
@@ -1007,6 +1032,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.materialFC = new FormControl("");
         this.spentMaterial = new SpentMaterial();
         this.exists = false;
+        this.closeButtonMaterialModalMob.nativeElement.click();
       }
       this.clickAddMaterial = false;
       this.exists = false;
@@ -1064,10 +1090,16 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingMaterial = existing.smObjectId;
     this.woMaterials.forEach((material) => {
       if (material.smObjectId == this.idOfEditingMaterial) {
-        material.material.dbid = this.substances.find(
-          (x) => x.dbid == material.material.dbid
-        ).dbid;
-        material.quantity = existing.quantity;
+        if(!this.mob){
+          material.material.dbid = this.substances.find(
+            (x) => x.dbid == material.material.dbid
+          ).dbid;
+          material.quantity = existing.quantity;
+        } else {
+          material.material = this.materialFC.value;
+          material.quantity = this.quantityEntered;
+          this.closeButtonMaterialModalMob.nativeElement.click();
+        }
       }
     });
     this.toastr.success("Uspešno izvršena promena.");
@@ -1112,6 +1144,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.spentMaterialService
         .addSpentMaterial(this.workId, this.spentMaterial)
         .subscribe((res) => {
+          this.closeButtonMaterialModalMob.nativeElement.click();
           this.spinner.hide();
           console.log(res);
           this.spentMaterial = new SpentMaterial();
@@ -1249,11 +1282,23 @@ export class CreateworkOrderComponent implements OnInit {
   updateMaterialBasicInfo(spentMaterial) {
     this.idForValidQuantity = spentMaterial.id;
     this.clickUpdateMaterial = true;
-    if (spentMaterial.quantity < 0 || spentMaterial.quantity == null) {
-      this.validQuantity = false;
+    console.log(spentMaterial)
+    if(this.mob){
+      if(this.quantityEntered < 0 || this.quantityEntered == null){
+        this.validQuantity = false;
+      } else {
+        spentMaterial.material = this.materialFC.value;
+        spentMaterial.quantity = this.quantityEntered;
+        this.validQuantity = true;
+      }
     } else {
-      this.validQuantity = true;
+      if (spentMaterial.quantity < 0 || spentMaterial.quantity == null) {
+        this.validQuantity = false;
+      } else {
+        this.validQuantity = true;
+      }
     }
+   
     if (this.validQuantity == true) {
       this.spentMaterialService
         .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)
@@ -1699,5 +1744,41 @@ export class CreateworkOrderComponent implements OnInit {
           this.toastr.error("Radni nalog nije storniran.");
         }
       });
+  }
+
+  editWow(wow){
+    console.log(wow)
+    this.wowMob = wow;
+    this.mob = true;
+    console.log(this.wowMob)
+    this.editWowMobFlag = true;
+    this.workerFC.setValue(wow.user);
+    this.workerOperationFC.setValue(wow.operation);
+    this.workerMachineFC.setValue(wow.machine);
+    this.workerCoMachineFC.setValue(wow.connectingMachine)
+  }
+
+  addNewWowMob(){
+    this.editWowMobFlag = false;
+    this.workerFC = new FormControl("");
+    this.workerOperationFC.setValue(this.operationFC.value);
+    this.workerMachineFC = new FormControl("");
+    this.workerCoMachineFC = new FormControl("");
+  }
+
+  addNewMaterialMob(){
+    this.mob = true;
+    this.editMaterialMobFlag = false;
+    this.materialFC = new FormControl("");
+    this.quantityEntered = null;
+  }
+
+  editMaterialMob(material){
+    this.materialMob = material;
+    this.mob = true;
+    this.editMaterialMobFlag = true;
+    this.idOfEditingMaterial = material.smObjectId;
+    this.materialFC.setValue(material.material);
+    this.quantityEntered = material.quantity;
   }
 }
