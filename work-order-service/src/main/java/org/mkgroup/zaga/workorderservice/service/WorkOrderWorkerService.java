@@ -24,6 +24,7 @@ import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
+import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Machine;
@@ -112,8 +113,11 @@ public class WorkOrderWorkerService {
 		}
 	}
 	
-	public void updateWorkOrder(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
+	public SAPResponse updateWorkOrder(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
 		System.out.println(id);
+		
+		SAPResponse sapResponse = new SAPResponse();
+		
 		WorkOrderWorker wow = wowRepo.getOne(id);
 		WorkOrder workOrder = wow.getWorkOrder();
 		if(wowDTO.getDayPeriod() != null) {
@@ -193,7 +197,7 @@ public class WorkOrderWorkerService {
 		
 		wow.setMachine(machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid())));
 		
-		wow = wowRepo.save(wow);
+		
 		
 		Map<String, String> headerValues = getHeaderValues();
 		String csrfToken = headerValues.get("csrf");
@@ -242,10 +246,23 @@ public class WorkOrderWorkerService {
 	    
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO DODAT");
+	    	wow = wowRepo.save(wow);
+	    	sapResponse.setSuccess(true);
 	    }else if(status.equals("E")){
 	    	System.out.println("ERROR");
-	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    	
+
+	    	Pattern patternError = Pattern.compile("MessageText:(.*?),");
+	    	 Matcher matcherError = patternError.matcher(formatted);
+			List<String> errors = new ArrayList<String>();
+			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
+	    	
+	    	sapResponse.setSuccess(false);
+	    	sapResponse.setMessage(errors);
+	    	
+	    	
 	    }
+	    return sapResponse;
 	}
 	
 	public void updateWOWBasicInfo(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
@@ -316,6 +333,7 @@ public class WorkOrderWorkerService {
 	    	System.out.println("USPESNO DODAT");
 	    }else if(status.equals("E")){
 	    	System.out.println("ERROR");
+	    	
 	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
 	    }
 	}

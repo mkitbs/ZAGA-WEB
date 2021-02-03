@@ -126,7 +126,7 @@ public class MachineService {
 	public String formatJSON(String json) {
 		json = json.replace("=", ":");
 		System.out.println("JSON => " + json);
-		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,%':=\".()/_ -]*\\},", "");
+		json = json.replaceAll("__metadata:\\{[%a-zA-Z0-9,':=\".()/_\\n -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
@@ -146,7 +146,14 @@ public class MachineService {
 	public void updateMachine(Machine oldMachine, MachineDTO newMachine) {
 		oldMachine.setCompanyCode(newMachine.getCompanyCode());
 		oldMachine.setFuelType(FuelType.values()[Integer.parseInt(newMachine.getFuelType())]);
-		oldMachine.setName(newMachine.getName());
+		String newName;
+		if(newMachine.getName() != null) {
+			newName = newMachine.getName().replaceAll("%22", "'");//kada " stigne sa erp-a salje se kao %22
+			oldMachine.setName(newName);
+		}else {
+			oldMachine.setName(newMachine.getName());
+		}
+		
 		oldMachine.setOrgUnit(newMachine.getOrgUnit());
 		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
 		oldMachine.setMachineGroupId(machineGroup);
@@ -156,6 +163,9 @@ public class MachineService {
 	public void createMachine(MachineDTO newMachine) {
 		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR")) {
 			Machine machine = new Machine(newMachine);
+			if(machine.getName() != null) {
+				machine.setName(machine.getName().replaceAll("%22", "'"));
+			}
 			MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
 			machine.setMachineGroupId(machineGroup);
 			machineRepository.save(machine);

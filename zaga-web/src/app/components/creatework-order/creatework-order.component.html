@@ -27,13 +27,14 @@
             *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran'" (click)="cancellationWorkOrder()">
             <i class="fa fa-ban"></i> Storniraj radni nalog
           </button>
-          <button class="btn btn-primary btn-edit" 
+          <button class="btn btn-primary btn-edit"
             *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'"
             data-toggle="modal" data-target="#closeWOModal" style="margin-right: 5px;">
             <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
           </button>
           <button class="btn btn-primary btn-add mr-2"
-            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'" (click)="updateWorkOrder()">
+            *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'"
+            (click)="updateWorkOrder()">
             <i class="fa fa-save mr-2"></i> Sačuvaj radni nalog
           </button>
           <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(infoWorkOrderForm)">
@@ -45,8 +46,9 @@
   </div>
   <!--header info-->
   <div class="header-info">
-    <form #infoWorkOrderForm="ngForm" >
-      <table class="table header-table"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
+    <form #infoWorkOrderForm="ngForm">
+      <table class="table header-table"
+        [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
         <tr>
           <!--Datum-->
           <td class="left-col-header">
@@ -70,15 +72,15 @@
             <i class="fa fa-tasks mr-2"></i>Godina:
           </td>
           <td class="right-col-header">
-            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
-              *ngIf="!new; else elseBlockYear" (change)="getCulture()">
+            <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control" *ngIf="!new; else elseBlockYear"
+              (change)="getCulture()">
               <option value="{{previousYear}}">{{previousYear}}</option>
               <option value="{{currentYear}}" selected>{{currentYear}}</option>
               <option value="{{nextYear}}">{{nextYear}}</option>
             </select>
             <ng-template #elseBlockYear>
-              <select name="selYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel"
-                required (change)="getCulture()">
+              <select name="selYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel" required
+                (change)="getCulture()">
                 <option value="{{previousYear}}">{{previousYear}}</option>
                 <option value="{{currentYear}}" selected>{{currentYear}}</option>
                 <option value="{{nextYear}}">{{nextYear}}</option>
@@ -88,12 +90,12 @@
               </div>
             </ng-template>
           </td>
-         
-          
+
+
         </tr>
-       
+
         <tr>
-          
+
           <!--Parcela-->
           <td class="left-col-header">
             <i class="fa fa-database mr-2"></i>Parcela:
@@ -173,8 +175,8 @@
           </td>
         </tr>
         <tr>
-           <!--ATM-->
-           <td class="left-col-header">
+          <!--ATM-->
+          <td class="left-col-header">
             <i class="fa fa-file mr-2"></i>ATM:
           </td>
           <td class="right-col-header">
@@ -212,7 +214,7 @@
               </div>
             </form>
           </td>
-          
+
           <!--Odgovorna osoba-->
           <td class="left-col-header">
             <i class="fa fa-user mr-2"></i>Odgovorna osoba:
@@ -298,11 +300,10 @@
       aria-controls="collapseExampleMachines">
       <i class="fa fa-user mr-2"></i>
       <i class="fa fa-truck mr-2"></i>
-        Izvršioci/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows"
-        data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
-        aria-controls="collapseExampleMachines"></i><i *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows"
-        data-toggle="collapse" data-target="#collapseExampleMachines" aria-expanded="false"
-        aria-controls="collapseExampleMachines"></i>
+      Izvršioci/Mašine<i *ngIf="!machines" class="fa fa-arrow-down mr-2 mt-1 arrows" data-toggle="collapse"
+        data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines"></i><i
+        *ngIf="machines" class="fa fa-arrow-up mr-2 mt-1 arrows" data-toggle="collapse"
+        data-target="#collapseExampleMachines" aria-expanded="false" aria-controls="collapseExampleMachines"></i>
     </button>
     <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
@@ -688,7 +689,9 @@
                     </td>
                     <td>
                       <div class="form-group">
-                        <button class="btn btn-primary btn-delete mr-2" (click)="deleteWorkOrderWorker(wow)">
+                        <button class="btn btn-primary btn-delete mr-2" data-toggle="modal"
+                          data-target="#deleteWorkerModal" (click)="setWowId(wow.id)"
+                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
                           <i class="fa fa-minus"></i>
                         </button>
                       </div>
@@ -889,13 +892,13 @@
             </table>
           </div>
           <div class="col-12">
-            
-              <i *ngIf="wows.length == 0 && new">Dodajte izvršioce (i mašine)</i>
-              <br>
-             
-              <i *ngIf="workOrder.workers.length == 0 && !new">Dodajte izvršioce (i mašine)</i><br>
-              <i *ngIf="!new">*Polja koja su obavezna za unos</i>
-            
+
+            <i *ngIf="wows.length == 0 && new">Dodajte izvršioce (i mašine)</i>
+            <br>
+
+            <i *ngIf="workOrder.workers.length == 0 && !new">Dodajte izvršioce (i mašine)</i><br>
+            <i *ngIf="!new">*Polja koja su obavezna za unos</i>
+
           </div>
         </form>
       </div>
@@ -907,9 +910,9 @@
       data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
       aria-controls="collapseExampleMachines">
       <i class="fa fa-leaf mr-2"></i>Materijali<i *ngIf="!materials" class="fa fa-arrow-down mr-2 mt-1 arrows"
-         data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+        data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i><i *ngIf="materials" class="fa fa-arrow-up mr-2 mt-1 arrows"
-       data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
+        data-toggle="collapse" data-target="#collapseExampleMaterials" aria-expanded="false"
         aria-controls="collapseExampleMachines"></i>
     </button>
     <div class="collapse" id="collapseExampleMaterials">
@@ -939,7 +942,7 @@
 
                           <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
                             <mat-option *ngFor="
-                            let sub of substances | SearchMaterials: searchMaterial.value
+                            let sub of (substances$ | async) | SearchMaterials: searchMaterial.value
                               " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
                               {{sub.Id}} - {{ sub.Name }}
                             </mat-option>
@@ -955,7 +958,7 @@
                             <mat-autocomplete #autoMaterialWithoutId="matAutocomplete" [displayWith]="displayFnWithoutId"
                               place>
                               <mat-option *ngFor="
-                              let sub of substances | SearchMaterials: searchMaterialWithoutId.value
+                              let sub of (substances$ | async) | SearchMaterials: searchMaterialWithoutId.value
                                 " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
                                 {{ sub.Name }}
                               </mat-option>
@@ -1052,7 +1055,7 @@
 
                           <mat-autocomplete #autoWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
                             <mat-option *ngFor="
-                            let sub of substances | SearchMaterials: searchWoMaterial.value
+                            let sub of (substances$ | async) | SearchMaterials: searchWoMaterial.value
                               " [value]="sub">
                               {{sub.Id}} - {{ sub.Name }}
                             </mat-option>
@@ -1068,7 +1071,7 @@
                             <mat-autocomplete #autoWoMaterialWithoutId="matAutocomplete"
                               [displayWith]="displayFnWithoutId" place>
                               <mat-option *ngFor="
-                              let sub of substances | SearchMaterials: searchWoMaterialWithoutId.value
+                              let sub of (substances$ | async) | SearchMaterials: searchWoMaterialWithoutId.value
                                 " [value]="sub">
                                 {{ sub.Name }}
                               </mat-option>
@@ -1151,7 +1154,7 @@
                             <mat-autocomplete #autoExDbWoMaterial="matAutocomplete" [displayWith]="displayFnMaterial"
                               place>
                               <mat-option *ngFor="
-                            let sub of substances | SearchMaterials: searchExDbWoMaterial.value
+                            let sub of (substances$ | async) | SearchMaterials: searchExDbWoMaterial.value
                               " [value]="sub">
                                 {{sub.Id}} - {{ sub.Name }}
                               </mat-option>
@@ -1167,7 +1170,7 @@
                               <mat-autocomplete #autoExDbWoMaterialWithoutId="matAutocomplete"
                                 [displayWith]="displayFnWithoutId" place>
                                 <mat-option *ngFor="
-                              let sub of substances | SearchMaterials: searchExDbWoMaterialWithoutId.value
+                              let sub of (substances$ | async) | SearchMaterials: searchExDbWoMaterialWithoutId.value
                                 " [value]="sub">
                                   {{ sub.Name }}
                                 </mat-option>
@@ -1249,12 +1252,12 @@
   <br />
   <div class="col" style="float: right;">
     <button class="btn btn-primary btn-cancellation mr-2"
-            *ngIf="machines == true && materials == true && !new && creator==loggedUser" (click)="cancellationWorkOrder()">
-            <i class="fa fa-ban"></i> Storniraj radni nalog
+      *ngIf="machines == true && materials == true && !new && creator==loggedUser" (click)="cancellationWorkOrder()">
+      <i class="fa fa-ban"></i> Storniraj radni nalog
     </button>
     <button class="btn btn-primary btn-edit" style="margin-bottom: 5px; margin-right: 5px;"
-      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser" data-toggle="modal"
-      data-target="#closeWOModal">
+      *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser"
+      data-toggle="modal" data-target="#closeWOModal">
       <i class="fa fa-check"></i> Zatvori RN i proknjiži materijal
     </button>
     <button class="btn btn-primary btn-add mr-2" style="margin-bottom: 5px;"
@@ -2224,7 +2227,7 @@
 
                 <mat-autocomplete #autoMaterialMob="matAutocomplete" [displayWith]="displayFnMaterial" place>
                   <mat-option *ngFor="
-                  let sub of substances | SearchMaterials: searchMaterialMob.value
+                  let sub of (substances$ | async) | SearchMaterials: searchMaterialMob.value
                     " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
                     {{sub.Id}} - {{ sub.Name }}
                   </mat-option>
@@ -2240,7 +2243,7 @@
                   <mat-autocomplete #autoMaterialWithoutIdMob="matAutocomplete" [displayWith]="displayFnWithoutId"
                     place>
                     <mat-option *ngFor="
-                    let sub of substances | SearchMaterials: searchMaterialWithoutIdMob.value
+                    let sub of (substances$ | async) | SearchMaterials: searchMaterialWithoutIdMob.value
                       " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
                       {{ sub.Name }}
                     </mat-option>
@@ -2527,9 +2530,9 @@
                 <span class="input-group-text" id="basic-addon2">{{ unit }}/ha</span>
               </div>
               <ng-template #elseBlockSpentPerHectar>
-                
-                <input [(ngModel)]="spentMaterial.spent/workOrder.treated" type="number" name="spentPerHectar" id="" class="form-control"
-                  readonly />
+
+                <input [(ngModel)]="spentMaterial.spent/workOrder.treated" type="number" name="spentPerHectar" id=""
+                  class="form-control" readonly />
                 <div class="input-group-append">
                   <span class="input-group-text" id="basic-addon2">{{ spentMaterial.material.Unit }}/ha</span>
                 </div>
@@ -2594,7 +2597,8 @@
   </div>
 </div>
 <!--Modal zatvaranje radnog naloga-->
-<div class="modal fade" id="closeWOModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="closeWOModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -2636,7 +2640,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i
             class="fa fa-window-close"></i> Odustani</button>
-        <button class="btn btn-primary btn-add" data-dismiss="modal" (click)="deleteExistingWorkOrderWorker(workOrderWorkerId)">
+        <button class="btn btn-primary btn-add" data-dismiss="modal"
+          (click)="deleteExistingWorkOrderWorker(workOrderWorkerId)">
           <i class="fa fa-check"></i> Potrvdi
         </button>
       </div>
