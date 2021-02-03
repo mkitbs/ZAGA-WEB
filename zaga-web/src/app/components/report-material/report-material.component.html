@@ -109,118 +109,120 @@
     <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
   </div>
-  <table *ngIf="materials.length > 0" class="table table-hover tabela-nalozi">
-    <thead>
-      <tr>
-        <th scope="col">Materijal</th>
-        <th scope="col">SAP ID</th>
-        <th scope="col">ATM</th>
-        <th scope="col">Datum</th>
-        <th scope="col">Parcela</th>
-        <th scope="col">Usev</th>
-        <th scope="col">Planirano</th>
-        <!-- <th scope="col">Planirano/ha</th> -->
-        <th scope="col">Utrošeno</th>
-        <!-- <th scope="col">Utrošeno/ha</th> -->
-        <th scope="col">JM</th>
-        <th scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let material of materials 
-        | ReportMaterialMaterial: searchMaterial.value
-        | SearchMaterialUnit: searchUnit.value;
-          let i = index" >
-          <tr *ngIf="material === -1">
-            <td colspan="10" >
-              <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
-              <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
-            </td>
-          </tr>
-        <tr *ngFor="let workOrder of material.workOrders
-          | SearchWorkOrdersTable: searchTable.value
-          | SearchWorkOrdersOperation: searchOperation.value
-          | SearchWorkOrdersDate: searchDate.value
-          | SearchWorkOrdersCrop: searchCrop.value
-          | ReportMaterialSapId: searchWorkOrder.value
-          | SearchWoBetweenDates: filters; 
-          let j = index">
-          <ng-container *ngFor="let mat of workOrder.materials; let z = index">
-            <ng-container *ngIf="mat.deleted == false">
-              <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
-              <ng-template #elseBlockName><td></td></ng-template>
-              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
-                {{ workOrder.sapId }}
-              </td>
-              <ng-template #elseBlockSapId><td></td></ng-template>
-              <td>{{ workOrder.operationName }}</td>
-              <td>{{ workOrder.date }}</td>
-              <td>{{ workOrder.table }}</td>
-              <td>{{ workOrder.cropName.split(",")[1] }}</td>
-              <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
-              <ng-template #elseQuantity><td>/</td></ng-template>
-              <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
-              <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
-              <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
-              <ng-template #elseSpent><td>Nije uneto</td></ng-template>
-              <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
-              <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
-              <td>{{ material.material.material.Unit }}</td>
-              <td [ngClass]="{
-                  statusNovi: workOrder.status == 'Novi',
-                  statusURadu: workOrder.status == 'U radu',
-                  statusZatvoren: workOrder.status == 'Zatvoren',
-                  statusStorniran: workOrder.status == 'Storniran'
-                  }">
-                  {{ workOrder.status }}
-              </td>
-            </ng-container>
-          </ng-container>
-        </tr>
+  <div class="table-responsive">
+    <table *ngIf="materials.length > 0" class="table table-hover tabela-nalozi">
+      <thead>
         <tr>
-          <ng-container *ngFor="let workOrder of material.workOrders 
-            | SearchWorkOrdersCrop: searchCrop.value
+          <th scope="col">Materijal</th>
+          <th scope="col">SAP ID</th>
+          <th scope="col">ATM</th>
+          <th scope="col">Datum</th>
+          <th scope="col">Parcela</th>
+          <th scope="col">Usev</th>
+          <th scope="col">Planirano</th>
+          <!-- <th scope="col">Planirano/ha</th> -->
+          <th scope="col">Utrošeno</th>
+          <!-- <th scope="col">Utrošeno/ha</th> -->
+          <th scope="col">JM</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let material of materials 
+          | ReportMaterialMaterial: searchMaterial.value
+          | SearchMaterialUnit: searchUnit.value;
+            let i = index" >
+            <tr *ngIf="material === -1">
+              <td colspan="10" >
+                <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
+                <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
+              </td>
+            </tr>
+          <tr *ngFor="let workOrder of material.workOrders
             | SearchWorkOrdersTable: searchTable.value
             | SearchWorkOrdersOperation: searchOperation.value
-            | SearchWoBetweenDates: filters
             | SearchWorkOrdersDate: searchDate.value
-            | ReportMaterialSapId: searchWorkOrder.value; 
-            let i = index ">
-            <td *ngIf="i==0 && workOrder !== -1">Σ {{ material.material.material.Name }}</td>
-            <td *ngIf="i==0"></td>
-            <td *ngIf="i==0"></td>
-            <td *ngIf="i==0"></td>
-            <td *ngIf="i==0"></td>
-            <td *ngIf="i==0"></td>
-            <td style="font-weight: bold;" *ngIf="i==0">
-              {{
-                getQuantitySum(material.workOrders 
-                | SearchWorkOrdersCrop: searchCrop.value
-                | SearchWorkOrdersTable: searchTable.value
-                | SearchWorkOrdersOperation: searchOperation.value
-                | SearchWoBetweenDates: filters
-                | SearchWorkOrdersDate: searchDate.value
-                | ReportMaterialSapId: searchWorkOrder.value)
-              }}
-            </td>
-            <td style="font-weight: bold;" *ngIf="i==0">
-              {{
-                getSpentSum(material.workOrders 
-                | SearchWorkOrdersCrop: searchCrop.value
-                | SearchWorkOrdersTable: searchTable.value
-                | SearchWorkOrdersOperation: searchOperation.value
-                | SearchWoBetweenDates: filters
-                | SearchWorkOrdersDate: searchDate.value
-                | ReportMaterialSapId: searchWorkOrder.value)
-              }}
-            </td>
-            <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">{{ material.material.material.Unit }}</td>
-            <td *ngIf="i==0"></td>
-            <td *ngIf="i==0"></td>
-          </ng-container>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
+            | SearchWorkOrdersCrop: searchCrop.value
+            | ReportMaterialSapId: searchWorkOrder.value
+            | SearchWoBetweenDates: filters; 
+            let j = index">
+            <ng-container *ngFor="let mat of workOrder.materials; let z = index">
+              <ng-container *ngIf="mat.deleted == false">
+                <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
+                <ng-template #elseBlockName><td></td></ng-template>
+                <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
+                  {{ workOrder.sapId }}
+                </td>
+                <ng-template #elseBlockSapId><td></td></ng-template>
+                <td>{{ workOrder.operationName }}</td>
+                <td>{{ workOrder.date }}</td>
+                <td>{{ workOrder.table }}</td>
+                <td>{{ workOrder.cropName.split(",")[1] }}</td>
+                <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
+                <ng-template #elseQuantity><td>/</td></ng-template>
+                <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
+                <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
+                <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
+                <ng-template #elseSpent><td>Nije uneto</td></ng-template>
+                <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
+                <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
+                <td>{{ material.material.material.Unit }}</td>
+                <td [ngClass]="{
+                    statusNovi: workOrder.status == 'Novi',
+                    statusURadu: workOrder.status == 'U radu',
+                    statusZatvoren: workOrder.status == 'Zatvoren',
+                    statusStorniran: workOrder.status == 'Storniran'
+                    }">
+                    {{ workOrder.status }}
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+          <tr>
+            <ng-container *ngFor="let workOrder of material.workOrders 
+              | SearchWorkOrdersCrop: searchCrop.value
+              | SearchWorkOrdersTable: searchTable.value
+              | SearchWorkOrdersOperation: searchOperation.value
+              | SearchWoBetweenDates: filters
+              | SearchWorkOrdersDate: searchDate.value
+              | ReportMaterialSapId: searchWorkOrder.value; 
+              let i = index ">
+              <td *ngIf="i==0 && workOrder !== -1">Σ {{ material.material.material.Name }}</td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+              <td style="font-weight: bold;" *ngIf="i==0">
+                {{
+                  getQuantitySum(material.workOrders 
+                  | SearchWorkOrdersCrop: searchCrop.value
+                  | SearchWorkOrdersTable: searchTable.value
+                  | SearchWorkOrdersOperation: searchOperation.value
+                  | SearchWoBetweenDates: filters
+                  | SearchWorkOrdersDate: searchDate.value
+                  | ReportMaterialSapId: searchWorkOrder.value)
+                }}
+              </td>
+              <td style="font-weight: bold;" *ngIf="i==0">
+                {{
+                  getSpentSum(material.workOrders 
+                  | SearchWorkOrdersCrop: searchCrop.value
+                  | SearchWorkOrdersTable: searchTable.value
+                  | SearchWorkOrdersOperation: searchOperation.value
+                  | SearchWoBetweenDates: filters
+                  | SearchWorkOrdersDate: searchDate.value
+                  | ReportMaterialSapId: searchWorkOrder.value)
+                }}
+              </td>
+              <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">{{ material.material.material.Unit }}</td>
+              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0"></td>
+            </ng-container>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
   <ngx-spinner></ngx-spinner>
 </div>

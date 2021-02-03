@@ -36,7 +36,7 @@
           </div>
           <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
             <div class="card-body">
-              <div class="row">
+              <div class="row" style="word-break: break-word;">
                 <div
                   class="col-md-auto"
                   style="width: fit-content; padding-bottom: 10px"
@@ -110,7 +110,7 @@
         </div>
         <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="word-break: break-word;">
               <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
                 <img class="card-img-right" src="../../../assets/tractor.png" width="80px" height="80px" />
               </div>
@@ -176,7 +176,73 @@
         </div>
         <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 30.2rem; height: 90%;">
           <div class="card-body">
-            <div class="row">
+            <div class="row" style="word-break: break-word;">
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/tractor.png" width="80px" height="80px" />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title" style="margin-right: 30px;">
+                    {{ machineGroup.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ machineGroup.Id }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled grupa mašina</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="form-row">
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="machineGroupFC" [matAutocomplete]="autoMachineGroupTablet" #searchMachineGroupTablet
+              placeholder="Pretražite po nazivu ili šifri grupe mašina"/>
+            <mat-autocomplete #autoMachineGroupTablet="matAutocomplete" [displayWith]="displayFnMachineGroup" place>
+              <mat-option *ngFor="
+                let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value
+                " [value]="machineGroup" >
+                {{ machineGroup.Id }} - {{machineGroup.Name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+    <div class="center" *ngIf="machineGroups.length == 0 && loading == false">
+      <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema grupa mašina za prikazivanje</h4>
+    </div>
+    <div class="row card-group">
+      <div [ngClass]="machineGroup === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let machineGroup of machineGroups | SearchMachineGroup: searchMachineGroupTablet.value; let j = index">
+        <div *ngIf="machineGroup === -1" class="center">
+          <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema grupe mašine za prikazivanje</h4>
+        </div>
+        <div *ngIf="machineGroup !== -1" class="card mb-4" style="width: 25.2rem; height: 90%;">
+          <div class="card-body">
+            <div class="row" style="word-break: break-word;">
               <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
                 <img class="card-img-right" src="../../../assets/tractor.png" width="80px" height="80px" />
               </div>

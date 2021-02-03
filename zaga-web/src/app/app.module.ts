@@ -105,7 +105,8 @@ import { TimeTrackingComponent } from "./components/time-tracking/time-tracking.
 import { CdTimerModule } from "angular-cd-timer";
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { SearchWorkOrderNumberPipe } from './pipes/search-work-order-number.pipe';
-import { SearchWorkOrderResponsiblePipe } from './pipes/search-work-order-responsible.pipe'
+import { SearchWorkOrderResponsiblePipe } from './pipes/search-work-order-responsible.pipe';
+import { SearchWoStatusPipe } from './pipes/search-wo-status.pipe'
 
 declare var require: any;
 var config = require("config");
@@ -216,6 +217,7 @@ const routes: Routes = [
     PasswordResetComponent,
     SearchWorkOrderNumberPipe,
     SearchWorkOrderResponsiblePipe,
+    SearchWoStatusPipe,
   ],
   imports: [
     BrowserModule,

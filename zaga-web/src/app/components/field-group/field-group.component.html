@@ -229,6 +229,80 @@
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled poteza</h3>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <div class="form-row">
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldGroupFC" [matAutocomplete]="autoFieldGroupTablet" #searchFieldGroupTablet
+             placeholder="Pretražite po nazivu ili šifri poteza"/>
+            <mat-autocomplete #autoFieldGroupTablet="matAutocomplete" [displayWith]="displayFnFieldGroup" place>
+              <mat-option *ngFor="
+                let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value
+                " [value]="fieldGroup" >
+                {{fieldGroup.Id}} - {{ fieldGroup.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+    <div class="center" *ngIf="fieldGroups.length == 0 && loading == false">
+      <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
+    </div>
+    <div class="row card-group">
+      <div [ngClass]="fieldGroup === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value; let j = index">
+        <div *ngIf="fieldGroup === -1" class="center">
+          <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
+          <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
+        </div>
+        <div *ngIf="fieldGroup !== -1" class="card mb-4" style="width: 25rem; height: 90%;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-bottom: 10px">
+                <img class="card-img-right" src="../../../assets/fieldGroup.png" width="80px" height="80px" />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ fieldGroup.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ fieldGroup.Id }}</td>
+                    </tr>
+                    <tr title="Kod kompanije" style="cursor: help">
+                      <th><i class="fa fa-building-o"></i></th>
+                      <td>{{ fieldGroup.CompanyCode }}</td>
+                    </tr>
+                    <tr title="Organizaciona jedinica" style="cursor: help">
+                      <th><i class="fa fa-registered"></i></th>
+                      <td>{{ fieldGroup.OrganisationUnit }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editFieldGroupModal"
+            (click)="getFieldGroup(fieldGroup.dbId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
 <!--Edit field group modal-->
 <div class="modal fade" id="editFieldGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">

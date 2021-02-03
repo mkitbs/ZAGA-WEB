@@ -27,6 +27,7 @@ export class WorkOrderComponent implements OnInit {
   my = true;
   woSapId;
   loading;
+  status: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +42,12 @@ export class WorkOrderComponent implements OnInit {
     } else {
      this.getMyWorkOrders();
     }
+    this.status.push(
+      {name: "Novi", name2send: "NEW"}, 
+      {name: "U radu", name2send: "IN_PROGRESS"}, 
+      {name: "Zatvoreni", name2send: "CLOSED"},
+      {name: "Stornirani", name2send: "CANCELLATION"}
+    )
 
   }
 
@@ -286,6 +293,10 @@ export class WorkOrderComponent implements OnInit {
     }, error => {
       this.spinner.hide();
     });
+  }
+
+  displayFnStatus(status: any) : string {
+    return status.name;
   }
 
 }

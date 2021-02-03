@@ -348,6 +348,123 @@
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 70px"></div>
+  <div class="container">
+    <h3 class="mt-2 mb-2">Pregled useva</h3>
+    <div style="padding-top: 20px"></div>
+
+    <div class="form-row">
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="cropFC" [matAutocomplete]="autoCropLaptop" #searchCropLaptop
+             placeholder="Pretražite po nazivu ili šifri useva"/>
+            <mat-autocomplete #autoCropLaptop="matAutocomplete" [displayWith]="displayFnCrop" place>
+              <mat-option *ngFor="
+                let crop of crops | SearchCrop: searchCropLaptop.value
+                " [value]="crop" >
+                {{crop.Id}} - {{ crop.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="fieldFC" [matAutocomplete]="autoFieldLaptop" #searchFieldLaptop
+               placeholder="Pretražite po parceli"/>
+            <mat-autocomplete #autoFieldLaptop="matAutocomplete" [displayWith]="displayFnField" place>
+              <mat-option *ngFor="
+                let table of fields | SearchFields: searchFieldLaptop.value
+                " [value]="table" >
+                  {{table.Id}} - {{ table.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="col-11">
+        <form>
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [formControl]="cultureFC" [matAutocomplete]="autoCultureLaptop" #searchCultureLaptop
+              placeholder="Pretražite po kulturi"/>
+            <mat-autocomplete #autoCultureLaptop="matAutocomplete" [displayWith]="displayFnCulture" place>
+              <mat-option *ngFor="
+                let culture of cultures | SearchCulture: searchCultureLaptop.value
+                " [value]="culture" >
+                  {{culture.Id}} - {{ culture.Name }}({{ culture.cultureGroupName }})
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div style="padding-top: 20px"></div>
+  <div class="container">
+    <h5 *ngIf="crops.length == 0 && loading == false">
+      <img class="center" src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+      <h4 style="text-align: center;">Nema useva za prikazivanje</h4>
+    </h5>
+    <div class="row card-group">
+      <div [ngClass]="crop === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let crop of crops 
+      | SearchCropField: searchFieldLaptop.value
+      | SearchCropCulture: searchCultureLaptop.value
+      | SearchCrop: searchCropLaptop.value; let j = index">
+      <div *ngIf="crop === -1" class="center">
+        <img src="../../../assets/crop-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px;">Nema useva za prikazivanje</h4>
+      </div>
+      <div *ngIf="crop !== -1" class="card mb-3" style="width: 24rem; height: 90%;">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-auto" style="width: fit-content; padding-top: 12px">
+                <img class="card-img-right" src="../../../assets/crop.png" width="80px" height="80px" />
+              </div>
+              <div class="col">
+                <div class="card-text">
+                  <h5 class="card-title">
+                    {{ crop.Name }}
+                  </h5>
+                  <table>
+                    <tr title="SAP ID" style="cursor: help">
+                      <th><i class='fas fa-fingerprint'></i></th>
+                      <td>{{ crop.Id }}</td>
+                    </tr>
+                    <tr title="Parcela" style="cursor: help">
+                      <th><i class="fa fa-map-marker"></i></th>
+                      <td>{{ crop.field }}</td>
+                    </tr>
+                    <tr title="Površina" style="cursor: help">
+                      <th><i class="fa fa-clone"></i></th>
+                      <td>{{ crop.Area }} ha</td>
+                    </tr>
+                    <tr title="Godina" style="cursor: help">
+                      <th><i class="fa fa-calendar mr-2"></i></th>
+                      <td>{{ crop.Year }}</td>
+                    </tr>
+                    <tr title="Kultura" style="cursor: help">
+                      <th><i class="fa fa-cubes"></i></th>
+                      <td>{{ crop.cultureName }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" (click)="getCropForEdit(crop.id)" data-toggle="modal"
+            data-target="#editCropModal" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
 <!--Edit crop modal-->
 <div class="modal fade" id="editCropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">

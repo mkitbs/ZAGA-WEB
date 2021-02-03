@@ -176,3 +176,12 @@ th {
   margin-bottom: auto;
   width: 20%;
 }
+
+.centerMob {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 10%;
+  margin-bottom: auto;
+  width: 60%;
+}

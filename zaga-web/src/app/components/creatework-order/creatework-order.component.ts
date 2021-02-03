@@ -768,9 +768,15 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.operation.dbid = this.workerOperationFC.value.dbid;
     this.wow.machine.dbid = this.workerMachineFC.value.dbid;
     this.spinner.show();
-    this.wow.connectingMachine.dbid = this.selectedCouplingMachine;
+    if(this.workerCoMachineFC.value == -1){
+      this.wow.connectingMachine.dbid = this.workerCoMachineFC.value;
+    } else {
+      this.wow.connectingMachine.dbid = this.workerCoMachineFC.value.dbid;
+    }
+    
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
+      this.closeButtonWorkerModal.nativeElement.click();
       this.wow = new WorkOrderWorker();
       this.spinner.hide();
       this.workerFC = new FormControl("");
@@ -915,6 +921,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   updateWOWBasicInfo(workOrderWorker) {
+    console.log(workOrderWorker)
     this.wowService.updateWorkOrderWorkerBasicInfo(workOrderWorker.id, workOrderWorker).subscribe((res) => {
       console.log(res);
       this.toastr.success("Uspešno sačuvane promene.");
@@ -1110,6 +1117,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.spentMaterialService
         .addSpentMaterial(this.workId, this.spentMaterial)
         .subscribe((res) => {
+          this.closeButtonMaterialModalMob.nativeElement.click();
           this.spinner.hide();
           console.log(res);
           this.spentMaterial = new SpentMaterial();
@@ -1247,11 +1255,23 @@ export class CreateworkOrderComponent implements OnInit {
   updateMaterialBasicInfo(spentMaterial) {
     this.idForValidQuantity = spentMaterial.id;
     this.clickUpdateMaterial = true;
-    if (spentMaterial.quantity < 0 || spentMaterial.quantity == null) {
-      this.validQuantity = false;
+    console.log(spentMaterial)
+    if(this.mob){
+      if(this.quantityEntered < 0 || this.quantityEntered == null){
+        this.validQuantity = false;
+      } else {
+        spentMaterial.material = this.materialFC.value;
+        spentMaterial.quantity = this.quantityEntered;
+        this.validQuantity = true;
+      }
     } else {
-      this.validQuantity = true;
+      if (spentMaterial.quantity < 0 || spentMaterial.quantity == null) {
+        this.validQuantity = false;
+      } else {
+        this.validQuantity = true;
+      }
     }
+   
     if (this.validQuantity == true) {
       this.spentMaterialService
         .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)

@@ -206,9 +206,7 @@
 <!--tablet version-->
 <div class="d-none d-md-block d-lg-none">
   <div style="padding-top: 10px"></div>
-  <div class="container">
-    <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
-    <div style="padding-top: 10px"></div>
+  
     <div class="container">
       <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
       <div style="padding-top: 10px"></div>
@@ -304,7 +302,109 @@
           </button>
         </div>
       </div>
+    
+  </div>
+  <ngx-spinner></ngx-spinner>
+</div>
+<!--mobile version-->
+<div class="container d-md-none">
+  <div style="padding-top: 10px"></div>
+    <div class="container">
+      <h3 class="mt-2 mb-2">Pregled zaposlenih</h3>
+      <div style="padding-top: 10px"></div>
+      <div class="form-row">
+        <div class="col-11">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input
+                type="text"
+                matInput
+                #searchTablet
+                placeholder="Pretražite po imenu ili šifri radnika"
+              />
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-11">
+          <form>
+            <mat-form-field class="inputAuto">
+              <input
+                type="text"
+                matInput
+                #searchPTablet
+                placeholder="Pretražite po poziciji radnika"
+              />
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
     </div>
+    <div style="padding-top: 20px"></div>
+    <div class="container">
+      <div class="center" *ngIf="allEmployees.length == 0 && loading == false">
+        <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
+        <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
+      </div>
+      <div class="row card-group">
+        <div [ngClass]="employee === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let employee of allEmployees | SearchEmployees: searchTablet.value | SearchEmployeesPosition: searchPTablet.value">
+          <div *ngIf="employee === -1" class="center">
+            <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
+            <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
+          </div>
+          <div *ngIf="employee !== -1" class="card mb-4" style="width: 25rem; height: 90%;">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; padding-bottom: 10px"
+                >
+                  <img
+                    *ngIf="employee.name != '' && employee.name.split(' ')[1].endsWith('a'); else elseBlockEmployeeImage"
+                    class="card-img-right"
+                    src="../../../assets/farmerW.png"
+                    width="80px"
+                    height="80px"
+                  />
+                  <ng-template #elseBlockEmployeeImage>
+                    <img
+                        class="card-img-right"
+                        src="../../../assets/farmer.png"
+                        width="80px"
+                        height="80px"
+                  />
+                  </ng-template>
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      {{ employee.name }}
+                    </h5>
+                    <table>
+                      <tr title="SAP ID" style="cursor: help">
+                        <th><i class='fas fa-fingerprint'></i></th>
+                        <td>{{ employee.perNumber }}</td>
+                      </tr>
+                      <tr title="Pozicija" style="cursor: help">
+                        <th><i class="fa fa-briefcase"></i></th>
+                        <td>{{ employee.position }}</td>
+                      </tr>
+                      <tr title="Odeljenje" style="cursor: help">
+                        <th><i class="fa fa-building-o"></i></th>
+                        <td>{{ employee.department }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="buttonEdit btn btn-primary btn-edit" data-toggle="modal" data-target="#editEmployeeModal"
+            (click)="getEmployee(employee.userId)" hidden>
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </div>
+    
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

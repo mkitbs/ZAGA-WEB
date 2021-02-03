@@ -186,85 +186,143 @@
   </ng-container>
   <ngx-spinner></ngx-spinner>
 </div>
-
+<!--Mobile version-->
 <div class="container d-md-none">
-  <h3 class="mt-2 mb-2">Pregled naloga</h3>
-  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
-    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
-    Filteri
-    <i *ngIf="collapseBool" class="fa fa-arrow-down" (click)="collapse()"></i>
-    <i *ngIf="!collapseBool" class="fa fa-arrow-up" (click)="collapse()"></i>
-  </button>
+  <div style="margin-top: 80px;"></div>
+  <h3 class="mt-2 mb-2">Pregled naloga > <span *ngIf="my">Moji radni nalozi</span><span *ngIf="!my">Svi radni nalozi</span></h3>
   <a [routerLink]="['/create/workOrder/new']" style="float: right">
     <button class="btn btn-primary collapsing-button shadow-none">
       <i class="fa fa-plus"></i> Kreiraj novi nalog
     </button>
   </a>
+  <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+    Filteri
+    <i *ngIf="collapseBool" class="fa fa-arrow-down" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i>
+    <i *ngIf="!collapseBool" class="fa fa-arrow-up" data-toggle="collapse"
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ></i>
+  </button>
   <br />
   <form action="" class="collapse mb-4" id="collapseExample">
     <div class="form-row">
       <div class="col">
-        <label> Datum </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchNumberMob placeholder="Pretražite po šifri radnog naloga" />
+        </mat-form-field>
       </div>
       <div class="col">
-        <label> Tabla </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input 
+            ngbDatepicker 
+            #dayMob="ngbDatepicker" 
+            (click)="dayMob.toggle()"
+            matInput 
+            #searchDateMob
+            placeholder="Pretražite po datumu"
+          />
+        </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
-        <label> Usev </label>
-        <input type="text" class="form-control" />
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchTableMob placeholder="Pretražite po parceli" />
+        </mat-form-field>
       </div>
-
       <div class="col">
-        <label> Status </label>
-
-        <select class="form-control" id="exampleFormControlSelect1">
-          <option value=""></option>
-          <option value="novi">Novi</option>
-          <option value="u redu">U radu</option>
-          <option value="zavrseno">Završeno</option>
-        </select>
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchCropMob placeholder="Pretražite po usevu" />
+        </mat-form-field>
+      </div>
+      
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchOperationMob placeholder="Pretražite po operaciji" />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="inputAuto">
+          <input type="text" matInput #searchResponsibleMob placeholder="Pretražite po odgovornoj osobi" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+          <mat-form-field class="inputAuto">
+            <input type="text" matInput [matAutocomplete]="autoCulture" #searchStatus
+             placeholder="Pretražite po statusu" />
+            <mat-autocomplete #autoCulture="matAutocomplete" [displayWith]="displayFnStatus" place>
+              <mat-option *ngFor="
+                let stat of status 
+                " [value]="stat">
+                {{stat.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
       </div>
     </div>
   </form>
-
-  <span *ngIf="empty" style="font-size: 15px; float: left">Nema kreiranih naloga.</span>
+  <button *ngIf="my" class="btn btn-primary button-all shadow-none" style="float: left; width: 67px;" (click)="getAll()">
+    <i class="fa fa-tasks"></i> Svi
+  </button>
+  <button *ngIf="!my" class="btn btn-primary button-all shadow-none" style="float: left; width: 67px;" (click)="getMyWorkOrders()">
+    <i class="fa fa-tasks"></i> Moji
+  </button>
   <div style="padding-top: 30px"></div>
-  <div class="card mb-3" *ngFor="let workOrder of workOrders; let j = index" (click)="changeRoute(workOrder.id)"
+  
+  <ng-container  *ngFor="let workOrder of workOrders
+  | SearchWorkOrdersTable: searchTableMob.value
+  | SearchWorkOrdersDate: searchDateMob.value
+  | SearchWorkOrdersCrop: searchCropMob.value
+  | SearchWorkOrderNumber: searchNumberMob.value
+  | SearchWorkOrderResponsible: searchResponsibleMob.value
+  | SearchWorkOrdersOperation: searchOperationMob.value
+  | SearchStatus: searchStatus.value; let j = index">
+  <div *ngIf="workOrder === -1" class="centerMob">
+    <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
+    <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
+  </div>
+  <div *ngIf="!empty && workOrder !== -1" class="card mb-3" (click)="changeRoute(workOrder.id)"
     style="border: 1px solid #5c7495; border-radius: 5px">
     <div class="card-body" style="background-color: #5c7495">
       <h5 class="card-title" style="color: white">
-        {{ workOrder.operationName }}
+        <span style="float: center;">{{ workOrder.operationName }}</span>
       </h5>
       <ul class="list-group">
         <li class="list-group-item list-group-item">
-          <i class="fa fa-user" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+          <i class="fa fa-hashtag" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
+          <span style="padding-left: 6px; vertical-align: middle">
+            SAP ID: {{ workOrder.sapId }}</span>
+        </li>
+        <li class="list-group-item list-group-item">
+          <i class="fa fa-user" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
           <span style="padding-left: 6px; vertical-align: middle">
             Odgovorna osoba: {{ workOrder.responsibleName }}</span>
         </li>
         <li class="list-group-item list-group-item">
-          <i class="fa fa-map-marker" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+          <i class="fa fa-map-marker" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
           <span style="padding-left: 9px; vertical-align: middle">
-            Tabla i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
+            Parcela i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
           </span>
         </li>
         <li class="list-group-item list-group-item">
-          <i class="fa fa-clock-o" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+          <i class="fa fa-calendar" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
           <span style="padding-left: 3px; vertical-align: middle">
             Datum: {{ workOrder.date }}
           </span>
         </li>
         <li class="list-group-item list-group-item">
-          <i class="fa fa-tasks" style="font-size: 20px; vertical-align: bottom; color: #5c7495"></i>
+          <i class="fa fa-tasks" style="font-size: 15px; vertical-align: middle; color: #5c7495; margin-right: 4px;"></i>
+           Status:
           <span style="padding-left: 3px; vertical-align: middle" [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
               statusURadu: workOrder.status == 'U radu',
               statusZatvoren: workOrder.status == 'Zatvoren'
             }">
-            Status: <b>{{ workOrder.status }}</b></span>
+             <b>{{ workOrder.status }}</b></span>
         </li>
       </ul>
     </div>
@@ -275,6 +333,7 @@
 </button>
         </div>-->
   </div>
+  </ng-container>
 </div>
 
 <!--Copy modal-->
