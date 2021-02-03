@@ -1336,12 +1336,12 @@
       <div class="col-8">
         <div class="input-group mb-3">
         <input [(ngModel)]="workOrder.date" id="from" ngbDatepicker #odMob="ngbDatepicker"
-          (click)="from.toggle()" class="form-control" name="dateFrom" #dateFromMob="ngModel" required />
+          (click)="odMob.toggle()" class="form-control" name="dateFrom" #dateFromMob="ngModel" required />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary calendar" (click)="odMob.toggle()" type="button"></button>
           </div>
         </div>
-        <div *ngIf="dateFrom.invalid && clickAddWorkOrder" style="color: red">
+        <div *ngIf="dateFromMob.invalid && clickAddWorkOrder" style="color: red">
           Izaberite datum.
         </div>
       </div>
