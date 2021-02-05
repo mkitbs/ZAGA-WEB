@@ -206,10 +206,7 @@ public class AuthController {
                    HttpStatus.CONFLICT);
         }
        
-       if(userRepository.existsBySapUserId(signUpRequest.getSapUserId())) {
-    	   return new ResponseEntity<>("Fail -> Sap id is already in use!",
-    			   HttpStatus.NOT_ACCEPTABLE);
-       }
+       
 
        if(signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
 				try {
@@ -225,6 +222,10 @@ public class AuthController {
 				        if(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
 				    		User logged = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
 				    		user.setTenant(logged.getTenant());
+				    		if(userRepository.existsBySapUserIdAndTenantId(signUpRequest.getSapUserId(), logged.getTenant().getId())) {
+				    	    	   return new ResponseEntity<>("Fail -> Sap id is already in use!",
+				    	    			   HttpStatus.NOT_ACCEPTABLE);
+				    	       }
 				    	} 
 
 				        user = userRepository.save(user);
