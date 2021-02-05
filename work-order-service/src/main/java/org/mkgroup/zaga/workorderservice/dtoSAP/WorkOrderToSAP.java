@@ -80,7 +80,7 @@ public class WorkOrderToSAP {
 		this.WorkItemNumber = "001";
 		this.WorkOrderNumber = (action.equals("MOD") ? workOrder.getErpId().toString() : "");
 		this.CropVarietyId = "000000";
-		this.DataChangeUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
+		this.DataChangeUserNumber = workOrder.getUserCreatedSapId().toString();
 		this.WorkOrderDate = workDate;
 		this.WorkOrderOpenDate = workOpenDate;
 		this.WorkOrderCloseDate = null;
@@ -95,7 +95,7 @@ public class WorkOrderToSAP {
 			this.OnlyMaterial = "";
 		}
 		this.Note = "";
-		this.DataEntryUserNumber = workOrder.getResponsible().getPerNumber().toString();//menjati
+		this.DataEntryUserNumber = workOrder.getUserCreatedSapId().toString();
 		this.Deleted = "";
 		
 		for(SpentMaterial sp : workOrder.getMaterials()) {

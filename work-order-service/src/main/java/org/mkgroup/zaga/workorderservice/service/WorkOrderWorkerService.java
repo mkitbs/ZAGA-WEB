@@ -212,6 +212,9 @@ public class WorkOrderWorkerService {
 		for(WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
 			if(wowDTO.isNoOperationOutput()) {
 				emp.setNoOperationOutput("X");
+				workOrder.setNoOperationOutput(true);
+			} else {
+				workOrder.setNoOperationOutput(false);
 			}
 		}
 		
@@ -256,6 +259,7 @@ public class WorkOrderWorkerService {
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO DODAT");
 	    	wow = wowRepo.save(wow);
+	    	workOrderRepo.save(workOrder);
 	    	sapResponse.setSuccess(true);
 	    }else if(status.equals("E")){
 	    	System.out.println("ERROR");

@@ -282,7 +282,8 @@
               <div class="input-group">
                 <div class="input-group-prepend">
                   <div class="input-group-text">
-                    <input type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
+                    <input *ngIf="workOrder.noOperationOutput" checked type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
+                    <input *ngIf="!workOrder.noOperationOutput" type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
                   </div>
                 </div>
                     
@@ -891,7 +892,7 @@
                       <td>
                         <div class="form-group">
                           <button *ngIf="wow.machine.Id=='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
-                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
                               'warning' : 'ok'">
                             <i class="fa fa-ellipsis-v"></i>

@@ -573,6 +573,9 @@ public class WorkOrderService {
 			if(workOrderDTO.isNoOperationOutput()) {
 				System.out.println("NO OPERATION OUTPUT");
 				emp.setNoOperationOutput("X");
+				workOrder.setNoOperationOutput(true);
+			} else {
+				workOrder.setNoOperationOutput(false);
 			}
 		}
 		

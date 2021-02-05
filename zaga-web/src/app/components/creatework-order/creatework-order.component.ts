@@ -308,6 +308,10 @@ export class CreateworkOrderComponent implements OnInit {
         this.dateOfCreateWO = this.workOrder.date.day + "." + this.workOrder.date.month + "." + this.workOrder.date.year + "."
         this.creator = this.workOrder.userCreatedId;
 
+        if(this.workOrder.noOperationOutput){
+          this.noOperationOutput = true;
+        }
+
         this.userService.getUserBySapId(this.workOrder.userCreatedId).subscribe(data => {
           this.userCreator = data;
         })
@@ -869,6 +873,9 @@ export class CreateworkOrderComponent implements OnInit {
             }
           })
         }
+        if(this.workOrder.noOperationOutput){
+          this.noOperationOutput = true;
+        }
 
       });
     }, err => {
@@ -976,6 +983,10 @@ export class CreateworkOrderComponent implements OnInit {
         year: +this.workOrder.date.year,
       };
 
+      if(this.workOrder.noOperationOutput){
+        this.noOperationOutput = true;
+      }
+
       this.cropService
         .getAllByFieldAndYear(data.tableId, data.year)
         .subscribe((res) => {
@@ -1024,6 +1035,10 @@ export class CreateworkOrderComponent implements OnInit {
           month: +this.workOrder.date.month,
           year: +this.workOrder.date.year,
         };
+
+        if(this.workOrder.noOperationOutput){
+          this.noOperationOutput = true;
+        }
 
         this.cropService
           .getAllByFieldAndYear(data.tableId, data.year)
@@ -1204,6 +1219,10 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "Storniran";
             }
 
+            if(this.workOrder.noOperationOutput){
+              this.noOperationOutput = true;
+            }
+
             this.workOrder.date = {
               day: +this.workOrder.date.day,
               month: +this.workOrder.date.month,
@@ -1281,6 +1300,10 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "Zatvoren";
             } else if (this.workOrder.status == "CANCELLATION") {
               this.workOrder.status = "Storniran";
+            }
+
+            if(this.workOrder.noOperationOutput){
+              this.noOperationOutput = true;
             }
 
             this.workOrder.date = {
@@ -1372,6 +1395,10 @@ export class CreateworkOrderComponent implements OnInit {
               this.workOrder.status = "Zatvoren";
             } else if (this.workOrder.status == "CANCELLATION") {
               this.workOrder.status = "Storniran";
+            }
+
+            if(this.workOrder.noOperationOutput){
+              this.noOperationOutput = true;
             }
 
             this.workOrder.date = {
@@ -1519,6 +1546,10 @@ export class CreateworkOrderComponent implements OnInit {
             this.workOrder.status = "Storniran";
           }
 
+          if(this.workOrder.noOperationOutput){
+            this.noOperationOutput = true;
+          }
+
           this.workOrder.date = {
             day: +this.workOrder.date.day,
             month: +this.workOrder.date.month,
@@ -1650,6 +1681,11 @@ export class CreateworkOrderComponent implements OnInit {
       this.spinner.show();
       this.workOrder.treated = this.treatedEntered;
       this.workOrder.cancellation = false;
+      if(this.noOperationOutput){
+        this.workOrder.noOperationOutput = true;
+      } else {
+        this.workOrder.noOperationOutput = false;
+      }
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
         this.spinner.hide();
@@ -1699,6 +1735,10 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.status = "Zatvoren";
       } else if (this.workOrder.status == "CANCELLATION") {
         this.workOrder.status = "Storniran";
+      }
+
+      if(this.workOrder.noOperationOutput){
+        this.noOperationOutput = true;
       }
 
       this.workOrder.date = {

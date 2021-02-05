@@ -63,6 +63,7 @@ public class WorkOrderDTO {
 		closed = wo.isClosed();
 		treated = wo.getTreated();
 		userCreatedId = wo.getUserCreatedSapId().toString();
+		noOperationOutput = wo.isNoOperationOutput();
 		if(wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
