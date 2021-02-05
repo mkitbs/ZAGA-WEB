@@ -102,8 +102,13 @@ public class WorkOrderController {
 	@PostMapping("/updateWorkOrder")
 	public ResponseEntity<?> updateWorkOrder(@RequestBody WorkOrderDTO request){
 		try {
-			workOrderService.updateWorkOrder(request);
-			return new ResponseEntity<>(HttpStatus.OK);
+			SAPResponse sapResponse = workOrderService.updateWorkOrder(request);
+			if(sapResponse.isSuccess()) {
+				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.OK);
+			}else {
+				return new ResponseEntity<SAPResponse>(sapResponse, HttpStatus.BAD_REQUEST);
+			}
+			
 		}catch(Exception e) {
 			return new ResponseEntity<String>("Work order not updated. Error " + e.getMessage(), HttpStatus.BAD_REQUEST);
 		}

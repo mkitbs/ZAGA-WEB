@@ -524,9 +524,11 @@ public class WorkOrderService {
 	    return retVal;
 	} 
 	
-	public void updateWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
+	public SAPResponse updateWorkOrder(WorkOrderDTO workOrderDTO) throws Exception {
 
 		log.info("Work order update started");
+		
+		SAPResponse sapResponse = new SAPResponse();
 		
 		WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
 		
@@ -559,7 +561,7 @@ public class WorkOrderService {
 		
 		workOrder.setResponsible(responsible);
 		
-		workOrder = workOrderRepo.save(workOrder);
+		
 
 		Map<String, String> headerValues = getHeaderValues();
 		String csrfToken = headerValues.get("csrf");
@@ -615,11 +617,27 @@ public class WorkOrderService {
 	    
 	    if(status.equals("S")) {
 	    	System.out.println("USPESNO DODAT");
+	    	workOrder = workOrderRepo.save(workOrder);
+	    	sapResponse.setSuccess(true);
+	    	
+	    	
 	    }else if(status.equals("E")){
 	    	System.out.println("ERROR");
-	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
+	    	String error = "";
+	    	//Fail
+	    	Pattern patternError = Pattern.compile("MessageText:(.*?),");
+	    	 Matcher matcherError = patternError.matcher(formatted);
+			List<String> errors = new ArrayList<String>();
+			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
+	    	System.out.println(error);
+	    	log.error("Updating work order to SAP failed. (" + error +")");
+	    	
+	    	sapResponse.setSuccess(false);
+	    	sapResponse.setMessage(errors);
+	    	
+	    	
 	    }
-	
+	    return sapResponse;
 	}
 	
 	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate, String sapUserId) throws Exception {

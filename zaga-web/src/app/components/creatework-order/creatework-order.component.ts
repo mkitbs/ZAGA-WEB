@@ -1554,7 +1554,13 @@ export class CreateworkOrderComponent implements OnInit {
       },
       (error) => {
         this.spinner.hide();
-        this.toastr.error("Radni nalog nije sačuvan.");
+        this.toastr.error("Došlo je do greške prilikom čuvanja.")
+        if (error.status == 400) {
+          this.error = true;
+          this.errors = error.error.message;
+        } else {
+          this.toastr.error("Radni nalog nije sačuvan.");
+        }
       }
     );
   }
