@@ -758,7 +758,7 @@ export class DashboardComponent implements OnInit {
     
   ngOnInit() {
      localStorage["workOrders"] = JSON.stringify(this.tempJSON);
-     
   }
+  
 
 }

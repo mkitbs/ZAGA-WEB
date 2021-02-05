@@ -17,6 +17,9 @@ public interface MachineRepository extends JpaRepository<Machine, UUID> {
 	List<Machine> findByOrderByErpIdAsc();
 	Optional<Machine> findByErpId(String id);
 	
+	@Query(value = "SELECT * FROM machine WHERE erp_id=?1 AND org_unit=?2", nativeQuery = true)
+	Optional<Machine> findByErpIdAndOrgUnit(String id, String orgUnit);
+	
 	@Query(value = "select * from machine where type = ?1 order by erp_id asc", nativeQuery = true)
 	List<Machine> getMachines(String string);
 	

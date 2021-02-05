@@ -8,7 +8,11 @@ import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderWorker;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,7 +65,7 @@ public class WorkOrderToSAP {
 	private WorkOrderToEmployeeNavigation WorkOrderToEmployeeNavigation = new WorkOrderToEmployeeNavigation();
 	@JsonProperty("WorkOrderToReturnNavigation")
 	private WorkOrderToReturnNavigation WorkOrderToReturnNavigation = new WorkOrderToReturnNavigation();
-
+	
 
 	@SuppressWarnings("deprecation")
 	public WorkOrderToSAP(WorkOrder workOrder, String action) {
@@ -183,8 +187,9 @@ public class WorkOrderToSAP {
 			}
 			if(wow.getFinalState() != -1 && wow.getInitialState() != -1) {
 				Double doub = wow.getFinalState() - wow.getInitialState();
+				Double effectiveHours = wow.getDayPeriod() + wow.getNightPeriod();
 				woeSAP.setMachineTime(doub.toString());
-				woeSAP.setMachineEffectiveHours(doub.toString());
+				woeSAP.setMachineEffectiveHours(effectiveHours.toString());
 			}else {
 				woeSAP.setMachineTime("0.00000");
 				woeSAP.setMachineEffectiveHours("0.00000");
@@ -196,6 +201,8 @@ public class WorkOrderToSAP {
 				woeSAP.setDeleted("");
 			}
 			woeSAP.setWebBackendId(wow.getId());
+			//woeSAP.setNoOperationOutput("X");
+			System.out.println("WOE SAP" + woeSAP);
 			this.WorkOrderToEmployeeNavigation.getResults().add(woeSAP);
 		}
 		

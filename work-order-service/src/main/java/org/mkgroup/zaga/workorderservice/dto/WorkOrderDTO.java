@@ -42,6 +42,7 @@ public class WorkOrderDTO {
 	private double treated;
 	private long sapId;
 	private boolean cancellation;
+	private boolean noOperationOutput;
 	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();

@@ -26,6 +26,7 @@ public class WorkOrderWorkerDTO {
 	private Double fuel;
 	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
 	private boolean deleted;
+	private boolean noOperationOutput;
 	
 	public WorkOrderWorkerDTO(WorkOrderWorker wow) {
 		this.id = wow.getId();

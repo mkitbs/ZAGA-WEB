@@ -25,6 +25,7 @@ import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderEmployeeSAP;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Machine;
@@ -106,7 +107,9 @@ public class WorkOrderWorkerService {
 		WorkOrderWorker wow = wowRepo.getOne(id);
 		WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 		try {
-			deleteFuel(id, wowDTO);
+			if(wow.getMachine().getFuelErpId() != 0) {
+				deleteFuel(id, wowDTO);
+			}
 			wowRepo.deleteWorker(id);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -150,11 +153,12 @@ public class WorkOrderWorkerService {
 		} else {
 			wow.setSumState(-1.0);
 		}
+		SpentMaterial sm = new SpentMaterial();
 		if(wowDTO.getFuel() != null) {
 			if(wow.getMachine().getFuelErpId() != 0) {
 				//add fuel to spent material
 				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
-				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
+				sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
 				if(sm != null) {
 					if(sm.getQuantity() > 0) {
 						if(wow.getFuel() < 0) {
@@ -205,6 +209,11 @@ public class WorkOrderWorkerService {
 		String cookies = headerValues.get("cookies");
 		
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		for(WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
+			if(wowDTO.isNoOperationOutput()) {
+				emp.setNoOperationOutput("X");
+			}
+		}
 		
 		log.info("Updating work order with employee to SAP started");
 	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
@@ -226,7 +235,7 @@ public class WorkOrderWorkerService {
 	
 		System.out.println(response);
 	    if(response == null) {
-	    	wowRepo.delete(wow);
+	    	//wowRepo.delete(wow);
 			throw new Exception("Greska prilikom konekcije na SAP. Morate biti konektovani na VPN.");
 	    }
 	    System.out.println("REZZ" + response.getBody());
@@ -250,8 +259,13 @@ public class WorkOrderWorkerService {
 	    	sapResponse.setSuccess(true);
 	    }else if(status.equals("E")){
 	    	System.out.println("ERROR");
+	    	sm.setQuantity(-1.0);
+	    	sm.setQuantityPerHectar(-1.0);
+	    	sm.setSpent(-1.0);
+	    	sm.setSpentPerHectar(-1.0);
+	    	wow.setFuel(-1.0);
+	    	spentMaterialRepo.save(sm);
 	    	
-
 	    	Pattern patternError = Pattern.compile("MessageText:(.*?),");
 	    	 Matcher matcherError = patternError.matcher(formatted);
 			List<String> errors = new ArrayList<String>();
