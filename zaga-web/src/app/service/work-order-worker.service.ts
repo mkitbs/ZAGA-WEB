@@ -1,4 +1,5 @@
 import { HttpClient } from "@angular/common/http";
+import { identifierModuleUrl } from "@angular/compiler";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -53,6 +54,12 @@ export class WorkOrderWorkerService {
     return this.http.get(
       environment.gatewayWorkOrderURL + 
       "api/workOrderWorker/getWorkOrdersForTractorDriver"
+    )
+  }
+
+  getOne(id): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/workOrderWorker/getOne/" + id
     )
   }
 }

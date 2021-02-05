@@ -279,25 +279,32 @@
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3" *ngIf="!new">
-              
-                  <div class="input-group">
-                  
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <input *ngIf="workOrder.noOperationOutput" checked type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
+                    <input *ngIf="!workOrder.noOperationOutput" type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
+                  </div>
+                </div>
                     
-                  <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
+              <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
                     [(ngModel)]="treatedEntered" id="" class="form-control" 
-                    (change)="calculateQuantityPerHectar()" [disabled]="opstiNalog" />
+                    (change)="calculateQuantityPerHectar()" [disabled]="noOperationOutput" />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">ha</span>
                   </div>
                 </div>
             </div>
-            <!--<i *ngIf="!new" style="color: black; opacity: 50%; margin-bottom: 0px;">*Čekirajte ukoliko je radni nalog opšti.</i>-->
+            <i *ngIf="!new" style="color: black; opacity: 70%; margin-bottom: 0px; font-size: smaller;">
+              *Čekirajte ukoliko je radni nalog opšti.
+            </i>
             <div *ngIf="validWoInfo == false && clickCloseWorkOrder" style="color: red; font-weight: normal">
               Unesite površinu.
             </div>
             <div *ngIf="validTreated == false && clickUpdateWo" style="color: red; font-weight: normal">
               Površina mora biti veća ili jednaka nuli.
             </div>
+            
           </td>
         </tr>
       </table>
@@ -325,11 +332,12 @@
                 <th>ATM*</th>
                 <th>Mašina*</th>
                 <th>Priključna mašina*</th>
-                <th style="text-align: right !important" *ngIf="!new">Učinci</th>
+               <!-- <th style="text-align: right !important" *ngIf="!new"></th>-->
                 <th style="text-align: right !important"></th>
-                <th style="text-align: right !important" *ngIf="wows.length > 0 || (workOrder.workers.length > 0 && !emptyWow)">
-                  Obriši
+               <!-- <th style="text-align: right !important" *ngIf="wows.length > 0 || (workOrder.workers.length > 0 && !emptyWow)">
+                  
                 </th>
+                -->
               </thead>
               <tbody>
                 <tr>
@@ -504,14 +512,18 @@
                       </form>
                     </div>
                   </td>
+                   <!---
                   <td *ngIf="!new">
+                   
                     <div class="form-group">
                       <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#workerMachineModal"
                         (click)="addDetailWow()">
                         <i class="fa fa-ellipsis-v"></i>
                       </button>
                     </div>
+                   
                   </td>
+                   -->
                   <td>
                     <div *ngIf="new" class="form-group">
                       <button class="btn btn-primary btn-add" (click)="addWorkerAndMachine(wowForm.valid)"
@@ -521,7 +533,7 @@
                     </div>
                     <div *ngIf="!new" class="form-group">
                       <button class="btn btn-primary btn-add" (click)="addNewWorkerAndMachine()"
-                        [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser" style="width: 70px !important;">
+                        [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser" style="width: 70px !important; margin-left: 10px;">
                       
                         <i class="fa fa-plus"></i> Dodaj
                       </button>
@@ -532,6 +544,24 @@
                   <td colspan="7"><hr style="height:2px;border-width:0;color:gray;background-color:#33590b"></td>
                 </tr>
                 <!--editable table worker/machine new wo-->
+                <tr *ngIf="new && wows.length > 0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Potrvda izmene</td>
+                  <td>Obriši</td>
+                </tr>
+                <tr *ngIf="!new && workOrder.workers.length > 0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style="float: right;">Učinci</td>
+                  <td>Promena</td>
+                  <td>Obriši</td>
+
+                </tr>
                 <ng-container *ngIf="new; else elseBlockMachineState">
 
                   <tr *ngFor="let wow of wows">
@@ -862,13 +892,13 @@
                       <td>
                         <div class="form-group">
                           <button *ngIf="wow.machine.Id=='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
-                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
                               'warning' : 'ok'">
                             <i class="fa fa-ellipsis-v"></i>
                           </button>
                           <button *ngIf="wow.machine.Id!='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
-                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                            data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || 
                           wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
                           wow.fuel == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 || 
@@ -932,11 +962,11 @@
                 <th>Materijal*</th>
                 <th style="width: 150px">Planirana količina*</th>
                 <th *ngIf="!new" style="width: 150px">Planirana količina / ha<span style="color: #f68901;">*</span></th>
-                <th style="text-align: right !important" *ngIf="!new">Učinci</th>
+                <!--<th style="text-align: right !important" *ngIf="!new">Učinci</th>-->
                 <th style="text-align: right !important"></th>
-                <th style="text-align: right !important" *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0">
+                <!--<th style="text-align: right !important" *ngIf="woMaterials.length > 0 || workOrder.materials.length > 0">
                   Obriši
-                </th>
+                </th>-->
               </thead>
               <tbody>
                 <tr>
@@ -1022,6 +1052,7 @@
                       </div>
                     </div>
                   </td>
+                  <!--
                   <td *ngIf="!new">
                     <div class="form-group">
                       <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
@@ -1030,6 +1061,7 @@
                       </button>
                     </div>
                   </td>
+                  -->
                   <td>
                     <div *ngIf="new" class="form-group">
                       <button class="btn btn-primary btn-add mr-2" (click)="addMaterial(materialForm.valid)"
@@ -1048,6 +1080,20 @@
                 </tr>
                 <tr>
                   <td colspan="7"><hr style="height:2px;border-width:0;color:gray;background-color:#33590b"></td>
+                </tr>
+                <tr *ngIf="new && woMaterials.length > 0">
+                  <td></td>
+                  <td></td>
+                  <td style="text-align: right;">Potvrda izmene</td>
+                  <td style="text-align: right;">Obriši</td>
+                </tr>
+                <tr *ngIf="!new && workOrder.materials.length > 0">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style="float: right;">Učinci</td>
+                  <td style="text-align: right;">Potvrda izmene</td>
+                  <td style="text-align: right;">Obriši</td>
                 </tr>
                 <!--editable table materials new wo-->
                 <ng-container *ngIf="new; else elseBlockSpentMaterial">

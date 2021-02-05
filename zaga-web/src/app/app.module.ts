@@ -24,6 +24,7 @@ import {
   MatSnackBar,
   MatTooltipModule,
   yearsPerPage,
+  MatSelectModule
 } from "@angular/material";
 import { CloseWorkOrderComponent } from "./components/closework-order/closework-order.component";
 import { ToastrModule } from "ngx-toastr";
@@ -240,6 +241,7 @@ const routes: Routes = [
     FormsModule,
     ChartsModule,
     CdTimerModule,
+    MatSelectModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
       libraries: ["drawing", "geometry", "places"],

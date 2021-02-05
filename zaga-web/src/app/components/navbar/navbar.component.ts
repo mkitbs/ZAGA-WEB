@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   admin;
+  selectedProfile;
 
 
   ngOnInit() {
@@ -29,6 +30,15 @@ export class NavbarComponent implements OnInit {
     sessionStorage.clear();
     this.cookieService.delete("UserIdentity");
     this.authService.signout().subscribe(res => {})
+  }
+
+  changeProfile(event){
+    if(event.value == "qas"){
+      localStorage["PROFILE"] = "QAS";
+    }else if(event.value == "prd"){
+      localStorage["PROFILE"] = "PRD";
+    }
+
   }
 
 }
