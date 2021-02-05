@@ -115,4 +115,11 @@ public class WorkOrderWorkerController {
 		List<WorkOrderTractorDriverDTO> data = wowService.getWorkOrdersForTractorDriver(user.getId());
 		return new ResponseEntity<List<WorkOrderTractorDriverDTO>>(data, HttpStatus.OK);
 	}
+	
+	@GetMapping("getOne/{id}")
+	public ResponseEntity<?> getOne(@PathVariable UUID id){
+		WorkOrderWorker wow = wowService.getOne(id);
+		WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+		return new ResponseEntity<WorkOrderWorkerDTO>(wowDTO, HttpStatus.OK);
+	}
 }

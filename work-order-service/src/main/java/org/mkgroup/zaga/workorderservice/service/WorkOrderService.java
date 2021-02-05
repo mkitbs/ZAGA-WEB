@@ -569,6 +569,7 @@ public class WorkOrderService {
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
 		for(WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
 			if(workOrderDTO.isNoOperationOutput()) {
+				System.out.println("NO OPERATION OUTPUT");
 				emp.setNoOperationOutput("X");
 			}
 		}

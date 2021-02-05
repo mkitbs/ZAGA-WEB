@@ -748,10 +748,13 @@ public class WorkOrderWorkerService {
 		WorkOrder workOrder = wow.getWorkOrder();
 		int count = 0;
 		for(WorkOrderWorker wow2 : workOrder.getWorkers()) {
-			if(wow2.getMachine().getFuelErpId() == wow.getMachine().getFuelErpId()) {
-				count++;
+			if(!wow2.isDeleted()) {
+				if(wow2.getMachine().getFuelErpId() == wow.getMachine().getFuelErpId()) {
+					count++;
+				}
 			}
 		}
+		System.out.println("COUNT = " + count);
 		if(count > 1) {
 			if(wow.getMachine().getFuelErpId() != 0) {
 				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
@@ -763,10 +766,16 @@ public class WorkOrderWorkerService {
 				spentMaterialRepo.save(sm);
 			}
 		} else {
+			System.out.println("USAO U ELSE");
 			if(wow.getMachine().getFuelErpId() != 0) {
+				System.out.println("USAO U IF");
 				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
 				SpentMaterial sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).get();
-				sm.setDeleted(true);
+				sm.setQuantity(0.0);
+				sm.setQuantityPerHectar(0.0);
+				sm.setSpent(0.0);
+				sm.setSpentPerHectar(0.0);
+				//sm.setDeleted(true);
 				spentMaterialRepo.save(sm);
 			}
 			
