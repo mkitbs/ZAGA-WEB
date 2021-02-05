@@ -21,4 +21,5 @@ export class WorkOrder {
   table;
   userCreatedId;
   cancellation;
+  noOperationOutput;
 }

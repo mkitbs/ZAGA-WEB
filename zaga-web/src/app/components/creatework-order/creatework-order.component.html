@@ -19,10 +19,12 @@
           <span *ngIf="!new">Radni nalog kreirao: {{userCreator.name}} {{userCreator.surname}}</span>
         </div>
         <div class="col" style="float: right;">
-          <button class="btn btn-danger" data-toggle="modal" data-target="#errorsModal"
-            style="margin-left: 6px; float: right; border: none;" *ngIf="error">
-            <i class="fa fa-exclamation-triangle"></i>
-          </button>
+         
+            <button class="btn btn-danger blob" data-toggle="modal" data-target="#errorsModal"
+              style="margin-left: 6px; float: right; border: none;" *ngIf="error">
+              <i class="fa fa-exclamation-triangle"></i>
+           
+            </button>
           <button class="btn btn-primary btn-cancellation mr-2"
             *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran'" (click)="cancellationWorkOrder()">
             <i class="fa fa-ban"></i> Storniraj radni nalog
@@ -69,18 +71,18 @@
           </td>
           <!--Godina-->
           <td class="left-col-header">
-            <i class="fa fa-tasks mr-2"></i>Godina:
+           <i class="fa fa-calendar-check-o mr-2"></i> Godina:
           </td>
           <td class="right-col-header">
             <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control" *ngIf="!new; else elseBlockYear"
-              (change)="getCulture()">
+              (change)="getCulture()" style="margin-bottom: 10px;">
               <option value="{{previousYear}}">{{previousYear}}</option>
-              <option value="{{currentYear}}" selected>{{currentYear}}</option>
+              <option value="{{currentYear}}">{{currentYear}}</option>
               <option value="{{nextYear}}">{{nextYear}}</option>
             </select>
             <ng-template #elseBlockYear>
               <select name="selYear" [(ngModel)]="selectedYear" id="" class="form-control" #year="ngModel" required
-                (change)="getCulture()">
+                (change)="getCulture()" style="margin-bottom: 10px;">
                 <option value="{{previousYear}}">{{previousYear}}</option>
                 <option value="{{currentYear}}" selected>{{currentYear}}</option>
                 <option value="{{nextYear}}">{{nextYear}}</option>
@@ -98,7 +100,7 @@
 
           <!--Parcela-->
           <td class="left-col-header">
-            <i class="fa fa-database mr-2"></i>Parcela:
+            <i class="fa fa-map-marker mr-2"></i>Parcela:
           </td>
           <td class="right-col-header">
             <form>
@@ -148,7 +150,7 @@
                   <mat-option *ngFor="
                     let crop of crops | SearchCultures: searchCulture.value
                     " [value]="crop" (click)="getArea(crop.id)">
-                    {{crop.Id}} - {{ crop.Name }}
+                    {{crop.Id}} - {{ crop.Name }} ({{crop.CultureId}} - {{crop.cultureName}})
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -163,7 +165,7 @@
                     <mat-option *ngFor="
                       let crop of crops | SearchCultures: searchCultureWithoutId.value
                       " [value]="crop" (click)="getArea(crop.id)">
-                      {{ crop.Name }}
+                      {{ crop.Name }} ({{crop.cultureName}})
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
@@ -271,17 +273,25 @@
               Unesite površinu.
             </div>
           </td>
+          <!--Obradjeno-->
           <td class="left-col-header">
-            <span *ngIf="!new"> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
+            <span *ngIf="!new" style="padding-top: 5px;"> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
           </td>
           <td class="right-col-header">
             <div class="input-group mb-3" *ngIf="!new">
-              <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
-                [(ngModel)]="treatedEntered" id="" class="form-control" (change)="calculateQuantityPerHectar()" />
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">ha</span>
-              </div>
+              
+                  <div class="input-group">
+                  
+                    
+                  <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
+                    [(ngModel)]="treatedEntered" id="" class="form-control" 
+                    (change)="calculateQuantityPerHectar()" [disabled]="opstiNalog" />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">ha</span>
+                  </div>
+                </div>
             </div>
+            <!--<i *ngIf="!new" style="color: black; opacity: 50%; margin-bottom: 0px;">*Čekirajte ukoliko je radni nalog opšti.</i>-->
             <div *ngIf="validWoInfo == false && clickCloseWorkOrder" style="color: red; font-weight: normal">
               Unesite površinu.
             </div>
@@ -689,10 +699,8 @@
                     </td>
                     <td>
                       <div class="form-group">
-                        <button class="btn btn-primary btn-delete mr-2" data-toggle="modal"
-                          data-target="#deleteWorkerModal" (click)="setWowId(wow.id)"
-                          [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                          <i class="fa fa-minus"></i>
+                        <button class="btn btn-primary btn-delete mr-2" (click)="deleteWorkOrderWorker(wow)">
+                          <i class="fa fa-trash"></i>
                         </button>
                       </div>
                     </td>
@@ -880,7 +888,7 @@
                         <div class="form-group">
                           <button class="btn btn-primary btn-delete mr-2" data-toggle="modal" data-target="#deleteWorkerModal" (click)="setWowId(wow.id)"
                             [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser">
-                            <i class="fa fa-minus"></i>
+                            <i class="fa fa-trash"></i>
                           </button>
                         </div>
                       </td>
@@ -1128,7 +1136,7 @@
                     <td>
                       <div class="form-group">
                         <button class="btn btn-primary btn-delete mr-2" (click)="deleteSpentMaterial(material)">
-                          <i class="fa fa-minus"></i>
+                          <i class="fa fa-trash"></i>
                         </button>
                       </div>
                     </td>
@@ -1228,7 +1236,7 @@
                             data-target="#deleteMaterialModal" 
                             (click)="setMaterialId(material.id)"
                             [disabled]="workOrder.status == 'Zatvoren' || creator!=loggedUser || material.fuel">
-                            <i class="fa fa-minus"></i>
+                            <i class="fa fa-trash"></i>
                           </button>
                         </div>
                       </td>
@@ -1349,7 +1357,7 @@
     </div>
     <div class="row mt-2">
        <!--Godina-->
-       <div class="col-4" style="margin-top: 7px;"><i class="fa fa-tasks mr-2"></i>Godina:</div>
+       <div class="col-4" style="margin-top: 7px;"><i class="fa fa-calendar-check-o"></i>Godina:</div>
        <div class="col-8">
         <select name="year" [(ngModel)]="workOrder.year" id="" class="form-control"
         *ngIf="!new; else elseBlockYearMob" (change)="getCulture()">
@@ -1375,7 +1383,7 @@
     <div class="row mt-2">
       <!--Parcela-->
       <div class="col-4">
-        <i class="fa fa-database mr-2" style="margin-top: 17px;"></i>Parcela:
+        <i class="fa fa-map-marker mr-2" style="margin-top: 17px;"></i>Parcela:
       </div>
       <div class="col-8">
         <form>
@@ -2574,7 +2582,7 @@
     </div>
   </div>
 </div>
-
+<!--Modal error messages-->
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true" id="errorsModal">
   <div class="modal-dialog modal-lg">
@@ -2591,7 +2599,9 @@
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #ffc803; color: white; border:none">
+          <i class="fa fa-window-close"></i> Zatvori
+        </button>
       </div>
     </div>
   </div>

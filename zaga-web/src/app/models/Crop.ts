@@ -10,4 +10,5 @@ export class Crop {
   cultureName;
   field;
   cultureGroupName;
+  CultureId;
 }

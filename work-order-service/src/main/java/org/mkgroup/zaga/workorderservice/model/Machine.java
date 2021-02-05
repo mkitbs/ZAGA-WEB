@@ -73,8 +73,10 @@ public class Machine {
 		
 		if(m.getType().equals("PG")) {
 			this.type = MachineType.PROPULSION;
-		} else {
+		} else if(m.getType().equals("PR")) {
 			this.type = MachineType.COUPLING;
+		} else {
+			this.type = MachineType.PROPULSION;
 		}
 		
 		this.erpId = m.getErpId();

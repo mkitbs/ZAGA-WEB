@@ -93,8 +93,9 @@ public class MachineService {
 																(oDataString));
 
 	    for(MachineDTO m : machineList) {
+	    	System.out.println(m.getName());
 	    	machineRepository
-	    		.findByErpId(m.getErpId())
+	    		.findByErpIdAndOrgUnit(m.getErpId(), m.getOrgUnit())
 	    		.ifPresentOrElse(foundMachine -> updateMachine(foundMachine, m), 
 	    						() -> createMachine(m));
 	    }
@@ -161,7 +162,7 @@ public class MachineService {
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
-		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR")) {
+		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR") || newMachine.getType().equals("N")) {
 			Machine machine = new Machine(newMachine);
 			if(machine.getName() != null) {
 				machine.setName(machine.getName().replaceAll("%22", "'"));

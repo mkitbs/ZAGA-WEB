@@ -16,7 +16,7 @@ import { Machine } from "src/app/models/Machine";
 import { MachineService } from "src/app/service/machine.service";
 import { MaterialService } from "src/app/service/material.service";
 import { Form, FormControl } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { Field } from "src/app/models/Field";
 import { FieldService } from "src/app/service/field.service";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -192,6 +192,10 @@ export class CreateworkOrderComponent implements OnInit {
   editWowMobFlag;
   editMaterialMobFlag;
   mob = false;
+
+  opstiNalog = false;
+
+  subject = new Subject<Material>();
 
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
@@ -428,15 +432,23 @@ export class CreateworkOrderComponent implements OnInit {
     this.workerOperationFC.setValue(op);
   }
 
+
   getUnitOfMaterial(id) {
     console.log(id)
+    
+    let item = this.substances$.subscribe(items => {
+      items.find(item => item.dbid == id);
+    })
+    console.log(item)
     this.unit = this.substances.find((x) => x.dbid == id).Unit;
     console.log(this.unit)
+    /*
     this.woMaterials.forEach((material) => {
       if (material.material.dbid == id) {
         material.material.Unit = this.unit;
       }
     });
+    */
   }
 
   getCulture() {
@@ -545,7 +557,7 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   displayFnCulture(culture: Crop): string {
-    return culture && culture.Id + " - " + culture.Name
+    return culture && culture.Id + " - " + culture.Name + " (" + culture.CultureId + "-" + culture.cultureName +")"
   }
 
   displayFnMachine(machine: Machine): string {
@@ -706,9 +718,14 @@ export class CreateworkOrderComponent implements OnInit {
           ).dbid;
           console.log(this.devicesCoupling);
           
+          if(wow.connectingMachine.dbid != -1){
             wow.connectingMachine.dbid = this.devicesCoupling.find(
               (x) => x.dbid == wow.connectingMachine.dbid
             ).dbid;
+          } else {
+            wow.connectingMachine.dbid = -1;
+          }
+            
           
          
           wow.operation.dbid = this.operations.find(
@@ -884,59 +901,29 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validFuel = true;
     }
+    if(this.opstiNalog){
+      workOrderWorker.noOperationOutput = true;
+    } else {
+      workOrderWorker.noOperationOutput = false;
+    }
+    console.log(workOrderWorker);
     if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel) {
       this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.wow = new WorkOrderWorker();
         this.toastr.success("Uspešno sačuvane promene.");
         this.spinner.hide();
-        this.workOrderService.getOne(this.workId).subscribe((data) => {
-          this.workOrder = data;
-
-          this.workOrder.treated = this.treatedEntered;
-          if (this.workOrder.status == "NEW") {
-            this.workOrder.status = "Novi";
-          } else if (this.workOrder.status == "IN_PROGRESS") {
-            this.workOrder.status = "U radu";
-          } else if (this.workOrder.status == "CLOSED") {
-            this.workOrder.status = "Zatvoren";
-          } else if (this.workOrder.status == "CANCELLATION") {
-            this.workOrder.status = "Storniran";
-          }
-
-          if (this.workOrder.materials.length != 0) {
-            this.workOrder.materials.forEach(material => {
-              if (material.quantity == -1) {
-                material.quantity = null;
-              }
-              if (material.quantityPerHectar < 0) {
-                material.quantityPerHectar = null;
-              }
-            })
-          }
-
-          this.workOrder.date = {
-            day: +this.workOrder.date.day,
-            month: +this.workOrder.date.month,
-            year: +this.workOrder.date.year,
-          };
-
-          this.cropService
-            .getAllByFieldAndYear(data.tableId, data.year)
-            .subscribe((res) => {
-              this.crops = res;
-            });
-
-          if (this.workOrder.treated == 0) {
-            this.workOrder.treated = null;
-          }
-        });
+        this.getOneWorkOrder();
       }, error => {
         this.spinner.hide();
-        this.toastr.error("Došlo je do greške prilikom čuvanja.")
+        this.getOneWorkOrder();
+        
         if (error.status == 400) {
+          this.toastr.error("Došlo je do greške.Za detalje kliknite na uzvičnik.")
           this.error = true;
           this.errors = error.error.message;
+        } else {
+          this.toastr.error("Došlo je do greške prilikom čuvanja.")
         }
         this.wow = new WorkOrderWorker();
       });
@@ -945,6 +932,50 @@ export class CreateworkOrderComponent implements OnInit {
       this.spinner.hide();
     }
 
+  }
+
+  getOneWorkOrder(){
+    this.workOrderService.getOne(this.workId).subscribe((data) => {
+      this.workOrder = data;
+
+      this.workOrder.treated = this.treatedEntered;
+      if (this.workOrder.status == "NEW") {
+        this.workOrder.status = "Novi";
+      } else if (this.workOrder.status == "IN_PROGRESS") {
+        this.workOrder.status = "U radu";
+      } else if (this.workOrder.status == "CLOSED") {
+        this.workOrder.status = "Zatvoren";
+      } else if (this.workOrder.status == "CANCELLATION") {
+        this.workOrder.status = "Storniran";
+      }
+
+      if (this.workOrder.materials.length != 0) {
+        this.workOrder.materials.forEach(material => {
+          if (material.quantity < 0) {
+            material.quantity = null;
+          }
+          if (material.quantityPerHectar < 0) {
+            material.quantityPerHectar = null;
+          }
+        })
+      }
+
+      this.workOrder.date = {
+        day: +this.workOrder.date.day,
+        month: +this.workOrder.date.month,
+        year: +this.workOrder.date.year,
+      };
+
+      this.cropService
+        .getAllByFieldAndYear(data.tableId, data.year)
+        .subscribe((res) => {
+          this.crops = res;
+        });
+
+      if (this.workOrder.treated == 0) {
+        this.workOrder.treated = null;
+      }
+    });
   }
 
   updateWOWBasicInfo(workOrderWorker) {
@@ -1427,6 +1458,14 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.spinner.show();
     this.workOrder.responsibleId = this.nameFC.value.userId;
+    this.workOrder.operationId = this.operationFC.value.dbid
+    this.workOrder.tableId = this.fieldFC.value.dbId;
+    this.workOrder.cropId = this.cultureFC.value.id
+    if(this.opstiNalog){
+      this.workOrder.noOperationOutput = true;
+    } else {
+      this.workOrder.noOperationOutput = false;
+    }
     if (this.treatedEntered >= 0) {
       this.workOrder.treated = this.treatedEntered;
     } else {
@@ -1501,6 +1540,9 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = true;
     } else {
       this.validWoInfo = false;
+    }
+    if(this.opstiNalog){
+      this.validWoInfo = true;
     }
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
@@ -1654,12 +1696,14 @@ export class CreateworkOrderComponent implements OnInit {
       let dataa = this.workOrder.workers.filter(item => item.id == id);
       dataa[0].deleted = true;
       this.getWorkOrder();
+      this.getOneWorkOrder();
       this.spinner.hide();
       this.toastr.success("Uspešno ste izbrisali radnika")
 
     },
       err => {
         console.log(err);
+        this.getOneWorkOrder();
         this.toastr.error("Neuspešno brisanje radnika")
         this.spinner.hide();
       });
@@ -1737,7 +1781,7 @@ export class CreateworkOrderComponent implements OnInit {
         console.log(err);
         this.spinner.hide();
         if (err.status == 400) {
-          this.toastr.error("Došlo je do greške prilikom storniranja.");
+          this.toastr.error("Došlo je do greške prilikom storniranja. Za detalje kliknite na uzvičnik.");
           this.error = true;
           this.errors = err.error;
         } else {
@@ -1780,5 +1824,10 @@ export class CreateworkOrderComponent implements OnInit {
     this.idOfEditingMaterial = material.smObjectId;
     this.materialFC.setValue(material.material);
     this.quantityEntered = material.quantity;
+  }
+
+  disableTreated(){
+    this.opstiNalog = !this.opstiNalog;
+    console.log(this.opstiNalog)
   }
 }

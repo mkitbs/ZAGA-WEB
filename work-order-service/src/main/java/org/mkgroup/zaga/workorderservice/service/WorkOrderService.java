@@ -25,6 +25,7 @@ import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderEmployeeSAP;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
@@ -566,6 +567,11 @@ public class WorkOrderService {
 		String cookies = headerValues.get("cookies");
 		
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
+		for(WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
+			if(workOrderDTO.isNoOperationOutput()) {
+				emp.setNoOperationOutput("X");
+			}
+		}
 		
 		log.info("Updating work order with employee to SAP started");
 	    /*ResponseEntity<?> response = sap4hana.sendWorkOrder(cookies,
@@ -582,6 +588,8 @@ public class WorkOrderService {
   		System.out.println("Token:" + csrfToken);
   		System.out.println(headersRestTemplate.toString());
   		HttpEntity entity = new HttpEntity(workOrderSAP, headersRestTemplate);
+  		
+  		System.out.println("TO SAP => " + workOrderSAP);
 		
   		ResponseEntity<Object> response = restTemplate.exchange(
 	  		    sapS4Hurl, HttpMethod.POST, entity, Object.class);
@@ -672,6 +680,9 @@ public class WorkOrderService {
 		for(SpentMaterial material:materials) {
 			SpentMaterial spentMaterial = new SpentMaterial();
 			spentMaterial.setMaterial(material.getMaterial());
+			if(material.isFuel()) {
+				spentMaterial.setFuel(true);
+			}
 			spentMaterial.setWorkOrder(copy);
 			
 			spentMaterialRepo.save(spentMaterial);
