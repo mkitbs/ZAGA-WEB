@@ -32,6 +32,7 @@
     "chart.js": "^2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
     "chartjs-plugin-labels": "^1.1.0",
+    "chartjs-plugin-watermark": "^1.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "hammerjs": "^2.0.8",

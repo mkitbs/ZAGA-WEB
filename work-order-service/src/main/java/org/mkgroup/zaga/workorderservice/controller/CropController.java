@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.dto.AreasByCropsDTO;
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.mkgroup.zaga.workorderservice.repository.CropRepository;
@@ -103,6 +104,12 @@ public class CropController {
 	public ResponseEntity<?> updateCrop(@RequestBody CropDTO cropDTO){
 		cropService.editCrop(cropDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("getAreasByCrops")
+	public ResponseEntity<?> getAreasByCrops() {
+		List<AreasByCropsDTO> retVals = cropService.getAreasByCrops();
+		return new ResponseEntity<List<AreasByCropsDTO>>(retVals, HttpStatus.OK);
 	}
 	
 }

@@ -99,8 +99,8 @@ public class SpentMaterialController {
 	}
 	
 	@GetMapping("getDataForReport")
-	public ResponseEntity<?> getDataForReport(@RequestHeader("SapUserId") String sapuserid){
-		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport(sapuserid);
+	public ResponseEntity<?> getDataForReport(@RequestHeader("TenantId") String tenantId){
+		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport(Long.parseLong(tenantId));
 		return new ResponseEntity<List<MaterialReportDTO>>(data, HttpStatus.OK);
 	}
 }
