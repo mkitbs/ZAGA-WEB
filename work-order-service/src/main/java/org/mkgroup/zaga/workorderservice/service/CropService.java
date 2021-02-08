@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
+import org.mkgroup.zaga.workorderservice.dto.AreasByCropsDTO;
 import org.mkgroup.zaga.workorderservice.dto.CropDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.Crop;
@@ -206,6 +207,11 @@ public class CropService {
 		Culture culture = cultureRepo.getOne(cropDTO.getCultureId());
 		crop.setCulture(culture);
 		cropRepo.save(crop);
+	}
+	
+	public List<AreasByCropsDTO> getAreasByCrops() {
+		List<AreasByCropsDTO> retVals = cropRepo.findAreasByCrops();
+		return retVals;
 	}
 	
 }

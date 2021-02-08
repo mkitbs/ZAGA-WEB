@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.ws.rs.Path;
 
+import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
@@ -103,8 +104,8 @@ public class WorkOrderWorkerController {
 	}
 	
 	@GetMapping("getDataForReport")
-	public ResponseEntity<?> getDataForReport(@RequestHeader("SapUserId") String sapuserid){
-		List<WorkerReportDTO> data = wowService.getWorkersForReport(sapuserid);
+	public ResponseEntity<?> getDataForReport(@RequestHeader("TenantId") String tenantId){
+		List<WorkerReportDTO> data = wowService.getWorkersForReport(Long.parseLong(tenantId));
 		return new ResponseEntity<List<WorkerReportDTO>>(data, HttpStatus.OK);
 	}
 	
@@ -121,5 +122,11 @@ public class WorkOrderWorkerController {
 		WorkOrderWorker wow = wowService.getOne(id);
 		WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 		return new ResponseEntity<WorkOrderWorkerDTO>(wowDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("getNumOfEmployeesPerOperation")
+	public ResponseEntity<?> getNumOfEmployeesPerOperation(@RequestHeader("TenantId") String tenantId) { 
+		List<NumOfEmployeesPerOperationDTO> retVals = wowService.getWorkersPerOperation(Long.parseLong(tenantId));
+		return new ResponseEntity<List<NumOfEmployeesPerOperationDTO>>(retVals, HttpStatus.OK);
 	}
 }

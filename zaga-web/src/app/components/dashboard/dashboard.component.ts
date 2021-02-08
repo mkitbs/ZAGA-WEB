@@ -7,6 +7,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { config } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { WorkOrderWorkerService } from 'src/app/service/work-order-worker.service';
+import { NumOfEmployeesPerOperation } from 'src/app/models/NumOfEmployeesPerOperation';
+import { WorkOrderService } from 'src/app/service/work-order.service';
+import { CropService } from 'src/app/service/crop.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +22,98 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild('scroll', null) private scroll: ElementRef<any>;
 
-  constructor(private renderer: Renderer2) { }
+  constructor(
+    private renderer: Renderer2,
+    private wowService: WorkOrderWorkerService,
+    private woService: WorkOrderService,
+    private cropService: CropService
+  ) { }
+
+  numOfEmployeesPerOperation: NumOfEmployeesPerOperation[] = [];
+  barChartWorkerNoLabels: any[] = [];
+  barChartWorkerNoData: any[] = [];
+  numbersEmpPerOp: any[] = [];
+  chartEmployeePerOpReady = false;
+  chartEmployeePerOpEmpty;
+
+  operationsForToday: any[] = [];
+  barChartData: any[] = [];
+  barChartLabels: any[] = [];
+  numbersTreated: any[] = [];
+  numbersArea: any[] = [];
+  chartOpTodayReady = false;
+  chartOpTodayEmpty;
+
+  areasByCrops: any[] = [];
+  barChartAreaPerCultureLabels: any[] = [];
+  barChartAreaPerCultureData: any[] = [];
+  numbersAreasByCrops: any[] = [];
+  chartAreasByCropsReady = false;
+  chartAreasByCropsEmpty;
+
+  ngOnInit() {
+    localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+    this.wowService.getNumOfOperations().subscribe(data => {
+      this.numOfEmployeesPerOperation = data;
+      if(this.numOfEmployeesPerOperation.length == 0){
+        this.chartEmployeePerOpEmpty = true;
+      } else {
+        this.chartEmployeePerOpEmpty = false;
+      }
+      this.numOfEmployeesPerOperation.forEach(value => {
+        this.barChartWorkerNoLabels.push(value.operation);
+        //this.barChartWorkerNoData.push(value.numOfEmployees);
+        this.numbersEmpPerOp.push(value.numOfEmployees);
+        
+      })
+      this.barChartWorkerNoData = [
+        {data: this.numbersEmpPerOp,  backgroundColor: '#73964a', hoverBackgroundColor: '#33490b'}
+        
+      ];
+      this.chartEmployeePerOpReady = true;
+    })
+
+    this.woService.getOperationsForToday().subscribe(data => {
+      this.operationsForToday = data;
+      if(this.operationsForToday.length == 0){
+        this.chartOpTodayEmpty = true;
+      } else {
+        this.chartOpTodayEmpty = false;
+      }
+      console.log(this.operationsForToday)
+      this.operationsForToday.forEach(value => {
+        this.barChartLabels.push(value.operation);
+        this.numbersArea.push(value.area.toFixed(2));
+        this.numbersTreated.push(value.treated.toFixed(2));
+      })
+      this.barChartData = [
+        {data: this.numbersTreated, label:'urađeno ha', backgroundColor: '#73964a', hoverBackgroundColor: '#33490b'},
+        {data: this.numbersArea, label:'preostalo ha', backgroundColor: '#f68901', hoverBackgroundColor: "#f68901"}
+      ]
+      console.log(this.barChartLabels)
+      console.log(this.barChartData)
+      this.chartOpTodayReady = true;
+    })
+
+    this.cropService.getAreasByCrops().subscribe(data => {
+      this.areasByCrops = data;
+      if(this.areasByCrops.length == 0){
+        this.chartAreasByCropsEmpty = true;
+      } else {
+        this.chartAreasByCropsEmpty = false;
+      }
+      this.areasByCrops.forEach(value => {
+        this.barChartAreaPerCultureLabels.push(value.culture);
+        this.numbersAreasByCrops.push(value.area.toFixed(2));
+      })
+      this.barChartAreaPerCultureData = [
+        {data: this.numbersAreasByCrops}
+      ]
+      this.chartAreasByCropsReady = true;
+    })
+    
+ }
+
   //ucitava se ovde da bi se na pregledu naloga videle promene postojecih i dodele novih
   tempJSON = [
     {
@@ -332,15 +427,18 @@ export class DashboardComponent implements OnInit {
       }
    }
   };
-  barChartLabels = ['PRIHRANA MIN. ĐUBRIVOM II', 'SETVOSPREMANJE NOŠENIM SPREMAČEM', 'FINO SETVOSPREMANJE', 'PREDSETVENO ĐUBRENJE', 'SETVA',
+ /* barChartLabels = ['PRIHRANA MIN. ĐUBRIVOM II', 'SETVOSPREMANJE NOŠENIM SPREMAČEM', 'FINO SETVOSPREMANJE', 'PREDSETVENO ĐUBRENJE', 'SETVA',
   'SETVOSPREMANJE VUČENIM SPREMAČEM', 'PRSKANJE KONT. HERBICIDOM I', 'PRSKANJE ZEMLJIŠNIM HERBICIDOM'];
+  */
   barChartType = 'horizontalBar';
   barChartLegend = true;
+  /*
   barChartData = [
     {data: [357, 288, 378, 356, 300, 320, 164, 123 ], label:'urađeno ha', backgroundColor: '#73964a', hoverBackgroundColor: '#33490b'},
     {data: [230, 253, 149, 124, 150, 25, 0, 0], label:'preostalo ha', backgroundColor: '#f68901', hoverBackgroundColor: "#f68901"}
     
   ];
+  */
 
   //broj zaposlenih po operacijama
   barChartWorkerNoOptions = {
@@ -367,27 +465,29 @@ export class DashboardComponent implements OnInit {
       }
    }
   };
-  barChartWorkerNoLabels = ['OPŠTI POSLOVI', 'ŽETVA-TRANSPORT ROBE', 'ŽETVA', 'MEHAN. UKANJ. OCEVA U SEM. KUKURUZU', 'PREVOZ GORIVA I SIPANJE GORIVA',
-  'TARUPIRANJE', 'MULČIRANJE', 'GRABLJ. LUCERKE, DETEL. I TRAVE'];
+  /*barChartWorkerNoLabels = ['OPŠTI POSLOVI', 'ŽETVA-TRANSPORT ROBE', 'ŽETVA', 'MEHAN. UKANJ. OCEVA U SEM. KUKURUZU', 'PREVOZ GORIVA I SIPANJE GORIVA',
+  'TARUPIRANJE', 'MULČIRANJE', 'GRABLJ. LUCERKE, DETEL. I TRAVE'];*/
   barChartWorkerNoType = 'horizontalBar';
   barChartWorkerNoLegend = false;
-  barChartWorkerNoData = [
+  /*barChartWorkerNoData = [
     {data: [9, 8, 2, 2, 1, 1, 1, 1],  backgroundColor: '#73964a', hoverBackgroundColor: '#33490b'}
     
   ];
+  */
 
   //povrsine po kulturama
-  barChartAreaPerCultureType = 'bar';
-  barChartAreaPerCultureLabels = ["Šećerna repa", "Kukuruz", "Soja", "Semenski kukuruz", "Kukuruz šećerac", "Grašak", "Semenska pšenica",
-  "Kukuruz kokičar", "Ozima pšenica", "Semenska soja", "Postrni kukuruz", "Boranija"];
-  barChartAreaPerCultureData = [
+  barChartAreaPerCultureType = 'line';
+  /*barChartAreaPerCultureLabels = ["Šećerna repa", "Kukuruz", "Soja", "Semenski kukuruz", "Kukuruz šećerac", "Grašak", "Semenska pšenica",
+  "Kukuruz kokičar", "Ozima pšenica", "Semenska soja", "Postrni kukuruz", "Boranija"];*/
+  /*barChartAreaPerCultureData = [
     {data: [1110, 840, 834, 434, 364, 293, 254, 202, 154, 151, 149, 112]}
-  ]
+  ]*/
   barChartAreaPerCultureOptions = {
     legend: false,
     plugins: {
       datalabels: {
-         display: false
+         display: true,
+         align: 'top'
       },
       labels: {
         render: function (args) {
@@ -411,7 +511,7 @@ export class DashboardComponent implements OnInit {
       ],
       yAxes: [{
         stacked: true
-   }]
+      }]
     },
     plugins: {
       datalabels: {
@@ -420,6 +520,10 @@ export class DashboardComponent implements OnInit {
          anchor: 'center',
          color: 'white'
       }
+   },
+   watermark: {
+    rotate: -22.5,
+    text: 'DRAFT'
    }
   };
   barChartYieldPerCultureLabels = ['KUKURUZ', 'MKC-SEMENSKA PŠENICA C-2', 'OZIMI JEČAM', 'AGROGLOBE-SEMENSKA PŠENICA C-1', 'OZIMA PŠENICA',
@@ -756,9 +860,7 @@ export class DashboardComponent implements OnInit {
     }
   }
     
-  ngOnInit() {
-     localStorage["workOrders"] = JSON.stringify(this.tempJSON);
-  }
+ 
   
 
 }

@@ -165,10 +165,24 @@ public class AuthController {
     }
 	
 	@GetMapping("/check/{token}/userId")
-    public ResponseEntity<?> getTenant(@PathVariable String token) throws InvalidJTWTokenException{
+    public ResponseEntity<?> getUser(@PathVariable String token) throws InvalidJTWTokenException{
     	if(permissions.validateJwtToken(token)) {
     		try {
 				return new ResponseEntity<Long>(jwtProvider.getUserPrincipal(token).getId(), HttpStatus.OK);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	return null;
+    }
+	
+	@GetMapping("/check/{token}/tenantId")
+    public ResponseEntity<?> getTenant(@PathVariable String token) throws InvalidJTWTokenException{
+    	if(permissions.validateJwtToken(token)) {
+    		try {
+    			User user = userRepository.getOne(jwtProvider.getUserPrincipal(token).getId());
+				return new ResponseEntity<Long>(user.getTenant().getId(), HttpStatus.OK);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

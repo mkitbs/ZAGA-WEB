@@ -62,4 +62,10 @@ export class WorkOrderWorkerService {
       environment.gatewayWorkOrderURL + "api/workOrderWorker/getOne/" + id
     )
   }
+
+  getNumOfOperations(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/workOrderWorker/getNumOfEmployeesPerOperation"
+    )
+  }
 }

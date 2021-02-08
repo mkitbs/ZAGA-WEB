@@ -17,6 +17,7 @@ import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
+import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -584,21 +585,8 @@ public class WorkOrderWorkerService {
 
 	}
 	
-	public List<WorkerReportDTO> getWorkersForReport(String sapUserId){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
-		
-		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByWorkerId(user.getBody().getTenant().getId());
+	public List<WorkerReportDTO> getWorkersForReport(Long tenantId){
+		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByWorkerId(tenantId);
 		WorkerReportDTO report = new WorkerReportDTO();
 		List<WorkerReportDTO> retValues = new ArrayList<WorkerReportDTO>();
 		if(wows.size() > 0) {
@@ -784,6 +772,11 @@ public class WorkOrderWorkerService {
 			}
 			
 		}
+	}
+	
+	public List<NumOfEmployeesPerOperationDTO> getWorkersPerOperation(Long tenantId){
+		List<NumOfEmployeesPerOperationDTO> retVals = wowRepo.findNumOfOperation(tenantId);
+		return retVals;
 	}
 	
 }

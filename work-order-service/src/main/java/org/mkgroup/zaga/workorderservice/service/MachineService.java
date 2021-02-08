@@ -217,21 +217,8 @@ public class MachineService {
 		return retVals;
 	}
 	
-	public List<MachineReportDTO> getMachinesForReport(String sapUserId){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
-		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByMachineId(user.getBody().getTenant().getId());
+	public List<MachineReportDTO> getMachinesForReport(Long tenantId){
+		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByMachineId(tenantId);
 		MachineReportDTO report = new MachineReportDTO();
 		List<MachineReportDTO> retValues = new ArrayList<MachineReportDTO>();
 		if(wows.size() > 0) {

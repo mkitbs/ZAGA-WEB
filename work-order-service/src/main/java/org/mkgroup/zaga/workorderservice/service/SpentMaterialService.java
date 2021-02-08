@@ -450,21 +450,9 @@ public class SpentMaterialService {
 
 	}
 	
-	public List<MaterialReportDTO> getMaterialsForReport(String sapUserId){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
+	public List<MaterialReportDTO> getMaterialsForReport(Long tenantId){
 		
-		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId(user.getBody().getTenant().getId());
+		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId(tenantId);
 		
 		MaterialReportDTO report = new MaterialReportDTO();
 		List<MaterialReportDTO> retValues = new ArrayList<MaterialReportDTO>();

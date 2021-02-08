@@ -97,8 +97,8 @@ public class MachineController {
 	}
 	
 	@GetMapping("getDataForReport")
-	public ResponseEntity<?> getDataForReport(@RequestHeader("SapUserId") String sapuserid){
-		List<MachineReportDTO> data = machineService.getMachinesForReport(sapuserid);
+	public ResponseEntity<?> getDataForReport(@RequestHeader("TenantId") String tenantId){
+		List<MachineReportDTO> data = machineService.getMachinesForReport(Long.parseLong(tenantId));
 		return new ResponseEntity<List<MachineReportDTO>>(data, HttpStatus.OK);
 	}
 	

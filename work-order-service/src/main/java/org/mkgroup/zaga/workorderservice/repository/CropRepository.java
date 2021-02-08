@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.mkgroup.zaga.workorderservice.dto.AreasByCropsDTO;
 import org.mkgroup.zaga.workorderservice.model.Crop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,7 @@ public interface CropRepository extends JpaRepository<Crop, UUID>{
 	
 	@Query(value = "SELECT * FROM crop c WHERE c.culture_id=:cultureId", nativeQuery = true)
 	List<Crop> findByCulture(UUID cultureId);
+	
+	@Query(value = "SELECT cul.name AS culture, SUM(c.area) AS area FROM crop AS c INNER JOIN culture AS cul on c.culture_id=cul.id WHERE c.year=YEAR(CURDATE()) GROUP BY c.culture_id", nativeQuery = true)
+	List<AreasByCropsDTO> findAreasByCrops();
 }

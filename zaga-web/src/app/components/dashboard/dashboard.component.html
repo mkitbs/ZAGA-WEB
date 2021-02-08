@@ -1,46 +1,61 @@
 <navbar></navbar>
 <div class="container" style="margin-top: 50px;">
   <br><br>
+  <!--
   <div style="width: inherit; background-color: #ffc803; text-align: center;font-size: 15px;color:white">
     <span>Ovo je statička stranica, ne pokazuje realne podatke, osim vremenske prognoze!</span> 
   </div>
   <br>
+   -->
   <a class="weatherwidget-io" href="https://forecast7.com/sr/45d2719d83/novi-sad/" data-label_1="NOVI SAD"
     data-label_2="Vremenska prognoza"  data-icons="Climacons Animated" data-theme="original" data-suncolor="#f68901">Vidi vremensku prognozu</a>
   <br><br>
   <div class="row">
     <div class="col">
       <div style="display: block;">
-        <h3 style="text-align: center;">Operacije danas</h3>
-        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [chartType]="barChartType"
+        <h3 style="text-align: center;">Agro-tehinčke mere danas</h3>
+        <canvas baseChart *ngIf="chartOpTodayReady && !chartOpTodayEmpty" [datasets]="barChartData" [labels]="barChartLabels" [chartType]="barChartType"
           [legend]="barChartLegend" [options]="barChartOptions">
         </canvas>
+        <div *ngIf="chartOpTodayEmpty">
+          <img src="../../../assets/line-chart.png" class="center" />
+          <h5 style="text-align: center;" class="center">Nema podataka za prikazivanje</h5>
+        </div>
       </div>
     </div>
     <div class="col">
       <div style="display: block">
-        <h3 style="text-align: center;">Broj zaposlenih po operacijama (danas)</h3>
+        <h3 style="text-align: center;">Broj zaposlenih po ATM (danas)</h3>
         <br>
-        <canvas baseChart [datasets]="barChartWorkerNoData" [labels]="barChartWorkerNoLabels"
+        <canvas *ngIf="chartEmployeePerOpReady && !chartEmployeePerOpEmpty" baseChart [datasets]="barChartWorkerNoData" [labels]="barChartWorkerNoLabels"
           [chartType]="barChartWorkerNoType" [legend]="barChartWorkerNoLegend" [options]="barChartWorkerNoOptions">
         </canvas>
+        <div *ngIf="chartEmployeePerOpEmpty">
+          <img src="../../../assets/line-chart.png" class="center" />
+          <h5 style="text-align: center;" class="center">Nema podataka za prikazivanje</h5>
+        </div>
       </div>
     </div>
   </div>
   <br><br>
   <div class="row">
     <div class="col">
-      <div style="display: block">
-        <h3 style="text-align: center;">Površine po kulturama</h3>
+      <div style="display: block;">
+        <h3 style="text-align: center;">Površine (ha) po kulturama</h3>
         <br>
-        <canvas baseChart [datasets]="barChartAreaPerCultureData" [labels]="barChartAreaPerCultureLabels"
+        <canvas *ngIf="chartAreasByCropsReady && !chartAreasByCropsEmpty" baseChart [datasets]="barChartAreaPerCultureData" [labels]="barChartAreaPerCultureLabels"
           [chartType]="barChartAreaPerCultureType" [colors]="chartColors" [options]="barChartAreaPerCultureOptions">
         </canvas>
+        <div *ngIf="chartAreasByCropsEmpty">
+          <img src="../../../assets/line-chart.png" class="center" />
+          <h5 style="text-align: center;" class="center">Nema podataka za prikazivanje</h5>
+        </div>
       </div>
     </div>
     <div class="col">
-      <div style="display: block">
+      <div style="display: block;">
         <h3 style="text-align: center;">Prinos po kulturama t/ha</h3>
+        <h5 style="text-align: center; font-style: italic;"><span style="color: red;">*</span>Uzorak! Ne pokazuje realne podatke.</h5>
         <br>
         <canvas baseChart [datasets]="barChartYieldPerCultureData" [labels]="barChartYieldPerCultureLabels"
           [chartType]="barChartYieldPerCultureType" [legend]="barChartYieldPerCultureLegend"
@@ -53,6 +68,7 @@
   <div class="row">
     <div class="col">
       <h3 style="text-align: center;">Na terenu</h3>
+      <h5 style="text-align: center; font-style: italic;"><span style="color: red;">*</span>Uzorak! Ne pokazuje realne podatke.</h5>
       <br>
       <table class="table">
         <thead>

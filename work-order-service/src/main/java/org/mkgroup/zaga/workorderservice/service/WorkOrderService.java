@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
+import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -116,7 +117,7 @@ public class WorkOrderService {
 	@Value("${sap.services.s4h_close}")
 	String sapS4Close;
 	
-	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO, String sapUserId) throws Exception {
+	public SAPResponse addWorkOrder(WorkOrderDTO workOrderDTO, String sapUserId, Long tenantId) throws Exception {
 
 			SAPResponse sapResponse = new SAPResponse();
 			log.info("Work order creation started");
@@ -144,22 +145,7 @@ public class WorkOrderService {
 			
 			workOrder.setResponsible(responsible);
 			workOrder.setUserCreatedSapId(Long.parseLong(sapUserId));
-			
-			RestTemplate rest = new RestTemplate();
-			HttpServletRequest requesthttp = 
-			        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-			                .getRequest();
-
-			String token = (requesthttp.getHeader("Token"));
-			System.out.println(token);
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", "Bearer " + token);
-			HttpEntity<String> request2send = new HttpEntity<String>(headers);
-			ResponseEntity<Long> tenantId = rest.exchange(
-					"http://localhost:8091/auth/getLoggedTenant/", 
-					HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
-			workOrder.setTenantId(tenantId.getBody());
-			
+			workOrder.setTenantId(tenantId);
 			workOrder = workOrderRepo.save(workOrder);
 			
 			UUID workOrderId = workOrder.getId();
@@ -394,26 +380,12 @@ public class WorkOrderService {
 		    return sapResponse;
 		}
 	
-	public List<WorkOrderDTO> getAll(String sapUserId, HttpServletRequest request, HttpServletResponse response){
+	public List<WorkOrderDTO> getAll(Long tenantId){
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
-	    
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
 		
 		for(WorkOrder workOrder : workOrders) {
-			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
+			if(tenantId == workOrder.getTenantId()) {
 				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
@@ -421,22 +393,8 @@ public class WorkOrderService {
 		return workOrdersDTO;
 	}
 	
-	public List<WorkOrderDTO> getMyWorkOrders(Long userId, String sapUserId){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserById/"+userId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
-		
-		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId), user.getBody().getTenant().getId());
+	public List<WorkOrderDTO> getMyWorkOrders(Long tenantId, String sapUserId){
+		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId), tenantId);
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 	    
 		for(WorkOrder workOrder : workOrders) {
@@ -643,7 +601,7 @@ public class WorkOrderService {
 	    return sapResponse;
 	}
 	
-	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate, String sapUserId) throws Exception {
+	public WorkOrder createCopy(WorkOrder workOrder, DateDTO copyDate, String sapUserId, Long tenantId) throws Exception {
 		
 		SAPResponse sapResponse = new SAPResponse();
 		
@@ -666,21 +624,7 @@ public class WorkOrderService {
 		copy.setDate(date);
 		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
 		copy.setUserCreatedSapId(Long.parseLong(sapUserId));
-		
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<Long> tenantId = rest.exchange(
-				"http://localhost:8091/auth/getLoggedTenant/", 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<Long>(){});
-		copy.setTenantId(tenantId.getBody());
+		copy.setTenantId(tenantId);
 		
 		copy = workOrderRepo.save(copy);
 		UUID workOrderId = copy.getId();
@@ -914,21 +858,8 @@ public class WorkOrderService {
 			//workOrderRepo.save(workOrder);
 	}
 	
-	public List<WorkOrderDTO> getAllByStatus(Long userId, WorkOrderStatus status){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserById/"+userId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
-		List<WorkOrder> workOrders = workOrderRepo.findWoByStatus(user.getBody().getTenant().getId(), status.toString());
+	public List<WorkOrderDTO> getAllByStatus(Long tenantId, WorkOrderStatus status){
+		List<WorkOrder> workOrders = workOrderRepo.findWoByStatus(tenantId, status.toString());
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 		for(WorkOrder workOrder : workOrders) {
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
@@ -1076,26 +1007,12 @@ public class WorkOrderService {
 		return results;
 	}
 	
-	public List<WorkOrderDTO> getAllForTractorDriver(String sapUserId, HttpServletRequest request, HttpServletResponse response){
+	public List<WorkOrderDTO> getAllForTractorDriver(Long tenantId){
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
-	    
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserBySapId/"+sapUserId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
 		
 		for(WorkOrder workOrder : workOrders) {
-			if(user.getBody().getTenant().getId() == workOrder.getTenantId()) {
+			if(tenantId == workOrder.getTenantId()) {
 				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
@@ -1103,22 +1020,9 @@ public class WorkOrderService {
 		return workOrdersDTO;
 	}
 	
-	public List<WorkOrderDTO> getMyWoByStatus(Long userId, WorkOrderStatus status){
-		RestTemplate rest = new RestTemplate();
-		HttpServletRequest requesthttp = 
-		        ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())
-		                .getRequest();
-
-		String token = (requesthttp.getHeader("Token"));
-		System.out.println(token);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + token);
-		HttpEntity<String> request2send = new HttpEntity<String>(headers);
-		ResponseEntity<UserAuthDTO> user = rest.exchange(
-				"http://localhost:8091/user/getUserById/"+userId, 
-				HttpMethod.GET, request2send, new ParameterizedTypeReference<UserAuthDTO>(){});
-		System.out.println(user.getBody().getTenant().getId() + " -> " + Long.parseLong(user.getBody().getSapUserId()) + " -> " + status);
-		List<WorkOrder> workOrders = workOrderRepo.findMyWoByStatus(user.getBody().getTenant().getId(), Long.parseLong(user.getBody().getSapUserId()), status.toString());
+	public List<WorkOrderDTO> getMyWoByStatus(Long sapUserId, Long tenantId, WorkOrderStatus status){
+		System.out.println(tenantId + " -> " + sapUserId + " -> " + status);
+		List<WorkOrder> workOrders = workOrderRepo.findMyWoByStatus(tenantId, sapUserId, status.toString());
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 		for(WorkOrder workOrder : workOrders) {
 			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
@@ -1126,6 +1030,11 @@ public class WorkOrderService {
 		}
 		System.out.println(workOrdersDTO);
 		return workOrdersDTO;
+	}
+	
+	public List<OperationsTodayDTO> getOperationsForToday(Long tenantId){
+		List<OperationsTodayDTO> retValues = workOrderRepo.findAllOperationsForToday(tenantId);
+		return retValues;
 	}
 	
 }

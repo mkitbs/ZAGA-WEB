@@ -34,6 +34,7 @@ public class ZuulPreFilter extends ZuulFilter{
 	    String permisije = restTemplate.getForObject("http://localhost:8091/auth/check/{token}", String.class, token);
 		String sapUserId = restTemplate.getForObject("http://localhost:8091/auth/check/{token}/sapUserId", String.class, token);
 		Long userId = restTemplate.getForObject("http://localhost:8091/auth/check/{token}/userId", Long.class, token);
+		Long tenantId = restTemplate.getForObject("http://localhost:8091/auth/check/{token}/tenantId", Long.class, token);
 	    //String permisije = restTemplate.getForObject("http://192.168.10.206:8081/api/auth/check/{token}", String.class, token);
 	    //String username = restTemplate.getForObject("http://192.168.10.206:8081/api/auth/check/{token}/username", String.class, token);
 	    System.out.println(permisije);
@@ -42,6 +43,7 @@ public class ZuulPreFilter extends ZuulFilter{
 	    ctx.addZuulRequestHeader("SapUserId", sapUserId);
 	    ctx.addZuulRequestHeader("Token", token);
 	    ctx.addZuulRequestHeader("UserId", String.valueOf(userId));
+	    ctx.addZuulRequestHeader("TenantId", String.valueOf(tenantId));
 	    System.out.println(ctx);
 	    
 	    return null;

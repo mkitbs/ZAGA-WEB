@@ -63,4 +63,10 @@ export class CropService {
       environment.gatewayWorkOrderURL + "api/crop/"
     )
   }
+
+  getAreasByCrops(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/crop/getAreasByCrops"
+    )
+  }
 }
