@@ -1,2 +1,8 @@
 Dockerfile
 zaga-web/src/environments
+authorization-service/src/main/resources/bootstrap.yml
+work-order-service/src/main/resources/bootstrap.yml
+search-service/src/main/resources/bootstrap.yml
+*.yml
+zuul-api-gateway/src/main/resources/bootstrap.yml
+eureka-service-discovery/src/main/resources/bootstrap.yml

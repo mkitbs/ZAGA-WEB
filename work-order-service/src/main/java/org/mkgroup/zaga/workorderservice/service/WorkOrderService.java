@@ -146,6 +146,8 @@ public class WorkOrderService {
 			workOrder.setResponsible(responsible);
 			workOrder.setUserCreatedSapId(Long.parseLong(sapUserId));
 			workOrder.setTenantId(tenantId);
+			workOrder.setNumOfRefOrder(workOrderDTO.getNumOfRefOrder());
+			workOrder.setNote(workOrderDTO.getNote());
 			workOrder = workOrderRepo.save(workOrder);
 			
 			UUID workOrderId = workOrder.getId();
@@ -311,6 +313,7 @@ public class WorkOrderService {
 		    if(status.equals("S")) {
 		    	System.out.println("USPESNO");
 		    	//uspesno
+		    	System.out.println("FORMATTED => " + formatted);
 		    	JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 		    	JsonArray array = convertedObject.get("d").getAsJsonObject().get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
 			    JsonArray arrayMaterial = convertedObject.get("d").getAsJsonObject().get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
@@ -518,7 +521,8 @@ public class WorkOrderService {
 		User responsible = employeeService.getOne(workOrderDTO.getResponsibleId());
 		
 		workOrder.setResponsible(responsible);
-		
+		workOrder.setNumOfRefOrder(workOrderDTO.getNumOfRefOrder());
+		workOrder.setNote(workOrderDTO.getNote());
 		
 
 		Map<String, String> headerValues = getHeaderValues();
@@ -876,6 +880,8 @@ public class WorkOrderService {
 		json = json.replaceAll(":}", ":\"\"}");
 		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
 		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
+		json = json.replaceAll(" NoteHeader:[a-zA-Z -0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
+		json = json.replaceAll(" NoteItem:[a-zA-Z -0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
 		//System.out.println(json);
 		
 		return json;
@@ -899,8 +905,14 @@ public class WorkOrderService {
 		
 		HttpEntity entity = new HttpEntity(headersRestTemplate);
 
-		ResponseEntity<Object> response = restTemplate.exchange(
-		    sapS4Hurl, HttpMethod.GET, entity, Object.class);
+		ResponseEntity<Object> response = null;
+		try {
+			response = restTemplate.exchange(
+				    sapS4Hurl, HttpMethod.GET, entity, Object.class);
+		} catch(Exception e) {
+			workOrderRepo.delete(wo);
+		}
+		
 		
 		//ResponseEntity<Object> resp = sap4hana.getCSRFToken("Basic " + authHeader, "Fetch");
 		

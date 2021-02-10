@@ -170,6 +170,9 @@ export class CreateworkOrderComponent implements OnInit {
   materialFC: FormControl = new FormControl("");
   woMaterialFC: FormControl = new FormControl("");
 
+  numOfRefOrderFC: FormControl = new FormControl("");
+  noteFC: FormControl = new FormControl("");
+
   filteredOptions: Observable<string[]>;
 
   currentYear;
@@ -254,6 +257,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.loading = false;
         this.spinner.hide();
         this.workOrder = data;
+        this.noteFC.setValue(this.workOrder.note)
+        this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
         console.log(this.workOrder.treated)
         if (this.workOrder.treated != undefined) {
           this.workOrder.materials.forEach(mat => {
@@ -848,6 +853,9 @@ export class CreateworkOrderComponent implements OnInit {
           this.workOrder.status = "Storniran";
         }
 
+        this.noteFC.setValue(this.workOrder.note)
+        this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
+
         this.workOrder.date = {
           day: +this.workOrder.date.day,
           month: +this.workOrder.date.month,
@@ -954,6 +962,8 @@ export class CreateworkOrderComponent implements OnInit {
   getOneWorkOrder(){
     this.workOrderService.getOne(this.workId).subscribe((data) => {
       this.workOrder = data;
+      this.noteFC.setValue(this.workOrder.note)
+      this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
 
       this.workOrder.treated = this.treatedEntered;
       if (this.workOrder.status == "NEW") {
@@ -1007,6 +1017,8 @@ export class CreateworkOrderComponent implements OnInit {
       this.spinner.hide();
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
+        this.noteFC.setValue(this.workOrder.note)
+        this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
 
         this.workOrder.treated = this.treatedEntered;
         if (this.workOrder.status == "NEW") {
@@ -1209,6 +1221,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.quantityEntered = null;
           this.workOrderService.getOne(this.workId).subscribe((data) => {
             this.workOrder = data;
+            this.noteFC.setValue(this.workOrder.note)
+            this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
             if (this.workOrder.status == "NEW") {
               this.workOrder.status = "Novi";
             } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -1292,6 +1306,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
           this.workOrderService.getOne(this.workId).subscribe((data) => {
             this.workOrder = data;
+            this.noteFC.setValue(this.workOrder.note)
+            this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
             if (this.workOrder.status == "NEW") {
               this.workOrder.status = "Novi";
             } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -1387,6 +1403,8 @@ export class CreateworkOrderComponent implements OnInit {
           this.spinner.hide();
           this.workOrderService.getOne(this.workId).subscribe((data) => {
             this.workOrder = data;
+            this.noteFC.setValue(this.workOrder.note)
+            this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
             if (this.workOrder.status == "NEW") {
               this.workOrder.status = "Novi";
             } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -1469,6 +1487,8 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrder.operationId = this.operationFC.value.dbid
       this.workOrder.tableId = this.fieldFC.value.dbId;
       this.workOrder.cropId = this.cultureFC.value.id
+      this.workOrder.numOfRefOrder = this.numOfRefOrderFC.value;
+      this.workOrder.note = this.noteFC.value;
       console.log("===========")
       console.log(this.workOrder)
       console.log("===========")
@@ -1512,6 +1532,8 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.operationId = this.operationFC.value.dbid
     this.workOrder.tableId = this.fieldFC.value.dbId;
     this.workOrder.cropId = this.cultureFC.value.id
+    this.workOrder.numOfRefOrder = this.numOfRefOrderFC.value
+    this.workOrder.note = this.noteFC.value;
     if(this.noOperationOutput){
       this.workOrder.noOperationOutput = true;
       this.validTreated = true;
@@ -1534,7 +1556,8 @@ export class CreateworkOrderComponent implements OnInit {
         this.toastr.success("Uspešno sačuvan radni nalog.");
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
-
+          this.noteFC.setValue(this.workOrder.note)
+          this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
           console.log(this.workOrder);
           if (this.workOrder.status == "NEW") {
             this.workOrder.status = "Novi";
@@ -1602,6 +1625,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = true;
     } else {
       this.validWoInfo = false;
+      this.toastr.error("Unesite obrađenu površinu.")
     }
     if(this.noOperationOutput){
       this.validWoInfo = true;
@@ -1680,6 +1704,8 @@ export class CreateworkOrderComponent implements OnInit {
       console.log(this.validWow)
       this.spinner.show();
       this.workOrder.treated = this.treatedEntered;
+      this.workOrder.numOfRefOrder = this.numOfRefOrderFC.value
+      this.workOrder.note = this.noteFC.value;
       this.workOrder.cancellation = false;
       if(this.noOperationOutput){
         this.workOrder.noOperationOutput = true;
@@ -1727,6 +1753,8 @@ export class CreateworkOrderComponent implements OnInit {
   getWorkOrder() {
     this.workOrderService.getOne(this.workId).subscribe((data) => {
       this.workOrder = data;
+      this.noteFC.setValue(this.workOrder.note)
+      this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
       if (this.workOrder.status == "NEW") {
         this.workOrder.status = "Novi";
       } else if (this.workOrder.status == "IN_PROGRESS") {

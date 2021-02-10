@@ -43,6 +43,8 @@ public class WorkOrderDTO {
 	private long sapId;
 	private boolean cancellation;
 	private boolean noOperationOutput;
+	private String numOfRefOrder;
+	private String note;
 	
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
@@ -64,6 +66,8 @@ public class WorkOrderDTO {
 		treated = wo.getTreated();
 		userCreatedId = wo.getUserCreatedSapId().toString();
 		noOperationOutput = wo.isNoOperationOutput();
+		numOfRefOrder = wo.getNumOfRefOrder();
+		note = wo.getNote();
 		if(wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {

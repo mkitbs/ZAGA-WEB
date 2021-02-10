@@ -59,6 +59,12 @@ public class WorkOrder {
 	
 	private boolean noOperationOutput = false;
 	
+	@Column(nullable = true)
+	private String numOfRefOrder;
+	
+	@Column(nullable = true)
+	private String note;
+	
 	@ManyToOne
 	@JoinColumn(name="responsible_id", nullable=true)
 	private User responsible;

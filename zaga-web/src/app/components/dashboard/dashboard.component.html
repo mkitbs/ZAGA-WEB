@@ -14,6 +14,7 @@
     <div class="col">
       <div style="display: block;">
         <h3 style="text-align: center;">Agro-tehinčke mere danas</h3>
+        <br>
         <canvas baseChart *ngIf="chartOpTodayReady && !chartOpTodayEmpty" [datasets]="barChartData" [labels]="barChartLabels" [chartType]="barChartType"
           [legend]="barChartLegend" [options]="barChartOptions">
         </canvas>
@@ -132,4 +133,5 @@
     </div>
   </div>
   <br>
+  <ngx-spinner></ngx-spinner>
 </div>
