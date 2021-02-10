@@ -22,4 +22,6 @@ export class WorkOrder {
   userCreatedId;
   cancellation;
   noOperationOutput;
+  numOfRefOrder;
+  note;
 }

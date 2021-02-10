@@ -51,8 +51,10 @@ public class WorkOrderToSAP {
 	private String NoMaterial;
 	@JsonProperty("OnlyMaterial")
 	private String OnlyMaterial;
-	@JsonProperty("Note")
-	private String Note;
+	@JsonProperty("NoteHeader")
+	private String NoteHeader;
+	@JsonProperty("NoteItem")
+	private String NoteItem;
 	@JsonProperty("DataEntryUserNumber")
 	private String DataEntryUserNumber;
 	@JsonProperty("DataChangeUserNumber")
@@ -94,7 +96,8 @@ public class WorkOrderToSAP {
 		} else {
 			this.OnlyMaterial = "";
 		}
-		this.Note = "";
+		this.NoteHeader = workOrder.getNumOfRefOrder();
+		this.NoteItem = workOrder.getNote();
 		this.DataEntryUserNumber = workOrder.getUserCreatedSapId().toString();
 		this.Deleted = "";
 		

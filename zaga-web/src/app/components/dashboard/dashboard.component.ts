@@ -11,6 +11,7 @@ import { WorkOrderWorkerService } from 'src/app/service/work-order-worker.servic
 import { NumOfEmployeesPerOperation } from 'src/app/models/NumOfEmployeesPerOperation';
 import { WorkOrderService } from 'src/app/service/work-order.service';
 import { CropService } from 'src/app/service/crop.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,8 @@ export class DashboardComponent implements OnInit {
     private renderer: Renderer2,
     private wowService: WorkOrderWorkerService,
     private woService: WorkOrderService,
-    private cropService: CropService
+    private cropService: CropService,
+    private spinner: NgxSpinnerService,
   ) { }
 
   numOfEmployeesPerOperation: NumOfEmployeesPerOperation[] = [];
@@ -53,6 +55,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     localStorage["workOrders"] = JSON.stringify(this.tempJSON);
+    
     this.wowService.getNumOfOperations().subscribe(data => {
       this.numOfEmployeesPerOperation = data;
       if(this.numOfEmployeesPerOperation.length == 0){
@@ -71,8 +74,9 @@ export class DashboardComponent implements OnInit {
         
       ];
       this.chartEmployeePerOpReady = true;
+    }, error => {
+      
     })
-
     this.woService.getOperationsForToday().subscribe(data => {
       this.operationsForToday = data;
       if(this.operationsForToday.length == 0){
@@ -93,6 +97,8 @@ export class DashboardComponent implements OnInit {
       console.log(this.barChartLabels)
       console.log(this.barChartData)
       this.chartOpTodayReady = true;
+    }, error => {
+     
     })
 
     this.cropService.getAreasByCrops().subscribe(data => {
@@ -110,6 +116,8 @@ export class DashboardComponent implements OnInit {
         {data: this.numbersAreasByCrops}
       ]
       this.chartAreasByCropsReady = true;
+    }, error => {
+      
     })
     
  }

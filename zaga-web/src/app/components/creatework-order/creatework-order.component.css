@@ -44,6 +44,15 @@ h3 {
   vertical-align: middle;
 }
 
+.right-col-header2 {
+  font-weight: bold;
+  color: #73964a;
+  padding-left: 0%;
+  margin-left: 0%;
+  padding-top: 23px;
+  vertical-align: bottom;
+}
+
 td.right-col-header {
   width: 300px !important;
 }
