@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,9 +62,15 @@ public class UserController {
 	
 	@GetMapping("getUserBySapId/{id}")
 	public ResponseEntity<?> getUserBySapId(@PathVariable String id){
-		User user = userRepo.findBySapUserId(id);
-		UserDTO userDTO = new UserDTO(user);
-		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+		if(userRepo.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).isPresent()) {
+    		User logged = userRepo.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    		User user = userRepo.findBySapUserId(id, logged.getTenant().getId());
+    		UserDTO userDTO = new UserDTO(user);
+    		return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 

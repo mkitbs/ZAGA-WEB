@@ -23,7 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	@Query("select u from User u where u.id != ?#{principal.id}")
 	List<User> findUsersExceptSelf();
 	
-	User findBySapUserId(String sapId);
+	@Query(value = "SELECT * from users u WHERE u.sap_user_id=?1 AND u.tenant_id=?2", nativeQuery = true)
+	User findBySapUserId(String sapId, Long tenantId);
 	
 	boolean existsBySapUserIdAndTenantId(String sapUserId, Long tenantId);
 }
