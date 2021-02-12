@@ -154,6 +154,13 @@ public class MachineService {
 		}else {
 			oldMachine.setName(newMachine.getName());
 		}
+		if(newMachine.getType().equals("PG")) {
+			oldMachine.setType(MachineType.PROPULSION);
+		} else if(newMachine.getType().equals("PR")) {
+			oldMachine.setType(MachineType.COUPLING);
+		} else {
+			oldMachine.setType(MachineType.PROPULSION);
+		}
 		
 		oldMachine.setOrgUnit(newMachine.getOrgUnit());
 		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
