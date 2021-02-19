@@ -1,0 +1,14 @@
+h3 {
+  color: #5c7495;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.card-border {
+  border-style: solid;
+  border-color: #5c7495;
+  border-width: medium;
+}

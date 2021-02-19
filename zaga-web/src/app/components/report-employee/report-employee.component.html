@@ -165,7 +165,7 @@
           | SearchWoBetweenDates: filters; 
           let j = index">
 
-          <tr *ngFor="let wo of workOrder.workers; let z = index">
+            <tr *ngFor="let wo of workOrder.workers; let z = index">
               <td *ngIf="z==0 && j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
               <ng-template #elseBlockName><td></td></ng-template>
               <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
@@ -192,8 +192,8 @@
                 {{ workOrder.status }}
               </td>
           
-          </tr>
-        </ng-container>
+            </tr>
+          </ng-container>
           <tr>
             <ng-container *ngFor="let workOrder of worker.workOrders 
               | SearchWorkOrdersCrop: searchCrop.value

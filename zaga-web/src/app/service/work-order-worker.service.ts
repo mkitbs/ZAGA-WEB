@@ -65,7 +65,36 @@ export class WorkOrderWorkerService {
 
   getNumOfOperations(): Observable<any> {
     return this.http.get(
-      environment.gatewayWorkOrderURL + "api/workOrderWorker/getNumOfEmployeesPerOperation"
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getNumOfEmployeesPerOperation"
+    )
+  }
+
+  getHourOfWorkerPerCulture(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getHourOfWorkerPerCulture"
+    )
+  }
+
+  getMachineSumStatePerCulture(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getMachineSumStatePerCulture"
+    )
+  }
+
+  getMachineSumState(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getMachineSumState"
+    )
+  }
+
+  getMachineSumFuelPerCulture(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + 
+      "api/workOrderWorker/getMachineSumFuelPerCulture"
     )
   }
 }

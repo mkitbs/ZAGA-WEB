@@ -24,7 +24,11 @@ import {
   MatSnackBar,
   MatTooltipModule,
   yearsPerPage,
-  MatSelectModule
+  MatSelectModule,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialog,
+  MatDialogModule
 } from "@angular/material";
 import { CloseWorkOrderComponent } from "./components/closework-order/closework-order.component";
 import { ToastrModule } from "ngx-toastr";
@@ -108,12 +112,15 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { SearchWorkOrderNumberPipe } from './pipes/search-work-order-number.pipe';
 import { SearchWorkOrderResponsiblePipe } from './pipes/search-work-order-responsible.pipe';
 import { SearchWoStatusPipe } from './pipes/search-wo-status.pipe'
+import { LeavePageGuard } from "./service/leave-page.guard";
+import { LeavePageConfirmationComponent } from './components/leave-page-confirmation/leave-page-confirmation.component';
+import { WorkOrderReportsComponent } from './components/work-order-reports/work-order-reports.component';
 
 declare var require: any;
 var config = require("config");
 
 const routes: Routes = [
-  { path: "create/workOrder/:workId", component: CreateworkOrderComponent, canActivate: [AuthGuardGuard] },
+  { path: "create/workOrder/:workId", component: CreateworkOrderComponent, canActivate: [AuthGuardGuard], canDeactivate: [LeavePageGuard] },
   { path: "nalog", component: NalogComponent, canActivate: [AuthGuardGuard] },
   { path: "login", component: LoginComponent },
   { path: "workOrder", component: WorkOrderComponent, canActivate: [AuthGuardGuard] },
@@ -138,6 +145,7 @@ const routes: Routes = [
   { path: "workOrderTractorDriver", component: WorkOrderTractorDriverComponent, canActivate: [AuthGuardGuard] },
   { path: "timeTracking/:id", component: TimeTrackingComponent },
   { path: "passwordReset/:token", component: PasswordResetComponent },
+  { path: "workOrderReports", component: WorkOrderReportsComponent, canActivate: [AuthGuardGuard] },
   { path: "404", component: NotFoundComponent },
   { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
   { path: "**", component: NotFoundComponent }
@@ -219,6 +227,8 @@ const routes: Routes = [
     SearchWorkOrderNumberPipe,
     SearchWorkOrderResponsiblePipe,
     SearchWoStatusPipe,
+    LeavePageConfirmationComponent,
+    WorkOrderReportsComponent,
   ],
   imports: [
     BrowserModule,
@@ -242,10 +252,14 @@ const routes: Routes = [
     ChartsModule,
     CdTimerModule,
     MatSelectModule,
+    MatDialogModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyD160yNHv43GMMRFiNI7G5dyNA4e5nchug",
       libraries: ["drawing", "geometry", "places"],
     }),
+  ],
+  entryComponents: [
+    LeavePageConfirmationComponent
   ],
   providers: [
     ThemeService,
@@ -257,6 +271,8 @@ const routes: Routes = [
     MatSnackBar,
     DeviceDetectorService,
     CookieService,
+    LeavePageGuard,
+    MatDialog,
     { provide: NgbDateParserFormatter, useClass: NgbDateParser },
   ],
   bootstrap: [AppComponent],

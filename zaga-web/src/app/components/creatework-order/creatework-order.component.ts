@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Material } from "src/app/models/Material";
 import { ToastrService } from "ngx-toastr";
@@ -33,6 +33,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { User } from 'src/app/models/User';
 import { Setting } from 'src/app/models/Setting';
+import { LeavePageGuard } from "src/app/service/leave-page.guard";
 
 @Component({
   selector: "app-creatework-order",
@@ -46,7 +47,10 @@ export class CreateworkOrderComponent implements OnInit {
   @ViewChild("closeButtonWowModal", null) closeButtonWowModal;
   @ViewChild("closeButtonCloseWOModal", null) closeButtonCloseWOModal;
   @ViewChild("closeButtonMaterialModalMob", null) closeButtonMaterialModalMob;
-
+  @ViewChild("saveStartedCreation", null) saveStartedCreation;
+  @ViewChild("closeSaveStartedModal", null) closeSaveStartedModal;
+  @ViewChild("openErrorsModal", null) openErrorsModal;
+  @ViewChild("leavePageConfirm", null) leavePageConfirm;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,6 +70,7 @@ export class CreateworkOrderComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
+    private canDeactivate: LeavePageGuard
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -141,6 +146,8 @@ export class CreateworkOrderComponent implements OnInit {
 
   validWow;
   validWom;
+  validWows: any [] = [];
+  validWoms: any [] = [];
   validWoInfo;
   validDayPeriod;
   validNightPeriod;
@@ -199,6 +206,19 @@ export class CreateworkOrderComponent implements OnInit {
   noOperationOutput = false;
 
   subject = new Subject<Material>();
+
+  startedCreationWorker = false;
+  startedCreationMaterial = false;
+  addWow = false;
+  addMat = false;
+  validAnswerWow = false;
+  validAnswerMat = false;
+  msgInvalidAnswerWow;
+  msgInvalidAnswerMat;
+  errWow = false;
+  errMat = false;
+
+  leavePageFlag;
 
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
@@ -309,8 +329,21 @@ export class CreateworkOrderComponent implements OnInit {
           month: +this.workOrder.date.month,
           year: +this.workOrder.date.year,
         };
+        
+        let day;
+        let month;
+        if(this.workOrder.date.day >= 0 && this.workOrder.date.day <= 9){
+          day = "0" + this.workOrder.date.day;
+        } else {
+          day = this.workOrder.date.day;
+        }
+        if(this.workOrder.date.month >= 0 && this.workOrder.date.month <= 9){
+          month = "0" + this.workOrder.date.month;
+        } else {
+          month = this.workOrder.date.month;
+        }
 
-        this.dateOfCreateWO = this.workOrder.date.day + "." + this.workOrder.date.month + "." + this.workOrder.date.year + "."
+        this.dateOfCreateWO = day + "." + month + "." + this.workOrder.date.year + "."
         this.creator = this.workOrder.userCreatedId;
 
         if(this.workOrder.noOperationOutput){
@@ -633,13 +666,20 @@ export class CreateworkOrderComponent implements OnInit {
       }
 
       this.wows.forEach((wow) => {
+        console.log(wow)
+        console.log(this.wow)
         if (
           wow.user.id == this.wow.user.id &&
           wow.operation.dbid == this.wow.operation.dbid &&
-          wow.machine.dbid == this.wow.machine.dbid
+          wow.machine.dbid == this.wow.machine.dbid &&
+          wow.connectingMachine.dbid == this.wow.connectingMachine.dbid &&
+          wow.wowObjectId != this.wow.wowObjectId
         ) {
-          this.toastr.error("Radnik, operacija i mašina su već dodati");
+          this.toastr.error("Radnik, operacija i mašina su već dodati", "Greška!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+          });
           this.exists = true;
+          this.wow = new WorkOrderWorker();
         }
       });
       if (!this.exists) {
@@ -758,7 +798,9 @@ export class CreateworkOrderComponent implements OnInit {
         }
    
         this.closeButtonWorkerModal.nativeElement.click();
-        this.toastr.success("Uspešno izvršena promena.");
+        this.toastr.success("Uspešno izvršena promena.", "Potvrda!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        });
         console.log(this.wows)
       }
     });
@@ -834,6 +876,9 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(this.wow)
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
+      this.toastr.success("Izvršioc " + this.workerFC.value.name + " je uspešno dodat.", "Potvrda!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+      })
       this.closeButtonWorkerModal.nativeElement.click();
       this.wow = new WorkOrderWorker();
       this.spinner.hide();
@@ -888,6 +933,9 @@ export class CreateworkOrderComponent implements OnInit {
       });
     }, err => {
       this.spinner.hide();
+      this.toastr.error("Izvršioc " + this.workerFC.value.name + " nije dodat.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      })
     });
   }
 
@@ -936,7 +984,16 @@ export class CreateworkOrderComponent implements OnInit {
       this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.wow = new WorkOrderWorker();
-        this.toastr.success("Uspešno sačuvane promene.");
+        if(this.withoutMachine){
+          this.toastr.success("Uspešno uneti učinci za izvršioca " + workOrderWorker.user.Name, "Potvrda!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+          });
+        } else {
+          this.toastr.success("Uspešno uneti učinci za izvršioca " + workOrderWorker.user.Name + " i mašinu " + workOrderWorker.machine.Name, "Potvrda!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+          });
+        }
+        
         this.spinner.hide();
         this.getOneWorkOrder();
       }, error => {
@@ -948,7 +1005,15 @@ export class CreateworkOrderComponent implements OnInit {
           this.error = true;
           this.errors = error.error.message;
         } else {
-          this.toastr.error("Došlo je do greške prilikom čuvanja.")
+          if(this.withoutMachine){
+            this.toastr.error("Neuspešno uneti učinci za izvršioca " + workOrderWorker.user.Name, "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
+          } else {
+            this.toastr.error("Neuspešno uneti učinci za izvršioca " + workOrderWorker.user.Name + " i mašinu " + workOrderWorker.machine.Name, "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
+          }
         }
         this.wow = new WorkOrderWorker();
       });
@@ -1013,7 +1078,9 @@ export class CreateworkOrderComponent implements OnInit {
     console.log(workOrderWorker)
     this.wowService.updateWorkOrderWorkerBasicInfo(workOrderWorker.id, workOrderWorker).subscribe((res) => {
       console.log(res);
-      this.toastr.success("Uspešno sačuvane promene.");
+      this.toastr.success("Uspešno izvršena promena.", "Potvrda!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+      });
       this.spinner.hide();
       this.workOrderService.getOne(this.workId).subscribe((data) => {
         this.workOrder = data;
@@ -1064,6 +1131,9 @@ export class CreateworkOrderComponent implements OnInit {
       });
     }, error => {
       this.spinner.hide();
+      this.toastr.error("Neuspešno izvršena promena.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      });
     });
   }
 
@@ -1090,7 +1160,9 @@ export class CreateworkOrderComponent implements OnInit {
           material.material.dbid == this.spentMaterial.material.dbid &&
           material.quantity == this.spentMaterial.quantity
         ) {
-          this.toastr.error("Materijal sa izabranom količinom je već unet.");
+          this.toastr.error("Materijal sa izabranom količinom je već unet. Izaberite drugi materijal ili promenite količinu.", "Greška!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+          });
           this.exists = true;
         }
       });
@@ -1155,8 +1227,10 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editExistingMaterial(existing) {
+    console.log(existing)
     this.idOfEditingMaterial = existing.smObjectId;
     this.woMaterials.forEach((material) => {
+      console.log(material)
       if (material.smObjectId == this.idOfEditingMaterial) {
         if(!this.mob){
           material.material.dbid = this.substances.find(
@@ -1170,7 +1244,9 @@ export class CreateworkOrderComponent implements OnInit {
         }
       }
     });
-    this.toastr.success("Uspešno izvršena promena.");
+    this.toastr.success("Materijal " + existing.material.Name + " je uspešno promenjen.", "Potvrda!", {
+      positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+    });
     console.log(this.woMaterials);
   }
 
@@ -1214,6 +1290,10 @@ export class CreateworkOrderComponent implements OnInit {
         .subscribe((res) => {
           this.closeButtonMaterialModalMob.nativeElement.click();
           this.spinner.hide();
+          console.log(this.materialFC.value.Name)
+          this.toastr.success("Materijal " + this.materialFC.value.Name + " je uspešno dodat.", "Potvrda!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+          })
           console.log(res);
           this.spentMaterial = new SpentMaterial();
           this.materialFC = new FormControl("");
@@ -1270,7 +1350,9 @@ export class CreateworkOrderComponent implements OnInit {
           });
         }, error => {
           this.spinner.hide();
-          this.toastr.error("Trenutno nije moguće dodati novi materijal.")
+          this.toastr.error("Materijal " + this.materialFC.value.Name + " nije dodat.", "Greška!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+          })
         });
     }
 
@@ -1278,6 +1360,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   updateMaterial(spentMaterial) {
     console.log(spentMaterial.spent)
+    console.log(spentMaterial)
     this.clickUpdateMaterial = true;
     this.error = false;
     this.errors = [];
@@ -1293,7 +1376,9 @@ export class CreateworkOrderComponent implements OnInit {
     }
     else {
       this.validQuantity = false;
-      this.toastr.error("Unesite planiranu količinu.")
+      this.toastr.error("Unesite planiranu količinu za materijal " + spentMaterial.material.Name, "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      })
       this.spinner.hide();
     }
     if (this.validSpentQuantity == true && this.validQuantity == true) {
@@ -1302,7 +1387,9 @@ export class CreateworkOrderComponent implements OnInit {
         .updateSpentMaterial(spentMaterial.id, spentMaterial)
         .subscribe((res) => {
           console.log(res);
-          this.toastr.success("Uspešno sačuvane promene.");
+          this.toastr.success("Uspešno uneti učinci za materijal " + spentMaterial.material.Name, "Potvrda!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+          });
           this.spinner.hide();
           this.workOrderService.getOne(this.workId).subscribe((data) => {
             this.workOrder = data;
@@ -1364,7 +1451,9 @@ export class CreateworkOrderComponent implements OnInit {
             this.errors = err.error.errors;
             this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
           } else {
-            this.toastr.error("Greška prilikom unosa učinaka.");
+            this.toastr.error("Neuspešno uneti učinci za materijal " + spentMaterial.material.Name, "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
           }
          
         });
@@ -1398,7 +1487,9 @@ export class CreateworkOrderComponent implements OnInit {
         .updateSpentMaterialBasicInfo(spentMaterial.id, spentMaterial)
         .subscribe((res) => {
           console.log(res);
-          this.toastr.success("Uspešno sačuvane promene.");
+          this.toastr.success("Uspešno sačuvane promene.", "Potvrda!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+          });
           this.clickUpdateMaterial = false;
           this.spinner.hide();
           this.workOrderService.getOne(this.workId).subscribe((data) => {
@@ -1451,12 +1542,19 @@ export class CreateworkOrderComponent implements OnInit {
             }
           });
         }, err => {
-          this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+          if(err.status == 400){
+            this.toastr.error("Greška. Za detalje kliknite na uzvičnik");
+            this.error = true;
+            this.errors = err.error.errors;
+          } else {
+            this.toastr.error("Neuspešno sačuvane promene.", "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
+          }
           spentMaterial.spent = null;
           this.spinner.hide();
           console.log(err);
-          this.error = true;
-          this.errors = err.error.errors;
+         
         });
     }
 
@@ -1469,7 +1567,15 @@ export class CreateworkOrderComponent implements OnInit {
     this.errors = [];
     this.clickAddWorkOrder = true;
     console.log(valid.status);
-    if (valid.status == "VALID" && this.nameFC.valid) {
+    console.log(this.fieldFC.value.dbId)
+    if (
+      valid.status == "VALID" && 
+      this.nameFC.valid &&
+      this.nameFC.value.userId != undefined &&
+      this.operationFC.value.dbid != undefined &&
+      this.fieldFC.value.dbId != undefined &&
+      this.cultureFC.value.id != undefined
+    ) {
       this.spinner.show();
       if (this.workOrder.date != undefined) {
         if (this.workOrder.date.month < 10) {
@@ -1496,24 +1602,34 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrderService.addWorkOrder(this.workOrder).subscribe(
         (data) => {
           this.spinner.hide();
+          this.canDeactivate.leave = true;
           this.toastr.success(
-            "Uspešno kreiran radni nalog. SAP id je " + data.erpId
+            "Uspešno kreiran radni nalog. SAP id je " + data.erpId, "Potvrda!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+            }
           );
           this.router.navigate(["/workOrder"]);
         },
         (error) => {
           this.spinner.hide();
-          if (error.status === 500) {
-            this.toastr.error("Radni nalog nije kreiran.");
-          } else if (error.status === 400) {
+          if (error.status === 400) {
             //let errorMessage = error.error.message;
             //this.toastr.error(errorMessage);
             this.error = true;
             this.errors = error.error.message;
+            this.openErrorsModal.nativeElement.click();
+          } else {
+            this.toastr.error("Radni nalog nije kreiran.", "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
           }
         }
       );
 
+    } else {
+      this.toastr.error("Radni nalog nije kreiran. Popunite sva polja pravilno.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      });
     }
   }
 
@@ -1527,6 +1643,7 @@ export class CreateworkOrderComponent implements OnInit {
         this.workOrder.date.day = "0" + this.workOrder.date.day;
       }
     }
+    
     this.spinner.show();
     this.workOrder.responsibleId = this.nameFC.value.userId;
     this.workOrder.operationId = this.operationFC.value.dbid
@@ -1553,7 +1670,9 @@ export class CreateworkOrderComponent implements OnInit {
       (data) => {
         this.clickUpdateWo = false;
         this.spinner.hide();
-        this.toastr.success("Uspešno sačuvan radni nalog.");
+        this.toastr.success("Radni nalog " + this.workOrder.sapId + " je uspešno sačuvan.", "Potvrda!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+        });
         this.workOrderService.getOne(this.workId).subscribe((data) => {
           this.workOrder = data;
           this.noteFC.setValue(this.workOrder.note)
@@ -1608,12 +1727,15 @@ export class CreateworkOrderComponent implements OnInit {
       },
       (error) => {
         this.spinner.hide();
-        this.toastr.error("Došlo je do greške prilikom čuvanja.")
+        //this.toastr.error("Došlo je do greške prilikom čuvanja.")
         if (error.status == 400) {
           this.error = true;
           this.errors = error.error.message;
+          this.openErrorsModal.nativeElement.click();
         } else {
-          this.toastr.error("Radni nalog nije sačuvan.");
+          this.toastr.error("Radni nalog " + this.workOrder.sapId + " nije sačuvan.", "Greška!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+          });
         }
       }
     );
@@ -1625,14 +1747,61 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = true;
     } else {
       this.validWoInfo = false;
-      this.toastr.error("Unesite obrađenu površinu.")
+      this.toastr.error("Unesite obrađenu površinu pre zatvaranja radnog naloga.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      })
     }
     if(this.noOperationOutput){
       this.validWoInfo = true;
     }
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
+      
+      if(wow.machine.Id == "BEZ-MASINE"){
+        this.withoutMachine = true;
+      }else {
+        this.withoutMachine = false;
+      }
       console.log(this.withoutMachine)
+      if(this.withoutMachine){
+        if(
+          wow.dayPeriod == -1 ||
+          wow.dayPeriod == null ||
+          wow.nightPeriod == -1 ||
+          wow.nightPeriod == null
+          ) {
+            this.validWow = false;
+            this.validWows.push("false");
+            const element: HTMLElement = document.getElementById(wow.id);
+            this.renderer.setStyle(element, "background-color", "#BD362F");
+          } else {
+            this.validWow = true;
+            this.validWows.push("true");
+          }
+      } else {
+        if(
+          wow.dayPeriod == -1 ||
+          wow.dayPeriod == null ||
+          wow.nightPeriod == -1 ||
+          wow.nightPeriod == null ||
+          wow.initialState == -1 ||
+          wow.initialState == null ||
+          wow.finalState == -1 ||
+          wow.finalState == null ||
+          wow.fuel == -1 ||
+          wow.fuel == null
+          ){
+            this.validWow = false;
+            this.validWows.push("false");
+            const element: HTMLElement = document.getElementById(wow.id);
+            this.renderer.setStyle(element, "background-color", "#BD362F");
+          } else {
+            this.validWow = true;
+            this.validWows.push("true");
+          }
+        }
+     
+      /*
       if (
         (wow.dayPeriod == -1 ||
           wow.nightPeriod == -1 ||
@@ -1675,27 +1844,49 @@ export class CreateworkOrderComponent implements OnInit {
       } else {
         this.validWow = true;
       }
-
+      */
     });
+    console.log(this.validWows)
+    console.log(this.validWows.indexOf("false"))
+    if(this.validWows.indexOf("false") != -1){
+      this.validWow = false;
+    } else {
+      this.validWow = true;
+    }
+    this.validWows = [];
     if (this.workOrder.materials.length == 0) {
       this.validWom = true;
     } else {
       this.workOrder.materials.forEach((material) => {
         if (material.spent == -1 && material.deleted != true) {
           this.validWom = false;
+          this.validWoms.push("false");
           const element: HTMLElement = document.getElementById(material.id);
           this.renderer.setStyle(element, "background-color", "#BD362F");
         } else {
           this.validWom = true;
+          this.validWoms.push("true");
         }
       });
     }
+    if(this.validWoms.indexOf("false") != -1){
+      this.validWom = false;
+    } else {
+      this.validWom = true;
+    }
+    this.validWoms = [];
     if (this.validWow == false && this.validWom == false) {
-      this.toastr.error("Unesite učinke.");
+      this.toastr.error("Unesite učinke izvršioca/mašina i materijala.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      });
     } else if (this.validWom == false) {
-      this.toastr.error("Unesite učinke materijala.");
+      this.toastr.error("Unesite učinke materijala.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      });
     } else if (this.validWow == false) {
-      this.toastr.error("Unesite učinke radnika i mašina.");
+      this.toastr.error("Unesite učinke izvršioca/mašina.", "Greška!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      });
     } else if (
       this.validWom == true &&
       this.validWow == true &&
@@ -1715,19 +1906,25 @@ export class CreateworkOrderComponent implements OnInit {
       this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
         console.log(res);
         this.spinner.hide();
-        this.error = true;
-        this.toastr.success("Uspešno zatvoren radni nalog.");
+        //this.error = true;
+        this.canDeactivate.leave = true;
+        this.toastr.success("Radni nalog " + this.workOrder.sapId + " je uspešno zatvoren.", "Potrvrda!",{
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+        });
         this.router.navigate(["/workOrder"]);
       },
         err => {
           console.log(err);
           this.spinner.hide();
           if (err.status == 400) {
-            this.toastr.error("Došlo je do greške prilikom zatvaranja.");
+            //this.toastr.error("Došlo je do greške prilikom zatvaranja.");
             this.error = true;
             this.errors = err.error;
+            this.openErrorsModal.nativeElement.click();
           } else {
-            this.toastr.error("Radni nalog nije zatvoren.");
+            this.toastr.error("Radni nalog " + this.workOrder.sapId + " nije zatvoren.", "Greška!", {
+              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+            });
           }
         });
     }
@@ -1791,34 +1988,45 @@ export class CreateworkOrderComponent implements OnInit {
 
   deleteExistingWorkOrderWorker(id) {
     this.spinner.show();
+    let dataa;
     this.wowService.deleteWorkOrderWorker(id).subscribe((res) => {
-      let dataa = this.workOrder.workers.filter(item => item.id == id);
+      dataa = this.workOrder.workers.filter(item => item.id == id);
+      console.log(dataa)
       dataa[0].deleted = true;
       this.getWorkOrder();
       this.getOneWorkOrder();
       this.spinner.hide();
-      this.toastr.success("Uspešno ste izbrisali radnika")
+      this.toastr.success("Uspešno ste izbrisali radnika " + dataa[0].user.Name, "Potvrda!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+      })
 
     },
       err => {
         console.log(err);
         this.getOneWorkOrder();
-        this.toastr.error("Neuspešno brisanje radnika")
+        this.toastr.error("Neuspešno brisanje radnika " + dataa[0].user.Name, "Greška!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        })
         this.spinner.hide();
       });
   }
 
   deleteExistingSpentMaterial(id) {
     this.spinner.show();
+    let dataa;
     this.spentMaterialService.deleteSpentMaterial(id).subscribe((res) => {
-      let dataa = this.workOrder.materials.filter(item => item.id == id);
+      dataa = this.workOrder.materials.filter(item => item.id == id);
       dataa[0].deleted = true;
       this.spinner.hide();
-      this.toastr.success("Uspešno ste izbrisali materijal")
+      this.toastr.success("Uspešno ste izbrisali materijal " + dataa[0].material.Name, "Potvrda!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+      })
     },
       err => {
         console.log(err);
-        this.toastr.error("Neuspešno brisanje materijala")
+        this.toastr.error("Neuspešno brisanje materijala " + dataa[0].material.Name, "Greška!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        })
         this.spinner.hide();
       });
   }
@@ -1872,19 +2080,25 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrderService.closeWorkOrder(this.workOrder).subscribe((res) => {
       console.log(res);
       this.spinner.hide();
-      this.error = true;
-      this.toastr.success("Uspešno storniran radni nalog.");
+      //this.error = true;
+      this.canDeactivate.leave = true;
+      this.toastr.success("Uspešno storniran radni nalog " + this.workOrder.sapId, "Potvrda!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+      });
       this.router.navigate(["/workOrder"]);
     },
       err => {
         console.log(err);
         this.spinner.hide();
         if (err.status == 400) {
-          this.toastr.error("Došlo je do greške prilikom storniranja. Za detalje kliknite na uzvičnik.");
+          //this.toastr.error("Došlo je do greške prilikom storniranja. Za detalje kliknite na uzvičnik.");
           this.error = true;
           this.errors = err.error;
+          this.openErrorsModal.nativeElement.click();
         } else {
-          this.toastr.error("Radni nalog nije storniran.");
+          this.toastr.error("Radni nalog " + this.workOrder.sapId + " nije storniran.", "Greška!", {
+            positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+          });
         }
       });
   }
@@ -1929,4 +2143,168 @@ export class CreateworkOrderComponent implements OnInit {
     this.noOperationOutput = !this.noOperationOutput;
     console.log(this.noOperationOutput)
   }
+
+  checkIfStartedCreation(){
+    if(
+      this.workerFC.value != "" &&
+      this.workerOperationFC.value != "" &&
+      this.workerMachineFC.value != "" &&
+      this.workerCoMachineFC.value != ""
+    ) {
+      this.startedCreationWorker = true;
+    } else {
+      console.log("ELSE")
+      this.startedCreationWorker = false;
+    }
+    if(this.materialFC.value != "" && this.quantityEntered != null){
+      this.startedCreationMaterial = true;
+    } else {
+      this.startedCreationMaterial = false;
+    }
+    if(this.startedCreationWorker || this.startedCreationMaterial){
+      this.saveStartedCreation.nativeElement.click();
+    }
+    if(!this.startedCreationWorker && !this.startedCreationMaterial){
+      this.updateWorkOrder();
+    }
+  }
+
+  addWorkerAndUpdateWo(){
+      if(this.startedCreationWorker && !this.startedCreationMaterial){
+        if(this.addWow && this.validAnswerWow){
+          this.errWow = false;
+          this.addNewWorkerAndMachine();
+          this.updateWorkOrder();
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.addWow && this.validAnswerWow){
+          this.errWow = false;
+          this.updateWorkOrder();
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.validAnswerWow) {
+          this.errWow = true;
+          console.log("ELSE MSG TRUE")
+          this.msgInvalidAnswerWow = "Morate izabrati da li želite da dodate radnika, klikom na dugme Da ili Ne!"
+        }
+      }
+      else if(this.startedCreationMaterial && !this.startedCreationWorker){
+        if(this.addMat && this.validAnswerMat){
+          this.errMat = false;
+          this.addNewMaterial();
+          this.updateWorkOrder();
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.addMat && this.validAnswerMat){
+          this.errMat = false;
+          this.updateWorkOrder();
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.validAnswerMat) {
+          this.errMat = true;
+          this.msgInvalidAnswerMat = "Morate izabrati da li želite da dodate materijale, klikom na dugme Da ili Ne!"
+        }
+      } 
+      else if(this.startedCreationWorker && this.startedCreationMaterial){
+        if(this.addMat && this.addWow && this.validAnswerWow && this.validAnswerMat){
+          this.errMat = false;
+          this.errWow = false;
+          this.addNewWorkerAndMachine();
+          this.addNewMaterial();
+          this.updateWorkOrder();
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(this.addMat && !this.addWow && this.validAnswerWow && this.validAnswerMat){
+          this.errMat = false;
+          this.errWow = false;
+          this.addNewMaterial();
+          this.updateWorkOrder();
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.addMat && this.addWow && this.validAnswerWow && this.validAnswerMat){
+          this.errMat = false;
+          this.errWow = false;
+          this.addNewWorkerAndMachine();
+          this.updateWorkOrder();
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if (!this.addMat && !this.addWow && this.validAnswerWow && this.validAnswerMat){
+          this.errMat = false;
+          this.errWow = false;
+          this.workerFC = new FormControl("");
+          this.workerOperationFC = new FormControl("");
+          this.workerMachineFC = new FormControl("");
+          this.workerCoMachineFC = new FormControl("");  
+          this.materialFC = new FormControl("");
+          this.quantityEntered = null;
+          this.updateWorkOrder();
+          this.closeSaveStartedModal.nativeElement.click();
+        } else if(!this.validAnswerWow && !this.validAnswerMat){
+          this.errMat = true;
+          this.errWow = true;
+          console.log("TWO ERR")
+          this.msgInvalidAnswerWow = "Morate izabrati da li želite da dodate radnika, klikom na dugme Da ili Ne!"
+          this.msgInvalidAnswerMat = "Morate izabrati da li želite da dodate materijale, klikom na dugme Da ili Ne!"
+        } else if(!this.validAnswerWow){
+          this.errWow = true;
+          this.msgInvalidAnswerWow = "Morate izabrati da li želite da dodate radnika, klikom na dugme Da ili Ne!"
+        } else if(!this.validAnswerMat){
+          this.errMat = true;
+          this.msgInvalidAnswerMat = "Morate izabrati da li želite da dodate materijale, klikom na dugme Da ili Ne!"
+        }
+      }
+      
+    
+  }
+
+  getAnswerWorker(value){
+    if(value == "workerYes"){
+      this.addWow = true;
+      this.validAnswerWow = true;
+    } else if(value == "workerNo"){
+      this.addWow = false;
+      this.validAnswerWow = true;
+    } else {
+      this.validAnswerWow = false;
+    }
+    console.log("Worker = " + value)
+  }
+
+  getAnswerMaterial(value){
+    if(value == "materialYes"){
+      this.addMat = true;
+      this.validAnswerMat = true;
+    } else if(value == "materialNo"){
+      this.addMat = false;
+      this.validAnswerMat = true;
+    } else {
+      this.validAnswerMat = false;
+    }
+    console.log("Mat = " + value)
+  }
+
+ 
 }

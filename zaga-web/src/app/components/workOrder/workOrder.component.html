@@ -343,7 +343,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">
-          <i class="fa fa-sticky-note-o"></i> Radni nalog #{{woSapId}}
+          Da li ste sigurni da želite da kopirate radni nalog?
         </h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeButtonMaterialModal>
           <span aria-hidden="true">&times;</span>
@@ -351,6 +351,33 @@
       </div>
       <div class="modal-body">
         <form #materialModalForm="ngForm">
+          <table class="table table-borderless">
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-slack mr-2"></i>Broj radnog naloga:</th>
+              <td style="text-align: left;">{{workOrder.sapId}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-calendar mr-2"></i>Datum:</th>
+              <td style="text-align: left;">{{workOrder.date}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-map-marker mr-2"></i>Parcela:</th>
+              <td style="text-align: left;">{{workOrder.table}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-cubes mr-2"></i>Usev:</th>
+              <td style="text-align: left;">{{workOrder.cropName}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-file mr-2"></i>ATM:</th>
+              <td style="text-align: left;">{{workOrder.operationName}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;"><i class="fa fa-user mr-2"></i>Odgovorna osoba:</th>
+              <td style="text-align: left;">{{workOrder.responsibleName}}</td>
+            </tr>
+          </table>
+          <div class="break-class pt-2 mb-4"></div>
           <h5>Napravi kopiju za {{ copyDate | date: "dd.MM.yyyy." }}</h5>
           <div class="form-group">
             <label>

@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	@EntityGraph(value = "User.Roles.Permissions")
 	Optional<User> findByEmail(String email);
 	
+	boolean existsByEmailAndTenantId(String username, Long tenantId);
+	
 	boolean existsByEmail(String username);
 
 	@Query("select u from User u where u.id = ?#{principal.id}")

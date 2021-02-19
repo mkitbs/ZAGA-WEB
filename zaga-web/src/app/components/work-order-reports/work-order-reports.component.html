@@ -1,0 +1,232 @@
+<div class="container" style="margin-bottom: 4%;">
+    <navbar></navbar>
+</div>
+<div class="container" style="margin-top: 80px;">
+    <h3 class="mt-2 mb-2">Izveštaji radnih naloga</h3>
+    <div style="padding-top: 20px;"></div>
+    <div class="row card-group">
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="spentMat()"
+            [ngClass]="spentMatBool ? 'card-border' : 'null'">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/graph.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Utrošak materijala 
+                    </h5>
+                    <p>Pregled utrošenih materijala po parcelama i usevima za tekuću godinu</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="spentWorkHours()"
+            [ngClass]="spentWorkHoursBool ? 'card-border' : 'null'">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/graph.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                    Utrošak radnih sati
+                    </h5>
+                    <p>Pregled utrošenih radnih sati radnika po parcelama i usevima</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="spentMachineWorkHours()"
+            [ngClass]="spentMachineWorkHoursBool ? 'card-border' : 'null'">
+            <div class="card-body">
+              <div class="row">
+                <div
+                  class="col-md-auto"
+                  style="width: fit-content; "
+                >
+                  <img
+                    class="card-img-right"
+                    src="../../../assets/graph.png"
+                    style="width: auto; height: 70px;"
+                  />
+                </div>
+                <div class="col">
+                  <div class="card-text">
+                    <h5 class="card-title">
+                      Utrošak moto časova mašina
+                    </h5>
+                    <p>Podešavanje jezika aplikacije</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+            <div class="card mb-3" style="width: 30.8rem; height: 8.5rem;" (click)="spentMachineFuel()"
+                [ngClass]="spentMachineFuelBool ? 'card-border' : 'null'">
+              <div class="card-body">
+                <div class="row">
+                  <div
+                    class="col-md-auto"
+                    style="width: fit-content; "
+                  >
+                    <img
+                      class="card-img-right"
+                      src="../../../assets/graph.png"
+                      style="width: auto; height: 70px;"
+                    />
+                  </div>
+                  <div class="col">
+                    <div class="card-text">
+                      <h5 class="card-title">
+                        Utrošak goriva mašina
+                      </h5>
+                      <p>Podešavanje jezika aplikacije</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div> 
+    
+    <div *ngIf="spentMatBool && !spentMaterialPerCultureEmpty">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usev (Kultura)</th>
+                    <th>Materijal</th>
+                    <th>Količina</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let crop of spentMaterialsPerCulture; let i = index">
+                    <tr *ngFor="let mat of crop.spentMaterials; let z = index">
+                        <td *ngIf="z==0; else elseBlockCrop"><b>{{crop.crop}} ({{crop.culture}})</b></td>
+                        <ng-template #elseBlockCrop><td></td></ng-template>
+                        <td>{{mat.material}}</td>
+                        <td>{{mat.quantity}} {{mat.unit}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <div style="padding-bottom: 10px;"></div>
+    </div>
+
+    <div *ngIf="spentWorkHoursBool && !spentWorkerHourPerCultureEmpty">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usev (Kultura)</th>
+                    <th>Radnik</th>
+                    <th>Radni sati</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let crop of spentWorkerHourPerCulture; let i = index">
+                    <tr *ngFor="let worker of crop.workers; let z = index">
+                        <td *ngIf="z==0; else elseBlockCropWorkerHour"><b>{{crop.crop}} ({{crop.culture}})</b></td>
+                        <ng-template #elseBlockCropWorkerHour><td></td></ng-template>
+                        <td>{{worker.name}}</td>
+                        <td>{{worker.hour}} h</td>
+                    </tr>
+                    <tr style="background-color: #ffc803;">
+                        <td><b>Σ</b> Radnih sati na {{crop.crop}} ({{crop.culture}})</td>
+                        <td></td>
+                        <td><b>{{getSumWorkHourPerField(crop.workers)}}</b></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <div style="padding-bottom: 10px;"></div>
+    </div>
+    
+    <div *ngIf="spentMachineWorkHoursBool && !machineStatePerCultureEmpty">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usev (Kultura)</th>
+                    <th>Mašina</th>
+                    <th>Moto časovi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let crop of machineStatePerCulture; let i = index">
+                    <tr *ngFor="let machine of crop.machines; let z = index">
+                        <td *ngIf="z==0; else elseBlockCropMachineState"><b>{{crop.crop}} ({{crop.culture}})</b></td>
+                        <ng-template #elseBlockCropMachineState><td></td></ng-template>
+                        <td>{{machine.name}}</td>
+                        <td>{{machine.state}} MČ</td>
+                    </tr>
+                    <tr style="background-color: #ffc803;">
+                        <td><b>Σ</b> MČ na {{crop.crop}} ({{crop.culture}})</td>
+                        <td></td>
+                        <td><b>{{getMachineSumPerField(crop.machines)}}</b></td>
+                    </tr>
+                </ng-container>
+                <!--
+                <tr style="border-bottom: 2px solid #000;"></tr>
+                <tr *ngFor="let m of machineSumState" style="background-color: #ffc803;">
+                    <td><b>Σ MČ</b></td>
+                    <td><b>{{m.machine}}</b></td>
+                    <td><b>{{m.state}} MČ</b></td>
+                </tr>
+                -->
+            </tbody>
+        </table>
+        <div style="padding-bottom: 10px;"></div>
+    </div>
+    
+    <div *ngIf="spentMachineFuelBool && !machineFuelPerCultureEmpty">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usev (Kultura)</th>
+                    <th>Mašina</th>
+                    <th>Utrošak goriva</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let crop of machineFuelPerCulture; let i = index">
+                    <tr *ngFor="let machine of crop.machines; let z = index">
+                        <td *ngIf="z==0; else elseBlockCropMachineState"><b>{{crop.crop}} ({{crop.culture}})</b></td>
+                        <ng-template #elseBlockCropMachineState><td></td></ng-template>
+                        <td>{{machine.name}}</td>
+                        <td>{{machine.fuel}} l</td>
+                    </tr>
+                    <tr style="background-color: #ffc803;">
+                        <td><b>Σ</b> Litara na {{crop.crop}} ({{crop.culture}})</td>
+                        <td></td>
+                        <td><b>{{getMachineFuelPerField(crop.machines)}}</b></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <div style="padding-bottom: 10px;"></div>
+    </div>
+</div>

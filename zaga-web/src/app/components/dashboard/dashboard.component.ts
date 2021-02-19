@@ -12,6 +12,7 @@ import { NumOfEmployeesPerOperation } from 'src/app/models/NumOfEmployeesPerOper
 import { WorkOrderService } from 'src/app/service/work-order.service';
 import { CropService } from 'src/app/service/crop.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,7 @@ export class DashboardComponent implements OnInit {
     private woService: WorkOrderService,
     private cropService: CropService,
     private spinner: NgxSpinnerService,
+    private router: Router
   ) { }
 
   numOfEmployeesPerOperation: NumOfEmployeesPerOperation[] = [];
@@ -868,6 +870,13 @@ export class DashboardComponent implements OnInit {
     }
   }
     
+  showWorkOrders(){
+    this.router.navigateByUrl("/workOrder")
+  }
+
+  createWorkOrder(){
+    this.router.navigateByUrl("/create/workOrder/new")
+  }
  
   
 

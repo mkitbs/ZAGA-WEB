@@ -118,3 +118,37 @@ h3 {
 .select {
   background-color: #5c7495;
 }
+
+.buttonEdit {
+  top: 2px;
+  right: 2px;
+  position: absolute;
+}
+
+.btn-edit {
+  float: right;
+  background-color: #f68901;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-add {
+  float: right;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-delete {
+  float: right;
+  background-color: #bd362f;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-ban {
+  float: right;
+  background-color: #ffc803;
+  border: none;
+  box-shadow: none;
+}

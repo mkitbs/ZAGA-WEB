@@ -11,7 +11,7 @@ export class SearchFieldsPipe implements PipeTransform {
       return fields;
     }
     let result =  fields.filter((field) =>
-      this.matchValue(field, query)
+      this.matchValue2(field, query)
     );
     if(result.length === 0){
       return[-1];
@@ -29,6 +29,10 @@ export class SearchFieldsPipe implements PipeTransform {
     } else{
       return data.Name.toLowerCase().includes(value.toLowerCase()) 
     }
+  }
+
+  matchValue2(data, value){
+    return JSON.stringify(data).toLowerCase().includes(value.toLowerCase());
   }
 
 }
