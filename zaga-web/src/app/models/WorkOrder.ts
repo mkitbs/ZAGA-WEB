@@ -24,4 +24,6 @@ export class WorkOrder {
   noOperationOutput;
   numOfRefOrder;
   note;
+  cropName;
+  responsibleName;
 }
