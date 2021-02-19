@@ -23,6 +23,9 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialsDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
@@ -511,6 +514,47 @@ public class SpentMaterialService {
 			}
 		}
 		
+		return retValues;
+	}
+	
+	public List<SpentMaterialPerCultureReportDTO> getSpentMaterialPerCulture(Long tenantId){
+		List<SpentMaterialPerCultureDTO> spentMaterials = spentMaterialRepo.getSpentMaterialPerCulture(tenantId);
+		SpentMaterialPerCultureReportDTO spentMatReport = new SpentMaterialPerCultureReportDTO();
+		List<SpentMaterialPerCultureReportDTO> retValues = new ArrayList<SpentMaterialPerCultureReportDTO>();
+		
+		if(spentMaterials.size() > 0) {
+			spentMatReport.setCrop(spentMaterials.get(0).getCrop());
+			spentMatReport.setCulture(spentMaterials.get(0).getCulture());
+			SpentMaterialsDTO material = new SpentMaterialsDTO(spentMaterials.get(0));
+			List<SpentMaterialsDTO> materials = new ArrayList<SpentMaterialsDTO>();
+			materials.add(material);
+			spentMatReport.setSpentMaterials(materials);
+			if(spentMaterials.size() == 1) {
+				retValues.add(spentMatReport);
+			}
+		}
+		
+		for(int i = 0; i<spentMaterials.size()-1; i++) {
+			List<SpentMaterialsDTO> materials = new ArrayList<SpentMaterialsDTO>();
+			if(spentMaterials.get(i).getCrop().equals(spentMaterials.get(i+1).getCrop())) {
+				spentMatReport.getSpentMaterials().add(new SpentMaterialsDTO(spentMaterials.get(i+1)));
+				if(i+1 == spentMaterials.size()-1) {
+					retValues.add(spentMatReport);
+				}
+			} else {
+				retValues.add(spentMatReport);
+				spentMatReport = new SpentMaterialPerCultureReportDTO();
+				spentMatReport.setCrop(spentMaterials.get(i+1).getCrop());
+				spentMatReport.setCulture(spentMaterials.get(i+1).getCulture());
+				SpentMaterialsDTO material = new SpentMaterialsDTO(spentMaterials.get(i+1));
+				materials.add(material);
+				spentMatReport.setSpentMaterials(materials);
+				if(i+1 == spentMaterials.size()-1) {
+					retValues.add(spentMatReport);
+				}
+			}
+			
+		}
 		return retValues;
 	}
 	

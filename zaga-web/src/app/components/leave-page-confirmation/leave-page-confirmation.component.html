@@ -1,0 +1,15 @@
+<section>
+<h2 mat-dialog-title>Napuštate stranicu!</h2>
+<mat-dialog-content>
+  <p>Ukoliko ste vršili izmene na radnom nalogu, a niste ga sačuvali, promene neće biti sačuvane! <br>
+    Da li ste sigurni da želite da napustite stranicu?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button class="btn btn-primary btn-add mr-2" (click)="onYesResponse()">
+      <i class="fa fa-check"></i> Potrvdi
+    </button>
+    <button type="button" class="btn btn-primary btn-delete mr-2" (click)="onNoResponse()">
+      <i class="fa fa-window-close"></i> Odustani
+    </button>
+</mat-dialog-actions>
+</section>

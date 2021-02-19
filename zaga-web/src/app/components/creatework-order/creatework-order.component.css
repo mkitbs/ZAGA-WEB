@@ -260,3 +260,42 @@ button.calendar {
     box-shadow: 0 0 0 0 rgba(214, 12, 12, 0.274);
   }
 }
+
+.btn-yes {
+  float: right;
+  background-color: #33590b;
+  border: none;
+  box-shadow: none;
+  color: white;
+}
+
+.btn-no {
+  float: right;
+  background-color: #bd362f;
+  border: none;
+  box-shadow: none;
+  color: white;
+}
+
+[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[type="radio"] + .btn-yes {
+  cursor: pointer;
+}
+
+[type="radio"] + .btn-no {
+  cursor: pointer;
+}
+
+[type="radio"]:checked + .btn-yes {
+  background-color: #5c7495;
+}
+
+[type="radio"]:checked + .btn-no {
+  background-color: #5c7495;
+}

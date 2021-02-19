@@ -27,3 +27,15 @@ agm-map {
   margin-right: auto;
   width: 50%;
 }
+
+.card-home {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-home:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+}

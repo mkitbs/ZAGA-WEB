@@ -6,7 +6,11 @@ import java.util.UUID;
 
 import javax.ws.rs.Path;
 
+import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelPerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
@@ -128,5 +132,30 @@ public class WorkOrderWorkerController {
 	public ResponseEntity<?> getNumOfEmployeesPerOperation(@RequestHeader("TenantId") String tenantId) { 
 		List<NumOfEmployeesPerOperationDTO> retVals = wowService.getWorkersPerOperation(Long.parseLong(tenantId));
 		return new ResponseEntity<List<NumOfEmployeesPerOperationDTO>>(retVals, HttpStatus.OK);
+	}
+	
+	@GetMapping("getHourOfWorkerPerCulture")
+	public ResponseEntity<?> getHourOfWorkerPerCulture(@RequestHeader("TenantId") String tenantId){
+		List<SpentHourOfWorkerPerCultureReportDTO> retVals = wowService.getHourOfWorkerPerCulture(Long.parseLong(tenantId));
+		return new ResponseEntity<List<SpentHourOfWorkerPerCultureReportDTO>>(retVals, HttpStatus.OK);
+	}
+	
+	@GetMapping("getMachineSumStatePerCulture")
+	public ResponseEntity<?> getMachineSumStatePerCulture(@RequestHeader("TenantId") String tenantId){
+		List<MachineSumStatePerCultureReportDTO> retVals = wowService.getMachineSumStatePerCulture(Long.parseLong(tenantId));
+		return new ResponseEntity<List<MachineSumStatePerCultureReportDTO>>(retVals, HttpStatus.OK);
+	}
+	
+	@GetMapping("getMachineSumState")
+	public ResponseEntity<?> getMachineSumState(@RequestHeader("TenantId") String tenantId){
+		List<MachineSumStatePerCultureDTO> retVals = wowService.getMachineSumState(Long.parseLong(tenantId));
+		return new ResponseEntity<List<MachineSumStatePerCultureDTO>>(retVals, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("getMachineSumFuelPerCulture")
+	public ResponseEntity<?> getMachineSumFuelPerCulture(@RequestHeader("TenantId") String tenantId){
+		List<MachineSumFuelPerCultureReportDTO> retVals = wowService.getMachineSumFuelPerCulture(Long.parseLong(tenantId));
+		return new ResponseEntity<List<MachineSumFuelPerCultureReportDTO>>(retVals, HttpStatus.OK);
 	}
 }

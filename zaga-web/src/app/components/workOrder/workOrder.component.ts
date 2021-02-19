@@ -15,6 +15,7 @@ export class WorkOrderComponent implements OnInit {
   empty = false;
 
   workOrders: WorkOrder[] = [];
+  workOrder: WorkOrder = new WorkOrder();
   copyDate = new Date();
 
   workOrderId;
@@ -28,6 +29,7 @@ export class WorkOrderComponent implements OnInit {
   woSapId;
   loading;
   status: any[] = [];
+  dateOfCreateWO;
 
   constructor(
     private route: ActivatedRoute,
@@ -90,6 +92,7 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getWorkOrderId(wo) {
+    this.workOrder = wo;
     this.workOrderId = wo.id;
     this.woSapId = wo.sapId;
   }

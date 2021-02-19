@@ -15,15 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelPerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelPerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumStateDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialsDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkerPerCultureDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderEmployeeSAP;
@@ -781,4 +792,131 @@ public class WorkOrderWorkerService {
 		return retVals;
 	}
 	
+	public List<SpentHourOfWorkerPerCultureReportDTO> getHourOfWorkerPerCulture(Long tenantId){
+		List<SpentHourOfWorkerPerCultureDTO> spentHours = wowRepo.getHourOfWorkersPerCulture(tenantId);
+		List<SpentHourOfWorkerPerCultureReportDTO> retValues = new ArrayList<SpentHourOfWorkerPerCultureReportDTO>();
+		SpentHourOfWorkerPerCultureReportDTO spentHour = new SpentHourOfWorkerPerCultureReportDTO();
+		
+		if(spentHours.size() > 0) {
+			spentHour.setCrop(spentHours.get(0).getCrop());
+			spentHour.setCulture(spentHours.get(0).getCulture());
+			WorkerPerCultureDTO worker = new WorkerPerCultureDTO(spentHours.get(0));
+			List<WorkerPerCultureDTO> workers = new ArrayList<WorkerPerCultureDTO>();
+			workers.add(worker);
+			spentHour.setWorkers(workers);
+			if(spentHours.size() == 1) {
+				retValues.add(spentHour);
+			}
+		}
+		
+		for(int i = 0; i<spentHours.size()-1; i++) {
+			List<WorkerPerCultureDTO> workers = new ArrayList<WorkerPerCultureDTO>();
+			if(spentHours.get(i).getCrop().equals(spentHours.get(i+1).getCrop())) {
+				spentHour.getWorkers().add(new WorkerPerCultureDTO(spentHours.get(i+1)));
+				if(i+1 == spentHours.size()-1) {
+					retValues.add(spentHour);
+				}
+			} else {
+				retValues.add(spentHour);
+				spentHour = new SpentHourOfWorkerPerCultureReportDTO();
+				spentHour.setCrop(spentHours.get(i+1).getCrop());
+				spentHour.setCulture(spentHours.get(i+1).getCulture());
+				WorkerPerCultureDTO worker = new WorkerPerCultureDTO(spentHours.get(i+1));
+				workers.add(worker);
+				spentHour.setWorkers(workers);
+				if(i+1 == spentHours.size()-1) {
+					retValues.add(spentHour);
+				}
+			}
+			
+		}
+		return retValues;
+	}
+	
+	public List<MachineSumStatePerCultureReportDTO> getMachineSumStatePerCulture(Long tenantId){
+		List<MachineSumStatePerCultureDTO> machineStates = wowRepo.getMachineSumStatePerCulture(tenantId);
+		List<MachineSumStatePerCultureReportDTO> retValues = new ArrayList<MachineSumStatePerCultureReportDTO>();
+		MachineSumStatePerCultureReportDTO report = new MachineSumStatePerCultureReportDTO();
+		
+		if(machineStates.size() > 0) {
+			report.setCrop(machineStates.get(0).getCrop());
+			report.setCulture(machineStates.get(0).getCulture());
+			MachineSumStateDTO machine = new MachineSumStateDTO(machineStates.get(0));
+			List<MachineSumStateDTO> machines = new ArrayList<MachineSumStateDTO>();
+			machines.add(machine);
+			report.setMachines(machines);
+			if(machineStates.size() == 1) {
+				retValues.add(report);
+			}
+		}
+		
+		for(int i = 0; i<machineStates.size()-1; i++) {
+			List<MachineSumStateDTO> machines = new ArrayList<MachineSumStateDTO>();
+			if(machineStates.get(i).getCrop().equals(machineStates.get(i+1).getCrop())) {
+				report.getMachines().add(new MachineSumStateDTO(machineStates.get(i+1)));
+				if(i+1 == machineStates.size()-1) {
+					retValues.add(report);
+				}
+			} else {
+				retValues.add(report);
+				report = new MachineSumStatePerCultureReportDTO();
+				report.setCrop(machineStates.get(i+1).getCrop());
+				report.setCulture(machineStates.get(i+1).getCulture());
+				MachineSumStateDTO machine = new MachineSumStateDTO(machineStates.get(i+1));
+				machines.add(machine);
+				report.setMachines(machines);
+				if(i+1 == machineStates.size()-1) {
+					retValues.add(report);
+				}
+			}
+			
+		}
+		return retValues;
+	}
+	
+	public List<MachineSumStatePerCultureDTO> getMachineSumState(Long tenantId){
+		List<MachineSumStatePerCultureDTO> retVals = wowRepo.getMachineSumState(tenantId);
+		return retVals;
+	}
+	
+	public List<MachineSumFuelPerCultureReportDTO> getMachineSumFuelPerCulture(Long tenantId){
+		List<MachineSumFuelPerCultureDTO> machineFuels = wowRepo.getMachineSumFuelPerCultureDTO(tenantId);
+		List<MachineSumFuelPerCultureReportDTO> retValues = new ArrayList<MachineSumFuelPerCultureReportDTO>();
+		MachineSumFuelPerCultureReportDTO report = new MachineSumFuelPerCultureReportDTO();
+		
+		if(machineFuels.size() > 0) {
+			report.setCrop(machineFuels.get(0).getCrop());
+			report.setCulture(machineFuels.get(0).getCulture());
+			MachineSumFuelDTO machine = new MachineSumFuelDTO(machineFuels.get(0));
+			List<MachineSumFuelDTO> machines = new ArrayList<MachineSumFuelDTO>();
+			machines.add(machine);
+			report.setMachines(machines);
+			if(machineFuels.size() == 1) {
+				retValues.add(report);
+			}
+		}
+		
+		for(int i = 0; i<machineFuels.size()-1; i++) {
+			List<MachineSumFuelDTO> machines = new ArrayList<MachineSumFuelDTO>();
+			if(machineFuels.get(i).getCrop().equals(machineFuels.get(i+1).getCrop())) {
+				report.getMachines().add(new MachineSumFuelDTO(machineFuels.get(i+1)));
+				if(i+1 == machineFuels.size()-1) {
+					retValues.add(report);
+				}
+			} else {
+				retValues.add(report);
+				report = new MachineSumFuelPerCultureReportDTO();
+				report.setCrop(machineFuels.get(i+1).getCrop());
+				report.setCulture(machineFuels.get(i+1).getCulture());
+				MachineSumFuelDTO machine = new MachineSumFuelDTO(machineFuels.get(i+1));
+				machines.add(machine);
+				report.setMachines(machines);
+				if(i+1 == machineFuels.size()-1) {
+					retValues.add(report);
+				}
+			}
+			
+		}
+		return retValues;
+	}
 }

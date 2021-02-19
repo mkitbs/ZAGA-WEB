@@ -1,4 +1,4 @@
-<div class="container" style="margin-bottom: 3%;">
+<div class="container" style="margin-bottom: 4%;">
   <navbar></navbar>
 </div>
 <div class="container mt-4 d-none d-md-block" style="padding-top: 40px;">
@@ -16,7 +16,7 @@
             }">{{ workOrder.status }}</span>
           <br>
           <span *ngIf="!new">Br. radnog naloga (SAP): {{workOrder.sapId}}</span><br>
-          <span *ngIf="!new">Radni nalog kreirao: {{userCreator.name}} {{userCreator.surname}}</span>
+          <span *ngIf="!new">Radni nalog kreirao/la: {{userCreator.name}} {{userCreator.surname}}</span>
         </div>
         <div class="col" style="float: right;">
          
@@ -26,7 +26,8 @@
            
             </button>
           <button class="btn btn-primary btn-cancellation mr-2"
-            *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran'" (click)="cancellationWorkOrder()">
+            *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran' && workOrder.status == 'Zatvoren'" 
+            data-toggle="modal" data-target="#cancellationWorkOrderModal">
             <i class="fa fa-ban"></i> Storniraj radni nalog
           </button>
           <button class="btn btn-primary btn-edit"
@@ -36,7 +37,7 @@
           </button>
           <button class="btn btn-primary btn-add mr-2"
             *ngIf="!new && workOrder.status != 'Zatvoren' && creator==loggedUser && workOrder.status != 'Storniran'"
-            (click)="updateWorkOrder()">
+            (click)="checkIfStartedCreation()">
             <i class="fa fa-save mr-2"></i> Sačuvaj radni nalog
           </button>
           <button class="btn btn-primary btn-add mr-2" *ngIf="new" (click)="addWorkOrder(infoWorkOrderForm)">
@@ -92,12 +93,8 @@
               </div>
             </ng-template>
           </td>
-
-
         </tr>
-
         <tr>
-
           <!--Parcela-->
           <td class="left-col-header">
             <i class="fa fa-map-marker mr-2"></i>Parcela:
@@ -351,6 +348,7 @@
     </button>
     <div class="collapse" id="collapseExampleMachines">
       <div class="card card-body collapse-card">
+        <h5>Unos novog izvršioca/mašine:</h5>
         <form #wowForm="ngForm">
           <div class="table-responsive">
             <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
@@ -983,6 +981,7 @@
     <div class="collapse" id="collapseExampleMaterials">
       <div class="card card-body collapse-card">
         <form #materialForm="ngForm">
+          <h5>Unos novog materijala:</h5>
           <div class="table-responsive">
             <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
               <thead>
@@ -1333,7 +1332,7 @@
   <br />
   <div class="col" style="float: right;">
     <button class="btn btn-primary btn-cancellation mr-2"
-      *ngIf="machines == true && materials == true && !new && creator==loggedUser" (click)="cancellationWorkOrder()">
+      *ngIf="machines == true && materials == true && !new && creator==loggedUser && workOrder.status != 'Storniran' && workOrder.status == 'Zatvoren'" (click)="cancellationWorkOrder()">
       <i class="fa fa-ban"></i> Storniraj radni nalog
     </button>
     <button class="btn btn-primary btn-edit" style="margin-bottom: 5px; margin-right: 5px;"
@@ -1343,7 +1342,7 @@
     </button>
     <button class="btn btn-primary btn-add mr-2" style="margin-bottom: 5px;"
       *ngIf="machines == true && materials == true && !new && workOrder.status != 'Zatvoren' && creator==loggedUser"
-      (click)="updateWorkOrder()">
+      (click)="checkIfStartedCreation()">
       <i class="fa fa-save mr-2"></i>Sačuvaj radni nalog
     </button>
 
@@ -1375,7 +1374,7 @@
         }">{{ workOrder.status }}</span>
         <br>
           <span>Br. RN (SAP): {{workOrder.sapId}}</span><br>
-          <span>RN kreirao: {{userCreator.name}} {{userCreator.surname}}</span>
+          <span>RN kreirao/la: {{userCreator.name}} {{userCreator.surname}}</span>
     </div>
     <div class="col" *ngIf="new">
       <div class="btn-group-vertical" style="float: right">
@@ -1396,7 +1395,8 @@
         <i class="fa fa-check mr-2"></i>Zatvori RN
       </button>
       <button class="btn btn-primary btn-cancellation mr-2"
-        *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran'" (click)="cancellationWorkOrder()">
+        *ngIf="!new && creator==loggedUser && workOrder.status != 'Storniran' && workOrder.status == 'Zatvoren'" 
+        data-toggle="modal" data-target="#cancellationWorkOrderModal">
         <i class="fa fa-ban"></i> Storniraj RN
       </button>
       <button class="btn btn-danger" data-toggle="modal" data-target="#errorsModal"
@@ -2696,6 +2696,8 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
+        <button hidden type="button" class="close" data-toggle="modal" data-target="#errorsModal" #openErrorsModal>
+        </button>
       </div>
       <div class="modal-body">
         <ul>
@@ -2779,6 +2781,122 @@
         <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i
             class="fa fa-window-close"></i> Odustani</button>
         <button class="btn btn-primary btn-add" data-dismiss="modal" (click)="deleteExistingSpentMaterial(materialId)">
+          <i class="fa fa-check"></i> Potrvdi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal cuvanje zapocetog dodavanja izvrsioca/masine-->
+<div class="modal fade" id="saveStartedCreationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Potvrda započetih dodavanja
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeSaveStartedModal>
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <button hidden type="button" class="close" data-toggle="modal" data-target="#saveStartedCreationModal" #saveStartedCreation>
+          <span hidden aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-borderless">
+          <tr *ngIf="startedCreationWorker">
+            <td style="vertical-align: middle;">
+              <h6>Da li želite da dodate {{workerFC.value.name}} u izvršioce?</h6>
+            </td>
+            <td>
+              <label>
+                <input type="radio" name="worker" value="workerYes" (change)="getAnswerWorker($event.target.value)"/>
+                <span class="btn btn-primary btn-yes mr-2">Da</span>
+              </label>
+            </td>
+            <td>
+              <label>
+                <input type="radio" name="worker" value="workerNo" (change)="getAnswerWorker($event.target.value)"/>
+                <span class="btn btn-primary btn-no mr-2">Ne</span>
+              </label>
+            </td>
+          </tr>
+          <tr *ngIf="startedCreationMaterial">
+            <td style="vertical-align: middle;">
+              <h6>Da li želite da dodate {{materialFC.value.name}} u materijale?</h6>
+            </td>
+            <td>
+              <label>
+                <input type="radio" name="material" value="materialYes" (change)="getAnswerMaterial($event.target.value)"/>
+                <span class="btn btn-primary btn-yes mr-2">Da</span>
+              </label>
+            </td>
+            <td>
+              <label>
+                <input type="radio" name="material" value="materialNo" (change)="getAnswerMaterial($event.target.value)"/>
+                <span class="btn btn-primary btn-no mr-2">Ne</span>
+              </label>
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p *ngIf="errWow" style="color: red;">{{msgInvalidAnswerWow}}</p>
+          <br>
+          <p *ngIf="errMat" style="color: red;">{{msgInvalidAnswerMat}}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal">
+          <i class="fa fa-window-close"></i> Odustani</button>
+        <button class="btn btn-primary btn-add" (click)="addWorkerAndUpdateWo()">
+          <i class="fa fa-check"></i> Potvrdi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal potvrda pre storniranja naloga-->
+<div class="modal fade" id="cancellationWorkOrderModal" tabindex="-1" role="dialog" 
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Da li ste sigurni da želite da stornirate radni nalog?
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-borderless">
+          <tr>
+            <th><i class="fa fa-slack mr-2"></i>Broj radnog naloga:</th>
+            <td>{{workOrder.sapId}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-calendar mr-2"></i>Datum:</th>
+            <td>{{dateOfCreateWO}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-map-marker mr-2"></i>Parcela:</th>
+            <td>{{workOrder.table}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-cubes mr-2"></i>Usev:</th>
+            <td>{{workOrder.cropName}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-file mr-2"></i>ATM:</th>
+            <td>{{workOrder.operationName}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i
+            class="fa fa-window-close"></i> Odustani</button>
+        <button class="btn btn-primary btn-add" data-dismiss="modal" (click)="cancellationWorkOrder()">
           <i class="fa fa-check"></i> Potrvdi
         </button>
       </div>

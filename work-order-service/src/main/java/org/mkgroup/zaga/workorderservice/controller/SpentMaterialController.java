@@ -7,6 +7,8 @@ import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MaterialReportHelperDTO;
 import org.mkgroup.zaga.workorderservice.dto.Response;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
 import org.mkgroup.zaga.workorderservice.model.Material;
 import org.mkgroup.zaga.workorderservice.model.SpentMaterial;
@@ -102,5 +104,11 @@ public class SpentMaterialController {
 	public ResponseEntity<?> getDataForReport(@RequestHeader("TenantId") String tenantId){
 		List<MaterialReportDTO> data = spentMaterialService.getMaterialsForReport(Long.parseLong(tenantId));
 		return new ResponseEntity<List<MaterialReportDTO>>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("getSpentMaterialPerCulture")
+	public ResponseEntity<?> getSpentMaterialPerCulture(@RequestHeader("TenantId") String tenantId){
+		List<SpentMaterialPerCultureReportDTO> spentMaterials = spentMaterialService.getSpentMaterialPerCulture(Long.parseLong(tenantId));
+		return new ResponseEntity<List<SpentMaterialPerCultureReportDTO>>(spentMaterials, HttpStatus.OK);
 	}
 }

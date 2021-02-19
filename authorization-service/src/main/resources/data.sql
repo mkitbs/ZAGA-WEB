@@ -19,7 +19,7 @@ insert into tenant (id, company_code, name, setting_id) values (2, '1200', 'PIKB
 
 -- users
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 
-values (1, 'Milan', 'Katic', 'katic@gmail.com', '12', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1996-10-07', '060696969', 1);
+values (1, 'Milan', 'Katic', 'katic@gmail.com', '4', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1996-10-07', '060696969', 1);
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 
 values (2, 'Milos', 'Vrgovic', 'vrgovicm@gmail.com', '13', 1, '$2a$10$tlHY4ACO1oM5KR5eFRNdaOcIfOR0ZQXEnCB0TjnBgHPIOWHIfZN7K', 1, '1998-01-19', '06012345', 2);
 insert into users (id, name, surname, email, sap_user_id,enabled, password, non_locked, date_of_birth, telephone, tenant_id) 

@@ -485,6 +485,74 @@
             </ng-template>
             <div style="padding-top: 50px;"></div>
             <div class="row card-group">
+              <div class="col-4" *ngFor="let user of users">
+                <div class="card mb-3" style="width: 29rem; height: 90%; cursor: context-menu;">
+                  <div class="card-body">
+                    <div class="row">
+                      <div
+                        class="col-md-auto"
+                        style="width: fit-content; "
+                      >
+                        <img
+                          *ngIf="user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/active.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                        <img
+                          *ngIf="!user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/deactive.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                      </div>
+                      <div class="col">
+                        <div class="card-text">
+                          <h5 class="card-title">
+                            {{user.name}} {{user.surname}}
+                          </h5>
+                          <table>
+                            <tr>
+                              <th><i class="fa fa-envelope"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fa fa-phone"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fas fa-fingerprint"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
+                            </tr>
+                            <tr *ngFor="let role of user.roles; let i = index">
+                              <th><i class="fa fa-user" *ngIf="i==0"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">
+                                <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-primary btn-edit" (click)="nextStep(user)">
+                      <i class="fa fa-edit"></i> Izmenite
+                    </button>
+                    <button *ngIf="user.enabled" class="btn btn-primary btn-ban" (click)="deactivateUser(user.id)">
+                      <i class="fas fa-ban"></i> Deaktivirajte
+                    </button>
+                    <button *ngIf="!user.enabled" class="btn btn-primary btn-add" (click)="activateUser(user.id)">
+                      <i class="fas fa-toggle-on"></i> Aktivirajte
+                    </button>
+                    <button class="btn btn-primary btn-delete" (click)="deleteUser(user.id)">
+                      <i class="fa fa-trash"></i> Obrišite
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <!--
               <div class="col-3" *ngFor="let user of users">
                 <div class="flip-card">
                   <div class="flip-card-inner">
@@ -527,7 +595,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+              -->
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label>
@@ -663,7 +731,7 @@
                   -->
                 </div>
                 <div class="col-5">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
@@ -863,7 +931,7 @@
                 </div>
               -->
                 <div class="col-5">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
@@ -1416,45 +1484,69 @@
             </ng-template>
             <div style="padding-top: 50px;"></div>
             <div class="row card-group">
-              <div class="col-4" *ngFor="let user of users">
-                <div class="flip-card">
-                  <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                      <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/active.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                      <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/deactive.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                      <div class="card-body">
-                        <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
+              <div class="col-6" *ngFor="let user of users">
+                <div class="card mb-3" style="width: 29rem; height: 90%; cursor: context-menu;">
+                  <div class="card-body">
+                    <div class="row">
+                      <div
+                        class="col-md-auto"
+                        style="width: fit-content; "
+                      >
+                        <img
+                          *ngIf="user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/active.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                        <img
+                          *ngIf="!user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/deactive.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                      </div>
+                      <div class="col">
+                        <div class="card-text">
+                          <h5 class="card-title">
+                            {{user.name}} {{user.surname}}
+                          </h5>
+                          <table>
+                            <tr>
+                              <th><i class="fa fa-envelope"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fa fa-phone"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fas fa-fingerprint"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
+                            </tr>
+                            <tr *ngFor="let role of user.roles; let i = index">
+                              <th><i class="fa fa-user" *ngIf="i==0"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">
+                                <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                    <div class="flip-card-back">
-                      <h1>{{user.name}} {{user.surname}}</h1>
-                      <table style="margin: auto">
-                        <tr>
-                          <th><i class="fa fa-envelope"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
-                        </tr>
-                        <tr>
-                          <th><i class="fa fa-phone"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
-                        </tr>
-                        <tr>
-                          <th><i class="fas fa-fingerprint"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
-                        </tr>
-                        <tr *ngFor="let role of user.roles; let i = index">
-                          <th><i class="fa fa-user" *ngIf="i==0"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">
-                            <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
-                          </td>
-                        </tr>
-                      </table>
-                      <div style="position: absolute; bottom: 5px; left: 70px;">
-                        <button *ngIf="user.enabled == false" class="btn" (click)="activateUser(user.id)"><i class="fa fa-check fa-lg" style="color: white;" title="Aktiviraj nalog"></i></button>
-                        <button *ngIf="user.enabled == true" class="btn" (click)="deactivateUser(user.id)"><i class="fa fa-times fa-lg" style="color: white;" title="Deaktiviraj nalog"></i></button>
-                        <button class="btn" (click)="nextStep(user)"><i class="fa fa-edit fa-lg" style="color: white;" title="Izmeni"></i></button>
-                        <button class="btn" (click)="deleteUser(user.id)"><i class="fa fa-trash fa-lg" style="color: white;" title="Obriši"></i></button>
-                      </div>
-                    </div>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-primary btn-edit" (click)="nextStep(user)">
+                      <i class="fa fa-edit"></i> Izmenite
+                    </button>
+                    <button *ngIf="user.enabled" class="btn btn-primary btn-ban" (click)="deactivateUser(user.id)">
+                      <i class="fas fa-ban"></i> Deaktivirajte
+                    </button>
+                    <button *ngIf="!user.enabled" class="btn btn-primary btn-add" (click)="activateUser(user.id)">
+                      <i class="fas fa-toggle-on"></i> Aktivirajte
+                    </button>
+                    <button class="btn btn-primary btn-delete" (click)="deleteUser(user.id)">
+                      <i class="fa fa-trash"></i> Obrišite
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1594,7 +1686,7 @@
                   -->
                 </div>
                 <div class="col-5">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
@@ -1794,7 +1886,7 @@
                 </div>
               -->
                 <div class="col-5">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
@@ -2344,44 +2436,68 @@
             <div style="padding-top: 50px;"></div>
             <div class="row card-group">
               <div class="col-5" *ngFor="let user of users">
-                <div class="flip-card">
-                  <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                      <img *ngIf="user.enabled == true" class="card-img-top" src="../../../assets/active.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                      <img *ngIf="user.enabled == false" class="card-img-top" src="../../../assets/deactive.jpg" alt="Avatar" style="width: 250px; height: 200px;">
-                      <div class="card-body">
-                        <h4 class="card-title">{{user.name}} {{user.surname}}</h4>
+                <div class="card mb-3" style="width: 26rem; height: 90%; cursor: context-menu;">
+                  <div class="card-body">
+                    <div class="row" style="word-break: break-word;">
+                      <div
+                        class="col-md-auto"
+                        style="width: fit-content; "
+                      >
+                        <img
+                          *ngIf="user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/active.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                        <img
+                          *ngIf="!user.enabled"
+                          class="card-img-right"
+                          src="../../../assets/deactive.jpg"
+                          style="width: auto; height: 100px;"
+                        />
+                      </div>
+                      <div class="col">
+                        <div class="card-text">
+                          <h5 class="card-title">
+                            {{user.name}} {{user.surname}}
+                          </h5>
+                          <table>
+                            <tr>
+                              <th><i class="fa fa-envelope"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fa fa-phone"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
+                            </tr>
+                            <tr>
+                              <th><i class="fas fa-fingerprint"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
+                            </tr>
+                            <tr *ngFor="let role of user.roles; let i = index">
+                              <th><i class="fa fa-user" *ngIf="i==0"></i></th>
+                              <td style="text-align: left; padding-left: 5px;">
+                                <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                    <div class="flip-card-back">
-                      <h1>{{user.name}} {{user.surname}}</h1>
-                      <table style="margin: auto">
-                        <tr>
-                          <th><i class="fa fa-envelope"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.email}}</td>
-                        </tr>
-                        <tr>
-                          <th><i class="fa fa-phone"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.telephone}}</td>
-                        </tr>
-                        <tr>
-                          <th><i class="fas fa-fingerprint"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">{{user.sapUserId }}</td>
-                        </tr>
-                        <tr *ngFor="let role of user.roles; let i = index">
-                          <th><i class="fa fa-user" *ngIf="i==0"></i></th>
-                          <td style="text-align: left; padding-left: 5px;">
-                            <span > {{ role.name }}<span *ngIf="user.roles.length!=i+1">,</span></span>
-                          </td>
-                        </tr>
-                      </table>
-                      <div style="position: absolute; bottom: 5px; left: 70px;">
-                        <button *ngIf="user.enabled == false" class="btn" (click)="activateUser(user.id)"><i class="fa fa-check fa-lg" style="color: white;" title="Aktiviraj nalog"></i></button>
-                        <button *ngIf="user.enabled == true" class="btn" (click)="deactivateUser(user.id)"><i class="fa fa-times fa-lg" style="color: white;" title="Deaktiviraj nalog"></i></button>
-                        <button class="btn" (click)="nextStep(user)"><i class="fa fa-edit fa-lg" style="color: white;" title="Izmeni"></i></button>
-                        <button class="btn" (click)="deleteUser(user.id)"><i class="fa fa-trash fa-lg" style="color: white;" title="Obriši"></i></button>
-                      </div>
-                    </div>
+                  </div>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-primary btn-edit" (click)="nextStep(user)">
+                      <i class="fa fa-edit"></i> Izmenite
+                    </button>
+                    <button *ngIf="user.enabled" class="btn btn-primary btn-ban" (click)="deactivateUser(user.id)">
+                      <i class="fas fa-ban"></i> Deaktivirajte
+                    </button>
+                    <button *ngIf="!user.enabled" class="btn btn-primary btn-add" (click)="activateUser(user.id)">
+                      <i class="fas fa-toggle-on"></i> Aktivirajte
+                    </button>
+                    <button class="btn btn-primary btn-delete" (click)="deleteUser(user.id)">
+                      <i class="fa fa-trash"></i> Obrišite
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2524,7 +2640,7 @@
                 </div>
                 <div style="padding-bottom: 10px;"></div>
                 <div class="col-12">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
@@ -2727,7 +2843,7 @@
               -->
               <div style="padding-bottom: 10px;"></div>
                 <div class="col-12">
-                  <label><i class="fa fa-user"></i> Role korisnika</label><br>
+                  <label><i class="fa fa-user"></i> Uloga korisnika</label><br>
                     <ng-multiselect-dropdown 
                       name="rol"   
                       [placeholder]="'Izaberite role'" 
