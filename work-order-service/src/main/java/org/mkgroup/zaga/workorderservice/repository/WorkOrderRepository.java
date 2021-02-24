@@ -1,9 +1,11 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
+import org.mkgroup.zaga.workorderservice.model.Culture;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +29,6 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrder, UUID>{
 	
 	@Query(value = "SELECT op.name AS operation, SUM(wo.treated) AS treated, SUM(co.area-wo.treated) AS area FROM work_order AS wo INNER JOIN operation AS op ON wo.operation_id=op.id INNER JOIN crop AS co ON wo.crop_id=co.id WHERE wo.tenant_id=?1 AND wo.date=curdate() GROUP BY wo.operation_id", nativeQuery = true)
 	List<OperationsTodayDTO> findAllOperationsForToday(Long tenantId);
+	
+	Optional<WorkOrder> findByErpId(Long id);
 }
