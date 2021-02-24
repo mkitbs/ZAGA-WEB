@@ -1050,14 +1050,15 @@ public class WorkOrderService {
 		WorkOrder workOrder = new WorkOrder();
 		
 		String woDateStr = json.get("WorkOrderDate").getAsString();
-		woDateStr = woDateStr.split("(")[1];
-		woDateStr = woDateStr.split(")")[0];
+		System.out.println(woDateStr);
+		woDateStr = woDateStr.split("\\(")[1];
+		woDateStr = woDateStr.split("\\)")[0];
 		Date woDate = new Date(Long.parseLong(woDateStr));
 		workOrder.setDate(woDate);
 		
 		String woCreateStr = json.get("WorkOrderOpenDate").getAsString();
-		woCreateStr = woCreateStr.split("(")[1];
-		woCreateStr = woCreateStr.split(")")[0];
+		woCreateStr = woCreateStr.split("\\(")[1];
+		woCreateStr = woCreateStr.split("\\)")[0];
 		Date woCreateDate = new Date(Long.parseLong(woCreateStr));
 		workOrder.setCreationDate(woCreateDate);
 		
@@ -1145,7 +1146,7 @@ public class WorkOrderService {
 			wow.setUser(userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).get());
 			
 			wow.setOperation(operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).get());
-			
+			System.out.println(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString());
 			Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).get();
 			wow.setMachine(machine);
 			
@@ -1213,7 +1214,165 @@ public class WorkOrderService {
 	}
 	
 	public void updateSync(JsonObject json, UUID id) {
+		WorkOrder workOrder = workOrderRepo.getOne(id);
 		
+		String woDateStr = json.get("WorkOrderDate").getAsString();
+		woDateStr = woDateStr.split("(")[1];
+		woDateStr = woDateStr.split(")")[0];
+		Date woDate = new Date(Long.parseLong(woDateStr));
+		workOrder.setDate(woDate);
+		/*
+		String woCreateStr = json.get("WorkOrderOpenDate").getAsString();
+		woCreateStr = woCreateStr.split("(")[1];
+		woCreateStr = woCreateStr.split(")")[0];
+		Date woCreateDate = new Date(Long.parseLong(woCreateStr));
+		workOrder.setCreationDate(woCreateDate);
+		*/
+		switch (json.get("WorkOrderStatus").getAsString()) {
+		case "L":
+			workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
+			break;
+		case "Z":
+			workOrder.setStatus(WorkOrderStatus.CLOSED);
+			break;
+		case "O":
+			workOrder.setStatus(WorkOrderStatus.NEW);
+			break;
+		case "D":
+			workOrder.setStatus(WorkOrderStatus.CANCELLATION);
+			break;
+		}
+		
+		//workOrder.setTreated(0);
+		Operation operation = operationRepo.findByErpId(Long.parseLong(json.get("OperationId").getAsString())).get();
+		workOrder.setOperation(operation);
+
+		Crop crop = cropRepo.findByErpId(Long.parseLong(json.get("CropId").getAsString())).get();
+		workOrder.setCrop(crop);
+
+		User responsible = userRepo.findByPerNumber(Long.parseLong(json.get("ResponsibleUserNumber").getAsString().replaceAll("0", ""))).get();
+		workOrder.setResponsible(responsible);
+		
+		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString().replaceAll("0", "")));
+
+		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
+		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString());
+		workOrder.setNote(json.get("NoteItem").getAsString());
+		workOrder = workOrderRepo.save(workOrder);
+
+		UUID workOrderId = id;
+
+		JsonArray jsonWow = json.get("WorkOrderToEmployeeNavigation").getAsJsonObject().get("results").getAsJsonArray();
+		if(jsonWow.size() == 0) {
+			workOrder.setTreated(0);
+		}
+		Map<Long, Boolean> fuelsMap = new HashMap<Long, Boolean>();
+		for (int i = 0; i < jsonWow.size(); i++) {
+			int erpId = Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString());
+			WorkOrderWorker worker = wowRepo.findByErpIdAndWorkOrderId(erpId, workOrderId).get();
+			
+			WorkOrderWorker wow = new WorkOrderWorker();
+			if(worker != null) {
+				wow = worker;
+			}
+			
+			if(i == 0) {
+				workOrder.setTreated(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString()));
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString().equals("0.00000")) {
+				wow.setNightPeriod(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString()));
+			} else {
+				wow.setNightPeriod(-1.0);
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString().equals("0.00000")) {
+				wow.setDayPeriod(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString()));
+			} else {
+				wow.setDayPeriod(-1.0);
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("MachineTimeEnd").getAsString().equals("0.0")) {
+				wow.setFinalState(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeEnd").getAsString()));
+			} else {
+				wow.setFinalState(-1.0);
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString().equals("0.00000")) {
+				wow.setFuel(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString()));
+			} else {
+				wow.setFuel(-1.0);
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString().equals("0.0")) {
+				wow.setInitialState(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString()));
+			} else {
+				wow.setInitialState(-1.0);
+			}
+			if (!jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString().equals("0.0") && !jsonWow.get(i).getAsJsonObject().get("MachineTimeEnd").getAsString().equals("0.0")) {
+				wow.setSumState(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeEnd").getAsString()) - Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString()));
+			} else {
+				wow.setSumState(-1.0);
+			}
+			wow.setWorkOrder(workOrder);
+			if (!jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString().equals("0.00000") && !jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString().equals("0.00000")) {
+				wow.setWorkPeriod(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString()) + Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString()));
+			} else {
+				wow.setWorkPeriod(-1.0);
+			}
+			
+			wow.setUser(userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).get());
+			
+			wow.setOperation(operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).get());
+			
+			Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).get();
+			wow.setMachine(machine);
+			
+			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
+
+			if (!fuelsMap.containsKey(machine.getFuelErpId())) {
+				fuelsMap.put(machine.getFuelErpId(), true);
+			}
+
+			if (!jsonWow.get(i).getAsJsonObject().get("SlaveMachineId").getAsString().equals("")) {
+				wow.setConnectingMachine(
+						machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("SlaveMachineId").getAsString()).get());
+			} else {
+				wow.setConnectingMachine(null);
+			}
+			
+			wow = wowRepo.save(wow);
+			workOrder.getWorkers().add(wow);
+			workOrder = workOrderRepo.save(workOrder);
+		}
+
+		JsonArray jsonWom = json.get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
+		
+		for (int i = 0; i < jsonWom.size(); i++) {
+			int erpId = Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
+			SpentMaterial mat = spentMaterialRepo.findByErpAndWorkOrder(erpId, workOrderId).get();
+			SpentMaterial material = new SpentMaterial();
+			if(mat != null) {
+				material = mat;
+			}
+			Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
+			material.setMaterial(matr);
+			material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
+			// material.setQuantityPerHectar(m.getQuantity() /
+			// workOrder.getCrop().getArea());
+			if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
+				material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
+				material.setSpentPerHectar(0.0);
+			} else {
+				material.setSpent(-1.0);
+				material.setSpentPerHectar(-1.0);
+			}
+			if(fuelsMap.containsKey(matr.getErpId())) {
+				material.setFuel(true);
+			}
+			material.setWorkOrder(workOrder);
+			material = spentMaterialRepo.save(material);
+			workOrder.getMaterials().add(material);
+			workOrder = workOrderRepo.save(workOrder);
+		}
+
+		
+
 	}
 	
 	public List<WorkOrderDTO> getMyWoByStatus(Long sapUserId, Long tenantId, WorkOrderStatus status) {
