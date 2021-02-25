@@ -1154,12 +1154,10 @@ public class WorkOrderService {
 		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
-		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString().replaceAll("-", " "));
-		System.out.println("JSON = " + json.toString());
-		
-		
-		
-		workOrder.setNote(json.get("NoteItem").getAsString().replaceAll("-", " "));
+		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
+		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+		workOrder.setNote(noteItem.replaceAll("%2C", ","));
 		
 		workOrder.setErpId(Long.parseLong(json.get("WorkOrderNumber").getAsString()));
 		
@@ -1349,8 +1347,10 @@ public class WorkOrderService {
 		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
-		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString().replaceAll("-", " "));
-		workOrder.setNote(json.get("NoteItem").getAsString().replaceAll("-", " "));
+		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
+		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+		workOrder.setNote(noteItem.replaceAll("%2C", ","));
 		workOrder = workOrderRepo.save(workOrder);
 
 		UUID workOrderId = id;
