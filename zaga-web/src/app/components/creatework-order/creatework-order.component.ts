@@ -896,6 +896,12 @@ export class CreateworkOrderComponent implements OnInit {
       this.wow.connectingMachine.dbid = this.workerCoMachineFC.value.dbid;
     }
     console.log(this.wow)
+    this.wow.finalState = -1;
+    this.wow.initialState = -1;
+    this.wow.dayPeriod = -1;
+    this.wow.nightPeriod = -1;
+    this.wow.sumState = -1;
+    this.wow.fuel = -1;
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
       this.toastr.success("Izvršioc " + this.workerFC.value.name + " je uspešno dodat.", "Potvrda!", {
@@ -1781,50 +1787,57 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
-      
-      if(wow.machine.Id == "BEZ-MASINE" || this.fieldFC.value.Id == 999997){
-        this.withoutMachine = true;
-      }else {
-        this.withoutMachine = false;
-      }
-      console.log(this.withoutMachine)
-      if(this.withoutMachine){
-        if(
-          wow.dayPeriod == -1 ||
-          wow.dayPeriod == null ||
-          wow.nightPeriod == -1 ||
-          wow.nightPeriod == null
-          ) {
-            this.validWow = false;
-            this.validWows.push("false");
-            const element: HTMLElement = document.getElementById(wow.id);
-            this.renderer.setStyle(element, "background-color", "#BD362F");
-          } else {
-            this.validWow = true;
-            this.validWows.push("true");
-          }
-      } else {
-        if(
-          wow.dayPeriod == -1 ||
-          wow.dayPeriod == null ||
-          wow.nightPeriod == -1 ||
-          wow.nightPeriod == null ||
-          wow.initialState == -1 ||
-          wow.initialState == null ||
-          wow.finalState == -1 ||
-          wow.finalState == null ||
-          wow.fuel == -1 ||
-          wow.fuel == null
-          ){
-            this.validWow = false;
-            this.validWows.push("false");
-            const element: HTMLElement = document.getElementById(wow.id);
-            this.renderer.setStyle(element, "background-color", "#BD362F");
-          } else {
-            this.validWow = true;
-            this.validWows.push("true");
-          }
+      if(wow.deleted == false){
+        console.log("WOW = " + wow)
+        if(wow.machine.Id == "BEZ-MASINE" || this.fieldFC.value.Id == 999997){
+          this.withoutMachine = true;
+        }else {
+          this.withoutMachine = false;
         }
+        console.log(this.withoutMachine)
+        if(this.withoutMachine){
+          if(
+            wow.dayPeriod == -1 ||
+            wow.dayPeriod == null ||
+            wow.nightPeriod == -1 ||
+            wow.nightPeriod == null
+            ) {
+              this.validWow = false;
+              this.validWows.push("false");
+              const element: HTMLElement = document.getElementById(wow.id);
+              this.renderer.setStyle(element, "background-color", "#BD362F");
+            } else {
+              this.validWow = true;
+              console.log(this.validWow)
+              this.validWows.push("true");
+            }
+        } else {
+          console.log("USAO U ELSE")
+          if(
+            wow.dayPeriod == -1 ||
+            wow.dayPeriod == null ||
+            wow.nightPeriod == -1 ||
+            wow.nightPeriod == null ||
+            wow.initialState == -1 ||
+            wow.initialState == null ||
+            wow.finalState == -1 ||
+            wow.finalState == null ||
+            wow.fuel == -1 ||
+            wow.fuel == null
+            ){
+              this.validWow = false;
+              this.validWows.push("false");
+              const element: HTMLElement = document.getElementById(wow.id);
+              this.renderer.setStyle(element, "background-color", "#BD362F");
+            } else {
+              this.validWow = true;
+              this.validWows.push("true");
+            }
+          }
+          console.log(this.validWow)
+      }
+      
+      
      
       /*
       if (
@@ -1901,9 +1914,10 @@ export class CreateworkOrderComponent implements OnInit {
     }
     this.validWoms = [];
     if (this.validWow == false && this.validWom == false) {
-      this.toastr.error("Unesite učinke izvršioca/mašina i materijala.", "Greška!", {
-        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
-      });
+        this.toastr.error("Unesite učinke izvršioca/mašina i materijala.", "Greška!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        });
+      
     } else if (this.validWom == false) {
       this.toastr.error("Unesite učinke materijala.", "Greška!", {
         positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true

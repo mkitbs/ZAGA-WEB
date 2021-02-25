@@ -228,7 +228,7 @@ public class WorkOrderService {
 			wow.setMachine(machine);
 			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 
-			if (!fuelsMap.containsKey(machine.getFuelErpId())) {
+			if (!fuelsMap.containsKey(machine.getFuelErpId()) && workOrder.getCrop().getField().getErpId() != 999997) {
 				fuelsMap.put(machine.getFuelErpId(), true);
 			}
 
