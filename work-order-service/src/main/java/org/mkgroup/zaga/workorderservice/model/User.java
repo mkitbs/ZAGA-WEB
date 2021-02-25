@@ -20,7 +20,6 @@ import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @NoArgsConstructor
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames ={"perNumber"})})
@@ -57,9 +56,69 @@ public class User {
 		this.perNumber = em.getPerNumber();
 	}
 	
-	@Override
-    public String toString() { 
-        return String.format(""); 
-    } 
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public Long getPerNumber() {
+		return perNumber;
+	}
+
+	public void setPerNumber(Long perNumber) {
+		this.perNumber = perNumber;
+	}
+
+	public List<WorkOrder> getResponsible() {
+		return responsible;
+	}
+
+	public void setResponsible(List<WorkOrder> responsible) {
+		this.responsible = responsible;
+	}
+
+	public List<WorkOrderMachine> getWorkOrderMachines() {
+		return workOrderMachines;
+	}
+
+	public void setWorkOrderMachines(List<WorkOrderMachine> workOrderMachines) {
+		this.workOrderMachines = workOrderMachines;
+	}
+
+	public List<WorkOrderWorker> getWorkOrderWorking() {
+		return workOrderWorking;
+	}
+
+	public void setWorkOrderWorking(List<WorkOrderWorker> workOrderWorking) {
+		this.workOrderWorking = workOrderWorking;
+	} 
+	
 	
 }

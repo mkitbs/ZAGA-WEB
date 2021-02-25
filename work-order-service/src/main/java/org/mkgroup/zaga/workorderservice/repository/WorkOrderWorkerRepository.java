@@ -1,6 +1,7 @@
 package org.mkgroup.zaga.workorderservice.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -34,6 +35,9 @@ public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker
 	@Transactional
 	@Query(value = "UPDATE work_order_worker SET deleted = true WHERE id = ?1", nativeQuery = true)
 	void deleteWorker(UUID id);
+	
+	@Query(value = "SELECT * FROM work_order_worker WHERE erp_id = ?1 AND work_order_id = ?2", nativeQuery = true)
+	Optional<WorkOrderWorker> findByErpIdAndWorkOrderId(int erpId, UUID workOrderId);
 	
 	@Query(value = "SELECT * FROM work_order_worker AS wow WHERE wow.worker_id=?1 AND wow.deleted=false", nativeQuery = true)
 	List<WorkOrderWorker> findAllWoWByWorker(UUID workerId);

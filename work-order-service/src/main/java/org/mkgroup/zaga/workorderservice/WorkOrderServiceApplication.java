@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableHystrix
 @EnableFeignClients
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 public class WorkOrderServiceApplication {
 
 	public static void main(String[] args) {

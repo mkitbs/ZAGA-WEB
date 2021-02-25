@@ -153,4 +153,10 @@ public class WorkOrderController {
 		List<OperationsTodayDTO> retVals = workOrderService.getOperationsForToday(Long.parseLong(tenantId));
 		return new ResponseEntity<List<OperationsTodayDTO>>(retVals, HttpStatus.OK);
 	}
+	
+	@GetMapping("/sync")
+	public ResponseEntity<?> synchronization(){
+		workOrderService.synch();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
