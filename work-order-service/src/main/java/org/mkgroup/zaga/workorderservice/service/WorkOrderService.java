@@ -941,12 +941,19 @@ public class WorkOrderService {
 	    JsonArray arrayAll = convertedObject.get("d").getAsJsonObject().get("results").getAsJsonArray();
 	    for(int i = 0; i < arrayAll.size(); i++) {
 	    	JsonObject json = arrayAll.get(i).getAsJsonObject();
-	    	workOrderRepo.findByErpId(Long.parseLong(arrayAll.get(i)
-	    											.getAsJsonObject()
-	    											.get("WorkOrderNumber")
-	    											.getAsString()))
-	    											.ifPresentOrElse(found -> updateSync(json, found.getId()), 
-	    																() -> createSync(json));;
+	    	if(
+	    			!json.get("OperationId").getAsString().equals("0000") ||
+	    			!json.get("CropId").getAsString().equals("000000") ||
+	    			!json.get("FieldId").getAsString().equals("000000")
+	    	) {
+	    		workOrderRepo.findByErpId(Long.parseLong(arrayAll.get(i)
+						.getAsJsonObject()
+						.get("WorkOrderNumber")
+						.getAsString()))
+						.ifPresentOrElse(found -> updateSync(json, found.getId()), 
+											() -> createSync(json));;
+	    	}
+	    	
 	    }
 		//return response;
 	}
