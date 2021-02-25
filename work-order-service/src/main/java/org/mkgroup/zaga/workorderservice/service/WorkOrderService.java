@@ -1251,6 +1251,12 @@ public class WorkOrderService {
 					wow.setConnectingMachine(null);
 				}
 				
+				if(jsonWow.get(i).getAsJsonObject().get("NoOperationOutput").getAsString().equals("X")) {
+					workOrder.setNoOperationOutput(true);
+				} else {
+					workOrder.setNoOperationOutput(false);
+				}
+				
 				wow = wowRepo.save(wow);
 				workOrder.getWorkers().add(wow);
 				workOrder = workOrderRepo.save(workOrder);
@@ -1261,35 +1267,38 @@ public class WorkOrderService {
 		JsonArray jsonWom = json.get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 		System.out.println(jsonWom.size() + " VELICINA LISTE");
 		for (int i = 0; i < jsonWom.size(); i++) {
-			SpentMaterial material = new SpentMaterial();
-			System.out.println(jsonWom.get(i).getAsJsonObject().get("WorkOrderNumber").getAsString());
-			System.out.println(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString());
-			Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
-			material.setMaterial(matr);
-			material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
-			// material.setQuantityPerHectar(m.getQuantity() /
-			// workOrder.getCrop().getArea());
-			if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
-				material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
-				material.setSpentPerHectar(0.0);
-			} else {
-				material.setSpent(-1.0);
-				material.setSpentPerHectar(-1.0);
+			if(!jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString().equals("")) {
+				SpentMaterial material = new SpentMaterial();
+				System.out.println(jsonWom.get(i).getAsJsonObject().get("WorkOrderNumber").getAsString());
+				System.out.println(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString());
+				Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
+				material.setMaterial(matr);
+				material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
+				// material.setQuantityPerHectar(m.getQuantity() /
+				// workOrder.getCrop().getArea());
+				if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
+					material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
+					material.setSpentPerHectar(0.0);
+				} else {
+					material.setSpent(-1.0);
+					material.setSpentPerHectar(-1.0);
+				}
+				if(fuelsMap.containsKey(matr.getErpId())) {
+					material.setFuel(true);
+				}
+				material.setWorkOrder(workOrder);
+				System.out.println("ERP MAT " + jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
+				material.setErpId(Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString()));
+				if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+					material.setDeleted(true);
+				} else {
+					material.setDeleted(false);
+				}
+				material = spentMaterialRepo.save(material);
+				workOrder.getMaterials().add(material);
+				workOrder = workOrderRepo.save(workOrder);
 			}
-			if(fuelsMap.containsKey(matr.getErpId())) {
-				material.setFuel(true);
-			}
-			material.setWorkOrder(workOrder);
-			System.out.println("ERP MAT " + jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
-			material.setErpId(Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString()));
-			if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
-				material.setDeleted(true);
-			} else {
-				material.setDeleted(false);
-			}
-			material = spentMaterialRepo.save(material);
-			workOrder.getMaterials().add(material);
-			workOrder = workOrderRepo.save(workOrder);
+			
 		}
 
 		/*Iterator it = fuelsMap.entrySet().iterator();
@@ -1456,6 +1465,12 @@ public class WorkOrderService {
 					wow.setConnectingMachine(null);
 				}
 				
+				if(jsonWow.get(i).getAsJsonObject().get("NoOperationOutput").getAsString().equals("X")) {
+					workOrder.setNoOperationOutput(true);
+				} else {
+					workOrder.setNoOperationOutput(false);
+				}
+				
 				wow = wowRepo.save(wow);
 				workOrder.getWorkers().add(wow);
 				workOrder = workOrderRepo.save(workOrder);
@@ -1466,37 +1481,40 @@ public class WorkOrderService {
 		JsonArray jsonWom = json.get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
 		
 		for (int i = 0; i < jsonWom.size(); i++) {
-			int erpId = Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
-			SpentMaterial mat = spentMaterialRepo.findByErpAndWorkOrder(erpId, workOrderId).orElse(null);
-			SpentMaterial material = new SpentMaterial();
-			if(mat != null) {
-				material = mat;
+			if(!jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString().equals("")) {
+				int erpId = Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
+				SpentMaterial mat = spentMaterialRepo.findByErpAndWorkOrder(erpId, workOrderId).orElse(null);
+				SpentMaterial material = new SpentMaterial();
+				if(mat != null) {
+					material = mat;
+				}
+				Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
+				material.setMaterial(matr);
+				material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
+				// material.setQuantityPerHectar(m.getQuantity() /
+				// workOrder.getCrop().getArea());
+				if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
+					material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
+					material.setSpentPerHectar(0.0);
+				} else {
+					material.setSpent(-1.0);
+					material.setSpentPerHectar(-1.0);
+				}
+				if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+					material.setDeleted(true);
+				} else {
+					material.setDeleted(false);
+				}
+				if(fuelsMap.containsKey(matr.getErpId())) {
+					material.setFuel(true);
+				}
+				material.setWorkOrder(workOrder);
+				material.setErpId(erpId);
+				material = spentMaterialRepo.save(material);
+				workOrder.getMaterials().add(material);
+				workOrder = workOrderRepo.save(workOrder);
 			}
-			Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
-			material.setMaterial(matr);
-			material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
-			// material.setQuantityPerHectar(m.getQuantity() /
-			// workOrder.getCrop().getArea());
-			if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
-				material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
-				material.setSpentPerHectar(0.0);
-			} else {
-				material.setSpent(-1.0);
-				material.setSpentPerHectar(-1.0);
-			}
-			if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
-				material.setDeleted(true);
-			} else {
-				material.setDeleted(false);
-			}
-			if(fuelsMap.containsKey(matr.getErpId())) {
-				material.setFuel(true);
-			}
-			material.setWorkOrder(workOrder);
-			material.setErpId(erpId);
-			material = spentMaterialRepo.save(material);
-			workOrder.getMaterials().add(material);
-			workOrder = workOrderRepo.save(workOrder);
+			
 		}
 
 		
