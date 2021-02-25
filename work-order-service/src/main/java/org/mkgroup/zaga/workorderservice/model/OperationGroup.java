@@ -16,6 +16,7 @@ import org.mkgroup.zaga.workorderservice.dto.OperationGroupDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -39,6 +40,11 @@ public class OperationGroup {
 	public OperationGroup(OperationGroupDTO operation) {
 		this.name = operation.getName();
 		this.erpId = operation.getId();
+	}
+
+	@Override
+	public String toString() {
+		return "OperationGroup [id=" + id + ", name=" + name + ", erpId=" + erpId + ", operations=" + operations + "]";
 	}
 
 }

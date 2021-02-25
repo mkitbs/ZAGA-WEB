@@ -1,14 +1,23 @@
 package org.mkgroup.zaga.workorderservice.service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -855,19 +864,47 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 * * * * *")
-	public List<WorkOrderDTO> synch(){
+	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
+		String date2send = "";
+		String time2send = "";
+		try {
+	        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        Date today = Calendar.getInstance().getTime();
+	        String reportDate = df.format(today);
+	        String dateToPrintToFile = reportDate;
+	        File file = new File("src/main/resources/lastDateOfUpdateDB/testDate.txt");
+	        if (!file.exists()) {
+	            file.createNewFile();
+	            date2send = "2021-01-01T00:00:00";
+	            time2send = "00:00:00";
+	        } else {
+	        	 BufferedReader reader = new BufferedReader(new FileReader(file));
+	             String lastDate = reader.readLine();
+	             System.out.println("Current line = " + lastDate);
+	             date2send = lastDate.split(" ")[0] + "T" + lastDate.split(" ")[1];
+	             time2send = lastDate.split(" ")[1];
+	             System.out.println(date2send);
+	             System.out.println(time2send);
+	             reader.close();
+	        }
+	        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+	        BufferedWriter bw = new BufferedWriter(fw);
+	        bw.write(dateToPrintToFile);
+	        bw.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 		
 		LocalDateTime date = LocalDateTime.now();
 		String time = date.getHour() + ":" + date.getMinute() + ":" + date.getSecond();
 		System.out.println(date);
 		System.out.println(time);
-		//String filter = String.format(
-		//		"?$filter=(WorkOrderOpenDate eq datetime'%s' and WorkOrderOpenTime eq '%s') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json",
-		//		date.toString(), time);
-		String filter = "?$filter=(WorkOrderOpenDate eq datetime'2021-02-20T00:00:00' and WorkOrderOpenTime eq '00:00:00') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json";
+		String filter = String.format(
+				"?$filter=(WorkOrderOpenDate eq datetime'%s' and WorkOrderOpenTime eq '%s') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json",
+				date2send, time2send);
+		//String filter = "?$filter=(WorkOrderOpenDate eq datetime'2021-02-20T00:00:00' and WorkOrderOpenTime eq '00:00:00') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json";
 				
 		String url = sapS4Hurl.concat(filter);
 		System.out.println("URL FOR SYNC => " + url);
@@ -910,7 +947,7 @@ public class WorkOrderService {
 	    											.ifPresentOrElse(found -> updateSync(json, found.getId()), 
 	    																() -> createSync(json));;
 	    }
-		return response;
+		//return response;
 	}
 
 	public List<WorkOrderDTO> getAllByStatus(Long tenantId, WorkOrderStatus status) {
@@ -940,13 +977,15 @@ public class WorkOrderService {
 	}
 	
 	public String formatJSONSync(String json) {
-		System.out.println(json);
 		json = json.replace("=", ":");
 		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
 		json = json.replace("/", "");
 		json = json.replaceAll(":,", ":\"\",");
 		json = json.replaceAll(":}", ":\"\"}");
-		//System.out.println(json);
+		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
+		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
+		//json = json.replaceAll(" NoteHeader:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
+		//json = json.replaceAll(" NoteItem:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
 		return json;
 	}
 

@@ -156,6 +156,7 @@ public class WorkOrderController {
 	
 	@GetMapping("/sync")
 	public ResponseEntity<?> synchronization(){
-		return new ResponseEntity<List<WorkOrderDTO>>(workOrderService.synch(), HttpStatus.OK);
+		workOrderService.synch();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

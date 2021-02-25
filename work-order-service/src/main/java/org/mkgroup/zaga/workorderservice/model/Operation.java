@@ -20,6 +20,7 @@ import org.mkgroup.zaga.workorderservice.dto.OperationDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -74,5 +75,11 @@ public class Operation {
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Operation [id=" + id + ", kind=" + kind + ", status=" + status + ", name=" + name + ", erpId=" + erpId
+				+ ", type=" + type + ", operationGroup=" + operationGroup + ", workOrders=" + workOrders + "]";
 	}
 }
