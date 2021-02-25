@@ -50,6 +50,13 @@ export class OperationService {
     );
   }
 
+  getAllByErpGroup(groupId): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "api/operation/getAllByErpGroup/" +
+      groupId
+    );
+  }
+
   getAllGroupByType(): Observable<any> {
     return this.http.get(
       environment.gatewayWorkOrderURL + "api/operation/getAllGroupByType"

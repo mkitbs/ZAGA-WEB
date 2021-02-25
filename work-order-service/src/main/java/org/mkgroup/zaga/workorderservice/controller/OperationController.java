@@ -78,6 +78,12 @@ public class OperationController {
 		return new ResponseEntity<List<OperationDTO>>(operations, HttpStatus.OK);
 	}
 	
+	@GetMapping("getAllByErpGroup/{groupId}")
+	public ResponseEntity<?> getAllByGroup(@PathVariable Long groupId){
+		List<OperationDTO> operations = operationService.getAllByErpGroup(groupId);
+		return new ResponseEntity<List<OperationDTO>>(operations, HttpStatus.OK);
+	}
+	
 	@GetMapping("getAllGroupByType")
 	public ResponseEntity<?> getAllGroupByType(){
 		List<OperationDTO> operations = operationService.getAllGroupByType();
