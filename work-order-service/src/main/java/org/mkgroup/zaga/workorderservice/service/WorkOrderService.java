@@ -1179,8 +1179,8 @@ public class WorkOrderService {
 		Map<Long, Boolean> fuelsMap = new HashMap<Long, Boolean>();
 		for (int i = 0; i < jsonWow.size(); i++) {
 			if(
-					!jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString().equals("00000000") ||
-					!jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString().equals("0000") ||
+					!jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString().equals("00000000") &&
+					!jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString().equals("0000") &&
 					!jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString().equals("")
 			) {
 				WorkOrderWorker wow = new WorkOrderWorker();
@@ -1375,8 +1375,8 @@ public class WorkOrderService {
 		Map<Long, Boolean> fuelsMap = new HashMap<Long, Boolean>();
 		for (int i = 0; i < jsonWow.size(); i++) {
 			if(
-					!jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString().equals("00000000") ||
-					!jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString().equals("0000") ||
+					!jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString().equals("00000000") &&
+					!jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString().equals("0000") &&
 					!jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString().equals("")
 			) {
 				int erpId = Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString());
