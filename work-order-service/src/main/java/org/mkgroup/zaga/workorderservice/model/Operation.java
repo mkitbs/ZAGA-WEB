@@ -22,7 +22,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "operation", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
@@ -77,9 +76,68 @@ public class Operation {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "Operation [id=" + id + ", kind=" + kind + ", status=" + status + ", name=" + name + ", erpId=" + erpId
-				+ ", type=" + type + ", operationGroup=" + operationGroup + ", workOrders=" + workOrders + "]";
+	public UUID getId() {
+		return id;
 	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getErpId() {
+		return erpId;
+	}
+
+	public void setErpId(Long erpId) {
+		this.erpId = erpId;
+	}
+
+	public OperationType getType() {
+		return type;
+	}
+
+	public void setType(OperationType type) {
+		this.type = type;
+	}
+
+	public OperationGroup getOperationGroup() {
+		return operationGroup;
+	}
+
+	public void setOperationGroup(OperationGroup operationGroup) {
+		this.operationGroup = operationGroup;
+	}
+
+	public List<WorkOrderWorker> getWorkOrders() {
+		return workOrders;
+	}
+
+	public void setWorkOrders(List<WorkOrderWorker> workOrders) {
+		this.workOrders = workOrders;
+	}
+	
 }

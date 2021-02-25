@@ -77,10 +77,10 @@ public class WorkOrder {
 	@JoinColumn(name="crop_id", nullable=true)
 	private Crop crop;
 	
-	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<WorkOrderWorker> workers = new ArrayList<WorkOrderWorker>();
 	
-	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "workOrder", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<SpentMaterial> materials = new ArrayList<SpentMaterial>();
 
 	@Override

@@ -18,7 +18,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "operation_group", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
@@ -42,9 +41,36 @@ public class OperationGroup {
 		this.erpId = operation.getId();
 	}
 
-	@Override
-	public String toString() {
-		return "OperationGroup [id=" + id + ", name=" + name + ", erpId=" + erpId + ", operations=" + operations + "]";
+	public UUID getId() {
+		return id;
 	}
 
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getErpId() {
+		return erpId;
+	}
+
+	public void setErpId(Long erpId) {
+		this.erpId = erpId;
+	}
+
+	public List<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operation> operations) {
+		this.operations = operations;
+	}
+	
 }
