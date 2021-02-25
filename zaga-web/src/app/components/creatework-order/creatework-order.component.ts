@@ -417,12 +417,13 @@ export class CreateworkOrderComponent implements OnInit {
       });
     }
 
+    /*
     this.operationService.getAll().subscribe((data) => {
       //data = this.convertKeysToLowerCase(data);
       this.operations = data;
       console.log(this.operations);
     });
-
+    */
     this.machineService.getAllPropulsion().subscribe((data) => {
       // data = this.convertKeysToLowerCase(data);
       this.devicesPropulsion = data;
@@ -493,7 +494,28 @@ export class CreateworkOrderComponent implements OnInit {
     */
   }
 
+  getATM(){
+    if(this.new){
+      if(this.fieldFC.value.Id == 999997){
+        this.operationService.getAllByErpGroup(91).subscribe((data) => {
+          //data = this.convertKeysToLowerCase(data);
+          this.operations = data;
+          console.log(this.operations);
+        });
+    
+      } else {
+        this.operationService.getAll().subscribe((data) => {
+          //data = this.convertKeysToLowerCase(data);
+          this.operations = data;
+          console.log(this.operations);
+        });
+    
+      }
+    }
+  }
+
   getCulture() {
+    this.getATM();
     this.workOrder.area = null;
     this.crops = [];
     this.cultureFC = new FormControl("");
@@ -707,7 +729,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wowService.getOne(id).subscribe(data => {
       console.log(data)
       this.wow = data;
-      if (this.wow.machine.Id == "BEZ-MASINE") {
+      if (this.wow.machine.Id == "BEZ-MASINE" || this.fieldFC.value.Id == 999997) {
         this.withoutMachine = true;
       } else {
         this.withoutMachine = false;
@@ -1747,9 +1769,12 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWoInfo = true;
     } else {
       this.validWoInfo = false;
-      this.toastr.error("Unesite obrađenu površinu pre zatvaranja radnog naloga.", "Greška!", {
-        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
-      })
+      if(this.noOperationOutput != true){
+        this.toastr.error("Unesite obrađenu površinu pre zatvaranja radnog naloga.", "Greška!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        })
+      }
+     
     }
     if(this.noOperationOutput){
       this.validWoInfo = true;
@@ -1757,7 +1782,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.workOrder.workers.forEach((wow) => {
       console.log(wow)
       
-      if(wow.machine.Id == "BEZ-MASINE"){
+      if(wow.machine.Id == "BEZ-MASINE" || this.fieldFC.value.Id == 999997){
         this.withoutMachine = true;
       }else {
         this.withoutMachine = false;
@@ -1858,7 +1883,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.validWom = true;
     } else {
       this.workOrder.materials.forEach((material) => {
-        if (material.spent == -1 && material.deleted != true) {
+        if (material.spent == -1 && material.deleted != true && !this.withoutMachine) {
           this.validWom = false;
           this.validWoms.push("false");
           const element: HTMLElement = document.getElementById(material.id);

@@ -252,6 +252,18 @@ public class OperationService {
 		return retValues;
 	}
 	
+
+	public List<OperationDTO> getAllByErpGroup(Long groupId){
+		OperationGroup opGroup = operationGroupRepo.findByErpId(91L).get();
+		List<OperationDTO> retValues = new ArrayList<OperationDTO>();
+		List<Operation> operations = operationRepo.findAllByGroup(opGroup.getId());
+		for(Operation operation : operations) {
+			OperationDTO retValue = new OperationDTO(operation);
+			retValues.add(retValue);
+		}
+		return retValues;
+	}
+	
 	public List<OperationDTO> getAllGroupByType(){
 		List<Operation> operations = operationRepo.findAllByGroupByType();
 		List<OperationDTO> retValues = new ArrayList<OperationDTO>();

@@ -1224,6 +1224,12 @@ public class WorkOrderService {
 			wow.setErpId(Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString()));
 			
 			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
+			
+			if(jsonWow.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+				wow.setDeleted(true);
+			} else {
+				wow.setDeleted(false);
+			}
 
 			if (!fuelsMap.containsKey(machine.getFuelErpId())) {
 				fuelsMap.put(machine.getFuelErpId(), true);
@@ -1265,6 +1271,11 @@ public class WorkOrderService {
 			material.setWorkOrder(workOrder);
 			System.out.println("ERP MAT " + jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
 			material.setErpId(Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString()));
+			if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+				material.setDeleted(true);
+			} else {
+				material.setDeleted(false);
+			}
 			material = spentMaterialRepo.save(material);
 			workOrder.getMaterials().add(material);
 			workOrder = workOrderRepo.save(workOrder);
@@ -1352,7 +1363,7 @@ public class WorkOrderService {
 		for (int i = 0; i < jsonWow.size(); i++) {
 			int erpId = Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString());
 			System.out.println("ERP ID = " + erpId);
-			WorkOrderWorker worker = wowRepo.findByErpIdAndWorkOrderId(erpId, workOrderId).get();
+			WorkOrderWorker worker = wowRepo.findByErpIdAndWorkOrderId(erpId, workOrderId).orElse(null);
 			
 			WorkOrderWorker wow = new WorkOrderWorker();
 			if(worker != null) {
@@ -1399,6 +1410,8 @@ public class WorkOrderService {
 				wow.setWorkPeriod(-1.0);
 			}
 			
+			wow.setErpId(erpId);
+			
 			wow.setUser(userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).get());
 			
 			wow.setOperation(operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).get());
@@ -1407,6 +1420,12 @@ public class WorkOrderService {
 			wow.setMachine(machine);
 			
 			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
+			
+			if(jsonWow.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+				wow.setDeleted(true);
+			} else {
+				wow.setDeleted(false);
+			}
 
 			if (!fuelsMap.containsKey(machine.getFuelErpId())) {
 				fuelsMap.put(machine.getFuelErpId(), true);
@@ -1445,10 +1464,16 @@ public class WorkOrderService {
 				material.setSpent(-1.0);
 				material.setSpentPerHectar(-1.0);
 			}
+			if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
+				material.setDeleted(true);
+			} else {
+				material.setDeleted(false);
+			}
 			if(fuelsMap.containsKey(matr.getErpId())) {
 				material.setFuel(true);
 			}
 			material.setWorkOrder(workOrder);
+			material.setErpId(erpId);
 			material = spentMaterialRepo.save(material);
 			workOrder.getMaterials().add(material);
 			workOrder = workOrderRepo.save(workOrder);
