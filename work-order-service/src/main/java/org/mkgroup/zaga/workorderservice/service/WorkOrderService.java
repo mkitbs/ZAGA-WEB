@@ -1428,7 +1428,7 @@ public class WorkOrderService {
 		
 		for (int i = 0; i < jsonWom.size(); i++) {
 			int erpId = Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
-			SpentMaterial mat = spentMaterialRepo.findByErpAndWorkOrder(erpId, workOrderId).get();
+			SpentMaterial mat = spentMaterialRepo.findByErpAndWorkOrder(erpId, workOrderId).orElse(null);
 			SpentMaterial material = new SpentMaterial();
 			if(mat != null) {
 				material = mat;
