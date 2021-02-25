@@ -119,7 +119,7 @@ public class WorkOrderWorkerService {
 		WorkOrderWorker wow = wowRepo.getOne(id);
 		WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 		try {
-			if(wow.getMachine().getFuelErpId() != 0) {
+			if(wow.getMachine().getFuelErpId() != 0 && wow.getWorkOrder().getCrop().getField().getErpId() != 999997) {
 				deleteFuel(id, wowDTO);
 			}
 			wowRepo.deleteWorker(id);
@@ -167,7 +167,7 @@ public class WorkOrderWorkerService {
 		}
 		SpentMaterial sm = new SpentMaterial();
 		if(wowDTO.getFuel() != null) {
-			if(wow.getMachine().getFuelErpId() != 0) {
+			if(wow.getMachine().getFuelErpId() != 0 && workOrder.getCrop().getField().getErpId() != 999997) {
 				//add fuel to spent material
 				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
 				sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
@@ -298,7 +298,7 @@ public class WorkOrderWorkerService {
 	public void updateWOWBasicInfo(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
 		WorkOrderWorker wow = wowRepo.getOne(id);
 		WorkOrder workOrder = wow.getWorkOrder();
-		if( wowDTO.getMachine().getFuelErpId() != 0 && wow.getMachine().getFuelErpId() != wowDTO.getMachine().getFuelErpId()) {
+		if( wowDTO.getMachine().getFuelErpId() != 0 && wow.getMachine().getFuelErpId() != wowDTO.getMachine().getFuelErpId() && workOrder.getCrop().getField().getErpId() != 999997) {
 			updateFuel(id, wowDTO);
 		}
 		
@@ -390,7 +390,7 @@ public class WorkOrderWorkerService {
 		Machine machine = machineRepo.getOne(UUID.fromString(wowDTO.getMachine().getDbid()));
 		wow.setMachine(machine);
 		wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
-		if(wow.getMachine().getFuelErpId() != 0) {
+		if(wow.getMachine().getFuelErpId() != 0 && workOrder.getCrop().getField().getErpId() != 999997) {
 			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
 			SpentMaterial spentMat = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
 			boolean exist;
