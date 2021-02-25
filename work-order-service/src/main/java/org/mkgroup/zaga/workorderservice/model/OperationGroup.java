@@ -17,7 +17,6 @@ import org.mkgroup.zaga.workorderservice.dto.OperationGroupDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "operation_group", uniqueConstraints = {@UniqueConstraint(columnNames ={"erpId"})})
@@ -40,5 +39,39 @@ public class OperationGroup {
 		this.name = operation.getName();
 		this.erpId = operation.getId();
 	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getErpId() {
+		return erpId;
+	}
+
+	public void setErpId(Long erpId) {
+		this.erpId = erpId;
+	}
+
+	public List<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operation> operations) {
+		this.operations = operations;
+	}
+	
+	
 
 }

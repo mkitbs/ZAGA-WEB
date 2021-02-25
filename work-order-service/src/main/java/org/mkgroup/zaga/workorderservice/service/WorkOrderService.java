@@ -1070,7 +1070,7 @@ public class WorkOrderService {
 	
 	public void createSync(JsonObject json) {
 		WorkOrder workOrder = new WorkOrder();
-		
+		System.out.println("USAO U SYNC CREATE");
 		String woDateStr = json.get("WorkOrderDate").getAsString();
 		System.out.println(woDateStr);
 		woDateStr = woDateStr.split("\\(")[1];
@@ -1101,6 +1101,7 @@ public class WorkOrderService {
 		}
 		
 		//workOrder.setTreated(0);
+		System.out.println(json.get("OperationId").getAsString() + "OPERATION");
 		Operation operation = operationRepo.findByErpId(Long.parseLong(json.get("OperationId").getAsString())).get();
 		workOrder.setOperation(operation);
 
@@ -1201,11 +1202,12 @@ public class WorkOrderService {
 		}
 
 		JsonArray jsonWom = json.get("WorkOrderToMaterialNavigation").getAsJsonObject().get("results").getAsJsonArray();
-		
+		System.out.println(jsonWom.size() + " VELICINA LISTE");
 		for (int i = 0; i < jsonWom.size(); i++) {
 			SpentMaterial material = new SpentMaterial();
-
-			material.setMaterial(materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get());
+			System.out.println(jsonWom.get(i).getAsJsonObject().get("WorkOrderNumber").getAsString());
+			Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
+			material.setMaterial(matr);
 			material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
 			// material.setQuantityPerHectar(m.getQuantity() /
 			// workOrder.getCrop().getArea());
@@ -1216,14 +1218,18 @@ public class WorkOrderService {
 				material.setSpent(-1.0);
 				material.setSpentPerHectar(-1.0);
 			}
+			if(fuelsMap.containsKey(matr.getErpId())) {
+				material.setFuel(true);
+			}
 			material.setWorkOrder(workOrder);
+			System.out.println("ERP MAT " + jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString());
 			material.setErpId(Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString()));
 			material = spentMaterialRepo.save(material);
 			workOrder.getMaterials().add(material);
 			workOrder = workOrderRepo.save(workOrder);
 		}
 
-		Iterator it = fuelsMap.entrySet().iterator();
+		/*Iterator it = fuelsMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue());
@@ -1243,12 +1249,12 @@ public class WorkOrderService {
 
 			it.remove(); // avoids a ConcurrentModificationException
 		}
-
+		 */
 	}
 	
 	public void updateSync(JsonObject json, UUID id) {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
-		
+		System.out.println("USAO U SYNC UPDATE");
 		String woDateStr = json.get("WorkOrderDate").getAsString();
 		woDateStr = woDateStr.split("\\(")[1];
 		woDateStr = woDateStr.split("\\)")[0];
