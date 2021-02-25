@@ -864,6 +864,7 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
+	@Scheduled(cron = "0 * * * * *")
 	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
@@ -1245,6 +1246,7 @@ public class WorkOrderService {
 		for (int i = 0; i < jsonWom.size(); i++) {
 			SpentMaterial material = new SpentMaterial();
 			System.out.println(jsonWom.get(i).getAsJsonObject().get("WorkOrderNumber").getAsString());
+			System.out.println(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString());
 			Material matr = materialRepo.findByErpId(Long.parseLong(jsonWom.get(i).getAsJsonObject().get("MaterialId").getAsString())).get();
 			material.setMaterial(matr);
 			material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
