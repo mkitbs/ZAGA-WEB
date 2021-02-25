@@ -1,5 +1,6 @@
 package org.mkgroup.zaga.workorderservice.service;
 
+import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -58,7 +59,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -67,6 +70,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 
 @Service
 public class WorkOrderService {
@@ -851,8 +855,9 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	
+	@Scheduled(cron = "0 * * * * *")
 	public List<WorkOrderDTO> synch(){
+		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
 		
 		LocalDateTime date = LocalDateTime.now();
@@ -884,10 +889,16 @@ public class WorkOrderService {
 	  		    url, HttpMethod.GET, entity, Object.class);
 		
 		String oDataString = sapResponse.getBody().toString().replace(":", "-");
-		String formatted = formatJSON(oDataString);
+		System.out.println("ODATASTRING = " + oDataString);
+		String formatted = formatJSONSync(oDataString);
 		formatted = formatted.replaceAll("WorkOrderToReturnNavigation:[a-zA-Z0-9: '\"().,_\\{\\}\\n-]*,", "");
-		System.out.println(formatted);
-		
+		System.out.println("FORMATTED = " + formatted);
+		formatted = formatted.replaceAll("\\s+","-");
+		System.out.println("FORMATTED 1 = " + formatted);
+		formatted = formatted.replaceAll(",-",",");
+		System.out.println("FORMATTED 2 = " + formatted);
+		formatted = formatted.replaceAll("\\{-", "\\{");
+		System.out.println("FORMATTED 3 = " + formatted);
 		JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
 	    JsonArray arrayAll = convertedObject.get("d").getAsJsonObject().get("results").getAsJsonArray();
 	    for(int i = 0; i < arrayAll.size(); i++) {
@@ -926,6 +937,17 @@ public class WorkOrderService {
 
 		return json;
 
+	}
+	
+	public String formatJSONSync(String json) {
+		System.out.println(json);
+		json = json.replace("=", ":");
+		json = json.replaceAll("__metadata:\\{[a-zA-Z0-9,':=\".()/_ -]*\\},", "");
+		json = json.replace("/", "");
+		json = json.replaceAll(":,", ":\"\",");
+		json = json.replaceAll(":}", ":\"\"}");
+		//System.out.println(json);
+		return json;
 	}
 
 	public Map<String, String> getHeaderValues(WorkOrder wo) throws Exception {
@@ -1054,6 +1076,7 @@ public class WorkOrderService {
 		woDateStr = woDateStr.split("\\(")[1];
 		woDateStr = woDateStr.split("\\)")[0];
 		Date woDate = new Date(Long.parseLong(woDateStr));
+		System.out.println("DATE CREATE = " + woDate);
 		workOrder.setDate(woDate);
 		
 		String woCreateStr = json.get("WorkOrderOpenDate").getAsString();
@@ -1084,14 +1107,21 @@ public class WorkOrderService {
 		Crop crop = cropRepo.findByErpId(Long.parseLong(json.get("CropId").getAsString())).get();
 		workOrder.setCrop(crop);
 
-		User responsible = userRepo.findByPerNumber(Long.parseLong(json.get("ResponsibleUserNumber").getAsString().replaceAll("0", ""))).get();
+		User responsible = userRepo.findByPerNumber(Long.parseLong(json.get("ResponsibleUserNumber").getAsString())).get();
 		workOrder.setResponsible(responsible);
 		
-		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString().replaceAll("0", "")));
+		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
-		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString());
-		workOrder.setNote(json.get("NoteItem").getAsString());
+		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString().replaceAll("-", " "));
+		System.out.println("JSON = " + json.toString());
+		
+		
+		
+		workOrder.setNote(json.get("NoteItem").getAsString().replaceAll("-", " "));
+		
+		workOrder.setErpId(Long.parseLong(json.get("WorkOrderNumber").getAsString()));
+		
 		workOrder = workOrderRepo.save(workOrder);
 
 		UUID workOrderId = workOrder.getId();
@@ -1150,6 +1180,8 @@ public class WorkOrderService {
 			Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).get();
 			wow.setMachine(machine);
 			
+			wow.setErpId(Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString()));
+			
 			wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 
 			if (!fuelsMap.containsKey(machine.getFuelErpId())) {
@@ -1185,6 +1217,7 @@ public class WorkOrderService {
 				material.setSpentPerHectar(-1.0);
 			}
 			material.setWorkOrder(workOrder);
+			material.setErpId(Integer.parseInt(jsonWom.get(i).getAsJsonObject().get("WorkOrderMaterialNumber").getAsString()));
 			material = spentMaterialRepo.save(material);
 			workOrder.getMaterials().add(material);
 			workOrder = workOrderRepo.save(workOrder);
@@ -1217,10 +1250,11 @@ public class WorkOrderService {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		
 		String woDateStr = json.get("WorkOrderDate").getAsString();
-		woDateStr = woDateStr.split("(")[1];
-		woDateStr = woDateStr.split(")")[0];
+		woDateStr = woDateStr.split("\\(")[1];
+		woDateStr = woDateStr.split("\\)")[0];
 		Date woDate = new Date(Long.parseLong(woDateStr));
-		workOrder.setDate(woDate);
+		System.out.println("DATE = " + woDate);
+		
 		/*
 		String woCreateStr = json.get("WorkOrderOpenDate").getAsString();
 		woCreateStr = woCreateStr.split("(")[1];
@@ -1242,6 +1276,7 @@ public class WorkOrderService {
 			workOrder.setStatus(WorkOrderStatus.CANCELLATION);
 			break;
 		}
+		workOrder.setDate(woDate);
 		
 		//workOrder.setTreated(0);
 		Operation operation = operationRepo.findByErpId(Long.parseLong(json.get("OperationId").getAsString())).get();
@@ -1250,14 +1285,14 @@ public class WorkOrderService {
 		Crop crop = cropRepo.findByErpId(Long.parseLong(json.get("CropId").getAsString())).get();
 		workOrder.setCrop(crop);
 
-		User responsible = userRepo.findByPerNumber(Long.parseLong(json.get("ResponsibleUserNumber").getAsString().replaceAll("0", ""))).get();
+		User responsible = userRepo.findByPerNumber(Long.parseLong(json.get("ResponsibleUserNumber").getAsString())).get();
 		workOrder.setResponsible(responsible);
 		
-		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString().replaceAll("0", "")));
+		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
-		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString());
-		workOrder.setNote(json.get("NoteItem").getAsString());
+		workOrder.setNumOfRefOrder(json.get("NoteHeader").getAsString().replaceAll("-", " "));
+		workOrder.setNote(json.get("NoteItem").getAsString().replaceAll("-", " "));
 		workOrder = workOrderRepo.save(workOrder);
 
 		UUID workOrderId = id;
@@ -1269,6 +1304,7 @@ public class WorkOrderService {
 		Map<Long, Boolean> fuelsMap = new HashMap<Long, Boolean>();
 		for (int i = 0; i < jsonWow.size(); i++) {
 			int erpId = Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString());
+			System.out.println("ERP ID = " + erpId);
 			WorkOrderWorker worker = wowRepo.findByErpIdAndWorkOrderId(erpId, workOrderId).get();
 			
 			WorkOrderWorker wow = new WorkOrderWorker();
