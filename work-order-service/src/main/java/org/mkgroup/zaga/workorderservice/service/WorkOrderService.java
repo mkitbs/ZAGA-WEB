@@ -1223,12 +1223,20 @@ public class WorkOrderService {
 				} else {
 					wow.setWorkPeriod(-1.0);
 				}
-				wow.setUser(userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).get());
-				
-				wow.setOperation(operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).get());
+				User user = userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).orElse(null);
+				if(user != null) {
+					wow.setUser(user);
+				}
+				Operation op = operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).orElse(null);
+				if(op != null) {
+					wow.setOperation(null);
+				}
 				System.out.println(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString());
-				Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).get();
-				wow.setMachine(machine);
+				Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).orElse(null);
+				if(machine != null) {
+					wow.setMachine(machine);
+				}
+				
 				
 				wow.setErpId(Integer.parseInt(jsonWow.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsString()));
 				
@@ -1257,9 +1265,11 @@ public class WorkOrderService {
 					workOrder.setNoOperationOutput(false);
 				}
 				
-				wow = wowRepo.save(wow);
-				workOrder.getWorkers().add(wow);
-				workOrder = workOrderRepo.save(workOrder);
+				if(user != null && op != null && machine != null) {
+					wow = wowRepo.save(wow);
+					workOrder.getWorkers().add(wow);
+					workOrder = workOrderRepo.save(workOrder);
+				}
 			} 
 			
 		}
@@ -1439,12 +1449,22 @@ public class WorkOrderService {
 				
 				wow.setErpId(erpId);
 				
-				wow.setUser(userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).get());
+				User user = userRepo.findByPerNumber(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("EmployeeId").getAsString())).orElse(null);
+				if(user != null) {
+					wow.setUser(user);
+				}
 				
-				wow.setOperation(operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).get());
+				Operation op = operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).orElse(null);
+				if(op != null) {
+					wow.setOperation(op);
+				}
 				
-				Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).get();
-				wow.setMachine(machine);
+				
+				Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).orElse(null);
+				if(machine != null) {
+					wow.setMachine(machine);
+				}
+				
 				
 				wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 				
@@ -1471,9 +1491,12 @@ public class WorkOrderService {
 					workOrder.setNoOperationOutput(false);
 				}
 				
-				wow = wowRepo.save(wow);
-				workOrder.getWorkers().add(wow);
-				workOrder = workOrderRepo.save(workOrder);
+				if(user != null && op != null && machine != null) {
+					wow = wowRepo.save(wow);
+					workOrder.getWorkers().add(wow);
+					workOrder = workOrderRepo.save(workOrder);
+				}
+				
 			}
 			
 		}
