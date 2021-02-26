@@ -864,7 +864,7 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 0/3 * * * *")
+	@Scheduled(cron = "0 0/5 * * * *")
 	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
@@ -1229,7 +1229,7 @@ public class WorkOrderService {
 				}
 				Operation op = operationRepo.findByErpId(Long.parseLong(jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString())).orElse(null);
 				if(op != null) {
-					wow.setOperation(null);
+					wow.setOperation(op);
 				}
 				System.out.println(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString());
 				Machine machine = machineRepo.findByErpId(jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString()).orElse(null);
