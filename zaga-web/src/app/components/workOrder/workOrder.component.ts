@@ -14,6 +14,8 @@ export class WorkOrderComponent implements OnInit {
   collapseBool = true;
   empty = false;
 
+  page = 1;
+  pageSize = 10;
   workOrders: WorkOrder[] = [];
   workOrder: WorkOrder = new WorkOrder();
   copyDate = new Date();
@@ -36,19 +38,19 @@ export class WorkOrderComponent implements OnInit {
     private router: Router,
     private workOrderService: WorkOrderService,
     private spinner: NgxSpinnerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.urlParam == "closing") {
       this.getAllWorkOrdersByStatus("IN_PROGRESS");
     } else {
-     this.getMyWorkOrders();
+      this.getMyWorkOrders();
     }
     this.status.push(
-      {name: "Novi", name2send: "NEW"}, 
-      {name: "U radu", name2send: "IN_PROGRESS"}, 
-      {name: "Zatvoreni", name2send: "CLOSED"},
-      {name: "Stornirani", name2send: "CANCELLATION"}
+      { name: "Novi", name2send: "NEW" },
+      { name: "U radu", name2send: "IN_PROGRESS" },
+      { name: "Zatvoreni", name2send: "CLOSED" },
+      { name: "Stornirani", name2send: "CANCELLATION" }
     )
 
   }
@@ -67,12 +69,12 @@ export class WorkOrderComponent implements OnInit {
 
   sortBySapId() {
     this.desc = !this.desc;
-    if(this.desc) {
+    if (this.desc) {
       this.workOrders.sort((w1, w2) => w1.sapId - w2.sapId);
     } else {
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
     }
-    
+
 
   }
 
@@ -84,7 +86,7 @@ export class WorkOrderComponent implements OnInit {
       this.copyDate = new Date();
     } else {
       console.log(value)
-      if(value != undefined){
+      if (value != undefined) {
         const someDate = value.year + "-" + value.month + "-" + value.day;
         this.copyDate = new Date(someDate);
       }
@@ -155,10 +157,10 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
+          } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if(workOrder.sapId == 0){
+          if (workOrder.sapId == 0) {
             workOrder.sapId = null;
           }
         });
@@ -169,7 +171,7 @@ export class WorkOrderComponent implements OnInit {
     });
   }
 
-  getAll(){
+  getAll() {
     this.my = false;
     this.loading = true;
     this.spinner.show();
@@ -198,10 +200,10 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
+          } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if(workOrder.sapId == 0){
+          if (workOrder.sapId == 0) {
             workOrder.sapId = null;
           }
         });
@@ -212,7 +214,7 @@ export class WorkOrderComponent implements OnInit {
     });
   }
 
-  getMyWorkOrders(){
+  getMyWorkOrders() {
     this.my = true;
     this.loading = true;
     this.spinner.show();
@@ -241,16 +243,16 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
+          } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if(workOrder.sapId == 0){
+          if (workOrder.sapId == 0) {
             workOrder.sapId = null;
           }
         });
       }
       this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
-    }, error =>{
+    }, error => {
       this.spinner.hide();
     })
   }
@@ -284,10 +286,10 @@ export class WorkOrderComponent implements OnInit {
             workOrder.status = "U radu";
           } else if (workOrder.status == "CLOSED") {
             workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
+          } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if(workOrder.sapId == 0){
+          if (workOrder.sapId == 0) {
             workOrder.sapId = null;
           }
         });
@@ -298,7 +300,7 @@ export class WorkOrderComponent implements OnInit {
     });
   }
 
-  displayFnStatus(status: any) : string {
+  displayFnStatus(status: any): string {
     return status.name;
   }
 

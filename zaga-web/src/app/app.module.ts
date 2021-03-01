@@ -115,6 +115,7 @@ import { SearchWoStatusPipe } from './pipes/search-wo-status.pipe'
 import { LeavePageGuard } from "./service/leave-page.guard";
 import { LeavePageConfirmationComponent } from './components/leave-page-confirmation/leave-page-confirmation.component';
 import { WorkOrderReportsComponent } from './components/work-order-reports/work-order-reports.component';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 declare var require: any;
 var config = require("config");
@@ -242,6 +243,7 @@ const routes: Routes = [
     NgbDatepickerModule,
     NgMultiSelectDropDownModule.forRoot(),
     ReactiveFormsModule,
+    NgbPaginationModule,
     MatTooltipModule,
     MatAutocompleteModule,
     MatFormFieldModule,

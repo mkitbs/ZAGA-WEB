@@ -185,3 +185,12 @@ th {
   margin-bottom: auto;
   width: 60%;
 }
+
+/*pagination*/
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+  color: #5c7495 !important;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+  background-color: #5c7495 !important;
+}

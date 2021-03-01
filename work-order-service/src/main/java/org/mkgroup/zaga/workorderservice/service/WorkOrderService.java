@@ -864,7 +864,7 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 * * * * *")
 	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
