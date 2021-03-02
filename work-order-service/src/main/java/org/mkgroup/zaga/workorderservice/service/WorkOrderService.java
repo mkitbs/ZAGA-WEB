@@ -864,7 +864,7 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "0 * * * * *")
 	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
@@ -976,8 +976,8 @@ public class WorkOrderService {
 		json = json.replaceAll(":}", ":\"\"}");
 		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
 		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
-		json = json.replaceAll(" NoteHeader:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
-		json = json.replaceAll(" NoteItem:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
+		json = json.replaceAll(" NoteHeader:[a-zA-Z \\-0-9!_.,%?\\/()\\\\\"šŠćĆčČđĐŽž]*,", "");
+		json = json.replaceAll(" NoteItem:[a-zA-Z \\-0-9!_.,%?\\/()\\\\\"šŠćĆčČđĐŽž]*,", "");
 		// System.out.println(json);
 
 		return json;
@@ -1162,8 +1162,10 @@ public class WorkOrderService {
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
 		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+		noteHeader = noteHeader.replaceAll("%22", "\"");
 		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
 		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+		noteItem = noteItem.replaceAll("%22", "\"");
 		workOrder.setNote(noteItem.replaceAll("%2C", ","));
 		
 		workOrder.setErpId(Long.parseLong(json.get("WorkOrderNumber").getAsString()));
@@ -1380,8 +1382,10 @@ public class WorkOrderService {
 
 		workOrder.setTenantId(1L);//zakuucana vrednost, treba izmeeniti
 		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+		noteHeader = noteHeader.replaceAll("%22", "\"");
 		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
 		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+		noteItem = noteItem.replaceAll("%22", "\"");
 		workOrder.setNote(noteItem.replaceAll("%2C", ","));
 		workOrder = workOrderRepo.save(workOrder);
 
