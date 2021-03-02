@@ -896,12 +896,12 @@ export class CreateworkOrderComponent implements OnInit {
       this.wow.connectingMachine.dbid = this.workerCoMachineFC.value.dbid;
     }
     console.log(this.wow)
-    this.wow.finalState = -1;
-    this.wow.initialState = -1;
-    this.wow.dayPeriod = -1;
-    this.wow.nightPeriod = -1;
-    this.wow.sumState = -1;
-    this.wow.fuel = -1;
+    this.wow.finalState = null;
+    this.wow.initialState = null;
+    this.wow.dayPeriod = null;
+    this.wow.nightPeriod = null;
+    this.wow.sumState = null;
+    this.wow.fuel = null;
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
       this.toastr.success("Izvršioc " + this.workerFC.value.name + " je uspešno dodat.", "Potvrda!", {
