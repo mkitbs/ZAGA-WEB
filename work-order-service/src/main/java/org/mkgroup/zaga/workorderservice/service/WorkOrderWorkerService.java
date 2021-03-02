@@ -371,6 +371,7 @@ public class WorkOrderWorkerService {
 	public void addWorker(UUID id, WorkOrderWorkerDTO wowDTO) throws Exception {
 		WorkOrder workOrder = workOrderRepo.getOne(id);
 		WorkOrderWorker wow = new WorkOrderWorker();
+		System.out.println("NIGHT PERIOD = " + wow.getNightPeriod());
 		if(wowDTO.getNightPeriod() != null) {
 			wow.setNightPeriod(wowDTO.getNightPeriod());
 		} else {
@@ -518,6 +519,7 @@ public class WorkOrderWorkerService {
 	    		System.out.println("RESPONSE => " + array);
 	    		
 	    		worker.setErpId(array.get(i).getAsJsonObject().get("WorkOrderEmployeeNumber").getAsInt());
+
 	    		wowRepo.save(worker);
 	    	}
 	    	
