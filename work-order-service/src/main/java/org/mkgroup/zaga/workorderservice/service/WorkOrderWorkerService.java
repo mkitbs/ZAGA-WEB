@@ -590,8 +590,8 @@ public class WorkOrderWorkerService {
 		json = json.replaceAll(":}", ":\"\"}");
 		json = json.replaceAll("<201 [a-zA-Z ]+,", "");
 		json = json.replaceAll(",\\[content[-a-zA-Z0-9,\". ;:_()'\\]<>]+", "");
-		json = json.replaceAll(" NoteHeader:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
-		json = json.replaceAll(" NoteItem:[a-zA-Z \\-0-9!_.,%?\\/()\\\\šŠćĆčČđĐŽž]*,", "");
+		json = json.replaceAll(" NoteHeader:[a-zA-Z \\-0-9!_.,%?\\/()\\\\\"šŠćĆčČđĐŽž]*,", "");
+		json = json.replaceAll(" NoteItem:[a-zA-Z \\-0-9!_.,%?\\/()\\\\\"šŠćĆčČđĐŽž]*,", "");
 		//System.out.println(json);
 		
 		return json;

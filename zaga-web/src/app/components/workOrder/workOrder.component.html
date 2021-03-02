@@ -183,7 +183,7 @@
 
     </table>
   </ng-container>
-  <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+  <ngb-pagination *ngIf="!empty" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
     [boundaryLinks]="true" [collectionSize]="workOrders.length">
   </ngb-pagination>
   <ngx-spinner></ngx-spinner>
@@ -279,7 +279,9 @@
   | SearchWorkOrderNumber: searchNumberMob.value
   | SearchWorkOrderResponsible: searchResponsibleMob.value
   | SearchWorkOrdersOperation: searchOperationMob.value
-  | SearchStatus: searchStatus.value; let j = index">
+  | SearchStatus: searchStatus.value
+  | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
+   let j = index">
     <div *ngIf="workOrder === -1" class="centerMob">
       <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
@@ -326,14 +328,11 @@
           </li>
         </ul>
       </div>
-      <!--<div class="card-footer" style="background-color: #acbacc3a;">
-          <button type="button" class="btn" id="left-panel-link" >Register</button>
-          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal1" id="right-panel-link">
-  Learn More
-</button>
-        </div>-->
     </div>
   </ng-container>
+  <ngb-pagination *ngIf="!empty" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+    [boundaryLinks]="true" [collectionSize]="workOrders.length">
+  </ngb-pagination>
 </div>
 
 <!--Copy modal-->

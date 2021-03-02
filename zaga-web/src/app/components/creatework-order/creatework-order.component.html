@@ -916,13 +916,13 @@
                       </td>
                       <td>
                         <div class="form-group">
-                          <button *ngIf="wow.machine.Id=='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          <button *ngIf="wow.machine.Id=='BEZ-MASINE' || fieldFC.value.Id == 999997" class="btn btn-primary btn-add mr-2" data-toggle="modal"
                             data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
                               'warning' : 'ok'">
                             <i class="fa fa-ellipsis-v"></i>
                           </button>
-                          <button *ngIf="wow.machine.Id!='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          <button *ngIf="wow.machine.Id!='BEZ-MASINE' && fieldFC.value.Id != 999997" class="btn btn-primary btn-add mr-2" data-toggle="modal"
                             data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || 
                           wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
