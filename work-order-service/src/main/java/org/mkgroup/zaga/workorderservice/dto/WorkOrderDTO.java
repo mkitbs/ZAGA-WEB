@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkOrderDTO {
-	
+
 	private UUID id;
 	private DateDTO date;
 	private String status;
@@ -45,7 +45,7 @@ public class WorkOrderDTO {
 	private boolean noOperationOutput;
 	private String numOfRefOrder;
 	private String note;
-	
+
 	public WorkOrderDTO(WorkOrder wo) {
 		id = wo.getId();
 		date = new DateDTO(wo);
@@ -68,27 +68,32 @@ public class WorkOrderDTO {
 		noOperationOutput = wo.isNoOperationOutput();
 		numOfRefOrder = wo.getNumOfRefOrder();
 		note = wo.getNote();
-		if(wo.getErpId() != null) {
+		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
 			sapId = 0;
 		}
-		
+
 		this.materials = new ArrayList<SpentMaterialDTO>();
-		for(SpentMaterial sm : wo.getMaterials()) {
+		for (SpentMaterial sm : wo.getMaterials()) {
 			SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
-			this.materials.add(smDTO);
+			if (!smDTO.isDeleted()) {
+				this.materials.add(smDTO);
+			}
+
 		}
-		
-		
+
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
-		for(WorkOrderWorker wow : wo.getWorkers()) {
+		for (WorkOrderWorker wow : wo.getWorkers()) {
 			WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
-			this.workers.add(wowDTO);
+			if (!wowDTO.isDeleted()) {
+				this.workers.add(wowDTO);
+			}
+
 		}
-		
-	}	
-	
+
+	}
+
 	public WorkOrderDTO(WorkOrder wo, UUID idMaterial) {
 		id = wo.getId();
 		date = new DateDTO(wo);
@@ -98,25 +103,25 @@ public class WorkOrderDTO {
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
 		treated = wo.getTreated();
-		if(wo.getErpId() != null) {
+		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
 			sapId = 0;
 		}
-		
+
 		this.materials = new ArrayList<SpentMaterialDTO>();
-		for(SpentMaterial sm : wo.getMaterials()) {
-			if(sm.getMaterial().getId().equals(idMaterial)) {
-				if(sm.isDeleted() != true) {
+		for (SpentMaterial sm : wo.getMaterials()) {
+			if (sm.getMaterial().getId().equals(idMaterial)) {
+				if (sm.isDeleted() != true) {
 					SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
 					this.materials.add(smDTO);
 				}
-				
+
 			}
 		}
-		
-	}	
-	
+
+	}
+
 	public WorkOrderDTO(WorkOrder wo, Long idWorker) {
 		id = wo.getId();
 		date = new DateDTO(wo);
@@ -126,26 +131,26 @@ public class WorkOrderDTO {
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
 		treated = wo.getTreated();
-		if(wo.getErpId() != null) {
+		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
 			sapId = 0;
 		}
-		
+
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
-		for(WorkOrderWorker wow : wo.getWorkers()) {
-			if(wow.getUser().getPerNumber().equals(idWorker)) {
-				if(wow.isDeleted()!=true) {
+		for (WorkOrderWorker wow : wo.getWorkers()) {
+			if (wow.getUser().getPerNumber().equals(idWorker)) {
+				if (wow.isDeleted() != true) {
 					WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 					this.workers.add(wowDTO);
 				}
-				
+
 			}
-			
+
 		}
-		
-	}	
-	
+
+	}
+
 	public WorkOrderDTO(WorkOrder wo, String machineName) {
 		id = wo.getId();
 		date = new DateDTO(wo);
@@ -155,23 +160,23 @@ public class WorkOrderDTO {
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
 		treated = wo.getTreated();
-		if(wo.getErpId() != null) {
+		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
 			sapId = 0;
 		}
-		
+
 		this.workers = new ArrayList<WorkOrderWorkerDTO>();
-		for(WorkOrderWorker wow : wo.getWorkers()) {
-			if(wow.getMachine().getName().equals(machineName)) {
-				if(wow.isDeleted() != true) {
+		for (WorkOrderWorker wow : wo.getWorkers()) {
+			if (wow.getMachine().getName().equals(machineName)) {
+				if (wow.isDeleted() != true) {
 					WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
 					this.workers.add(wowDTO);
 				}
-				
+
 			}
-			
+
 		}
-		
-	}	
+
+	}
 }
