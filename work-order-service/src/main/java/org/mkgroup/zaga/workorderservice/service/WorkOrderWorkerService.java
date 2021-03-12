@@ -167,7 +167,7 @@ public class WorkOrderWorkerService {
 		SpentMaterial sm = new SpentMaterial();
 		if (wowDTO.getFuel() != null) {
 			if (wow.getMachine().getFuelErpId() != 0 && workOrder.getCrop().getField().getErpId() != 999997
-					&& workOrder.getCrop().getField().getErpId() != 999999) {
+					&& workOrder.getCrop().getField().getErpId() != 999999  && wow.getMachine().getMachineGroupId().getErpId() != 91) {
 				// add fuel to spent material
 				Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
 				sm = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId()).orElse(null);
@@ -293,7 +293,8 @@ public class WorkOrderWorkerService {
 		if (wowDTO.getMachine().getFuelErpId() != 0
 				&& wow.getMachine().getFuelErpId() != wowDTO.getMachine().getFuelErpId()
 				&& workOrder.getCrop().getField().getErpId() != 999997
-				&& workOrder.getCrop().getField().getErpId() != 999999) {
+				&& workOrder.getCrop().getField().getErpId() != 999999
+				&& wow.getMachine().getMachineGroupId().getErpId() != 91) {
 			updateFuel(id, wowDTO);
 		}
 
@@ -382,7 +383,7 @@ public class WorkOrderWorkerService {
 		wow.setMachine(machine);
 		wow.setStatus(WorkOrderWorkerStatus.NOT_STARTED);
 		if (wow.getMachine().getFuelErpId() != 0 && workOrder.getCrop().getField().getErpId() != 999997
-				&& workOrder.getCrop().getField().getErpId() != 999999) {
+				&& workOrder.getCrop().getField().getErpId() != 999999 && wow.getMachine().getMachineGroupId().getErpId() != 91) {
 			Material material = materialRepo.findByErpId(wow.getMachine().getFuelErpId()).get();
 			SpentMaterial spentMat = spentMaterialRepo.findByWoAndMaterial(workOrder.getId(), material.getId())
 					.orElse(null);

@@ -916,13 +916,13 @@
                       </td>
                       <td>
                         <div class="form-group">
-                          <button *ngIf="wow.machine.Id=='BEZ-MASINE' || fieldFC.value.Id == 999997" class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          <button *ngIf="wow.machine.Id=='BEZ-MASINE' || fieldFC.value.Id == 999997 || foreignMachine" class="btn btn-primary btn-add mr-2" data-toggle="modal"
                             data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
                               'warning' : 'ok'">
                             <i class="fa fa-ellipsis-v"></i>
                           </button>
-                          <button *ngIf="wow.machine.Id!='BEZ-MASINE' && fieldFC.value.Id != 999997" class="btn btn-primary btn-add mr-2" data-toggle="modal"
+                          <button *ngIf="wow.machine.Id!='BEZ-MASINE' && fieldFC.value.Id != 999997 && !foreignMachine" class="btn btn-primary btn-add mr-2" data-toggle="modal"
                             data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                             [ngClass]="wow.dayPeriod == null || 
                           wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
@@ -2505,7 +2505,9 @@
             <div class="col" *ngIf="withoutMachine == false">
               <h5><i class="fa fa-truck mr-2"></i> Mašina</h5>
               <h6>{{ wow.machine.Name }}</h6>
+              
               <hr class="solid" />
+              
               <div class="form-group">
                 <label for="imePrz">Početno stanje MČ</label>
                 <div class="input-group mb-3">
@@ -2546,7 +2548,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div *ngIf="!foreignMachine" class="form-group">
                 <label for="imePrz">Utrošeno goriva</label>
                 <div class="input-group mb-3">
                   <input [(ngModel)]="wow.fuel" type="number" name="fuel" class="form-control" id=""
@@ -2560,6 +2562,7 @@
                   Utrošak goriva može biti nula ili veći od nule.
                 </div>
               </div>
+              <p *ngIf="foreignMachine" style="color: #bd362f;">Gorivo knjižiti kroz MM transakciju</p>
             </div>
           </div>
         </form>
@@ -2729,6 +2732,7 @@
         <h6>Datum otvaranaj RN: {{dateOfCreateWO}}</h6>
         <h6>Datum knjiženja RN: {{dateOfCreateWO}}</h6>
         <h6>Datum zatvaranja RN: {{today | date:'dd.MM.yyyy.'}}</h6>
+        <p *ngIf="foreignMachine" style="color: #bd362f;">Gorivo knjižiti kroz MM transakciju</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-delete mr-2" data-dismiss="modal"><i

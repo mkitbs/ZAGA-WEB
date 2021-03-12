@@ -10,4 +10,5 @@ export class Machine {
     machineGroup;
     name;
     Id;
+    MachineGroupId;
 }
