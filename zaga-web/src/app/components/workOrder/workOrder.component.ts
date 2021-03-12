@@ -175,7 +175,7 @@ export class WorkOrderComponent implements OnInit {
     this.my = false;
     this.loading = true;
     this.spinner.show();
-    this.workOrderService.getAll().subscribe((data) => {
+    this.workOrderService.getAllAsync().subscribe((data) => {
       this.loading = false;
       this.spinner.hide();
       this.workOrders = data;
