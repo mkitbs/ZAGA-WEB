@@ -220,6 +220,8 @@ export class CreateworkOrderComponent implements OnInit {
 
   leavePageFlag;
 
+  foreignMachine;
+
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
       this.setting = data;
@@ -321,8 +323,15 @@ export class CreateworkOrderComponent implements OnInit {
             } else {
               this.emptyWow = false;
             }
+            if(wow.machine.MachineGroupId == 91) {
+              this.foreignMachine = true;
+            } else {
+              this.foreignMachine = false;
+            }
           })
         }
+
+        
 
         this.workOrder.date = {
           day: +this.workOrder.date.day,
@@ -751,6 +760,11 @@ export class CreateworkOrderComponent implements OnInit {
         console.log("USAOOOOOO")
         this.wow.fuel = null;
       }
+      if(this.wow.machine.MachineGroupId == 91) {
+        this.foreignMachine = true;
+      } else {
+        this.foreignMachine = false;
+      }
     })
     
     /*
@@ -997,7 +1011,7 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       this.validFinalState = true;
     }
-    if ((workOrderWorker.fuel < 0 || workOrderWorker.fuel == null) && !this.withoutMachine) {
+    if ((workOrderWorker.fuel < 0 || workOrderWorker.fuel == null) && !this.withoutMachine && !this.foreignMachine) {
       this.validFuel = false;
     } else {
       this.validFuel = true;
@@ -1794,6 +1808,11 @@ export class CreateworkOrderComponent implements OnInit {
         }else {
           this.withoutMachine = false;
         }
+        if(wow.machine.MachineGroupId == 91) {
+          this.foreignMachine = true;
+        } else {
+          this.foreignMachine = false;
+        }
         console.log(this.withoutMachine)
         if(this.withoutMachine){
           if(
@@ -1801,6 +1820,26 @@ export class CreateworkOrderComponent implements OnInit {
             wow.dayPeriod == null ||
             wow.nightPeriod == -1 ||
             wow.nightPeriod == null
+            ) {
+              this.validWow = false;
+              this.validWows.push("false");
+              const element: HTMLElement = document.getElementById(wow.id);
+              this.renderer.setStyle(element, "background-color", "#BD362F");
+            } else {
+              this.validWow = true;
+              console.log(this.validWow)
+              this.validWows.push("true");
+            }
+        } else if (this.foreignMachine) {
+          if(
+            wow.dayPeriod == -1 ||
+            wow.dayPeriod == null ||
+            wow.nightPeriod == -1 ||
+            wow.nightPeriod == null ||
+            wow.initialState == -1 ||
+            wow.initialState == null ||
+            wow.finalState == -1 ||
+            wow.finalState == null
             ) {
               this.validWow = false;
               this.validWows.push("false");
