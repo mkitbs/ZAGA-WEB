@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { WorkOrder } from "../models/WorkOrder";
 
 @Injectable({
   providedIn: "root",
@@ -11,6 +12,10 @@ export class WorkOrderService {
 
   getAll(): Observable<any> {
     return this.http.get(environment.gatewayWorkOrderURL + "workOrder/getAll");
+  }
+
+  getAllAsync(): Observable<WorkOrder[]> {
+    return this.http.get<WorkOrder[]>(environment.gatewayWorkOrderURL + "workOrder/getAll")
   }
 
   getOne(id): Observable<any> {
