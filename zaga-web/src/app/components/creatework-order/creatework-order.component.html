@@ -1004,7 +1004,7 @@
                           <input type="text" matInput [formControl]="materialFC" [matAutocomplete]="autoMaterial"
                             #searchMaterial required placeholder="Izaberite materijal" />
 
-                          <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayFnMaterial" place>
+                          <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayFnMaterial">
                             <mat-option *ngFor="
                             let sub of (substances$ | async) | SearchMaterials: searchMaterial.value
                               " [value]="sub" (click)="getUnitOfMaterial(sub.dbid)">
