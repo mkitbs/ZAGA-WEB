@@ -9,11 +9,11 @@ export class SearchMaterialsPipe implements PipeTransform {
   transform(substances: any[], query): any {
     if (substances != null) {
       if (!query) {
-        return substances.slice(0, 20);
+        return substances;
       }
       return substances.filter((sub) =>
         this.matchValue(sub, query)
-      ).slice(0, 20);
+      );
     }
   }
 

@@ -299,3 +299,8 @@ button.calendar {
 [type="radio"]:checked + .btn-no {
   background-color: #5c7495;
 }
+
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+  min-width: 600px;
+}

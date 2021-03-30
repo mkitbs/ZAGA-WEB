@@ -1203,11 +1203,9 @@ public class WorkOrderService {
 				} else {
 					wow.setFinalState(-1.0);
 				}
-				if (!jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString().equals("0.00000")) {
-					wow.setFuel(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString()));
-				} else {
-					wow.setFuel(-1.0);
-				}
+				
+				wow.setFuel(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString()));
+				
 				if (!jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString().equals("0.0")) {
 					wow.setInitialState(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString()));
 				} else {
@@ -1287,13 +1285,10 @@ public class WorkOrderService {
 				material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
 				// material.setQuantityPerHectar(m.getQuantity() /
 				// workOrder.getCrop().getArea());
-				if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
-					material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
-					material.setSpentPerHectar(0.0);
-				} else {
-					material.setSpent(-1.0);
-					material.setSpentPerHectar(-1.0);
-				}
+				
+				material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
+				material.setSpentPerHectar(0.0);
+				
 				if(fuelsMap.containsKey(matr.getErpId())) {
 					material.setFuel(true);
 				}
@@ -1426,11 +1421,9 @@ public class WorkOrderService {
 				} else {
 					wow.setFinalState(-1.0);
 				}
-				if (!jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString().equals("0.00000")) {
-					wow.setFuel(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString()));
-				} else {
-					wow.setFuel(-1.0);
-				}
+				
+				wow.setFuel(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("SpentFuel").getAsString()));
+				
 				if (!jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString().equals("0.0")) {
 					wow.setInitialState(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("MachineTimeStart").getAsString()));
 				} else {
@@ -1517,13 +1510,10 @@ public class WorkOrderService {
 				material.setQuantity(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("PlannedQuantity").getAsString()));
 				// material.setQuantityPerHectar(m.getQuantity() /
 				// workOrder.getCrop().getArea());
-				if (!jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString().equals("0.000")) {
-					material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
-					material.setSpentPerHectar(0.0);
-				} else {
-					material.setSpent(-1.0);
-					material.setSpentPerHectar(-1.0);
-				}
+				
+				material.setSpent(Double.parseDouble(jsonWom.get(i).getAsJsonObject().get("SpentQuantity").getAsString()));
+				material.setSpentPerHectar(0.0);
+				
 				if(jsonWom.get(i).getAsJsonObject().get("Deleted").getAsString().equals("X")) {
 					material.setDeleted(true);
 				} else {

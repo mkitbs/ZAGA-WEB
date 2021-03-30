@@ -10,6 +10,11 @@ export class SearchWorkOrderNumberPipe implements PipeTransform {
     if(!query){
       return workOrders;
     }
+    workOrders.forEach((wo, index) => {
+      if(wo.sapId == null) {
+        workOrders.splice(index, 1);
+      }
+    })
     var result = workOrders.filter((wo =>
       wo.sapId.toString().toLowerCase().includes(query.toLowerCase()
     )));
