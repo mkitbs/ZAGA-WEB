@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { WorkOrderService } from "src/app/service/work-order.service";
 import { WorkOrder } from "src/app/models/WorkOrder";
 import { NgxSpinnerService } from "ngx-spinner";
+import { AllWorkOrdersResponseDTO } from "src/app/models/AllWorkOrdersResponseDTO";
 
 @Component({
   selector: "app-workOrder",
@@ -17,6 +18,7 @@ export class WorkOrderComponent implements OnInit {
   page = 1;
   pageSize = 10;
   workOrders: WorkOrder[] = [];
+  allWOResponse: AllWorkOrdersResponseDTO[] = [];
   workOrder: WorkOrder = new WorkOrder();
   copyDate = new Date();
 
@@ -70,9 +72,9 @@ export class WorkOrderComponent implements OnInit {
   sortBySapId() {
     this.desc = !this.desc;
     if (this.desc) {
-      this.workOrders.sort((w1, w2) => w1.sapId - w2.sapId);
+      this.allWOResponse.sort((w1, w2) => w1.sapId - w2.sapId);
     } else {
-      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+      this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }
 
 
@@ -135,22 +137,13 @@ export class WorkOrderComponent implements OnInit {
     this.spinner.show();
     this.workOrderService.getAllByStatus(status).subscribe((res) => {
       this.spinner.hide();
-      this.workOrders = res;
+      this.allWOResponse = res;
 
-      if (this.workOrders.length == 0) {
+      if (this.allWOResponse.length == 0) {
         this.empty = true;
       } else {
         this.empty = false;
-        this.workOrders.forEach((workOrder) => {
-          var date = "";
-          date =
-            workOrder.date.day.split(" ")[0] +
-            "." +
-            workOrder.date.month +
-            "." +
-            workOrder.date.year +
-            ".";
-          workOrder.date = date;
+        this.allWOResponse.forEach((workOrder) => {
           if (workOrder.status == "NEW") {
             workOrder.status = "Novi";
           } else if (workOrder.status == "IN_PROGRESS") {
@@ -160,12 +153,9 @@ export class WorkOrderComponent implements OnInit {
           } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if (workOrder.sapId == 0) {
-            workOrder.sapId = null;
-          }
         });
       }
-      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+      this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     });
@@ -175,25 +165,16 @@ export class WorkOrderComponent implements OnInit {
     this.my = false;
     this.loading = true;
     this.spinner.show();
-    this.workOrderService.getAllAsync().subscribe((data) => {
+    this.workOrderService.getAll().subscribe((data) => {
       this.loading = false;
       this.spinner.hide();
-      this.workOrders = data;
-      console.log(this.workOrders);
-      if (this.workOrders.length == 0) {
+      this.allWOResponse = data;
+      console.log(this.allWOResponse);
+      if (this.allWOResponse.length == 0) {
         this.empty = true;
       } else {
         this.empty = false;
-        this.workOrders.forEach((workOrder) => {
-          var date = "";
-          date =
-            workOrder.date.day.split(" ")[0] +
-            "." +
-            workOrder.date.month +
-            "." +
-            workOrder.date.year +
-            ".";
-          workOrder.date = date;
+        this.allWOResponse.forEach((workOrder) => {
           if (workOrder.status == "NEW") {
             workOrder.status = "Novi";
           } else if (workOrder.status == "IN_PROGRESS") {
@@ -203,12 +184,10 @@ export class WorkOrderComponent implements OnInit {
           } else if (workOrder.status == "CANCELLATION") {
             workOrder.status = "Storniran";
           }
-          if (workOrder.sapId == 0) {
-            workOrder.sapId = null;
-          }
+         
         });
       }
-      this.workOrders.sort((w1, w2) => w2.sapId - w1.sapId);
+      this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     });

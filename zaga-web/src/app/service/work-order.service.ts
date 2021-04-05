@@ -14,10 +14,6 @@ export class WorkOrderService {
     return this.http.get(environment.gatewayWorkOrderURL + "workOrder/getAll");
   }
 
-  getAllAsync(): Observable<WorkOrder[]> {
-    return this.http.get<WorkOrder[]>(environment.gatewayWorkOrderURL + "workOrder/getAll")
-  }
-
   getOne(id): Observable<any> {
     return this.http.get(
       environment.gatewayWorkOrderURL + "workOrder/getWorkOrder/" + id
