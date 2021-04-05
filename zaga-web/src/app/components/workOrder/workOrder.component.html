@@ -109,7 +109,7 @@
     <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px;">Niste kreirali ni jedan nalog</h4>
   </div>
-  <ng-container *ngFor="let workOrder of workOrders 
+  <ng-container *ngFor="let workOrder of allWOResponse 
   | SearchWorkOrdersTable: searchTable.value
   | SearchWorkOrdersDate: searchDate.value
   | SearchWorkOrdersCrop: searchCrop.value
@@ -137,7 +137,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let workOrder of workOrders
+        <tr *ngFor="let workOrder of allWOResponse
             | SearchWorkOrdersTable: searchTable.value
             | SearchWorkOrdersDate: searchDate.value
             | SearchWorkOrdersCrop: searchCrop.value
@@ -151,16 +151,16 @@
             {{ workOrder.sapId }}
           </td>
           <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.operationName }}
+            {{ workOrder.operation }}
           </td>
-          <td (click)="changeRoute(workOrder.id)">{{ workOrder.date }}</td>
-          <td (click)="changeRoute(workOrder.id)">{{ workOrder.table }}</td>
+          <td (click)="changeRoute(workOrder.id)">{{ workOrder.date | date:'dd.MM.yyyy.' }}</td>
+          <td (click)="changeRoute(workOrder.id)">{{ workOrder.field }}</td>
           <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
           <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.cropName.split(",")[1] }}
+            {{ workOrder.crop }}
           </td>
           <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.responsibleName }}
+            {{ workOrder.responsiblePerson }}
           </td>
           <td [ngClass]="{
               statusNovi: workOrder.status == 'Novi',
@@ -184,7 +184,7 @@
     </table>
   </ng-container>
   <ngb-pagination *ngIf="!empty" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
-    [boundaryLinks]="true" [collectionSize]="workOrders.length">
+    [boundaryLinks]="true" [collectionSize]="allWOResponse.length">
   </ngb-pagination>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -272,7 +272,7 @@
   </button>
   <div style="padding-top: 30px"></div>
 
-  <ng-container *ngFor="let workOrder of workOrders
+  <ng-container *ngFor="let workOrder of allWOResponse
   | SearchWorkOrdersTable: searchTableMob.value
   | SearchWorkOrdersDate: searchDateMob.value
   | SearchWorkOrdersCrop: searchCropMob.value
@@ -290,7 +290,7 @@
       style="border: 1px solid #5c7495; border-radius: 5px">
       <div class="card-body" style="background-color: #5c7495">
         <h5 class="card-title" style="color: white">
-          <span style="float: center;">{{ workOrder.operationName }}</span>
+          <span style="float: center;">{{ workOrder.operation }}</span>
         </h5>
         <ul class="list-group">
           <li class="list-group-item list-group-item">
@@ -301,18 +301,18 @@
           <li class="list-group-item list-group-item">
             <i class="fa fa-user" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
             <span style="padding-left: 6px; vertical-align: middle">
-              Odgovorna osoba: {{ workOrder.responsibleName }}</span>
+              Odgovorna osoba: {{ workOrder.responsiblePerson }}</span>
           </li>
           <li class="list-group-item list-group-item">
             <i class="fa fa-map-marker" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
             <span style="padding-left: 9px; vertical-align: middle">
-              Parcela i površina: {{ workOrder.table }} ({{ workOrder.area }} ha)
+              Parcela i površina: {{ workOrder.field }} ({{ workOrder.area }} ha)
             </span>
           </li>
           <li class="list-group-item list-group-item">
             <i class="fa fa-calendar" style="font-size: 15px; vertical-align: middle; color: #5c7495"></i>
             <span style="padding-left: 3px; vertical-align: middle">
-              Datum: {{ workOrder.date }}
+              Datum: {{ workOrder.date | date:'dd.MM.yyyy.' }}
             </span>
           </li>
           <li class="list-group-item list-group-item">
@@ -331,7 +331,7 @@
     </div>
   </ng-container>
   <ngb-pagination *ngIf="!empty" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
-    [boundaryLinks]="true" [collectionSize]="workOrders.length">
+    [boundaryLinks]="true" [collectionSize]="allWOResponse.length">
   </ngb-pagination>
 </div>
 

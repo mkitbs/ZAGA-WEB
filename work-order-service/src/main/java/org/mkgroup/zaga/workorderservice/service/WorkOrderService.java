@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
+import org.mkgroup.zaga.workorderservice.dto.AllWorkOrdersResponseDTO;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
@@ -405,29 +406,32 @@ public class WorkOrderService {
 
 			log.info("Insert work order into db failed");
 
+		} else {
+			log.info("Status undefined!");
+			workOrderRepo.delete(wo);
 		}
 		return sapResponse;
 	}
 
-	public List<WorkOrderDTO> getAll(Long tenantId) {
+	public List<AllWorkOrdersResponseDTO> getAll(Long tenantId) {
 		List<WorkOrder> workOrders = workOrderRepo.findAllOrderByCreationDate();
-		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 
 		for (WorkOrder workOrder : workOrders) {
 			if (tenantId == workOrder.getTenantId()) {
-				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+				AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
 		}
 		return workOrdersDTO;
 	}
 
-	public List<WorkOrderDTO> getMyWorkOrders(Long tenantId, String sapUserId) {
+	public List<AllWorkOrdersResponseDTO> getMyWorkOrders(Long tenantId, String sapUserId) {
 		List<WorkOrder> workOrders = workOrderRepo.findMyOrderByCreationDate(Long.parseLong(sapUserId), tenantId);
-		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 
 		for (WorkOrder workOrder : workOrders) {
-			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
 			workOrdersDTO.add(workOrderDTO);
 		}
 		return workOrdersDTO;
@@ -959,11 +963,11 @@ public class WorkOrderService {
 		//return response;
 	}
 
-	public List<WorkOrderDTO> getAllByStatus(Long tenantId, WorkOrderStatus status) {
+	public List<AllWorkOrdersResponseDTO> getAllByStatus(Long tenantId, WorkOrderStatus status) {
 		List<WorkOrder> workOrders = workOrderRepo.findWoByStatus(tenantId, status.toString());
-		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 		for (WorkOrder workOrder : workOrders) {
-			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
 			workOrdersDTO.add(workOrderDTO);
 		}
 		return workOrdersDTO;
@@ -1535,12 +1539,12 @@ public class WorkOrderService {
 
 	}
 	
-	public List<WorkOrderDTO> getMyWoByStatus(Long sapUserId, Long tenantId, WorkOrderStatus status) {
+	public List<AllWorkOrdersResponseDTO> getMyWoByStatus(Long sapUserId, Long tenantId, WorkOrderStatus status) {
 		System.out.println(tenantId + " -> " + sapUserId + " -> " + status);
 		List<WorkOrder> workOrders = workOrderRepo.findMyWoByStatus(tenantId, sapUserId, status.toString());
-		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
+		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 		for (WorkOrder workOrder : workOrders) {
-			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
+			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
 			workOrdersDTO.add(workOrderDTO);
 		}
 		System.out.println(workOrdersDTO);

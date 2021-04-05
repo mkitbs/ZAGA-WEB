@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mkgroup.zaga.workorderservice.dto.AllWorkOrdersResponseDTO;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
@@ -85,8 +86,8 @@ public class WorkOrderController {
 	
 	@GetMapping("/getAll")
 	public ResponseEntity<?> getAllWorkOrders(@RequestHeader("TenantId") String tenantId){
-		List<WorkOrderDTO> workOrders = workOrderService.getAll(Long.parseLong(tenantId));
-		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+		List<AllWorkOrdersResponseDTO> workOrders = workOrderService.getAll(Long.parseLong(tenantId));
+		return new ResponseEntity<List<AllWorkOrdersResponseDTO>>(workOrders, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getWorkOrder/{id}")
@@ -132,20 +133,20 @@ public class WorkOrderController {
 	
 	@GetMapping("/getAllByStatus/{status}")
 	public ResponseEntity<?> getAllByStatus(@PathVariable WorkOrderStatus status, @RequestHeader("TenantId") String tenantId){
-		List<WorkOrderDTO> workOrders = workOrderService.getAllByStatus(Long.valueOf(tenantId), status);
-		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+		List<AllWorkOrdersResponseDTO> workOrders = workOrderService.getAllByStatus(Long.valueOf(tenantId), status);
+		return new ResponseEntity<List<AllWorkOrdersResponseDTO>>(workOrders, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getMyWorkOrders")
 	public ResponseEntity<?> getMyWorkOrders(@RequestHeader("SapUserId") String sapUserId, @RequestHeader("TenantId") String tenantId){
-		List<WorkOrderDTO> workOrders = workOrderService.getMyWorkOrders(Long.valueOf(tenantId), sapUserId);
-		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+		List<AllWorkOrdersResponseDTO> workOrders = workOrderService.getMyWorkOrders(Long.valueOf(tenantId), sapUserId);
+		return new ResponseEntity<List<AllWorkOrdersResponseDTO>>(workOrders, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getMyWoByStatus/{status}")
 	public ResponseEntity<?> getMyWoByStatus(@PathVariable WorkOrderStatus status, @RequestHeader("SapUserId") String sapUserId, @RequestHeader("TenantId") String tenantId){
-		List<WorkOrderDTO> workOrders = workOrderService.getMyWoByStatus(Long.parseLong(sapUserId), Long.parseLong(tenantId), status);
-		return new ResponseEntity<List<WorkOrderDTO>>(workOrders, HttpStatus.OK);
+		List<AllWorkOrdersResponseDTO> workOrders = workOrderService.getMyWoByStatus(Long.parseLong(sapUserId), Long.parseLong(tenantId), status);
+		return new ResponseEntity<List<AllWorkOrdersResponseDTO>>(workOrders, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getOperationsForToday")
