@@ -23,6 +23,7 @@ public class AllWorkOrdersResponseDTO {
 	private String crop;
 	private String responsiblePerson;
 	private String status;
+	private String orgUnit;
 	
 	public AllWorkOrdersResponseDTO(WorkOrder workOrder) {
 		this.id = workOrder.getId();
@@ -38,5 +39,6 @@ public class AllWorkOrdersResponseDTO {
 		this.crop = workOrder.getCrop().getName();
 		this.responsiblePerson = workOrder.getResponsible().getName();
 		this.status = workOrder.getStatus().toString();
+		this.orgUnit = workOrder.getOrgUnit();
 	}
 }

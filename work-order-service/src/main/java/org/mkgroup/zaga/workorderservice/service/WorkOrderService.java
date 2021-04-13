@@ -179,6 +179,7 @@ public class WorkOrderService {
 		workOrder.setTenantId(tenantId);
 		workOrder.setNumOfRefOrder(workOrderDTO.getNumOfRefOrder());
 		workOrder.setNote(workOrderDTO.getNote());
+		workOrder.setOrgUnit("PIKB");
 		workOrder = workOrderRepo.save(workOrder);
 
 		UUID workOrderId = workOrder.getId();
@@ -418,7 +419,7 @@ public class WorkOrderService {
 		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 
 		for (WorkOrder workOrder : workOrders) {
-			if (tenantId == workOrder.getTenantId()) {
+			if (tenantId == workOrder.getTenantId() && (workOrder.getOrgUnit().equals("PIKB") || workOrder.getOrgUnit().equals("BIPR"))) {
 				AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
@@ -431,8 +432,10 @@ public class WorkOrderService {
 		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 
 		for (WorkOrder workOrder : workOrders) {
-			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
-			workOrdersDTO.add(workOrderDTO);
+			if (workOrder.getOrgUnit().equals("PIKB") || workOrder.getOrgUnit().equals("BIPR")) {
+				AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
+			}
 		}
 		return workOrdersDTO;
 	}
@@ -547,6 +550,7 @@ public class WorkOrderService {
 		workOrder.setResponsible(responsible);
 		workOrder.setNumOfRefOrder(workOrderDTO.getNumOfRefOrder());
 		workOrder.setNote(workOrderDTO.getNote());
+		workOrder.setOrgUnit("PIKB");
 
 		Map<String, String> headerValues = getHeaderValues();
 		String csrfToken = headerValues.get("csrf");
@@ -645,6 +649,7 @@ public class WorkOrderService {
 		copy.setStatus(WorkOrderStatus.IN_PROGRESS);
 		copy.setUserCreatedSapId(Long.parseLong(sapUserId));
 		copy.setTenantId(tenantId);
+		copy.setOrgUnit("PIKB");
 
 		copy = workOrderRepo.save(copy);
 		UUID workOrderId = copy.getId();
@@ -869,7 +874,70 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 0/10 * * * ?")
+	public void syncOrgUnit() {
+		System.out.println("Usao u sync novi");
+		String filter = "?$filter=(WorkOrderOpenDate eq datetime'2021-02-20T00:00:00' and WorkOrderOpenTime eq '00:00:00') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json";
+				
+		String url = sapS4Hurl.concat(filter);
+		System.out.println("URL FOR SYNC => " + url);
+		
+		StringBuilder authEncodingString = new StringBuilder()
+				.append("LJKOMNENOVIC")
+				.append(":")
+				.append("Ljubicakom24");
+		//Encoding Authorization String
+		String authHeader = Base64.getEncoder().encodeToString(
+	    		authEncodingString.toString().getBytes());
+		
+		ResponseEntity<Object> sapResponse = null;
+		HttpHeaders headersRestTemplate = new HttpHeaders();
+		headersRestTemplate.set("Authorization", "Basic " + authHeader);
+		HttpEntity entity = new HttpEntity(headersRestTemplate);
+		
+		sapResponse = restTemplate.exchange(
+	  		    url, HttpMethod.GET, entity, Object.class);
+		
+		String oDataString = sapResponse.getBody().toString().replace(":", "-");
+		String formatted = formatJSONSync(oDataString);
+		formatted = formatted.replaceAll("WorkOrderToReturnNavigation:[a-zA-Z0-9: '\"().,_\\{\\}\\n-]*,", "");
+		formatted = formatted.replaceAll("\\s+","-");
+		formatted = formatted.replaceAll(",-",",");
+		formatted = formatted.replaceAll("\\{-", "\\{");
+		JsonObject convertedObject = new Gson().fromJson(formatted, JsonObject.class);
+	    JsonArray arrayAll = convertedObject.get("d").getAsJsonObject().get("results").getAsJsonArray();
+	    for(int i = 0; i < arrayAll.size(); i++) {
+	    	JsonObject json = arrayAll.get(i).getAsJsonObject();
+	    	if(
+	    			!json.get("OperationId").getAsString().equals("0000") ||
+	    			!json.get("CropId").getAsString().equals("000000") ||
+	    			!json.get("FieldId").getAsString().equals("000000")
+	    	) {
+	    		System.out.println(i);
+	    		if(i == arrayAll.size()-1) {
+	    			System.out.println("done");
+	    		}
+	    		workOrderRepo.findByErpId(Long.parseLong(arrayAll.get(i)
+						.getAsJsonObject()
+						.get("WorkOrderNumber")
+						.getAsString()))
+						.ifPresentOrElse(found -> updateSyncOrgUnit(json, found.getId()), 
+											() -> createSync(json));;
+	    		
+	    	}
+	    }	
+	    
+	}
+	
+	
+	
+	private void updateSyncOrgUnit(JsonObject json, UUID id) {
+		WorkOrder workOrder = workOrderRepo.getOne(id);
+		workOrder.setOrgUnit(json.get("OrganisationUnit").getAsString());
+		workOrder = workOrderRepo.save(workOrder);
+	}
+
+	//@Scheduled(cron = "0 0/5 * * * ?")
 	public void synch(){
 		System.out.println("Usao u sync");
 		List<WorkOrderDTO> response = new ArrayList<WorkOrderDTO>();
@@ -916,9 +984,9 @@ public class WorkOrderService {
 		System.out.println("URL FOR SYNC => " + url);
 		
 		StringBuilder authEncodingString = new StringBuilder()
-				.append("MKATIC")
+				.append("LJKOMNENOVIC")
 				.append(":")
-				.append("katicm0908");
+				.append("Ljubicakom24");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
@@ -967,8 +1035,10 @@ public class WorkOrderService {
 		List<WorkOrder> workOrders = workOrderRepo.findWoByStatus(tenantId, status.toString());
 		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 		for (WorkOrder workOrder : workOrders) {
-			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
-			workOrdersDTO.add(workOrderDTO);
+			if (workOrder.getOrgUnit().equals("PIKB") || workOrder.getOrgUnit().equals("BIPR")) {
+				AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
+			}
 		}
 		return workOrdersDTO;
 	}
@@ -1112,7 +1182,7 @@ public class WorkOrderService {
 		List<WorkOrderDTO> workOrdersDTO = new ArrayList<WorkOrderDTO>();
 
 		for (WorkOrder workOrder : workOrders) {
-			if (tenantId == workOrder.getTenantId()) {
+			if (tenantId == workOrder.getTenantId() && (workOrder.getOrgUnit().equals("PIKB") || workOrder.getOrgUnit().equals("BIPR"))) {
 				WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder);
 				workOrdersDTO.add(workOrderDTO);
 			}
@@ -1174,6 +1244,7 @@ public class WorkOrderService {
 		workOrder.setNote(noteItem.replaceAll("%2C", ","));
 		
 		workOrder.setErpId(Long.parseLong(json.get("WorkOrderNumber").getAsString()));
+		workOrder.setOrgUnit(json.get("OrganisationUnit").getAsString());
 		
 		workOrder = workOrderRepo.save(workOrder);
 
@@ -1385,6 +1456,7 @@ public class WorkOrderService {
 		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
 		noteItem = noteItem.replaceAll("%22", "\"");
 		workOrder.setNote(noteItem.replaceAll("%2C", ","));
+		workOrder.setOrgUnit(json.get("OrganisationUnit").getAsString());
 		workOrder = workOrderRepo.save(workOrder);
 
 		UUID workOrderId = id;
@@ -1544,8 +1616,10 @@ public class WorkOrderService {
 		List<WorkOrder> workOrders = workOrderRepo.findMyWoByStatus(tenantId, sapUserId, status.toString());
 		List<AllWorkOrdersResponseDTO> workOrdersDTO = new ArrayList<AllWorkOrdersResponseDTO>();
 		for (WorkOrder workOrder : workOrders) {
-			AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
-			workOrdersDTO.add(workOrderDTO);
+			if (workOrder.getOrgUnit().equals("PIKB") || workOrder.getOrgUnit().equals("BIPR")) {
+				AllWorkOrdersResponseDTO workOrderDTO = new AllWorkOrdersResponseDTO(workOrder);
+				workOrdersDTO.add(workOrderDTO);
+			}
 		}
 		System.out.println(workOrdersDTO);
 		return workOrdersDTO;

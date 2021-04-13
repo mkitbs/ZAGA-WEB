@@ -65,6 +65,9 @@ public class WorkOrder {
 	@Column(nullable = true)
 	private String note;
 	
+	@Column(nullable = true)
+	private String orgUnit;
+	
 	@ManyToOne
 	@JoinColumn(name="responsible_id", nullable=true)
 	private User responsible;

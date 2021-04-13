@@ -114,10 +114,10 @@ public class WorkOrderWorkerController {
 	}
 	
 	@GetMapping("getWorkOrdersForTractorDriver")
-	public ResponseEntity<?> getWorkOrdersForTractorDriver(@RequestHeader("SapUserId") String sapUserId){
+	public ResponseEntity<?> getWorkOrdersForTractorDriver(@RequestHeader("SapUserId") String sapUserId, @RequestHeader("TenantId") String tenantId){
 		System.out.println("SAP ID ->" + sapUserId);
 		User user = userRepo.findByPerNumber(Long.parseLong(sapUserId)).get();
-		List<WorkOrderTractorDriverDTO> data = wowService.getWorkOrdersForTractorDriver(user.getId());
+		List<WorkOrderTractorDriverDTO> data = wowService.getWorkOrdersForTractorDriver(user.getId(), Long.parseLong(tenantId));
 		return new ResponseEntity<List<WorkOrderTractorDriverDTO>>(data, HttpStatus.OK);
 	}
 	

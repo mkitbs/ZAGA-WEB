@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 public interface SpentMaterialRepository extends JpaRepository<SpentMaterial, UUID>{
 
 
-	@Query(value = "SELECT * FROM spent_material AS sm INNER JOIN work_order AS wo ON sm.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND sm.deleted=false ORDER BY sm.material_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM spent_material AS sm INNER JOIN work_order AS wo ON sm.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND sm.deleted=false AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') ORDER BY sm.material_id", nativeQuery = true)
 	List<SpentMaterial> findAllByOrderByMaterialId(@Param("tenantId") Long tenantId);
 	
 	List<SpentMaterial> findAllByOrderByMaterialId();
@@ -35,6 +35,6 @@ public interface SpentMaterialRepository extends JpaRepository<SpentMaterial, UU
 	@Query(value = "SELECT * FROM spent_material WHERE erp_id=?1 AND work_order_id=?2", nativeQuery = true)
 	Optional<SpentMaterial> findByErpAndWorkOrder(int erpId, UUID workOrderId);
 	
-	@Query(value = "SELECT SUM(smat.quantity) AS quantity, mat.unit AS unit, mat.name AS material, c.name AS crop, cl.name AS culture FROM spent_material AS smat INNER JOIN material AS mat ON smat.material_id=mat.id INNER JOIN work_order AS wo ON smat.work_order_id=wo.id INNER JOIN crop AS c ON wo.crop_id=c.id INNER JOIN culture AS cl on c.culture_id=cl.id WHERE smat.quantity!=-1 AND smat.deleted=false AND wo.tenant_id=?1 GROUP BY wo.crop_id, smat.material_id ORDER BY c.name ASC", nativeQuery = true)
+	@Query(value = "SELECT SUM(smat.quantity) AS quantity, mat.unit AS unit, mat.name AS material, c.name AS crop, cl.name AS culture FROM spent_material AS smat INNER JOIN material AS mat ON smat.material_id=mat.id INNER JOIN work_order AS wo ON smat.work_order_id=wo.id INNER JOIN crop AS c ON wo.crop_id=c.id INNER JOIN culture AS cl on c.culture_id=cl.id WHERE smat.quantity!=-1 AND smat.deleted=false AND wo.tenant_id=?1 AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') GROUP BY wo.crop_id, smat.material_id ORDER BY c.name ASC", nativeQuery = true)
 	List<SpentMaterialPerCultureDTO> getSpentMaterialPerCulture(Long tenantId);
 }
