@@ -874,10 +874,10 @@ public class WorkOrderService {
 		// workOrderRepo.save(workOrder);
 	}
 	
-	@Scheduled(cron = "0 0/10 * * * ?")
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public void syncOrgUnit() {
 		System.out.println("Usao u sync novi");
-		String filter = "?$filter=(WorkOrderOpenDate eq datetime'2021-02-20T00:00:00' and WorkOrderOpenTime eq '00:00:00') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json";
+		String filter = "?$filter=(WorkOrderOpenDate eq datetime'2021-01-01T00:00:00' and WorkOrderOpenTime eq '00:00:00') &$expand=WorkOrderToEmployeeNavigation,WorkOrderToMaterialNavigation&$format=json";
 				
 		String url = sapS4Hurl.concat(filter);
 		System.out.println("URL FOR SYNC => " + url);
