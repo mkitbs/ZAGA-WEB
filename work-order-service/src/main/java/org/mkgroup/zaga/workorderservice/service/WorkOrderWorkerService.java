@@ -644,8 +644,8 @@ public class WorkOrderWorkerService {
 		return retValues;
 	}
 
-	public List<WorkOrderTractorDriverDTO> getWorkOrdersForTractorDriver(UUID workerId) {
-		List<WorkOrderWorker> result = wowRepo.findAllWoWByWorker(workerId);
+	public List<WorkOrderTractorDriverDTO> getWorkOrdersForTractorDriver(UUID workerId, Long tenantId) {
+		List<WorkOrderWorker> result = wowRepo.findAllWoWByWorker(workerId, tenantId);
 		List<WorkOrderTractorDriverDTO> retValues = new ArrayList<WorkOrderTractorDriverDTO>();
 		for (WorkOrderWorker wow : result) {
 			if (!wow.getMachine().getErpId().equals("BEZ-MASINE")
