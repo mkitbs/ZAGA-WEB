@@ -24,6 +24,7 @@ public class AllWorkOrdersResponseDTO {
 	private String responsiblePerson;
 	private String status;
 	private String orgUnit;
+	private double treated;
 	
 	public AllWorkOrdersResponseDTO(WorkOrder workOrder) {
 		this.id = workOrder.getId();
@@ -40,5 +41,6 @@ public class AllWorkOrdersResponseDTO {
 		this.responsiblePerson = workOrder.getResponsible().getName();
 		this.status = workOrder.getStatus().toString();
 		this.orgUnit = workOrder.getOrgUnit();
+		this.treated = workOrder.getTreated();
 	}
 }

@@ -8,4 +8,5 @@ export class AllWorkOrdersResponseDTO {
 	crop;
 	responsiblePerson;
 	status;
+	treated;
 }

@@ -71,5 +71,11 @@ export class WorkOrderService {
       environment.gatewayWorkOrderURL + "workOrder/getOperationsForToday"
     )
   }
+
+  getDataForATMReport(): Observable<any> {
+    return this.http.get(
+      environment.gatewayWorkOrderURL + "workOrder/getDataForATMReport"
+    )
+  }
   
 }

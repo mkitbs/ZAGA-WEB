@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mkgroup.zaga.workorderservice.dto.ATMReportResponseDTO;
 import org.mkgroup.zaga.workorderservice.dto.AllWorkOrdersResponseDTO;
 import org.mkgroup.zaga.workorderservice.dto.DateDTO;
 import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
@@ -159,5 +160,11 @@ public class WorkOrderController {
 	public ResponseEntity<?> synchronization(){
 		workOrderService.synch();
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/getDataForATMReport")
+	public ResponseEntity<?> getDataForATMReport(@RequestHeader("TenantId") String tenantId) {
+		List<ATMReportResponseDTO> retVals = workOrderService.getDataForATMReport(Long.parseLong(tenantId));
+		return new ResponseEntity<List<ATMReportResponseDTO>>(retVals, HttpStatus.OK);
 	}
 }

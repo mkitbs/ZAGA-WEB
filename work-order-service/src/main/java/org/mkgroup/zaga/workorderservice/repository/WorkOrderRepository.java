@@ -15,8 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkOrderRepository extends JpaRepository<WorkOrder, UUID>{
 
-	@Query(value = "SELECT * FROM work_order w ORDER BY w.creation_date ASC", nativeQuery = true)
-	List<WorkOrder> findAllOrderByCreationDate();
+	@Query(value = "SELECT * FROM work_order w WHERE w.tenant_id=?1 AND (w.org_unit='PIKB' OR w.org_unit='BIPR') ORDER BY w.creation_date ASC", nativeQuery = true)
+	List<WorkOrder> findAllOrderByCreationDate(Long tenantId);
+	
+	@Query(value = "SELECT * FROM work_order w WHERE w.tenant_id=?1 AND w.no_operation_output=false AND (w.org_unit='PIKB' OR w.org_unit='BIPR') ORDER BY w.creation_date ASC", nativeQuery = true)
+	List<WorkOrder> findAllForATMReport(Long tenantId);
 	
 	@Query(value = "SELECT * FROM work_order w WHERE w.user_created_sap_id=?1 AND w.tenant_id=?2 ORDER BY w.creation_date ASC", nativeQuery = true)
 	List<WorkOrder> findMyOrderByCreationDate(Long sapUserId, Long tenantId);

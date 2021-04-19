@@ -10,8 +10,9 @@ export class SearchWorkOrdersDatePipe implements PipeTransform {
     if(!query){
       return workOrders;
     }
+    console.log(workOrders)
     var result = workOrders.filter((wo) =>
-      wo.date.toLowerCase().includes(query.toLowerCase()
+      wo.date.includes(query
     ));
     if(result.length === 0){
       return[-1];
