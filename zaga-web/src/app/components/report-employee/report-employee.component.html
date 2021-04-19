@@ -166,23 +166,23 @@
           let j = index">
 
             <tr *ngFor="let wo of workOrder.workers; let z = index">
-              <td *ngIf="z==0 && j==0; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
-              <ng-template #elseBlockName><td></td></ng-template>
-              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
+              <td *ngIf="z==0 && j==0 && workOrder !== -1; else elseBlockName" style="font-weight: bold;">{{wo.user.Name}}</td>
+              <ng-template #elseBlockName><td *ngIf="workOrder !== -1"></td></ng-template>
+              <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0 && workOrder !== -1; else elseBlockSapId">
                 {{ workOrder.sapId }}
               </td>
-              <ng-template #elseBlockSapId><td></td></ng-template>
-              <td>{{ wo.operation.Name }}</td>
-              <td>{{ workOrder.date }}</td>
-              <td>{{ workOrder.table }}</td>
-              <td>{{ workOrder.cropName.split(",")[1] }}</td>
-              <td *ngIf="wo.dayPeriod != -1; else elseDayPeriod">{{ wo.dayPeriod }} h</td>
+              <ng-template #elseBlockSapId><td *ngIf="workOrder !== -1"></td></ng-template>
+              <td *ngIf="workOrder !== -1">{{ wo.operation.Name }}</td>
+              <td *ngIf="workOrder !== -1">{{ workOrder.date }}</td>
+              <td *ngIf="workOrder !== -1">{{ workOrder.table }}</td>
+              <td *ngIf="workOrder !== -1">{{ workOrder.cropName.split(",")[1] }}</td>
+              <td *ngIf="wo.dayPeriod != -1 && workOrder !== -1; else elseDayPeriod">{{ wo.dayPeriod }} h</td>
               <ng-template #elseDayPeriod><td>/</td></ng-template>
-              <td *ngIf="wo.nightPeriod != -1; else elseNightPeriod">{{ wo.nightPeriod }} h</td>
+              <td *ngIf="wo.nightPeriod != -1 && workOrder !== -1; else elseNightPeriod">{{ wo.nightPeriod }} h</td>
               <ng-template #elseNightPeriod><td>/</td></ng-template>
-              <td *ngIf="wo.workPeriod != -1; else elseWorkPeriod">{{ wo.workPeriod }} h</td>
+              <td *ngIf="wo.workPeriod != -1 && workOrder !== -1; else elseWorkPeriod">{{ wo.workPeriod }} h</td>
               <ng-template #elseWorkPeriod><td>/</td></ng-template>
-              <td [ngClass]="{
+              <td *ngIf="workOrder !== -1" [ngClass]="{
                   statusNovi: workOrder.status == 'Novi',
                   statusURadu: workOrder.status == 'U radu',
                   statusZatvoren: workOrder.status == 'Zatvoren',
@@ -204,12 +204,12 @@
               | SearchWoBetweenDates: filters; 
               let i = index ">
               <td *ngIf="i==0 && workOrder !== -1">Σ {{ worker.worker.Name }}</td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td style="font-weight: bold;" *ngIf="i==0">
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">
                 {{
                   getDayPeriodSum(worker.workOrders 
                   | SearchWorkOrdersCrop: searchCrop.value
@@ -220,7 +220,7 @@
                   | SearchWoBetweenDates: filters)
                 }}
               </td>
-              <td style="font-weight: bold;" *ngIf="i==0">
+              <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">
                 {{
                   getNightPeriodSum(worker.workOrders | SearchWorkOrdersCrop: searchCrop.value
                   | SearchWorkOrdersTable: searchTable.value
@@ -230,7 +230,7 @@
                   | SearchWoBetweenDates: filters)
                 }}
               </td>
-              <td style="font-weight: bold;" *ngIf="i==0">
+              <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">
                 {{
                   getWorkPeriodSum(worker.workOrders | SearchWorkOrdersCrop: searchCrop.value
                   | SearchWorkOrdersTable: searchTable.value
@@ -240,8 +240,8 @@
                   | SearchWoBetweenDates: filters)
                 }}
               </td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
+              <td *ngIf="i==0 && workOrder !== -1"></td>
             </ng-container>
           </tr>
         </ng-container>
