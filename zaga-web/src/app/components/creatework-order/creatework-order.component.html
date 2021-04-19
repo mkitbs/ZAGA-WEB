@@ -351,7 +351,7 @@
         <h5>Unos novog izvršioca/mašine:</h5>
         <form #wowForm="ngForm">
           <div class="table-responsive">
-            <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
+            <table class="table table-borderless table-input">
               <thead>
                 <th>Izvršioc*</th>
                 <th>ATM*</th>
@@ -371,7 +371,7 @@
                     <div class="form-group">
                       <form>
                         <!--WITH SAP ID-->
-                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorker">
+                        <mat-form-field class="inputAuto" *ngIf="sapId == 'WITH_ID'; else elseBlockWorker" >
                           <input type="text" matInput [formControl]="workerFC" [matAutocomplete]="autoWorker"
                             #searchWorker required placeholder="Izaberite izvršioca" />
 
@@ -983,7 +983,7 @@
         <form #materialForm="ngForm">
           <h5>Unos novog materijala:</h5>
           <div class="table-responsive">
-            <table class="table table-borderless table-input"  [ngClass]="workOrder.status == 'Zatvoren' || workOrder.status == 'Storniran' ? 'disableAll' : null">
+            <table class="table table-borderless table-input"  >
               <thead>
                 <th>Materijal*</th>
                 <th style="width: 150px">Planirana količina*</th>
@@ -1290,7 +1290,7 @@
                         <div class="form-group">
                           <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
                             (click)="editMaterial(material)" id="{{ material.id }}" [ngClass]="material.spent == null || 
-                          material.spent == -1 ? 'warning' : 'ok'"  [disabled]="material.fuel">
+                          material.spent == -1 ? 'warning' : 'ok'"  >
                             <i class="fa fa-ellipsis-v"></i>
                           </button>
                         </div>
