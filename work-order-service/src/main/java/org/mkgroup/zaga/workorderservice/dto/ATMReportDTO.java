@@ -27,7 +27,9 @@ public class ATMReportDTO {
 	
 	public ATMReportDTO(WorkOrder wo) {
 		this.id = wo.getId();
-		this.sapId = wo.getErpId();
+		if(wo.getErpId() != null) {
+			this.sapId = wo.getErpId();
+		}
 		this.operationName = wo.getOperation().getName();
 		String[] dateStr = wo.getDate().toString().split("-");
 		this.date = dateStr[2].substring(0, 2) + "." + dateStr[1] + "." + dateStr[0] + ".";
