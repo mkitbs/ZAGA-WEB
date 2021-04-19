@@ -1,0 +1,87 @@
+h3 {
+  color: #5c7495;
+}
+
+.tabela-nalozi {
+  width: 100%;
+  font-size: 12px;
+}
+
+table,
+td,
+tr,
+th {
+  text-align: center;
+  font-size: medium;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.break-class {
+  width: 100% !important;
+  border-top: 2px solid #33490b !important;
+  font-size: 12px;
+}
+
+.statusNovi {
+  color: #5c7495;
+}
+
+.statusURadu {
+  color: #f68901;
+}
+
+.statusZatvoren {
+  color: #73964a;
+}
+
+.statusStorniran {
+  color: #bd362f;
+}
+
+.collapsing-button {
+  width: fit-content;
+  text-align: center;
+  background-color: #73964a;
+  border: none;
+  box-shadow: none;
+}
+
+.inputAuto,
+.mat-form-field-infix {
+  font-size: 12px !important;
+  font-family: "Montserrat" !important;
+  width: 100% !important;
+  color: black !important;
+}
+
+.customMatInput {
+  font-size: 12px !important;
+  font-family: "Montserrat" !important;
+  width: 48% !important;
+  color: black !important;
+}
+
+.mat-input-element {
+  caret-color: #5c7495 !important;
+  /* cursor color on autocomplete input */
+}
+
+::ng-deep .mat-form-field-underline,
+::ng-deep .mat-form-field-ripple {
+  background-color: #5c7495 !important;
+  color: #5c7495 !important;
+}
+
+::ng-deep .mat-form-field-empty.mat-form-field-label {
+  color: #5c7495 !important;
+}
+
+.center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 10%;
+  margin-bottom: auto;
+  width: 20%;
+}

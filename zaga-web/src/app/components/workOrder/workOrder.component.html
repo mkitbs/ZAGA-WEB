@@ -120,68 +120,71 @@
       <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
     </div>
-    <table *ngIf="!empty && workOrder !==-1 && i==0" class="table table-hover tabela-nalozi">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
-                class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
-          <th scope="col">ATM</th>
-          <th scope="col">Datum</th>
-          <th scope="col">Parcela</th>
-          <th scope="col">Površina</th>
-          <th scope="col">Usev</th>
-          <th scope="col">Odgovorna osoba</th>
-          <th scope="col">Status</th>
-          <th scope="col">Kopiraj</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let workOrder of allWOResponse
-            | SearchWorkOrdersTable: searchTable.value
-            | SearchWorkOrdersDate: searchDate.value
-            | SearchWorkOrdersCrop: searchCrop.value
-            | SearchWorkOrdersOperation: searchOperation.value
-            | SearchWorkOrderNumber: searchNumber.value
-            | SearchWorkOrderResponsible: searchResponsible.value
-            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
-            let j = index" style="cursor: pointer">
-          <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
-          <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.sapId }}
-          </td>
-          <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.operation }}
-          </td>
-          <td (click)="changeRoute(workOrder.id)">{{ workOrder.date | date:'dd.MM.yyyy.' }}</td>
-          <td (click)="changeRoute(workOrder.id)">{{ workOrder.field }}</td>
-          <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
-          <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.crop }}
-          </td>
-          <td (click)="changeRoute(workOrder.id)">
-            {{ workOrder.responsiblePerson }}
-          </td>
-          <td [ngClass]="{
-              statusNovi: workOrder.status == 'Novi',
-              statusURadu: workOrder.status == 'U radu',
-              statusZatvoren: workOrder.status == 'Zatvoren',
-              statusStorniran: workOrder.status == 'Storniran'
-            }" (click)="changeRoute(workOrder.id)">
-            {{ workOrder.status }}
-          </td>
-          <td>
-            <div class="form-group">
-              <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
-                style="float: center" (click)="getWorkOrderId(workOrder)">
-                <i class="fa fa-copy"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-
-    </table>
+    <div class="table-responsive">
+      <table *ngIf="!empty && workOrder !==-1 && i==0" class="table table-hover tabela-nalozi">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" style="cursor: pointer;" (click)="sortBySapId()">SAP ID <span *ngIf="desc"><i
+                  class="fa fa-arrow-down"></i></span><span *ngIf="!desc"><i class="fa fa-arrow-up"></i></span></th>
+            <th scope="col">ATM</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Parcela</th>
+            <th scope="col">Površina</th>
+            <th scope="col">Obrađeno</th>
+            <th scope="col">Usev</th>
+            <th scope="col">Odgovorna osoba</th>
+            <th scope="col">Status</th>
+            <th scope="col">Kopiraj</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let workOrder of allWOResponse
+              | SearchWorkOrdersTable: searchTable.value
+              | SearchWorkOrdersDate: searchDate.value
+              | SearchWorkOrdersCrop: searchCrop.value
+              | SearchWorkOrdersOperation: searchOperation.value
+              | SearchWorkOrderNumber: searchNumber.value
+              | SearchWorkOrderResponsible: searchResponsible.value
+              | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
+              let j = index" style="cursor: pointer">
+            <th scope="row" (click)="changeRoute(workOrder.id)">{{ j + 1 }}</th>
+            <td (click)="changeRoute(workOrder.id)">
+              {{ workOrder.sapId }}
+            </td>
+            <td (click)="changeRoute(workOrder.id)">
+              {{ workOrder.operation }}
+            </td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.date | date:'dd.MM.yyyy.' }}</td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.field }}</td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.treated }}ha</td>
+            <td (click)="changeRoute(workOrder.id)">
+              {{ workOrder.crop }}
+            </td>
+            <td (click)="changeRoute(workOrder.id)">
+              {{ workOrder.responsiblePerson }}
+            </td>
+            <td [ngClass]="{
+                statusNovi: workOrder.status == 'Novi',
+                statusURadu: workOrder.status == 'U radu',
+                statusZatvoren: workOrder.status == 'Zatvoren',
+                statusStorniran: workOrder.status == 'Storniran'
+              }" (click)="changeRoute(workOrder.id)">
+              {{ workOrder.status }}
+            </td>
+            <td>
+              <div class="form-group">
+                <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#copyModal"
+                  style="float: center" (click)="getWorkOrderId(workOrder)">
+                  <i class="fa fa-copy"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </ng-container>
   <ngb-pagination *ngIf="!empty" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
     [boundaryLinks]="true" [collectionSize]="allWOResponse.length">

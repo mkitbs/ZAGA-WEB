@@ -116,6 +116,7 @@ import { LeavePageGuard } from "./service/leave-page.guard";
 import { LeavePageConfirmationComponent } from './components/leave-page-confirmation/leave-page-confirmation.component';
 import { WorkOrderReportsComponent } from './components/work-order-reports/work-order-reports.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReportAtmComponent } from './components/report-atm/report-atm.component';
 
 declare var require: any;
 var config = require("config");
@@ -147,6 +148,7 @@ const routes: Routes = [
   { path: "timeTracking/:id", component: TimeTrackingComponent },
   { path: "passwordReset/:token", component: PasswordResetComponent },
   { path: "workOrderReports", component: WorkOrderReportsComponent, canActivate: [AuthGuardGuard] },
+  { path: "report/atm", component: ReportAtmComponent, canActivate: [AuthGuardGuard] },
   { path: "404", component: NotFoundComponent },
   { path: "", component: HomeComponent, canActivate: [AuthGuardGuard] },
   { path: "**", component: NotFoundComponent }
@@ -230,6 +232,7 @@ const routes: Routes = [
     SearchWoStatusPipe,
     LeavePageConfirmationComponent,
     WorkOrderReportsComponent,
+    ReportAtmComponent,
   ],
   imports: [
     BrowserModule,

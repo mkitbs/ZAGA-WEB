@@ -1,0 +1,199 @@
+<navbar></navbar>
+<div style="margin-top: 50px;"></div>
+<div class="container">
+    <div style="padding-top: 10px"></div>
+    <h3 class="mt-2 mb-2">ATM</h3>
+    <div style="padding-top: 10px"></div>
+    <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
+        data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+        Filteri
+        <i *ngIf="collapseBool" class="fa fa-arrow-down" data-toggle="collapse"
+        data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i>
+        <i *ngIf="!collapseBool" class="fa fa-arrow-up" data-toggle="collapse"
+        data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i>
+    </button>
+    <br />
+    <form action="" class="collapse mb-4" id="collapseExample">
+        <div class="form-row">
+        <div class="col">
+            <mat-form-field class="inputAuto">
+            <input 
+                type="text" 
+                matInput 
+                #searchWorkOrder
+                placeholder="Pretražite po broju naloga"
+            />
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field class="inputAuto">
+            <input 
+                type="text" 
+                matInput 
+                #searchOperation
+                placeholder="Pretražite po agrotehničkoj meri"
+            />
+            </mat-form-field>
+        </div>
+        </div>
+        <div class="form-row">
+        <div class="col">
+            <mat-form-field class="inputAuto customMatInput">
+            <input 
+                ngbDatepicker 
+                #od="ngbDatepicker" 
+                (click)="od.toggle()"
+                matInput 
+                #searchDateFrom
+                placeholder="Pretražite po datumu od"
+                [(ngModel)]="dates.dateFrom"
+                (ngModelChange)="updateFilters()"
+                [ngModelOptions]="{standalone: true}"
+            />
+            </mat-form-field>
+            -
+            <mat-form-field class="inputAuto customMatInput">
+            <input 
+                ngbDatepicker 
+                #do="ngbDatepicker" 
+                (click)="do.toggle()"
+                matInput 
+                #searchDateTo
+                placeholder="Pretražite po datumu do"
+                [(ngModel)]="dates.dateTo"
+                (ngModelChange)="updateFilters()"
+                [ngModelOptions]="{standalone: true}"
+            />
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field class="inputAuto">
+            <input 
+                ngbDatepicker 
+                #day="ngbDatepicker" 
+                (click)="day.toggle()"
+                matInput 
+                #searchDate
+                placeholder="Pretražite po danu"
+            />
+            </mat-form-field>
+        </div>
+        </div>
+        <div class="form-row">
+        <div class="col">
+            <mat-form-field class="inputAuto">
+            <input 
+                type="text" 
+                matInput 
+                #searchCrop
+                placeholder="Pretražite po usevu"
+            />
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field class="inputAuto">
+            <input 
+                type="text" 
+                matInput 
+                #searchTable
+                placeholder="Pretražite po parceli"
+            />
+            </mat-form-field>
+        </div>
+        </div>
+    </form>
+    <!--
+    <div class="break-class pt-2 mb-4"></div>
+    <div *ngIf="workers.length == 0 && loading == false" class="center">
+        <img src="../../../assets/report-not-found.png" width="200px" height="200px" />
+        <h4 style="text-align: center; width: 200px; padding-top: 5px;">Izveštaj nije pronađen</h4>
+    </div>
+    -->
+    <div class="table-responsive">
+        <table *ngIf="atmReport.length > 0" class="table table-hover tabela-nalozi">
+            <thead>
+                <tr>
+                <th scope="col" style="vertical-align: middle;">ATM</th>
+                <th scope="col" style="vertical-align: middle;">SAP ID</th>
+                <th scope="col" style="vertical-align: middle;">Datum</th>
+                <th scope="col" style="vertical-align: middle;">Parcela</th>
+                <th scope="col" style="vertical-align: middle;">Usev</th>
+                <th scope="col" style="vertical-align: middle;">Površina</th>
+                <th scope="col" style="vertical-align: middle;">Obrađeno</th>
+                <th scope="col" style="vertical-align: middle;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let report of atmReport">
+                    <tr *ngFor="let workOrder of report.workOrders  
+                    | SearchWorkOrdersTable: searchTable.value
+                    | SearchWorkOrdersOperation: searchOperation.value
+                    | SearchWorkOrdersDate: searchDate.value
+                    | SearchWorkOrdersCrop: searchCrop.value
+                    | ReportMaterialSapId: searchWorkOrder.value
+                    | SearchWoBetweenDates: filters; let i = index">
+                        <td *ngIf="i == 0  && workOrder != -1; else elseBlock">{{report.atm}}</td>
+                        <ng-template #elseBlock>
+                            <td *ngIf="workOrder != -1"></td>
+                        </ng-template>
+                        <td 
+                            *ngIf="workOrder != -1"
+                            (click)="goToWorkOrder(workOrder.id)"
+                            style="cursor: pointer;"
+                            >{{workOrder.sapId}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.date}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.table}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.cropName}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.area}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.treated}}</td>
+                        <td *ngIf="workOrder != -1" [ngClass]="{
+                            statusNovi: workOrder.status == 'Novi',
+                            statusURadu: workOrder.status == 'U radu',
+                            statusZatvoren: workOrder.status == 'Zatvoren',
+                            statusStorniran: workOrder.status == 'Storniran'
+                            }" >
+                            {{workOrder.status}}</td>
+                    </tr>
+                    <tr *ngFor="let workOrder of report.workOrders 
+                    | SearchWorkOrdersTable: searchTable.value
+                    | SearchWorkOrdersOperation: searchOperation.value
+                    | SearchWorkOrdersDate: searchDate.value
+                    | SearchWorkOrdersCrop: searchCrop.value
+                    | ReportMaterialSapId: searchWorkOrder.value
+                    | SearchWoBetweenDates: filters; let y = index">
+                        <td *ngIf="y == 0 && workOrder != -1">Σ {{workOrder.operationName}}</td>
+                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                        <td *ngIf="y == 0 && workOrder != -1" style="font-weight: bold;">
+                            {{
+                                getAreaSum(report.workOrders 
+                                | SearchWorkOrdersTable: searchTable.value
+                                | SearchWorkOrdersOperation: searchOperation.value
+                                | SearchWorkOrdersDate: searchDate.value
+                                | SearchWorkOrdersCrop: searchCrop.value
+                                | ReportMaterialSapId: searchWorkOrder.value
+                                | SearchWoBetweenDates: filters)
+                              }}
+                        </td>
+                        <td *ngIf="y == 0 && workOrder != -1" style="font-weight: bold;">
+                            {{
+                                getTreatedSum(report.workOrders 
+                                | SearchWorkOrdersTable: searchTable.value
+                                | SearchWorkOrdersOperation: searchOperation.value
+                                | SearchWorkOrdersDate: searchDate.value
+                                | SearchWorkOrdersCrop: searchCrop.value
+                                | ReportMaterialSapId: searchWorkOrder.value
+                                | SearchWoBetweenDates: filters)
+                              }}
+                        </td>
+                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                    </tr>
+                </ng-container>
+               
+            </tbody>
+        </table>
+    </div>
+    <ngx-spinner></ngx-spinner>
+</div>

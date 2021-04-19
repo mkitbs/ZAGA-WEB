@@ -10,8 +10,9 @@ export class ReportMaterialSapIdPipe implements PipeTransform {
     if(!query){
       return workOrders;
     }
+    console.log(workOrders)
     workOrders.forEach((wo, index) => {
-      if(wo.sapId == null) {
+      if(wo.sapId == null || wo.sapId == 0) {
         workOrders.splice(index, 1);
       }
     })
