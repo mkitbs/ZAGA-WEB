@@ -13,9 +13,7 @@ export class SearchWorkOrdersOperationPipe implements PipeTransform {
     var result = workOrders.filter((wo) =>
       wo.operationName.toLowerCase().includes(query.toLowerCase()
     ));
-    if(result.length === 0){
-      return[-1];
-    }
+    
     return result;
   }
 

@@ -16,12 +16,12 @@ public class AllWorkOrdersResponseDTO {
 
 	private UUID id;
 	private Long sapId;
-	private String operation;
-	private Date date;
-	private String field;
+	private String operationName;
+	private String date;
+	private String table;
 	private double area;
-	private String crop;
-	private String responsiblePerson;
+	private String cropName;
+	private String responsibleName;
 	private String status;
 	private String orgUnit;
 	private double treated;
@@ -33,12 +33,13 @@ public class AllWorkOrdersResponseDTO {
 		} else {
 			this.sapId = 0L;
 		}
-		this.operation = workOrder.getOperation().getName();
-		this.date = workOrder.getDate();
-		this.field = workOrder.getCrop().getField().getName();
+		this.operationName = workOrder.getOperation().getName();
+		String[] dateStr = workOrder.getDate().toString().split("-");
+		this.date = dateStr[2].substring(0, 2) + "." + dateStr[1] + "." + dateStr[0] + ".";
+		this.table = workOrder.getCrop().getField().getName();
 		this.area = workOrder.getCrop().getArea();
-		this.crop = workOrder.getCrop().getName();
-		this.responsiblePerson = workOrder.getResponsible().getName();
+		this.cropName = workOrder.getCrop().getName();
+		this.responsibleName = workOrder.getResponsible().getName();
 		this.status = workOrder.getStatus().toString();
 		this.orgUnit = workOrder.getOrgUnit();
 		this.treated = workOrder.getTreated();

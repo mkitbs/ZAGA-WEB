@@ -180,7 +180,7 @@
               <ng-template #elseDayPeriod><td>/</td></ng-template>
               <td *ngIf="wo.nightPeriod != -1 && workOrder !== -1; else elseNightPeriod">{{ wo.nightPeriod }} h</td>
               <ng-template #elseNightPeriod><td>/</td></ng-template>
-              <td *ngIf="wo.workPeriod != -1 && workOrder !== -1; else elseWorkPeriod">{{ wo.workPeriod }} h</td>
+              <td *ngIf="wo.workPeriod != -1 && workOrder !== -1; else elseWorkPeriod">{{ wo.dayPeriod + wo.nightPeriod}}  h</td>
               <ng-template #elseWorkPeriod><td>/</td></ng-template>
               <td *ngIf="workOrder !== -1" [ngClass]="{
                   statusNovi: workOrder.status == 'Novi',

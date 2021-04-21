@@ -27,9 +27,7 @@ export class SearchWoBetweenDatesPipe implements PipeTransform {
           wos.push(wo);
         }
       });
-      if(wos.length === 0){
-        return[-1];
-      }
+     
       return wos;
       
     }

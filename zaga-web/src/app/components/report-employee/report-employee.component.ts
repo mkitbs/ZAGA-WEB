@@ -115,10 +115,13 @@ export class ReportEmployeeComponent implements OnInit {
     if(workOrders != -1){
       workOrders.forEach(wo => {
         wo.workers.forEach(w => {
-          if(w.workPeriod == -1){
-            w.workPeriod = 0.0;
+          if(w.nightPeriod == -1){
+            w.nightPeriod = 0.0;
           }
-          workPeriodSum += w.workPeriod;
+          if(w.dayPeriod == -1){
+            w.dayPeriod = 0.0;
+          }
+          workPeriodSum += w.nightPeriod + w.dayPeriod;
         })
       })
       return workPeriodSum + " h";

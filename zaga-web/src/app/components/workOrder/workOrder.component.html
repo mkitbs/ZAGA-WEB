@@ -153,17 +153,17 @@
               {{ workOrder.sapId }}
             </td>
             <td (click)="changeRoute(workOrder.id)">
-              {{ workOrder.operation }}
+              {{ workOrder.operationName }}
             </td>
-            <td (click)="changeRoute(workOrder.id)">{{ workOrder.date | date:'dd.MM.yyyy.' }}</td>
-            <td (click)="changeRoute(workOrder.id)">{{ workOrder.field }}</td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.date }}</td>
+            <td (click)="changeRoute(workOrder.id)">{{ workOrder.table }}</td>
             <td (click)="changeRoute(workOrder.id)">{{ workOrder.area }}ha</td>
             <td (click)="changeRoute(workOrder.id)">{{ workOrder.treated }}ha</td>
             <td (click)="changeRoute(workOrder.id)">
-              {{ workOrder.crop }}
+              {{ workOrder.cropName }}
             </td>
             <td (click)="changeRoute(workOrder.id)">
-              {{ workOrder.responsiblePerson }}
+              {{ workOrder.responsibleName }}
             </td>
             <td [ngClass]="{
                 statusNovi: workOrder.status == 'Novi',

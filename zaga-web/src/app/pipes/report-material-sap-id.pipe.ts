@@ -19,9 +19,7 @@ export class ReportMaterialSapIdPipe implements PipeTransform {
     var result = workOrders.filter((wo => 
       wo.sapId.toString().toLowerCase().includes(query.toLowerCase())
     ))
-    if(result.length === 0){
-      return[-1];
-    }
+    
     return result;
   }
 }

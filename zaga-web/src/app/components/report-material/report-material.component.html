@@ -138,7 +138,7 @@
                 <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
               </td>
             </tr>
-          <tr *ngFor="let workOrder of material.workOrders
+          <ng-container *ngFor="let workOrder of material.workOrders
             | SearchWorkOrdersTable: searchTable.value
             | SearchWorkOrdersOperation: searchOperation.value
             | SearchWorkOrdersDate: searchDate.value
@@ -146,9 +146,9 @@
             | ReportMaterialSapId: searchWorkOrder.value
             | SearchWoBetweenDates: filters; 
             let j = index">
-            <ng-container *ngFor="let mat of workOrder.materials; let z = index">
+            <tr *ngFor="let mat of workOrder.materials; let z = index">
               <ng-container *ngIf="mat.deleted == false">
-                <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
+                <td *ngIf="j==0 && z==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
                 <ng-template #elseBlockName><td></td></ng-template>
                 <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
                   {{ workOrder.sapId }}
@@ -176,8 +176,8 @@
                     {{ workOrder.status }}
                 </td>
               </ng-container>
-            </ng-container>
-          </tr>
+            </tr>
+          </ng-container>
           <tr>
             <ng-container *ngFor="let workOrder of material.workOrders 
               | SearchWorkOrdersCrop: searchCrop.value
