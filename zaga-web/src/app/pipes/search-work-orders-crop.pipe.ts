@@ -11,11 +11,9 @@ export class SearchWorkOrdersCropPipe implements PipeTransform {
       return workOrders;
     }
     var result = workOrders.filter((wo) =>
-      wo.cropName.split(",")[1].toLowerCase().includes(query.toLowerCase()
+      wo.cropName.toLowerCase().includes(query.toLowerCase()
     ));
-    if(result.length === 0){
-      return[-1]
-    }
+
     return result;
   }
 

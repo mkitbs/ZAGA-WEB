@@ -12,11 +12,8 @@ export class SearchWorkOrdersDatePipe implements PipeTransform {
     }
     console.log(workOrders)
     var result = workOrders.filter((wo) =>
-      wo.date.includes(query
-    ));
-    if(result.length === 0){
-      return[-1];
-    }
+      wo.date == query);
+    
     return result;
   }
 

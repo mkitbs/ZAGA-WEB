@@ -1,12 +1,12 @@
 export class AllWorkOrdersResponseDTO {
     id;
     sapId;
-    operation;
+    operationName;
 	date;
-	field;
+	table;
 	area;
-	crop;
-	responsiblePerson;
+	cropName;
+	responsibleName;
 	status;
 	treated;
 }
