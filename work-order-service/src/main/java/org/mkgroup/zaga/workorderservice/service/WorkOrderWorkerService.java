@@ -1,7 +1,6 @@
 package org.mkgroup.zaga.workorderservice.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.jboss.logging.Logger;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelDTO;
@@ -21,17 +18,10 @@ import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStateDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureReportDTO;
-import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
-import org.mkgroup.zaga.workorderservice.dto.MaterialReportSumDTO;
 import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureReportDTO;
-import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
-import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureReportDTO;
-import org.mkgroup.zaga.workorderservice.dto.SpentMaterialsDTO;
-import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
-import org.mkgroup.zaga.workorderservice.dto.WorkerTimeTrackingDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerPerCultureDTO;
@@ -55,15 +45,12 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.mkgroup.zaga.workorderservice.repository.WorkOrderWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -163,6 +150,17 @@ public class WorkOrderWorkerService {
 			wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
 		} else {
 			wow.setSumState(-1.0);
+		}
+		if (wowDTO.getOperationOutput() != null) {
+			if (wow.getOperationOutput() != -1.0) {
+				workOrder.setTreated(workOrder.getTreated() - wow.getOperationOutput() + wowDTO.getOperationOutput());
+				wow.setOperationOutput(wowDTO.getOperationOutput());
+			} else {
+				workOrder.setTreated(workOrder.getTreated() + wowDTO.getOperationOutput());
+				wow.setOperationOutput(wowDTO.getOperationOutput());
+			}
+		} else {
+			wow.setOperationOutput(-1.0);
 		}
 		SpentMaterial sm = new SpentMaterial();
 		if (wowDTO.getFuel() != null) {
@@ -449,6 +447,11 @@ public class WorkOrderWorkerService {
 			wow.setSumState(wowDTO.getFinalState() - wowDTO.getInitialState());
 		} else {
 			wow.setSumState(-1.0);
+		}
+		if (wowDTO.getOperationOutput() != null) {
+			wow.setOperationOutput(wowDTO.getOperationOutput());
+		} else {
+			wow.setOperationOutput(-1.0);
 		}
 		wow.setWorkOrder(workOrder);
 		wow.setUser(userRepo.getOne(wowDTO.getUser().getUserId()));

@@ -27,6 +27,7 @@ public class WorkOrderWorkerDTO {
 	private int erpId = 0; //broj stavke WorkOrderEmployeeNumber
 	private boolean deleted;
 	private boolean noOperationOutput;
+	private Double operationOutput;
 	
 	public WorkOrderWorkerDTO(WorkOrderWorker wow) {
 		this.id = wow.getId();
@@ -49,5 +50,6 @@ public class WorkOrderWorkerDTO {
 		this.sumState = wow.getSumState();
 		this.fuel = wow.getFuel();
 		this.erpId = wow.getErpId();
+		this.operationOutput = wow.getOperationOutput();
 	}
 }

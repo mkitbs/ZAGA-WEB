@@ -226,6 +226,11 @@ public class WorkOrderService {
 			} else {
 				wow.setWorkPeriod(-1.0);
 			}
+			if (wowDTO.getOperationOutput() != null) {
+				wow.setOperationOutput(wowDTO.getOperationOutput());
+			} else {
+				wow.setOperationOutput(-1.0);
+			}
 			wow.setUser(employeeService.getOne(wowDTO.getUser().getUserId()));
 			wow.setOperation(operationService.getOne(wowDTO.getOperation().getId()));
 			Machine machine = machineService.getOne(UUID.fromString(wowDTO.getMachine().getDbid()));
