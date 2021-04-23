@@ -70,6 +70,8 @@ public class WorkOrderWorker {
 	
 	private boolean deleted = false; //logicko brisanje zbog SAP-a
 	
+	private Double operationOutput = -1.0;
+	
 	@Enumerated(EnumType.STRING)
 	private WorkOrderWorkerStatus status;
 
@@ -208,6 +210,13 @@ public class WorkOrderWorker {
 	public void setStatus(WorkOrderWorkerStatus status) {
 		this.status = status;
 	}
-	
+
+	public Double getOperationOutput() {
+		return operationOutput;
+	}
+
+	public void setOperationOutput(Double operationOutput) {
+		this.operationOutput = operationOutput;
+	}
 	
 }

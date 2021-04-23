@@ -78,7 +78,7 @@ public class WorkOrderToSAP {
 		System.out.println(workOpenDate + " OPEN \n" + workDate + " WDATE");
 		this.Activity = action;
 		this.CompanyCode = "1200";
-		this.OrganisationUnit = "BIPR";
+		this.OrganisationUnit = "PIKB";
 		this.WorkItemNumber = "001";
 		this.WorkOrderNumber = (action.equals("MOD") ? workOrder.getErpId().toString() : "");
 		this.CropVarietyId = "000000";
@@ -150,14 +150,13 @@ public class WorkOrderToSAP {
 			woeSAP.setWorkSundayHours("0.00000");
 			woeSAP.setWorkHolidayHours("0.00000");
 			woeSAP.setOvertimeWork("");
-			if(workOrder.getTreated() == 0) {
+			if(wow.getOperationOutput() == -1.0) {
 				woeSAP.setOperationOutput("0.00000");
 				woeSAP.setMachineAreaOutput("0.00000");
 			}else {
-				woeSAP.setMachineAreaOutput(Double.toString(workOrder.getTreated()));
-				woeSAP.setOperationOutput(Double.toString(workOrder.getTreated()));
+				woeSAP.setMachineAreaOutput(Double.toString(wow.getOperationOutput()));
+				woeSAP.setOperationOutput(Double.toString(wow.getOperationOutput()));
 			}
-			woeSAP.setOperationOutput(Double.toString(workOrder.getTreated()));
 			woeSAP.setOperationOutputUnit("");
 			woeSAP.setNoOperationOutput("");
 			woeSAP.setMasterMachineId(wow.getMachine().getErpId().toString());

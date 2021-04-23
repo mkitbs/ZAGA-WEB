@@ -312,7 +312,7 @@
                     
               <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
                     [(ngModel)]="treatedEntered" id="" class="form-control" 
-                    (change)="calculateQuantityPerHectar()" [disabled]="noOperationOutput" />
+                    (change)="calculateQuantityPerHectar()" disabled />
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">ha</span>
                   </div>
@@ -2499,6 +2499,21 @@
                   *ngIf="(validWorkPeriod == false && clickAddWowDetail) || (validWorkPeriod == false && clickAddNewWow)"
                   style="color: red">
                   Maksimalan broj sati je 24.
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="imePrz">Obrađena površina</label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="wow.operationOutput" type="number" name="opOutput"
+                    class="form-control" id=""/>
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">ha</span>
+                  </div>
+                </div>
+                <div
+                  *ngIf="(validOperationOutput == false && clickAddWowDetail) || (validOperationOutput == false && clickAddNewWow)"
+                  style="color: red">
+                  Morate uneti obrađene hektare ili označiti da je radni nalog opšti.
                 </div>
               </div>
             </div>

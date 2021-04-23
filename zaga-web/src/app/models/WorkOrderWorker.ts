@@ -18,4 +18,5 @@ export class WorkOrderWorker {
   fuel;
   wowObjectId;
   deleted: boolean;
+  operationOutput;
 }

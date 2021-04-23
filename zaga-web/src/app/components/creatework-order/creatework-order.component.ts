@@ -221,6 +221,8 @@ export class CreateworkOrderComponent implements OnInit {
   leavePageFlag;
 
   foreignMachine;
+  validOperationOutput;
+  treated = 0;
 
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
@@ -357,6 +359,9 @@ export class CreateworkOrderComponent implements OnInit {
 
         if(this.workOrder.noOperationOutput){
           this.noOperationOutput = true;
+          this.validOperationOutput = true;
+        } else {
+          this.validOperationOutput = false;
         }
 
         this.userService.getUserBySapId(this.workOrder.userCreatedId).subscribe(data => {
@@ -765,6 +770,9 @@ export class CreateworkOrderComponent implements OnInit {
       } else {
         this.foreignMachine = false;
       }
+      if(this.wow.operationOutput == -1) {
+        this.wow.operationOutput = null;
+      }
     })
     
     /*
@@ -1021,11 +1029,22 @@ export class CreateworkOrderComponent implements OnInit {
     } else {
       workOrderWorker.noOperationOutput = false;
     }
+    console.log(workOrderWorker.operationOutput)
+    console.log(this.workOrder.noOperationOutput)
+    console.log(this.noOperationOutput)
+    if(workOrderWorker.operationOutput == undefined && this.noOperationOutput == false) {
+      this.validOperationOutput = false;
+    } else if (workOrderWorker.operationOutput == undefined && this.noOperationOutput == true) {
+      this.validOperationOutput = true;
+    } else if (workOrderWorker.operationOutput != undefined) {
+      this.validOperationOutput = true;
+    }
     console.log(workOrderWorker);
-    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel) {
+    if (this.validWorkPeriod && this.validNightPeriod && this.validWorkPeriod && this.validFinalState && this.validInitialState && this.validFuel && this.validOperationOutput) {
       this.wowService.updateWorkOrderWorker(workOrderWorker.id, workOrderWorker).subscribe((res) => {
         console.log(res);
         this.wow = new WorkOrderWorker();
+        
         if(this.withoutMachine){
           this.toastr.success("Uspešno uneti učinci za izvršioca " + workOrderWorker.user.Name, "Potvrda!", {
             positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
@@ -1072,7 +1091,7 @@ export class CreateworkOrderComponent implements OnInit {
       this.noteFC.setValue(this.workOrder.note)
       this.numOfRefOrderFC.setValue(this.workOrder.numOfRefOrder)
 
-      this.workOrder.treated = this.treatedEntered;
+      //this.workOrder.treated = this.treatedEntered;
       if (this.workOrder.status == "NEW") {
         this.workOrder.status = "Novi";
       } else if (this.workOrder.status == "IN_PROGRESS") {
@@ -1112,6 +1131,8 @@ export class CreateworkOrderComponent implements OnInit {
 
       if (this.workOrder.treated == 0) {
         this.workOrder.treated = null;
+      } else {
+        this.treatedEntered = this.workOrder.treated;
       }
     });
   }
@@ -1794,7 +1815,6 @@ export class CreateworkOrderComponent implements OnInit {
           positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
         })
       }
-     
     }
     if(this.noOperationOutput){
       this.validWoInfo = true;
@@ -2219,6 +2239,7 @@ export class CreateworkOrderComponent implements OnInit {
 
   disableTreated(){
     this.noOperationOutput = !this.noOperationOutput;
+    this.validOperationOutput = this.noOperationOutput;
     console.log(this.noOperationOutput)
   }
 
@@ -2384,5 +2405,14 @@ export class CreateworkOrderComponent implements OnInit {
     console.log("Mat = " + value)
   }
 
+  calculateTreatedArea() {
+    this.workOrder.workers.forEach(worker => {
+      console.log(worker.operationOutput)
+      if(worker.operationOutput != -1) {
+        this.treatedEntered += worker.operationOutput;
+      }
+    })
+    console.log(this.treatedEntered);
+  }
  
 }
