@@ -188,6 +188,8 @@ public class SpentMaterialService {
 	    		spentMaterialRepo.save(spentMat);
 	    	}
 	    }else if(status.equals("E")){
+	    	spentMaterial.setDeleted(true);
+	    	spentMaterialRepo.save(spentMaterial);
 	    	System.out.println("ERROR");
 	    	throw new Exception("Greska prilikom komunikacije sa SAP-om.");
 	    }
@@ -398,7 +400,7 @@ public class SpentMaterialService {
 		StringBuilder authEncodingString = new StringBuilder()
 				.append("MKATIC")
 				.append(":")
-				.append("katicm0908");
+				.append("Katicm0908");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());

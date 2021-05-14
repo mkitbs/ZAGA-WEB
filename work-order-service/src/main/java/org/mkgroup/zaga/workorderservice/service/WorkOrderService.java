@@ -564,15 +564,6 @@ public class WorkOrderService {
 		String cookies = headerValues.get("cookies");
 
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
-		for (WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
-			if (workOrderDTO.isNoOperationOutput()) {
-				System.out.println("NO OPERATION OUTPUT");
-				emp.setNoOperationOutput("X");
-				workOrder.setNoOperationOutput(true);
-			} else {
-				workOrder.setNoOperationOutput(false);
-			}
-		}
 
 		log.info("Updating work order with employee to SAP started");
 		/*
@@ -1068,7 +1059,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValues(WorkOrder wo) throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("katicm0908");
+		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("Katicm0908");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
@@ -1111,7 +1102,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValues() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("katicm0908");
+		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("Katicm0908");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 		// Testing HTTPS with RestTemplate
@@ -1139,7 +1130,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValuesClose() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("katicm0908");
+		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("Katicm0908");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
@@ -1253,9 +1244,11 @@ public class WorkOrderService {
 					&& !jsonWow.get(i).getAsJsonObject().get("OperationId").getAsString().equals("0000")
 					&& !jsonWow.get(i).getAsJsonObject().get("MasterMachineId").getAsString().equals("")) {
 				WorkOrderWorker wow = new WorkOrderWorker();
-				if (i == 0) {
-					workOrder.setTreated(
-							Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString()));
+
+				if (jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString().equals("0.00000")) {
+					wow.setOperationOutput(null);
+				} else {
+					wow.setOperationOutput(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString()));
 				}
 				if (jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString().equals("0.00000")
 						&& jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString().equals("0.00000")) {
@@ -1345,9 +1338,9 @@ public class WorkOrderService {
 				}
 
 				if (jsonWow.get(i).getAsJsonObject().get("NoOperationOutput").getAsString().equals("X")) {
-					workOrder.setNoOperationOutput(true);
+					wow.setNoOperationOutput(true);
 				} else {
-					workOrder.setNoOperationOutput(false);
+					wow.setNoOperationOutput(false);
 				}
 
 				if (user != null && op != null && machine != null) {
@@ -1489,9 +1482,10 @@ public class WorkOrderService {
 					wow = worker;
 				}
 
-				if (i == 0) {
-					workOrder.setTreated(
-							Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString()));
+				if (jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString().equals("0.00000")) {
+					wow.setOperationOutput(null);
+				} else {
+					wow.setOperationOutput(Double.parseDouble(jsonWow.get(i).getAsJsonObject().get("OperationOutput").getAsString()));
 				}
 				if (jsonWow.get(i).getAsJsonObject().get("WorkEffectiveHours").getAsString().equals("0.00000")
 						&& jsonWow.get(i).getAsJsonObject().get("WorkNightHours").getAsString().equals("0.00000")) {
@@ -1582,9 +1576,9 @@ public class WorkOrderService {
 				}
 
 				if (jsonWow.get(i).getAsJsonObject().get("NoOperationOutput").getAsString().equals("X")) {
-					workOrder.setNoOperationOutput(true);
+					wow.setNoOperationOutput(true);
 				} else {
-					workOrder.setNoOperationOutput(false);
+					wow.setNoOperationOutput(false);
 				}
 
 				if (user != null && op != null && machine != null) {
@@ -1677,6 +1671,22 @@ public class WorkOrderService {
 		}
 		return retValues;
 		
+	}
+	
+	public void syncNoOperationOutput() {
+		List<WorkOrder> workOrders = workOrderRepo.findAll();
+		for(WorkOrder workOrder : workOrders) {
+			for(WorkOrderWorker wow : workOrder.getWorkers()) {
+				if(workOrder.isNoOperationOutput()) {
+					wow.setNoOperationOutput(true);
+					wowRepo.save(wow);
+				} else {
+					wow.setNoOperationOutput(false);
+					wowRepo.save(wow);
+				}
+			}
+		}
+		System.out.println("DONE SYNC NO OPERATION OUTPUT");
 	}
 
 }

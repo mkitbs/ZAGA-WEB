@@ -158,4 +158,5 @@ public class WorkOrderWorkerController {
 		List<MachineSumFuelPerCultureReportDTO> retVals = wowService.getMachineSumFuelPerCulture(Long.parseLong(tenantId));
 		return new ResponseEntity<List<MachineSumFuelPerCultureReportDTO>>(retVals, HttpStatus.OK);
 	}
+	
 }

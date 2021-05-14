@@ -162,6 +162,11 @@ public class WorkOrderWorkerService {
 		} else {
 			wow.setOperationOutput(-1.0);
 		}
+		if (wowDTO.isNoOperationOutput()) {
+			wow.setNoOperationOutput(true);
+		} else {
+			wow.setNoOperationOutput(false);
+		}
 		SpentMaterial sm = new SpentMaterial();
 		if (wowDTO.getFuel() != null) {
 			if (wow.getMachine().getFuelErpId() != 0 && workOrder.getCrop().getField().getErpId() != 999997
@@ -217,14 +222,6 @@ public class WorkOrderWorkerService {
 		String cookies = headerValues.get("cookies");
 
 		WorkOrderToSAP workOrderSAP = new WorkOrderToSAP(workOrder, "MOD");
-		for (WorkOrderEmployeeSAP emp : workOrderSAP.getWorkOrderToEmployeeNavigation().getResults()) {
-			if (wowDTO.isNoOperationOutput()) {
-				emp.setNoOperationOutput("X");
-				workOrder.setNoOperationOutput(true);
-			} else {
-				workOrder.setNoOperationOutput(false);
-			}
-		}
 
 		log.info("Updating work order with employee to SAP started");
 		/*
@@ -532,7 +529,7 @@ public class WorkOrderWorkerService {
 
 	public Map<String, String> getHeaderValues() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("katicm0908");
+		StringBuilder authEncodingString = new StringBuilder().append("MKATIC").append(":").append("Katicm0908");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 

@@ -19,4 +19,5 @@ export class WorkOrderWorker {
   wowObjectId;
   deleted: boolean;
   operationOutput;
+  noOperationOutput: boolean;
 }

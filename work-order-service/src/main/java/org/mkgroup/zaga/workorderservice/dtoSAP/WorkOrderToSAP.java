@@ -158,7 +158,11 @@ public class WorkOrderToSAP {
 				woeSAP.setOperationOutput(Double.toString(wow.getOperationOutput()));
 			}
 			woeSAP.setOperationOutputUnit("");
-			woeSAP.setNoOperationOutput("");
+			if(wow.isNoOperationOutput()) {
+				woeSAP.setNoOperationOutput("X");
+			} else {
+				woeSAP.setNoOperationOutput("");
+			}
 			woeSAP.setMasterMachineId(wow.getMachine().getErpId().toString());
 			if(wow.getConnectingMachine() == null) {
 				woeSAP.setSlaveMachineId("");
