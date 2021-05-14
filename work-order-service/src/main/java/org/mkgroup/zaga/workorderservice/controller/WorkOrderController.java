@@ -167,4 +167,10 @@ public class WorkOrderController {
 		List<ATMReportResponseDTO> retVals = workOrderService.getDataForATMReport(Long.parseLong(tenantId));
 		return new ResponseEntity<List<ATMReportResponseDTO>>(retVals, HttpStatus.OK);
 	}
+	
+	@GetMapping("/syncNoOperationOutput")
+	public ResponseEntity<?> syncNoOperationOutput() {
+		workOrderService.syncNoOperationOutput();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

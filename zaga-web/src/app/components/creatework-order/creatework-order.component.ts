@@ -224,6 +224,8 @@ export class CreateworkOrderComponent implements OnInit {
   validOperationOutput;
   treated = 0;
 
+  showButtons: boolean = true;
+
   ngOnInit() {
     this.authService.getUserSettings().subscribe(data => {
       this.setting = data;
@@ -356,14 +358,14 @@ export class CreateworkOrderComponent implements OnInit {
 
         this.dateOfCreateWO = day + "." + month + "." + this.workOrder.date.year + "."
         this.creator = this.workOrder.userCreatedId;
-
+        /*
         if(this.workOrder.noOperationOutput){
           this.noOperationOutput = true;
           this.validOperationOutput = true;
         } else {
           this.validOperationOutput = false;
         }
-
+        */
         this.userService.getUserBySapId(this.workOrder.userCreatedId).subscribe(data => {
           this.userCreator = data;
         })
@@ -772,6 +774,11 @@ export class CreateworkOrderComponent implements OnInit {
       }
       if(this.wow.operationOutput == -1) {
         this.wow.operationOutput = null;
+      }
+      if(this.wow.noOperationOutput) {
+        this.noOperationOutput = true;
+      } else {
+        this.noOperationOutput = false;
       }
     })
     
@@ -1247,6 +1254,15 @@ export class CreateworkOrderComponent implements OnInit {
   }
 
   editMaterial(material) {
+    console.log(material.fuel)
+    if(material.fuel) {
+      console.log("usao u gorivo")
+      this.showButtons = false;
+    } else {
+      console.log("usao u nije gorivo")
+      this.showButtons = true;
+    }
+    console.log(this.showButtons)
     console.log(material)
     if (this.new) {
       this.spentMaterial.spent = material.spent;
@@ -2237,9 +2253,17 @@ export class CreateworkOrderComponent implements OnInit {
     this.quantityEntered = material.quantity;
   }
 
-  disableTreated(){
+  disableTreated(operationOutput){
+    console.log(operationOutput);
     this.noOperationOutput = !this.noOperationOutput;
-    this.validOperationOutput = this.noOperationOutput;
+    if(this.noOperationOutput || operationOutput != undefined || operationOutput != null) {
+      this.validOperationOutput = true;
+    } else if (!this.noOperationOutput && ( operationOutput != undefined || operationOutput != null)) {
+      this.validOperationOutput = true;
+    } else if (!this.noOperationOutput && ( operationOutput == undefined || operationOutput == null)) {
+      this.validOperationOutput = false;
+    }
+    //this.validOperationOutput = this.noOperationOutput;
     console.log(this.noOperationOutput)
   }
 

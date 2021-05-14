@@ -51,5 +51,6 @@ public class WorkOrderWorkerDTO {
 		this.fuel = wow.getFuel();
 		this.erpId = wow.getErpId();
 		this.operationOutput = wow.getOperationOutput();
+		this.noOperationOutput = wow.isNoOperationOutput();
 	}
 }

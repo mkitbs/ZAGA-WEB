@@ -300,16 +300,17 @@
           <td class="left-col-header">
             <span *ngIf="!new" style="padding-top: 5px;"> <i class="fa fa-flag mr-2"></i>Obrađeno: </span>
           </td>
-          <td class="right-col-header2">
+          <td class="right-col-header">
             <div class="input-group mb-3" *ngIf="!new">
               <div class="input-group">
+                <!--
                 <div class="input-group-prepend">
                   <div class="input-group-text">
                     <input *ngIf="workOrder.noOperationOutput" checked type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
                     <input *ngIf="!workOrder.noOperationOutput" type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
                   </div>
                 </div>
-                    
+                    -->
               <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
                     [(ngModel)]="treatedEntered" id="" class="form-control" 
                     (change)="calculateQuantityPerHectar()" disabled />
@@ -317,9 +318,6 @@
                     <span class="input-group-text" id="basic-addon2">ha</span>
                   </div>
                 </div>
-                <i *ngIf="!new" style="color: black; opacity: 70%; margin-bottom: 0px; font-size: smaller;">
-                  *Čekirajte ukoliko je radni nalog opšti.
-                </i>
             </div>
             
             <div *ngIf="validWoInfo == false && clickCloseWorkOrder" style="color: red; font-weight: normal">
@@ -1288,7 +1286,7 @@
                       </td>
                       <td>
                         <div class="form-group">
-                          <button class="btn btn-primary btn-add mr-2" data-toggle="modal" data-target="#materialModal"
+                          <button class="btn btn-primary btn-add mr-2"  data-toggle="modal" data-target="#materialModal"
                             (click)="editMaterial(material)" id="{{ material.id }}" [ngClass]="material.spent == null || 
                           material.spent == -1 ? 'warning' : 'ok'"  >
                             <i class="fa fa-ellipsis-v"></i>
@@ -2504,16 +2502,24 @@
               <div class="form-group">
                 <label for="imePrz">Obrađena površina</label>
                 <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <input type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated(wow.operationOutput)">
+                    </div>
+                  </div>
                   <input [(ngModel)]="wow.operationOutput" type="number" name="opOutput"
-                    class="form-control" id=""/>
+                    class="form-control" id="" [disabled]="noOperationOutput"/>
                   <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">ha</span>
                   </div>
+                  <i style="color: black; opacity: 70%; margin-bottom: 0px; font-size: smaller;">
+                    *Čekirajte ukoliko nema učinka ATM.
+                  </i>
                 </div>
                 <div
                   *ngIf="(validOperationOutput == false && clickAddWowDetail) || (validOperationOutput == false && clickAddNewWow)"
                   style="color: red">
-                  Morate uneti obrađene hektare ili označiti da je radni nalog opšti.
+                  Morate uneti obrađene hektare ili čekirati polje.
                 </div>
               </div>
             </div>
@@ -2683,20 +2689,20 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser" type="button" class="btn btn-danger"
+        <button *ngIf="workOrder.status != 'Zatvoren' && creator==loggedUser && showButtons" type="button" class="btn btn-danger"
           data-dismiss="modal" style="background-color: #f68901">
           <i class="fa fa-window-close"></i> Odustani
         </button>
-        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser" type="button"
+        <button *ngIf="new && workOrder.status != 'Zatvoren' && creator==loggedUser && showButtons" type="button"
           class="btn btn-success" style="background-color: #33590b" data-dismiss="modal">
           <i class="fa fa-save"></i> Sačuvaj
         </button>
-        <button *ngIf="!new && !addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser"
+        <button *ngIf="!new && !addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser && showButtons"
           type="button" class="btn btn-success" style="background-color: #33590b"
           (click)="updateMaterial(spentMaterial)">
-          <i class="fa fa-save"></i> Sačuvaj
+          <i class="fa fa-save"></i> Sačuva
         </button>
-        <button *ngIf="!new && addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser"
+        <button *ngIf="!new && addNewSpentMaterial && workOrder.status != 'Zatvoren' && creator==loggedUser && showButtons"
           type="button" class="btn btn-success" style="background-color: #33590b" (click)="validSpentMaterial()">
           <i class="fa fa-save"></i> Sačuvaj
         </button>

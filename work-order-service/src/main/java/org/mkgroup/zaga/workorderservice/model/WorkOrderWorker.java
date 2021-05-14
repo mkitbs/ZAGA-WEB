@@ -72,6 +72,8 @@ public class WorkOrderWorker {
 	
 	private Double operationOutput = -1.0;
 	
+	private boolean noOperationOutput;
+	
 	@Enumerated(EnumType.STRING)
 	private WorkOrderWorkerStatus status;
 
@@ -218,5 +220,15 @@ public class WorkOrderWorker {
 	public void setOperationOutput(Double operationOutput) {
 		this.operationOutput = operationOutput;
 	}
+
+	public boolean isNoOperationOutput() {
+		return noOperationOutput;
+	}
+
+	public void setNoOperationOutput(boolean noOperationOutput) {
+		this.noOperationOutput = noOperationOutput;
+	}
+	
+	
 	
 }
