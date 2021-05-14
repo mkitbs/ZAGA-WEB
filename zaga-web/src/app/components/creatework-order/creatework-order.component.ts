@@ -750,6 +750,7 @@ export class CreateworkOrderComponent implements OnInit {
       } else {
         this.withoutMachine = false;
       }
+      console.log(this.withoutMachine)
       if (this.wow.dayPeriod == -1) {
         this.wow.dayPeriod = null;
       }

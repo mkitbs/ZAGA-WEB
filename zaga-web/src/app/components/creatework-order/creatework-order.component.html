@@ -1665,21 +1665,20 @@
       <div class="col-8">
         
           <div class="input-group mb-3" *ngIf="!new">
+            <!--
             <div class="input-group-prepend">
               <div class="input-group-text">
                 <input *ngIf="workOrder.noOperationOutput" checked type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
                 <input *ngIf="!workOrder.noOperationOutput" type="checkbox" [(ngModel)]="noOperationOutput" name="noOpOutput" [ngModelOptions]="{standalone: true}" (click)="disableTreated()">
               </div>
             </div>
+            -->
             <input type="number" onKeyPress="if(this.value.length==6) return false;" name="treated"
-              [(ngModel)]="treatedEntered" id="" class="form-control" (change)="calculateQuantityPerHectar()" [disabled]="noOperationOutput" />
+              [(ngModel)]="treatedEntered" disabled id="" class="form-control" (change)="calculateQuantityPerHectar()" [disabled]="noOperationOutput" />
             <div class="input-group-append">
               <span class="input-group-text" id="basic-addon2">ha</span>
             </div>
           </div>
-          <i *ngIf="!new" style="color: black; opacity: 70%; margin-bottom: 0px; font-size: smaller;">
-            *Čekirajte ukoliko je radni nalog opšti.
-          </i>
           <div *ngIf="validWoInfo == false && clickCloseWorkOrder" style="color: red; font-weight: normal">
             Unesite površinu.
           </div>
@@ -1819,19 +1818,19 @@
                 <i class="fa fa-edit mr-2"></i>Izmeni
               </button>
               <button *ngIf="wow.machine.Id=='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
-                data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                 [ngClass]="wow.dayPeriod == null || wow.nightPeriod == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 ? 
                   'warning' : 'ok'">
-                <i class="fa fa-ellipsis-v"></i> Učinci
+                <i class="fa fa-ellipsis-v"></i> Učinci bz
               </button>
               <button *ngIf="wow.machine.Id!='BEZ-MASINE'" class="btn btn-primary btn-add mr-2" data-toggle="modal"
-                data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow)" id="{{ wow.id }}"
+                data-target="#workerMachineModal" (click)="editWorkerAndMachine(wow.id)" id="{{ wow.id }}"
                 [ngClass]="wow.dayPeriod == null || 
                     wow.nightPeriod == null || wow.initialState == null || wow.finalState == null || 
                     wow.fuel == null || wow.dayPeriod == -1 || wow.nightPeriod == -1 || 
                     wow.initialState == -1 || wow.finalState == -1 || wow.fuel == -1 ? 
                     'warning' : 'ok'">
-                <i class="fa fa-ellipsis-v"></i> Učinci
+                <i class="fa fa-ellipsis-v"></i> Učinci sm
               </button>
               
             </div>
