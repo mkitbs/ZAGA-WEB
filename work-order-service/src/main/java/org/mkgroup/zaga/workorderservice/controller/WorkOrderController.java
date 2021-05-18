@@ -173,4 +173,10 @@ public class WorkOrderController {
 		workOrderService.syncNoOperationOutput();
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@GetMapping("/syncOperationOutput")
+	public ResponseEntity<?> syncOperationOutput() {
+		workOrderService.syncOperationOutput();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
