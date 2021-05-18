@@ -614,7 +614,7 @@ public class WorkOrderService {
 			matcherError.results().forEach(mat -> errors.add((mat.group(1))));
 			System.out.println(error);
 			log.error("Updating work order to SAP failed. (" + error + ")");
-
+			sapResponse.setErpId(workOrder.getErpId());
 			sapResponse.setSuccess(false);
 			sapResponse.setMessage(errors);
 
@@ -1687,6 +1687,89 @@ public class WorkOrderService {
 			}
 		}
 		System.out.println("DONE SYNC NO OPERATION OUTPUT");
+	}
+	
+	public void syncOperationOutput() {
+		List<Long> errors = new ArrayList<Long>();
+		List<WorkOrder> workOrders = workOrderRepo.findAll();
+		for(WorkOrder workOrder : workOrders) {
+			if(!workOrder.getStatus().equals(WorkOrderStatus.CLOSED) 
+					&& !workOrder.getStatus().equals(WorkOrderStatus.CANCELLATION)) {
+				if(workOrder.getWorkers() != null && workOrder.getWorkers().size() >= 1) {
+					for(int i=0; i<workOrder.getWorkers().size(); i++) {
+						if(!workOrder.isNoOperationOutput() && workOrder.getTreated() != 0.0) {
+							int sumFinalState = wowRepo.sumAllFilanStates(workOrder.getId()); 
+							if(!workOrder.getWorkers().get(i).isDeleted() && 
+									workOrder.getWorkers().get(i).getFinalState() != -1.0 && 
+									!workOrder.getWorkers().get(i).getMachine().getErpId().equals("BEZ-MASINE")) {
+								if(sumFinalState > 0) {
+									workOrder.getWorkers().get(i).setOperationOutput(
+											(double) Math.round((workOrder.getWorkers().get(i).getFinalState() 
+													* workOrder.getTreated()) / sumFinalState));
+									wowRepo.save(workOrder.getWorkers().get(i));
+									WorkOrder updatedWorkOrder = workOrderRepo.getOne(workOrder.getId());
+									String status;
+									if(updatedWorkOrder.getStatus().equals(WorkOrderStatus.NEW)) {
+										status = "Novi";
+									} else if (updatedWorkOrder.getStatus().equals(WorkOrderStatus.IN_PROGRESS)) {
+										status = "U radu";
+									} else if (updatedWorkOrder.getStatus().equals(WorkOrderStatus.CLOSED)){
+										status = "Zatvoren";
+									} else {
+										status = "Storniran";
+									}
+									String type = "Sync";
+									WorkOrderDTO updatedWorkOrderDTO = new WorkOrderDTO(updatedWorkOrder, 
+											status, type);
+									try {
+										SAPResponse response = this.updateWorkOrder(updatedWorkOrderDTO);
+										if(!response.isSuccess()) {
+											errors.add(response.getErpId());
+										}
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							}
+							if (!workOrder.getWorkers().get(i).isDeleted() && 
+									workOrder.getWorkers().get(i).getMachine().getErpId().equals("BEZ-MASINE")) {
+								workOrder.getWorkers().get(i).setNoOperationOutput(true);
+								wowRepo.save(workOrder.getWorkers().get(i));
+								WorkOrder updatedWorkOrder = workOrderRepo.getOne(workOrder.getId());
+								String status;
+								if(updatedWorkOrder.getStatus().equals(WorkOrderStatus.NEW)) {
+									status = "Novi";
+								} else if (updatedWorkOrder.getStatus().equals(WorkOrderStatus.IN_PROGRESS)) {
+									status = "U radu";
+								} else if (updatedWorkOrder.getStatus().equals(WorkOrderStatus.CLOSED)){
+									status = "Zatvoren";
+								} else {
+									status = "Storniran";
+								}
+								String type = "Sync";
+								WorkOrderDTO updatedWorkOrderDTO = new WorkOrderDTO(updatedWorkOrder, 
+										status, type);
+								try {
+									SAPResponse response = this.updateWorkOrder(updatedWorkOrderDTO);
+									if(!response.isSuccess()) {
+										errors.add(response.getErpId());
+									}
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+							
+						}
+					}
+				}
+				
+			}
+			
+		}
+		System.out.println("DONE SYNC OPERATION OUTPUT");
+		System.out.println("ERRORS ON SYNC OPERATION OUTPUT = " + errors.toString());
 	}
 
 }

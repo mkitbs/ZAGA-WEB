@@ -181,4 +181,53 @@ public class WorkOrderDTO {
 		}
 
 	}
+
+	public WorkOrderDTO(WorkOrder wo, String status2, String type) {
+		id = wo.getId();
+		date = new DateDTO(wo);
+		status = status2;
+		cropId = wo.getCrop().getId();
+		cultureId = wo.getCrop().getCulture().getId();
+		operationId = wo.getOperation().getId();
+		responsibleId = wo.getResponsible().getId();
+		operationName = wo.getOperation().getName();
+		responsibleName = wo.getResponsible().getName();
+		area = wo.getCrop().getArea();
+		table = wo.getCrop().getField().getName();
+		tableId = wo.getCrop().getField().getId();
+		cropName = wo.getCrop().getName();
+		year = wo.getCrop().getYear();
+		creationDate = wo.getCreationDate();
+		closed = wo.isClosed();
+		treated = wo.getTreated();
+		userCreatedId = wo.getUserCreatedSapId().toString();
+		noOperationOutput = wo.isNoOperationOutput();
+		numOfRefOrder = wo.getNumOfRefOrder();
+		note = wo.getNote();
+		orgUnit = wo.getOrgUnit();
+		if (wo.getErpId() != null) {
+			sapId = wo.getErpId();
+		} else {
+			sapId = 0;
+		}
+
+		this.materials = new ArrayList<SpentMaterialDTO>();
+		for (SpentMaterial sm : wo.getMaterials()) {
+			SpentMaterialDTO smDTO = new SpentMaterialDTO(sm);
+			if (!smDTO.isDeleted()) {
+				this.materials.add(smDTO);
+			}
+
+		}
+
+		this.workers = new ArrayList<WorkOrderWorkerDTO>();
+		for (WorkOrderWorker wow : wo.getWorkers()) {
+			WorkOrderWorkerDTO wowDTO = new WorkOrderWorkerDTO(wow);
+			if (!wowDTO.isDeleted()) {
+				this.workers.add(wowDTO);
+			}
+
+		}
+
+	}
 }

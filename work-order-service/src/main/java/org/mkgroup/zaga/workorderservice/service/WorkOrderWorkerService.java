@@ -152,7 +152,7 @@ public class WorkOrderWorkerService {
 			wow.setSumState(-1.0);
 		}
 		if (wowDTO.getOperationOutput() != null) {
-			if (wow.getOperationOutput() != -1.0) {
+			if (wow.getOperationOutput() != null && wow.getOperationOutput() != -1.0) {
 				workOrder.setTreated(workOrder.getTreated() - wow.getOperationOutput() + wowDTO.getOperationOutput());
 				wow.setOperationOutput(wowDTO.getOperationOutput());
 			} else {

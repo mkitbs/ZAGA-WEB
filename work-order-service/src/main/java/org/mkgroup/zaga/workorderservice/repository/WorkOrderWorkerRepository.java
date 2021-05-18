@@ -56,4 +56,7 @@ public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker
 	
 	@Query(value = "SELECT SUM(wow.fuel) AS fuel, m.name AS machine, c.name AS crop, cul.name AS culture FROM work_order_worker AS wow INNER JOIN machine AS m ON wow.machine_id=m.id INNER JOIN work_order AS wo ON wow.work_order_id=wo.id INNER JOIN crop AS c ON wo.crop_id=c.id INNER JOIN culture AS cul ON c.culture_id=cul.id WHERE wow.fuel!=-1 AND wow.deleted=false AND wo.tenant_id=?1 AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') GROUP BY c.id, wow.machine_id ORDER BY c.name ASC", nativeQuery = true)
 	List<MachineSumFuelPerCultureDTO> getMachineSumFuelPerCultureDTO(Long tenantId);
+	
+	@Query(value = "SELECT SUM(REPLACE(wow.final_state, -1, 0)) FROM work_order_worker wow WHERE wow.work_order_id=?1 AND wow.deleted=false", nativeQuery = true)
+	int sumAllFilanStates(UUID workOrderId);
 }

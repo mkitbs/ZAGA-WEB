@@ -1,6 +1,8 @@
 package org.mkgroup.zaga.workorderservice.dto;
 
 
+import java.text.SimpleDateFormat;
+
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
 
 import lombok.Data;
@@ -16,9 +18,12 @@ public class DateDTO {
 	private String dayWithHours;
 	
 	public DateDTO(WorkOrder wo) {
-		dayWithHours = wo.getDate().toString().split("-")[2];
-		day = dayWithHours.split(" ")[0];
-		month = wo.getDate().toString().split("-")[1];
-		year = wo.getDate().toString().split("-")[0];
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String date = simpleDateFormat.format(wo.getDate());
+		System.out.println("DATEEEEE " + date + " WO IDDDD = " + wo.getErpId());
+		//dayWithHours = wo.getDate().toString().split("-")[2];
+		day = date.split("-")[2];
+		month = date.split("-")[1];
+		year = date.split("-")[0];
 	}
 }

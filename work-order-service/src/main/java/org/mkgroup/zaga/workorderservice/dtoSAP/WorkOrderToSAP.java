@@ -150,7 +150,7 @@ public class WorkOrderToSAP {
 			woeSAP.setWorkSundayHours("0.00000");
 			woeSAP.setWorkHolidayHours("0.00000");
 			woeSAP.setOvertimeWork("");
-			if(wow.getOperationOutput() == -1.0) {
+			if(wow.getOperationOutput() != null && wow.getOperationOutput() == -1.0) {
 				woeSAP.setOperationOutput("0.00000");
 				woeSAP.setMachineAreaOutput("0.00000");
 			}else {
