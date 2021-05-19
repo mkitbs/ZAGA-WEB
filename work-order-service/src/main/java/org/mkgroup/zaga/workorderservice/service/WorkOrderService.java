@@ -1703,9 +1703,16 @@ public class WorkOrderService {
 									workOrder.getWorkers().get(i).getFinalState() != -1.0 && 
 									!workOrder.getWorkers().get(i).getMachine().getErpId().equals("BEZ-MASINE")) {
 								if(sumFinalState > 0) {
-									workOrder.getWorkers().get(i).setOperationOutput(
-											(double) Math.round((workOrder.getWorkers().get(i).getFinalState() 
-													* workOrder.getTreated()) / sumFinalState));
+									double sum = (workOrder.getWorkers().get(i).getFinalState() 
+											* workOrder.getTreated()) / sumFinalState;
+									if(sum % 1 != 0) {
+										System.out.println("IMA OSTATAK = " + sum);
+										sum = Math.round(sum * 100);
+										workOrder.getWorkers().get(i).setOperationOutput(sum / 100);
+									} else {
+										System.out.println("NEMA OSTATAK = " + sum);
+										workOrder.getWorkers().get(i).setOperationOutput(sum);
+									}
 									wowRepo.save(workOrder.getWorkers().get(i));
 									WorkOrder updatedWorkOrder = workOrderRepo.getOne(workOrder.getId());
 									String status;
