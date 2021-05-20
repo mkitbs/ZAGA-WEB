@@ -1698,10 +1698,10 @@ public class WorkOrderService {
 				if(workOrder.getWorkers() != null && workOrder.getWorkers().size() >= 1) {
 					for(int i=0; i<workOrder.getWorkers().size(); i++) {
 						if(!workOrder.isNoOperationOutput() && workOrder.getTreated() != 0.0) {
-							int sumFinalState = wowRepo.sumAllFilanStates(workOrder.getId()); 
 							if(!workOrder.getWorkers().get(i).isDeleted() && 
 									workOrder.getWorkers().get(i).getFinalState() != -1.0 && 
 									!workOrder.getWorkers().get(i).getMachine().getErpId().equals("BEZ-MASINE")) {
+								int sumFinalState = wowRepo.sumAllFilanStates(workOrder.getId());
 								if(sumFinalState > 0) {
 									double sum = (workOrder.getWorkers().get(i).getFinalState() 
 											* workOrder.getTreated()) / sumFinalState;

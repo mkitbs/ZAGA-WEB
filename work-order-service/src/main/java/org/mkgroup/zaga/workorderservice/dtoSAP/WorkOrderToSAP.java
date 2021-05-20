@@ -150,12 +150,17 @@ public class WorkOrderToSAP {
 			woeSAP.setWorkSundayHours("0.00000");
 			woeSAP.setWorkHolidayHours("0.00000");
 			woeSAP.setOvertimeWork("");
-			if(wow.getOperationOutput() != null && wow.getOperationOutput() == -1.0) {
+			if (wow.isNoOperationOutput()) {
 				woeSAP.setOperationOutput("0.00000");
 				woeSAP.setMachineAreaOutput("0.00000");
-			}else {
-				woeSAP.setMachineAreaOutput(Double.toString(wow.getOperationOutput()));
-				woeSAP.setOperationOutput(Double.toString(wow.getOperationOutput()));
+			} else {
+				if(wow.getOperationOutput() == null || wow.getOperationOutput() <= 0) {
+					woeSAP.setOperationOutput("0.00000");
+					woeSAP.setMachineAreaOutput("0.00000");
+				} else {
+					woeSAP.setMachineAreaOutput(Double.toString(wow.getOperationOutput()));
+					woeSAP.setOperationOutput(Double.toString(wow.getOperationOutput()));
+				}
 			}
 			woeSAP.setOperationOutputUnit("");
 			if(wow.isNoOperationOutput()) {
