@@ -160,7 +160,10 @@ public class WorkOrderWorkerService {
 				wow.setOperationOutput(wowDTO.getOperationOutput());
 			}
 		} else {
-			wow.setOperationOutput(-1.0);
+			if (wow.getOperationOutput() != null && wow.getOperationOutput() != -1.0) {
+				workOrder.setTreated(workOrder.getTreated() - wow.getOperationOutput());
+			}
+			wow.setOperationOutput(null);
 		}
 		if (wowDTO.isNoOperationOutput()) {
 			wow.setNoOperationOutput(true);

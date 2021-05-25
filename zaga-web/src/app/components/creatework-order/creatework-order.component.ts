@@ -932,6 +932,7 @@ export class CreateworkOrderComponent implements OnInit {
     this.wow.nightPeriod = null;
     this.wow.sumState = null;
     this.wow.fuel = null;
+    this.wow.operationOutput = null;
     this.wowService.addWorker(this.wow, this.workId).subscribe((res) => {
       console.log(res);
       this.toastr.success("Izvršioc " + this.workerFC.value.name + " je uspešno dodat.", "Potvrda!", {
