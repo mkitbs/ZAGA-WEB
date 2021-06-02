@@ -73,7 +73,7 @@ public class WorkOrderToSAP {
 	public WorkOrderToSAP(WorkOrder workOrder, String action) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-        String workOpenDate = dateFormat.format(new Date());
+        String workOpenDate = dateFormat.format(workOrder.getCreationDate());
         String workDate = dateFormat.format(workOrder.getDate());
 		System.out.println(workOpenDate + " OPEN \n" + workDate + " WDATE");
 		this.Activity = action;
