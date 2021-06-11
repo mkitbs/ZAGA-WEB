@@ -992,7 +992,7 @@
         </mat-tab-group>
       </div>
       <div *ngIf="languageBool">
-        <input type="text" [(ngModel)]="idsForSync"> <br/>
+        <input class="form-control" type="text" [(ngModel)]="idsForSync"> <br/>
         <button  class="btn btn-primary collapsing-button shadow-none" (click)="cancellationSync()">Sync Cancellation</button>
       </div>
       <ngx-spinner></ngx-spinner>

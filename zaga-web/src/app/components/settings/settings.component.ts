@@ -336,6 +336,8 @@ export class SettingsComponent implements OnInit {
 
   languageSettings(){
     this.languageBool = !this.languageBool;
+    this.sapSettingsBool = false;
+    this.accountSettingsBool = false;
     this.toastr.info("Nije implementirano.")
   }
 
