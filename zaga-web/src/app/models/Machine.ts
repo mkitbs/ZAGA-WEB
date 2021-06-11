@@ -11,4 +11,5 @@ export class Machine {
     name;
     Id;
     MachineGroupId;
+    OrgUnit;
 }
