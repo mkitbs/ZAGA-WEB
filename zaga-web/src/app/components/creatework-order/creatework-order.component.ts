@@ -645,7 +645,7 @@ export class CreateworkOrderComponent implements OnInit {
       if (machine.Id == undefined) {
         return machine && "BEZ PRIKLJUČNE MAŠINE"
       } else {
-        return machine && machine.Id + " - " + machine.Name
+        return machine && machine.Id + " - " + machine.Name + "(" + machine.OrgUnit + ")"
       }
     }
 
@@ -671,7 +671,7 @@ export class CreateworkOrderComponent implements OnInit {
     if (machine.Id == undefined) {
       return machine && "BEZ PRIKLJUČNE MAŠINE"
     } else {
-      return machine && machine.Name
+      return machine && machine.Name  + "(" + machine.OrgUnit + ")"
     }
   }
 

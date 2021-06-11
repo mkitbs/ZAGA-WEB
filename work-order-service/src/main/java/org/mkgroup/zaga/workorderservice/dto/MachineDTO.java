@@ -61,6 +61,12 @@ public class MachineDTO {
 		machineGroupName = machine.getMachineGroupId().getName();
 		machineGroupId = machine.getMachineGroupId().getErpId();
 		fuelErpId = machine.getFuelErpId();
+		if (machine.getOrgUnit() != null) {
+			orgUnit = machine.getOrgUnit();
+		} else {
+			orgUnit = "Nepoznat";
+		}
+		
 	}
 
 	public MachineDTO(String name) {

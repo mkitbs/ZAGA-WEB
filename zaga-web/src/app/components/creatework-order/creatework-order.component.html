@@ -459,7 +459,7 @@
                             <mat-option *ngFor="
                             let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachine.value
                               " [value]="dev">
-                              {{dev.Id}} - {{ dev.Name }}
+                              {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -475,7 +475,7 @@
                               <mat-option *ngFor="
                               let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutId.value
                                 " [value]="dev">
-                                {{ dev.Name }}
+                                {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -504,7 +504,7 @@
                             <mat-option *ngFor="
                             let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachine.value
                               " [value]="dev">
-                              {{dev.Id}} - {{ dev.Name }}
+                              {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -523,7 +523,7 @@
                               <mat-option *ngFor="
                               let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutId.value
                                 " [value]="dev">
-                                {{ dev.Name }}
+                                {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -666,7 +666,7 @@
                             <mat-option *ngFor="
                             let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachine.value
                               " [value]="dev">
-                              {{dev.Id}} - {{ dev.Name }}
+                              {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -681,7 +681,7 @@
                               <mat-option *ngFor="
                               let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutId.value
                                 " [value]="dev">
-                                {{ dev.Name }}
+                                {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -704,7 +704,7 @@
                             <mat-option *ngFor="
                             let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachine.value
                               " [value]="dev">
-                              {{dev.Id}} - {{ dev.Name }}
+                              {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                             </mat-option>
                           </mat-autocomplete>
                         </mat-form-field>
@@ -723,7 +723,7 @@
                               <mat-option *ngFor="
                               let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutId.value
                                 " [value]="dev">
-                                {{ dev.Name }}
+                                {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -846,7 +846,7 @@
                               <mat-option *ngFor="
                             let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachine.value
                               " [value]="dev">
-                                {{dev.Id}} - {{ dev.Name }}
+                                {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -862,7 +862,7 @@
                                 <mat-option *ngFor="
                               let dev of devicesPropulsion | SearchPropulsionMachines: searchExDbWorkerMachineWithoutId.value
                                 " [value]="dev">
-                                  {{ dev.Name }}
+                                  {{ dev.Name }} ({{dev.OrgUnit}})
                                 </mat-option>
                               </mat-autocomplete>
                             </mat-form-field>
@@ -885,7 +885,7 @@
                               <mat-option *ngFor="
                             let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachine.value
                               " [value]="dev">
-                                {{dev.Id}} - {{ dev.Name }}
+                                {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -905,7 +905,7 @@
                                 <mat-option *ngFor="
                               let dev of devicesCoupling | SearchCouplingMachines: searchExDbWorkerCoMachineWithoutId.value
                                 " [value]="dev">
-                                  {{ dev.Name }}
+                                  {{ dev.Name }} ({{dev.OrgUnit}})
                                 </mat-option>
                               </mat-autocomplete>
                             </mat-form-field>
@@ -2120,7 +2120,7 @@
                   <mat-option *ngFor="
                   let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineMob.value
                     " [value]="dev">
-                    {{dev.Id}} - {{ dev.Name }}
+                    {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -2136,7 +2136,7 @@
                     <mat-option *ngFor="
                     let dev of devicesPropulsion | SearchPropulsionMachines: searchWorkerMachineWithoutIdMob.value
                       " [value]="dev">
-                      {{ dev.Name }}
+                      {{ dev.Name }} ({{dev.OrgUnit}})
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
@@ -2163,7 +2163,7 @@
                   <mat-option *ngFor="
                   let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineMob.value
                     " [value]="dev">
-                    {{dev.Id}} - {{ dev.Name }}
+                    {{dev.Id}} - {{ dev.Name }} ({{dev.OrgUnit}})
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -2182,7 +2182,7 @@
                     <mat-option *ngFor="
                     let dev of devicesCoupling | SearchCouplingMachines: searchWorkerCoMachineWithoutIdMob.value
                       " [value]="dev">
-                      {{ dev.Name }}
+                      {{ dev.Name }} ({{dev.OrgUnit}})
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
