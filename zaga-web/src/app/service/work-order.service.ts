@@ -77,5 +77,9 @@ export class WorkOrderService {
       environment.gatewayWorkOrderURL + "workOrder/getDataForATMReport"
     )
   }
+
+  syncCancellation(ids): Observable<any> {
+    return this.http.post(environment.gatewayWorkOrderURL + "workOrder/syncCancellation", ids)
+  }
   
 }
