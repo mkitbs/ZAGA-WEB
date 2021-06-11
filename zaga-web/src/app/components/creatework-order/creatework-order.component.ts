@@ -1649,69 +1649,76 @@ export class CreateworkOrderComponent implements OnInit {
     this.clickAddWorkOrder = true;
     console.log(valid.status);
     console.log(this.fieldFC.value.dbId)
-    if (
-      valid.status == "VALID" && 
-      this.nameFC.valid &&
-      this.nameFC.value.userId != undefined &&
-      this.operationFC.value.dbid != undefined &&
-      this.fieldFC.value.dbId != undefined &&
-      this.cultureFC.value.id != undefined
-    ) {
-      this.spinner.show();
-      if (this.workOrder.date != undefined) {
-        if (this.workOrder.date.month < 10) {
-          this.workOrder.date.month = "0" + this.workOrder.date.month;
-        }
-        if (this.workOrder.date.day < 10) {
-          this.workOrder.date.day = "0" + this.workOrder.date.day;
-        }
-      }
-
-      this.workOrder.workers = this.wows;
-      this.workOrder.materials = this.woMaterials;
-
-      this.workOrder.responsibleId = this.nameFC.value.userId
-      this.workOrder.operationId = this.operationFC.value.dbid
-      this.workOrder.tableId = this.fieldFC.value.dbId;
-      this.workOrder.cropId = this.cultureFC.value.id
-      this.workOrder.numOfRefOrder = this.numOfRefOrderFC.value;
-      this.workOrder.note = this.noteFC.value;
-      console.log("===========")
-      console.log(this.workOrder)
-      console.log("===========")
-
-      this.workOrderService.addWorkOrder(this.workOrder).subscribe(
-        (data) => {
-          this.spinner.hide();
-          this.canDeactivate.leave = true;
-          this.toastr.success(
-            "Uspešno kreiran radni nalog. SAP id je " + data.erpId, "Potvrda!", {
-              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
-            }
-          );
-          this.router.navigate(["/workOrder"]);
-        },
-        (error) => {
-          this.spinner.hide();
-          if (error.status === 400) {
-            //let errorMessage = error.error.message;
-            //this.toastr.error(errorMessage);
-            this.error = true;
-            this.errors = error.error.message;
-            this.openErrorsModal.nativeElement.click();
-          } else {
-            this.toastr.error("Radni nalog nije kreiran.", "Greška!", {
-              positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
-            });
+    if(this.wows.length == 0) {
+      this.toastr.info("Ne možete kreirati radni nalog bez radnika, ukoliko je potrebno da kreirate radni nalog samo sa materijalima uradite to preko SAP-a!", "Obaveštenje!", {
+        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+      })
+    } else {
+      if (
+        valid.status == "VALID" && 
+        this.nameFC.valid &&
+        this.nameFC.value.userId != undefined &&
+        this.operationFC.value.dbid != undefined &&
+        this.fieldFC.value.dbId != undefined &&
+        this.cultureFC.value.id != undefined
+      ) {
+        this.spinner.show();
+        if (this.workOrder.date != undefined) {
+          if (this.workOrder.date.month < 10) {
+            this.workOrder.date.month = "0" + this.workOrder.date.month;
+          }
+          if (this.workOrder.date.day < 10) {
+            this.workOrder.date.day = "0" + this.workOrder.date.day;
           }
         }
-      );
-
-    } else {
-      this.toastr.error("Radni nalog nije kreiran. Popunite sva polja pravilno.", "Greška!", {
-        positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
-      });
+  
+        this.workOrder.workers = this.wows;
+        this.workOrder.materials = this.woMaterials;
+  
+        this.workOrder.responsibleId = this.nameFC.value.userId
+        this.workOrder.operationId = this.operationFC.value.dbid
+        this.workOrder.tableId = this.fieldFC.value.dbId;
+        this.workOrder.cropId = this.cultureFC.value.id
+        this.workOrder.numOfRefOrder = this.numOfRefOrderFC.value;
+        this.workOrder.note = this.noteFC.value;
+        console.log("===========")
+        console.log(this.workOrder)
+        console.log("===========")
+  
+        this.workOrderService.addWorkOrder(this.workOrder).subscribe(
+          (data) => {
+            this.spinner.hide();
+            this.canDeactivate.leave = true;
+            this.toastr.success(
+              "Uspešno kreiran radni nalog. SAP id je " + data.erpId, "Potvrda!", {
+                positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: false
+              }
+            );
+            this.router.navigate(["/workOrder"]);
+          },
+          (error) => {
+            this.spinner.hide();
+            if (error.status === 400) {
+              //let errorMessage = error.error.message;
+              //this.toastr.error(errorMessage);
+              this.error = true;
+              this.errors = error.error.message;
+              this.openErrorsModal.nativeElement.click();
+            } else {
+              this.toastr.error("Radni nalog nije kreiran.", "Greška!", {
+                positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+              });
+            }
+          }
+        );
+  
+      } else {
+        this.toastr.error("Radni nalog nije kreiran. Popunite sva polja pravilno.", "Greška!", {
+          positionClass: 'toast-center-center', closeButton: true,  disableTimeOut: true
+        });
+      }
     }
+    
   }
 
   updateWorkOrder() {
