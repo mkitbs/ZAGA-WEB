@@ -169,15 +169,19 @@ public class MachineService {
 	}
 	
 	public void createMachine(MachineDTO newMachine) {
-		if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR") || newMachine.getType().equals("N")) {
-			Machine machine = new Machine(newMachine);
-			if(machine.getName() != null) {
-				machine.setName(machine.getName().replaceAll("%22", "'"));
+		Machine m = machineRepository.findByErpId(newMachine.getErpId()).orElse(null);
+		if(m == null) {
+			if(newMachine.getType().equals("PG") || newMachine.getType().equals("PR") || newMachine.getType().equals("N")) {
+				Machine machine = new Machine(newMachine);
+				if(machine.getName() != null) {
+					machine.setName(machine.getName().replaceAll("%22", "'"));
+				}
+				MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
+				machine.setMachineGroupId(machineGroup);
+				machineRepository.save(machine);
 			}
-			MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
-			machine.setMachineGroupId(machineGroup);
-			machineRepository.save(machine);
 		}
+		
 	}
 	
 	public void editMachine(MachineDTO machineDTO) {
