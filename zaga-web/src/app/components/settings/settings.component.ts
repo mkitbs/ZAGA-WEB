@@ -19,6 +19,7 @@ import { OperationGroupService } from 'src/app/service/operation-group.service';
 import { OperationService } from 'src/app/service/operation.service';
 import { UserService } from 'src/app/service/user.service';
 import { VarietyService } from 'src/app/service/variety.service';
+import { WorkOrderService } from 'src/app/service/work-order.service';
 
 @Component({
   selector: 'app-settings',
@@ -42,7 +43,8 @@ export class SettingsComponent implements OnInit {
     private cultureGroupService: CultureGroupService,
     private culutreService: CultureService,
     private varietyService: VarietyService,
-    private materialService: MaterialService
+    private materialService: MaterialService,
+    private workOrderService: WorkOrderService
   ) { 
     this.dropdownSettings = {
       singleSelection: false,
@@ -60,6 +62,7 @@ export class SettingsComponent implements OnInit {
   accountSettingsBool = false;
   loading = false;
   isUpdate = false;
+  languageBool = false;
 
   users: User[] = [];
   newUser: SignupRequest = new SignupRequest();
@@ -121,6 +124,9 @@ export class SettingsComponent implements OnInit {
   repeat = false;
   selectedAll = false;
 
+  idsForSync:any;
+  ids2Send: any[] = [];
+
   ngOnInit() {
     this.getAllUsers();
 
@@ -140,11 +146,13 @@ export class SettingsComponent implements OnInit {
   sapSettings(){
     this.sapSettingsBool = !this.sapSettingsBool;
     this.accountSettingsBool = false;
+    this.languageBool = false;
   }
 
   accountSettings(){
     this.accountSettingsBool = !this.accountSettingsBool;
     this.sapSettingsBool = false;
+    this.languageBool = false;
   }
 
   addNewUser(valid){
@@ -327,6 +335,7 @@ export class SettingsComponent implements OnInit {
   }
 
   languageSettings(){
+    this.languageBool = !this.languageBool;
     this.toastr.info("Nije implementirano.")
   }
 
@@ -1040,6 +1049,19 @@ export class SettingsComponent implements OnInit {
         console.log("Varieties error", error);
       })
     }
+  }
+
+  cancellationSync() {
+    var ids = [];
+    ids = this.idsForSync.split(",");
+    ids.forEach(id => {
+      this.ids2Send.push(id);
+    })
+    this.workOrderService.syncCancellation(this.ids2Send).subscribe(response => {
+      this.toastr.success("Success");
+    }, error => {
+      this.toastr.error("Error")
+    })
   }
 
 }
