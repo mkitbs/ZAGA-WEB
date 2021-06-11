@@ -13,6 +13,7 @@ import org.mkgroup.zaga.workorderservice.dto.OperationsTodayDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.CloseWorkOrderResponse;
 import org.mkgroup.zaga.workorderservice.dtoSAP.SAPResponse;
+import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
@@ -29,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping("/workOrder")
@@ -177,6 +181,21 @@ public class WorkOrderController {
 	@GetMapping("/syncOperationOutput")
 	public ResponseEntity<?> syncOperationOutput() {
 		workOrderService.syncOperationOutput();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/updateSyncWorkOrder/{id}")
+	public ResponseEntity<?> updateSyncWorkOrder(@RequestBody Object json, @PathVariable UUID id) {
+		System.out.println("AAAAAAAAAA");
+		Gson gson = new Gson();
+		JsonObject json2 = gson.fromJson(json.toString(), JsonObject.class);
+		workOrderService.updateSync(json2, id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/syncCancellation")
+	public ResponseEntity<?> syncCancellation(@RequestBody List<Long> ids) {
+		workOrderService.syncCancellation(ids);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

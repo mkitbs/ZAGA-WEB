@@ -34,4 +34,6 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrder, UUID>{
 	List<OperationsTodayDTO> findAllOperationsForToday(Long tenantId);
 	
 	Optional<WorkOrder> findByErpId(Long id);
+	
+	boolean existsByErpId(Long erpId);
 }

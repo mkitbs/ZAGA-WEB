@@ -1220,13 +1220,17 @@ public class WorkOrderService {
 		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);// zakuucana vrednost, treba izmeeniti
-		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
-		noteHeader = noteHeader.replaceAll("%22", "\"");
-		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
-		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
-		noteItem = noteItem.replaceAll("%22", "\"");
-		workOrder.setNote(noteItem.replaceAll("%2C", ","));
-
+		if(json.get("NoteHeader") != null) {
+			String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+			noteHeader = noteHeader.replaceAll("%22", "\"");
+			workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
+		}
+		if (json.get("NoteItem") != null) {
+			String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+			noteItem = noteItem.replaceAll("%22", "\"");
+			workOrder.setNote(noteItem.replaceAll("%2C", ","));
+		}
+		
 		workOrder.setErpId(Long.parseLong(json.get("WorkOrderNumber").getAsString()));
 		workOrder.setOrgUnit(json.get("OrganisationUnit").getAsString());
 
@@ -1452,12 +1456,18 @@ public class WorkOrderService {
 		workOrder.setUserCreatedSapId(Long.parseLong(json.get("ReleasedUserNumber").getAsString()));
 
 		workOrder.setTenantId(1L);// zakuucana vrednost, treba izmeeniti
-		String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
-		noteHeader = noteHeader.replaceAll("%22", "\"");
-		workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
-		String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
-		noteItem = noteItem.replaceAll("%22", "\"");
-		workOrder.setNote(noteItem.replaceAll("%2C", ","));
+		System.out.println(json.get("NoteHeader"));
+		if(json.get("NoteHeader") != null) {
+			String noteHeader = json.get("NoteHeader").getAsString().replaceAll("-", " ");
+			noteHeader = noteHeader.replaceAll("%22", "\"");
+			workOrder.setNumOfRefOrder(noteHeader.replaceAll("%2C", ","));
+		}
+		if (json.get("NoteItem") != null) {
+			String noteItem = json.get("NoteItem").getAsString().replaceAll("-", " ");
+			noteItem = noteItem.replaceAll("%22", "\"");
+			workOrder.setNote(noteItem.replaceAll("%2C", ","));
+		}
+		
 		workOrder.setOrgUnit(json.get("OrganisationUnit").getAsString());
 		workOrder = workOrderRepo.save(workOrder);
 
@@ -1777,6 +1787,20 @@ public class WorkOrderService {
 		}
 		System.out.println("DONE SYNC OPERATION OUTPUT");
 		System.out.println("ERRORS ON SYNC OPERATION OUTPUT = " + errors.toString());
+	}
+	
+	public void syncCancellation(List<Long> ids) {
+		for(Long id : ids) {
+			boolean exist = workOrderRepo.existsByErpId(id);
+			if (exist) {
+				WorkOrder workOrder = workOrderRepo.findByErpId(id).orElse(null);
+				if (workOrder != null) {
+					workOrder.setStatus(WorkOrderStatus.CANCELLATION);
+					workOrderRepo.save(workOrder);
+				}
+			}
+		}
+		System.out.println("DONE SYNC CANCELLATION");
 	}
 
 }
