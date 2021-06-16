@@ -30,7 +30,7 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrder, UUID>{
 	@Query(value = "SELECT * FROM work_order w WHERE w.tenant_id=?1 AND w.user_created_sap_id=?2 AND w.status=?3 AND w.erp_id IS NOT NULL", nativeQuery = true)
 	List<WorkOrder> findMyWoByStatus(Long tenantId, Long sapUserId, String status);
 	
-	@Query(value = "SELECT op.name AS operation, SUM(wo.treated) AS treated, SUM(co.area-wo.treated) AS area FROM work_order AS wo INNER JOIN operation AS op ON wo.operation_id=op.id INNER JOIN crop AS co ON wo.crop_id=co.id WHERE wo.tenant_id=?1 AND wo.date=curdate() GROUP BY wo.operation_id", nativeQuery = true)
+	@Query(value = "SELECT op.name AS operation, SUM(wo.treated) AS treated, SUM(co.area-wo.treated) AS area FROM work_order AS wo INNER JOIN operation AS op ON wo.operation_id=op.id INNER JOIN crop AS co ON wo.crop_id=co.id WHERE wo.tenant_id=?1 AND left(wo.date, 10)=curdate() GROUP BY wo.operation_id", nativeQuery = true)
 	List<OperationsTodayDTO> findAllOperationsForToday(Long tenantId);
 	
 	Optional<WorkOrder> findByErpId(Long id);
