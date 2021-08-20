@@ -12,6 +12,7 @@ import org.mkgroup.zaga.workorderservice.service.MachineService;
 import org.mkgroup.zaga.workorderservice.service.MaterialService;
 import org.mkgroup.zaga.workorderservice.service.OperationGroupService;
 import org.mkgroup.zaga.workorderservice.service.OperationService;
+import org.mkgroup.zaga.workorderservice.service.VarietyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,9 @@ public class SynchronizationController {
 	@Autowired
 	OperationService operationService;
 	
+	@Autowired
+	VarietyService varietyService;
+	
 	@GetMapping("{type}")
 	public ResponseEntity<?> syncData(@PathVariable String type){
 		if(type.equals("material")) {
@@ -86,8 +90,8 @@ public class SynchronizationController {
 		}else if(type.equals("culture")){
 			cultureService.getCulturesFromSAP();
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else if(type.equals("crop_variety")){
-			cropVarietyService.getCropVarietiesFromSAP();
+		}else if(type.equals("variety")){
+			varietyService.getVarietiesFromSAP();
 			return new ResponseEntity<>(HttpStatus.OK);
 		}else if(type.equals("crop")){
 			cropService.getCropsFromSAP();
