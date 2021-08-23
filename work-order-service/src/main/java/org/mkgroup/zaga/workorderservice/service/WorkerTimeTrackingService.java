@@ -267,9 +267,9 @@ public class WorkerTimeTrackingService {
 	public Map<String, String> getHeaderValues(WorkerTimeTracking wtt) throws Exception {
 		log.info("Getting X-CSRF-Token started");
 		StringBuilder authEncodingString = new StringBuilder()
-				.append("MKATIC")
+				.append("LJKOMNENOVIC")
 				.append(":")
-				.append("katicm0908");
+				.append("Ljubica123");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());

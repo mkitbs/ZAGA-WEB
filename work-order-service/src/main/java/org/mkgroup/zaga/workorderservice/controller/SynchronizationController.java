@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -64,8 +65,8 @@ public class SynchronizationController {
 	@Autowired
 	VarietyService varietyService;
 	
-	@GetMapping("{type}")
-	public ResponseEntity<?> syncData(@PathVariable String type){
+	@GetMapping
+	public ResponseEntity<?> syncData(@RequestParam String type){
 		if(type.equals("material")) {
 			materialService.getMaterialsFromSAP();
 			return new ResponseEntity<>(HttpStatus.OK);
