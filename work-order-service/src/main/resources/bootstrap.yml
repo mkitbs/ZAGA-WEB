@@ -3,5 +3,6 @@ spring:
     active: dev
   application:
     name: work-order-service
-  config:
-    uri: http://localhost:8888
+  cloud:
+    config:
+      uri: http://localhost:8888
