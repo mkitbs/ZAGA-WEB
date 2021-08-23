@@ -398,9 +398,9 @@ public class SpentMaterialService {
 	public Map<String, String> getHeaderValues() throws Exception {
 		log.info("Getting X-CSRF-Token started");
 		StringBuilder authEncodingString = new StringBuilder()
-				.append("MKATIC")
+				.append("LJKOMNENOVIC")
 				.append(":")
-				.append("Katicm0908");
+				.append("Ljubica123");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
