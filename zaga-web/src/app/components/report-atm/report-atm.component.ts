@@ -20,6 +20,9 @@ export class ReportAtmComponent implements OnInit {
   empty;
   loading;
 
+  page = 1;
+  pageSize = 3;
+
   constructor(
     private workOrderService: WorkOrderService,
     private spinner: NgxSpinnerService,

@@ -3,5 +3,5 @@ import { WorkOrder } from './WorkOrder';
 
 export class MachineReport {
     machine: Machine;
-    workOrders: WorkOrder[];
+    workOrders: string[];
 }

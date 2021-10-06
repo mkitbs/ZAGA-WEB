@@ -130,7 +130,8 @@
       <tbody>
         <ng-container *ngFor="let material of materials 
           | ReportMaterialMaterial: searchMaterial.value
-          | SearchMaterialUnit: searchUnit.value;
+          | SearchMaterialUnit: searchUnit.value 
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
             let i = index" >
             <tr *ngIf="material === -1">
               <td colspan="10" >
@@ -138,7 +139,8 @@
                 <h4 style="text-align: center; width: 200px; margin-left: auto; margin-right: auto;">Izveštaj nije pronađen</h4>
               </td>
             </tr>
-          <ng-container *ngFor="let workOrder of material.workOrders
+          
+            <tr *ngFor="let workOrder of material.workOrders
             | SearchWorkOrdersTable: searchTable.value
             | SearchWorkOrdersOperation: searchOperation.value
             | SearchWorkOrdersDate: searchDate.value
@@ -146,54 +148,42 @@
             | ReportMaterialSapId: searchWorkOrder.value
             | SearchWoBetweenDates: filters; 
             let j = index">
-            <tr *ngFor="let mat of workOrder.materials; let z = index">
-              <ng-container *ngIf="mat.deleted == false">
-                <td *ngIf="j==0 && z==0; else elseBlockName" style="font-weight: bold;">{{mat.material.Name}}</td>
+             
+                <td *ngIf="j==0 ; else elseBlockName" style="font-weight: bold;">{{material.material.material.Name}}</td>
                 <ng-template #elseBlockName><td></td></ng-template>
-                <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" *ngIf="z==0; else elseBlockSapId">
+                <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;" >
                   {{ workOrder.sapId }}
                 </td>
-                <ng-template #elseBlockSapId><td></td></ng-template>
-                <td>{{ workOrder.operationName }}</td>
-                <td>{{ workOrder.date }}</td>
-                <td>{{ workOrder.table }}</td>
-                <td>{{ workOrder.cropName.split(",")[1] }}</td>
-                <td *ngIf="mat.quantity != -1; else elseQuantity">{{ mat.quantity }}</td>
-                <ng-template #elseQuantity><td>/</td></ng-template>
-                <!-- <td *ngIf="mat.quantityPerHectar != -1; else elseQuantityPerHectar">{{ mat.quantityPerHectar | number:'0.0-3' }}</td> -->
-                <!-- <ng-template #elseQuantityPerHectar><td>Nije uneto</td></ng-template> -->
-                <td *ngIf="mat.spent != -1; else elseSpent">{{ mat.spent }}</td>
-                <ng-template #elseSpent><td>Nije uneto</td></ng-template>
-                <!-- <td *ngIf="mat.spentPerHectar != -1; else elseSpentPerHectar">{{ mat.spentPerHectar | number:'0.0-3' }}</td> -->
-                <!-- <ng-template #elseSpentPerHectar><td>Nije uneto</td></ng-template> -->
+                
+                <td>{{ workOrder.atm }}</td>
+                <td>{{ workOrder.workOrderDate | date:'dd.MM.yyyy.' }}</td>
+                <td>{{ workOrder.field }}</td>
+                <td>{{ workOrder.crop }}</td>
+                <td>{{ workOrder.quantity }}</td>
+               
+                <td>{{ workOrder.spent }}</td>
+               
                 <td>{{ material.material.material.Unit }}</td>
                 <td [ngClass]="{
-                    statusNovi: workOrder.status == 'Novi',
-                    statusURadu: workOrder.status == 'U radu',
-                    statusZatvoren: workOrder.status == 'Zatvoren',
-                    statusStorniran: workOrder.status == 'Storniran'
+                    statusNovi: workOrder.woStatus == 'Novi',
+                    statusURadu: workOrder.woStatus == 'U radu',
+                    statusZatvoren: workOrder.woStatus == 'Zatvoren',
+                    statusStorniran: workOrder.woStatus == 'Storniran'
                     }">
-                    {{ workOrder.status }}
+                    {{ workOrder.woStatus }}
                 </td>
-              </ng-container>
+              
             </tr>
-          </ng-container>
+          
           <tr>
-            <ng-container *ngFor="let workOrder of material.workOrders 
-              | SearchWorkOrdersCrop: searchCrop.value
-              | SearchWorkOrdersTable: searchTable.value
-              | SearchWorkOrdersOperation: searchOperation.value
-              | SearchWoBetweenDates: filters
-              | SearchWorkOrdersDate: searchDate.value
-              | ReportMaterialSapId: searchWorkOrder.value; 
-              let i = index ">
-              <td *ngIf="i==0 && workOrder !== -1">Σ {{ material.material.material.Name }}</td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-              <td style="font-weight: bold;" *ngIf="i==0">
+            
+              <td >Σ {{ material.material.material.Name }}</td>
+              <td></td>
+              <td></td>
+              <td ></td>
+              <td ></td>
+              <td></td>
+              <td style="font-weight: bold;" >
                 {{
                   getQuantitySum(material.workOrders 
                   | SearchWorkOrdersCrop: searchCrop.value
@@ -204,7 +194,7 @@
                   | ReportMaterialSapId: searchWorkOrder.value)
                 }}
               </td>
-              <td style="font-weight: bold;" *ngIf="i==0">
+              <td style="font-weight: bold;" >
                 {{
                   getSpentSum(material.workOrders 
                   | SearchWorkOrdersCrop: searchCrop.value
@@ -215,14 +205,17 @@
                   | ReportMaterialSapId: searchWorkOrder.value)
                 }}
               </td>
-              <td style="font-weight: bold;" *ngIf="i==0 && workOrder !== -1">{{ material.material.material.Unit }}</td>
-              <td *ngIf="i==0"></td>
-              <td *ngIf="i==0"></td>
-            </ng-container>
+              <td style="font-weight: bold;" >{{ material.material.material.Unit }}</td>
+              <td ></td>
+              <td ></td>
+            
           </tr>
         </ng-container>
       </tbody>
     </table>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+    [boundaryLinks]="true" [collectionSize]="materials.length">
+  </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

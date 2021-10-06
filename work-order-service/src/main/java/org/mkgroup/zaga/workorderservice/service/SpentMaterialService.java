@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.mkgroup.zaga.workorderservice.dto.SpentMaterialPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentMaterialsDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserAuthDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderForMaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dtoSAP.WorkOrderToSAP;
 import org.mkgroup.zaga.workorderservice.feign.SAP4HanaProxy;
 import org.mkgroup.zaga.workorderservice.model.Material;
@@ -39,6 +41,7 @@ import org.mkgroup.zaga.workorderservice.repository.WorkOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,9 +51,16 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import java.lang.reflect.Type;
+
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 
 @Service
 public class SpentMaterialService {
@@ -460,60 +470,15 @@ public class SpentMaterialService {
 	public List<MaterialReportDTO> getMaterialsForReport(Long tenantId){
 		
 		List<SpentMaterial> spentMaterials = spentMaterialRepo.findAllByOrderByMaterialId(tenantId);
-		
-		MaterialReportDTO report = new MaterialReportDTO();
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setAmbiguityIgnored(true);
 		List<MaterialReportDTO> retValues = new ArrayList<MaterialReportDTO>();
-		if(spentMaterials.size() > 0) {
-			report.setMaterial(new SpentMaterialDTO(spentMaterials.get(0)));
-			report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(0).getWorkOrder(), spentMaterials.get(0).getMaterial().getId()));
-			if(spentMaterials.size() == 1) {
-				retValues.add(report);
-			}
-		}
-		for(int i = 0; i<spentMaterials.size()-1; i++) {
-			if(spentMaterials.get(i).getMaterial().getId().equals(spentMaterials.get(i+1).getMaterial().getId())) {
-				if(!spentMaterials.get(i).getWorkOrder().equals(spentMaterials.get(i+1).getWorkOrder())) {
-					report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
-				}
-				
-				if(i+1 == spentMaterials.size()-1) {
-					retValues.add(report);
-				}
-			} else {
-				retValues.add(report);
-				report = new MaterialReportDTO();
-				report.setMaterial(new SpentMaterialDTO(spentMaterials.get(i+1)));
-				report.getWorkOrders().add(new WorkOrderDTO(spentMaterials.get(i+1).getWorkOrder(), spentMaterials.get(i+1).getMaterial().getId()));
-				if(i+1 == spentMaterials.size()-1) {
-					retValues.add(report);
-				}
-			}
-			
-		}
-		
-		for(MaterialReportDTO r : retValues) {
-			MaterialReportSumDTO quantity = new MaterialReportSumDTO();
-			MaterialReportSumDTO spent = new MaterialReportSumDTO();
-			double sumQuantity = 0.0;
-			double sumSpent = 0.0;
-			for(WorkOrderDTO wo : r.getWorkOrders()) {
-				for(SpentMaterialDTO mat : wo.getMaterials()) {
-					if(mat.getQuantity() == -1) {
-						mat.setQuantity(0.0);
-					}
-					sumQuantity += mat.getQuantity();
-					quantity.setSum(sumQuantity);
-					quantity.setUnit(mat.getMaterial().getUnit());
-					if(mat.getSpent() == -1) {
-						mat.setSpent(0.0);
-					}
-					sumSpent += mat.getSpent();
-					spent.setSum(sumSpent);
-					spent.setUnit(mat.getMaterial().getUnit());
-				}
-				r.setSumQuantity(quantity);
-				r.setSumSpent(spent);
-			}
+		for(SpentMaterial sm : spentMaterials) {
+			MaterialReportDTO report = new MaterialReportDTO();
+			List<WorkOrderForMaterialReportDTO> workOrders = workOrderRepo.findAllByMaterial(sm.getMaterial().getId(), tenantId);
+			report.setMaterial(new SpentMaterialDTO(sm));
+			report.setWorkOrders(workOrders);
+			retValues.add(report);
 		}
 		
 		return retValues;

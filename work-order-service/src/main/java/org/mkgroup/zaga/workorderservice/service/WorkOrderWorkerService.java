@@ -18,10 +18,14 @@ import org.mkgroup.zaga.workorderservice.dto.MachineSumFuelPerCultureReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStateDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureDTO;
 import org.mkgroup.zaga.workorderservice.dto.MachineSumStatePerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.MaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.NumOfEmployeesPerOperationDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureDTO;
 import org.mkgroup.zaga.workorderservice.dto.SpentHourOfWorkerPerCultureReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.SpentMaterialDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderForEmployeeReportDTO;
+import org.mkgroup.zaga.workorderservice.dto.WorkOrderForMaterialReportDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderTractorDriverDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkOrderWorkerDTO;
 import org.mkgroup.zaga.workorderservice.dto.WorkerPerCultureDTO;
@@ -584,66 +588,15 @@ public class WorkOrderWorkerService {
 
 	public List<WorkerReportDTO> getWorkersForReport(Long tenantId) {
 		List<WorkOrderWorker> wows = wowRepo.findAllByOrderByWorkerId(tenantId);
-		WorkerReportDTO report = new WorkerReportDTO();
+		
 		List<WorkerReportDTO> retValues = new ArrayList<WorkerReportDTO>();
-		if (wows.size() > 0) {
-			report.setWorker(new EmployeeDTO(wows.get(0).getUser()));
-			report.getWorkOrders()
-					.add(new WorkOrderDTO(wows.get(0).getWorkOrder(), wows.get(0).getUser().getPerNumber()));
-
-			if (wows.size() == 1) {
-				retValues.add(report);
-			}
+		for(WorkOrderWorker wow : wows) {
+			WorkerReportDTO report = new WorkerReportDTO();
+			List<WorkOrderForEmployeeReportDTO> workOrders = workOrderRepo.findAllByEmployee(wow.getUser().getId(), tenantId);
+			report.setWorker(wow.getUser().getName());
+			report.setWorkOrders(workOrders);
+			retValues.add(report);
 		}
-		for (int i = 0; i < wows.size() - 1; i++) {
-			if (wows.get(i).getUser().getId().equals(wows.get(i + 1).getUser().getId())) {
-				if (!wows.get(i).getWorkOrder().equals(wows.get(i + 1).getWorkOrder())) {
-					report.getWorkOrders().add(
-							new WorkOrderDTO(wows.get(i + 1).getWorkOrder(), wows.get(i + 1).getUser().getPerNumber()));
-				}
-
-				if (i + 1 == wows.size() - 1) {
-					retValues.add(report);
-				}
-			} else {
-				retValues.add(report);
-				report = new WorkerReportDTO();
-				report.setWorker(new EmployeeDTO(wows.get(i + 1).getUser()));
-				report.getWorkOrders().add(
-						new WorkOrderDTO(wows.get(i + 1).getWorkOrder(), wows.get(i + 1).getUser().getPerNumber()));
-
-				if (i + 1 == wows.size() - 1) {
-					retValues.add(report);
-				}
-			}
-
-		}
-
-		for (WorkerReportDTO w : retValues) {
-			double dayPeriodSum = 0.0;
-			double nightPeriodSum = 0.0;
-			double workPeriodSum = 0.0;
-			for (WorkOrderDTO wo : w.getWorkOrders()) {
-				for (WorkOrderWorkerDTO wow : wo.getWorkers()) {
-					if (wow.getDayPeriod() == -1) {
-						wow.setDayPeriod(0.0);
-					}
-					dayPeriodSum += wow.getDayPeriod();
-					if (wow.getNightPeriod() == -1) {
-						wow.setNightPeriod(0.0);
-					}
-					nightPeriodSum += wow.getNightPeriod();
-					if (wow.getWorkPeriod() == -1) {
-						wow.setWorkPeriod(0.0);
-					}
-					workPeriodSum += wow.getWorkPeriod();
-				}
-			}
-			w.setDayPeriodSum(dayPeriodSum);
-			w.setNightPeriodSum(nightPeriodSum);
-			w.setWorkPeriodSum(workPeriodSum);
-		}
-
 		return retValues;
 	}
 

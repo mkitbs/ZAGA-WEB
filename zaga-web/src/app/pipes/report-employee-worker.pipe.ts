@@ -11,7 +11,7 @@ export class ReportEmployeeWorkerPipe implements PipeTransform {
       return workers;
     }
     var result =  workers.filter(worker =>
-      worker.worker.Name.toLowerCase().includes(query.toLowerCase()
+      worker.worker.toLowerCase().includes(query.toLowerCase()
     ));
     
     if(result.length === 0){

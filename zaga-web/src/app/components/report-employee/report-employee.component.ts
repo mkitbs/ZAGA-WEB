@@ -28,6 +28,9 @@ export class ReportEmployeeComponent implements OnInit {
 
   empty;
   loading;
+
+  page = 1;
+  pageSize = 1;
  
   ngOnInit() {
     this.spinner.show();
@@ -37,29 +40,6 @@ export class ReportEmployeeComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
       this.workers = data;
-      this.workers.forEach(worker => {
-        var date = "";
-        worker.workOrders.forEach(workOrder => {
-          date =
-          workOrder.date.day.split(" ")[0] +
-          "." +
-          workOrder.date.month +
-          "." +
-          workOrder.date.year +
-          ".";
-          workOrder.date = date;
-
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
-            workOrder.status = "Storniran";
-          }
-        })
-      })
     }, error => {
       this.spinner.hide();
       this.loading = false;
@@ -78,12 +58,12 @@ export class ReportEmployeeComponent implements OnInit {
     let dayPeriodSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.workers.forEach(w => {
-          if(w.dayPeriod == -1){
-            w.dayPeriod = 0.0;
+        
+          if(wo.dayWork == "Nije uneto"){
+            wo.dayWork = 0.0;
           }
-          dayPeriodSum += w.dayPeriod;
-        })
+          dayPeriodSum += +wo.dayWork;
+        
       })
       return dayPeriodSum + " h"
     } else {
@@ -96,12 +76,12 @@ export class ReportEmployeeComponent implements OnInit {
     let nightPeriodSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.workers.forEach(w => {
-          if(w.nightPeriod == -1){
-            w.nightPeriod = 0.0;
+      
+          if(wo.nightWork == "Nije uneto"){
+            wo.nightWork = 0.0;
           }
-          nightPeriodSum += w.nightPeriod;
-        })
+          nightPeriodSum += +wo.nightWork;
+       
       })
       return nightPeriodSum + " h";
     } else {
@@ -114,15 +94,15 @@ export class ReportEmployeeComponent implements OnInit {
     let workPeriodSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.workers.forEach(w => {
-          if(w.nightPeriod == -1){
-            w.nightPeriod = 0.0;
+       
+          if(wo.nightWork == "Nije uneto"){
+            wo.nightWork = 0.0;
           }
-          if(w.dayPeriod == -1){
-            w.dayPeriod = 0.0;
+          if(wo.dayWork == "Nije uneto"){
+            wo.dayWork = 0.0;
           }
-          workPeriodSum += w.nightPeriod + w.dayPeriod;
-        })
+          workPeriodSum += +wo.nightWork + +wo.dayWork;
+        
       })
       return workPeriodSum + " h";
     } else {
