@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkerReportDTO {
 
-	private EmployeeDTO worker;
-	private List<WorkOrderDTO> workOrders = new ArrayList<WorkOrderDTO>();
-	private double dayPeriodSum;
-	private double nightPeriodSum;
-	private double workPeriodSum;
+	private String worker;
+	private List<WorkOrderForEmployeeReportDTO> workOrders = new ArrayList<WorkOrderForEmployeeReportDTO>();
 }

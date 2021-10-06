@@ -27,6 +27,9 @@ export class ReportMaterialComponent implements OnInit {
 
   loading;
 
+  page = 1;
+  pageSize = 3;
+
   ngOnInit() {
     this.spinner.show();
     this.loading = true;
@@ -35,29 +38,7 @@ export class ReportMaterialComponent implements OnInit {
       this.loading = false;
       this.materials = data;
       console.log(this.materials)
-      this.materials.forEach(material => {
-        var date = "";
-        material.workOrders.forEach(workOrder => {
-          date =
-          workOrder.date.day.split(" ")[0] +
-          "." +
-          workOrder.date.month +
-          "." +
-          workOrder.date.year +
-          ".";
-          workOrder.date = date;
-
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
-            workOrder.status = "Storniran";
-          }
-        })
-      })
+      
     }, error => {
       this.spinner.hide();
       this.loading = false;
@@ -76,14 +57,14 @@ export class ReportMaterialComponent implements OnInit {
     let quantitySum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.materials.forEach(m => {
-          if(m.quantity == -1){
-            m.quantity = 0.0;
+       
+          if(wo.quantity == 'Nije uneto'){
+            wo.quantity = 0.0;
           }
-          quantitySum += m.quantity;
-        })
+          quantitySum += +wo.quantity;
+        
       })
-      return quantitySum
+      return quantitySum.toFixed(2)
     } else {
       return null;
     }
@@ -95,14 +76,14 @@ export class ReportMaterialComponent implements OnInit {
     let spentSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.materials.forEach(m => {
-          if(m.spent == -1){
-            m.spent = 0.0;
+        
+          if(wo.spent == 'Nije uneto'){
+            wo.spent = 0.0;
           }
-          spentSum += m.spent;
-        })
+          spentSum += +wo.spent;
+       
       })
-      return spentSum
+      return spentSum.toFixed(2)
     } else {
       return null;
     }

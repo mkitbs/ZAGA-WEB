@@ -456,6 +456,18 @@ public class WorkOrderService {
 			return null;
 		}
 	}
+	
+	public WorkOrderDTO getOneWorkOrder(UUID id) {
+		boolean type = true;//zbog polimorfizma
+		try {
+			WorkOrder workOrder = workOrderRepo.getOne(id);
+			WorkOrderDTO workOrderDTO = new WorkOrderDTO(workOrder,type);
+			return workOrderDTO;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public WorkOrder getOneW(UUID id) {
 		try {

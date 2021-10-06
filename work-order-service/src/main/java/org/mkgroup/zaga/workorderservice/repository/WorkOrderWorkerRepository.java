@@ -22,10 +22,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker, UUID> {
 
-	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wo.status!='CANCELLATION' AND wo.erp_id IS NOT NULL AND wow.deleted=false AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') ORDER BY wow.worker_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wo.status!='CANCELLATION' AND wo.erp_id IS NOT NULL AND wow.deleted=false AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') GROUP BY wow.worker_id", nativeQuery = true)
 	List<WorkOrderWorker> findAllByOrderByWorkerId(@Param("tenantId") Long tenantId);
 	
-	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wo.status!='CANCELLATION' AND wo.erp_id IS NOT NULL AND wow.deleted=false AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') ORDER BY wow.machine_id", nativeQuery = true)
+	@Query(value = "SELECT * FROM work_order_worker AS wow INNER JOIN work_order AS wo ON wow.work_order_id=wo.id WHERE wo.tenant_id=:tenantId AND wo.status!='CANCELLATION' AND wo.erp_id IS NOT NULL AND wow.deleted=false AND (wo.org_unit='PIKB' OR wo.org_unit='BIPR') GROUP BY wow.machine_id", nativeQuery = true)
 	List<WorkOrderWorker> findAllByOrderByMachineId(@Param("tenantId") Long tenantId);
 	
 	@Query(value = "SELECT * FROM work_order_worker w ORDER BY w.machine_id", nativeQuery = true)
@@ -59,4 +59,7 @@ public interface WorkOrderWorkerRepository extends JpaRepository<WorkOrderWorker
 	
 	@Query(value = "SELECT SUM(REPLACE(wow.final_state, -1, 0)) FROM work_order_worker wow WHERE wow.work_order_id=?1 AND wow.deleted=false", nativeQuery = true)
 	int sumAllFilanStates(UUID workOrderId);
+	
+	@Query(value = "SELECT bin_to_uuid(wow.work_order_id), case wow.sum_state when -1 then 'Nije uneto' else wow.sum_state end, wo.erp_id, case wow.fuel when -1 then 'Nije uneto' else wow.fuel end, wo.date FROM work_order_worker wow left join work_order wo on wow.work_order_id=wo.id WHERE wow.machine_id=?1 and wo.status!='CANCELLATION'", nativeQuery = true)
+	List<String> findAllByMachine(UUID machineId);
 }

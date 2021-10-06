@@ -25,6 +25,9 @@ export class ReportMachineComponent implements OnInit {
 
   loading;
 
+  page = 1;
+  pageSize = 1;
+
   ngOnInit() {
     this.spinner.show();
     this.loading = true;
@@ -32,29 +35,7 @@ export class ReportMachineComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
       this.machines = data;
-      this.machines.forEach(machine => {
-        var date = "";
-        machine.workOrders.forEach(workOrder => {
-          date =
-          workOrder.date.day.split(" ")[0] +
-          "." +
-          workOrder.date.month +
-          "." +
-          workOrder.date.year +
-          ".";
-          workOrder.date = date;
-
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION"){
-            workOrder.status = "Storniran";
-          }
-        })
-      })
+      console.log(this.machines)
     }, error => {
       this.spinner.hide();
       this.loading = false;
@@ -73,12 +54,11 @@ export class ReportMachineComponent implements OnInit {
     let machineSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.workers.forEach(w => {
-          if(w.sumState == -1){
-            w.sumState = 0.0;
-          }
-          machineSum += w.sumState;
-        })
+        var state = wo.split(",")[1];
+        if(state == 'Nije uneto'){
+          state = 0.0;
+        }
+        machineSum += +state;
       })
       return machineSum + " MČ"
     } else {
@@ -91,12 +71,11 @@ export class ReportMachineComponent implements OnInit {
     let fuelSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {
-        wo.workers.forEach(w => {
-          if(w.fuel == -1){
-            w.fuel = 0.0;
-          }
-          fuelSum += w.fuel;
-        })
+        var fuel = wo.split(",")[3];
+        if(fuel == "Nije uneto"){
+          fuel = 0.0;
+        }
+        fuelSum += +fuel;
       })
       return fuelSum + " l"
     } else {

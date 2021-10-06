@@ -11,7 +11,7 @@ export class ReportMachineMachinePipe implements PipeTransform {
       return machines;
     }
     var result = machines.filter(machine =>
-      machine.machine.Name.toLowerCase().includes(query.toLowerCase()
+      machine.machine.toLowerCase().includes(query.toLowerCase()
     ));
     if(result.length === 0){
       return[-1];

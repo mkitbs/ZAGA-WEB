@@ -124,7 +124,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let report of atmReport">
+                <ng-container *ngFor="let report of atmReport | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
                     <tr *ngFor="let workOrder of report.workOrders  
                     | SearchWorkOrdersTable: searchTable.value
                     | SearchWorkOrdersOperation: searchOperation.value
@@ -193,7 +193,12 @@
                 </ng-container>
                
             </tbody>
+
         </table>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+        [boundaryLinks]="true" [collectionSize]="atmReport.length">
+      </ngb-pagination>
     </div>
+   
     <ngx-spinner></ngx-spinner>
 </div>
