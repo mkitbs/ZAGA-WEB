@@ -80,6 +80,7 @@
       </div>
       
     </div>
+    <!--
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
@@ -124,6 +125,7 @@
         </mat-form-field>
       </div>
     </div>
+    -->
   </form>
   <div class="break-class pt-2 mb-4"></div>
   <div *ngIf="machines.length == 0 && loading == false" class="center">
@@ -145,7 +147,12 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let machine of machines | ReportMachineMachine: searchMachine.value | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; 
+        <ng-container *ngFor="let machine of machines 
+          | ReportMachineMachine: searchMachine.value 
+          | SearchMachineDate: searchDate.value
+          | SearchMachineSapId: searchWorkOrder.value
+          | SearchMachineDates: filters
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; 
           let i = index" >
           <tr *ngIf="machine === -1">
             <td colspan="11" >
@@ -154,15 +161,7 @@
             </td>
           </tr>
           
-            <tr *ngFor="let workOrder of machine.workOrders 
-                | SearchWorkOrdersCrop: searchCrop.value
-                | SearchWorkOrdersTable: searchTable.value
-                | SearchWorkOrdersOperation: searchOperation.value
-                | SearchWorkOrdersDate: searchDate.value
-                | ReportMaterialSapId: searchWorkOrder.value
-                | SearchWoBetweenDates: filters
-                | SearchMachineCoupling: searchCouplingMachine.value; 
-                let j = index">
+            <tr *ngFor="let workOrder of machine.workOrders; let j = index">
               <td *ngIf="j==0; else elseBlockName" style="font-weight: bold;">{{machine.machine}}</td>
               <ng-template #elseBlockName><td></td></ng-template>
               <td (click)="changeRoute(workOrder.split(',')[0])" style="cursor: pointer;" >
@@ -179,26 +178,12 @@
               
               <td style="font-weight: bold;" >
                 {{
-                  getFinalMachineSum(machine.workOrders 
-                  | SearchWorkOrdersCrop: searchCrop.value
-                  | SearchWorkOrdersTable: searchTable.value
-                  | SearchWorkOrdersOperation: searchOperation.value
-                  | SearchWorkOrdersDate: searchDate.value
-                  | ReportMaterialSapId: searchWorkOrder.value
-                  | SearchWoBetweenDates: filters
-                  | SearchMachineCoupling: searchCouplingMachine.value)
+                  getFinalMachineSum(machine.workOrders)
                 }}
               </td>
               <td style="font-weight: bold;">
                 {{
-                  getFuelSum(machine.workOrders 
-                  | SearchWorkOrdersCrop: searchCrop.value
-                  | SearchWorkOrdersTable: searchTable.value
-                  | SearchWorkOrdersOperation: searchOperation.value
-                  | SearchWorkOrdersDate: searchDate.value
-                  | ReportMaterialSapId: searchWorkOrder.value
-                  | SearchWoBetweenDates: filters
-                  | SearchMachineCoupling: searchCouplingMachine.value)
+                  getFuelSum(machine.workOrders)
                 }}
               </td>
               

@@ -35,6 +35,9 @@ export class CropComponent implements OnInit {
   cropFC: FormControl = new FormControl("");
   loading;
 
+  page = 1;
+  pageSize = 12;
+
   ngOnInit() {
     this.spinner.show();
     this.loading = true;

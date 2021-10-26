@@ -30,6 +30,9 @@ export class MachineComponent implements OnInit {
 
   loading;
 
+  page = 1;
+  pageSize = 12;
+
   ngOnInit() {
    this.getAll();
    this.getAllGroupByType();

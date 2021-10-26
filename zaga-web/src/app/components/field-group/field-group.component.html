@@ -29,7 +29,10 @@
       <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
     </div>
     <div class="row card-group">
-      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroup.value; let j = index">
+      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-4'" 
+        *ngFor="let fieldGroup of fieldGroups 
+          | SearchFieldGroup: searchFieldGroup.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="fieldGroup === -1" class="center">
           <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
@@ -78,6 +81,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="fieldGroups.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -111,7 +117,10 @@
       <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
     </div>
     <div class="row card-group">
-      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupLaptop.value; let j = index">
+      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-5'" 
+        *ngFor="let fieldGroup of fieldGroups 
+          | SearchFieldGroup: searchFieldGroupLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="fieldGroup === -1" class="center">
           <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
@@ -152,6 +161,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="fieldGroups.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -185,7 +197,10 @@
       <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
     </div>
     <div class="row card-group">
-      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value; let j = index">
+      <div [ngClass]="fieldGroup === -1 ? 'fullScreen' : 'col-7'" 
+        *ngFor="let fieldGroup of fieldGroups 
+          | SearchFieldGroup: searchFieldGroupTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="fieldGroup === -1" class="center">
           <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
@@ -226,6 +241,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="fieldGroups.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -259,7 +277,10 @@
       <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
     </div>
     <div class="row card-group">
-      <div [ngClass]="fieldGroup === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let fieldGroup of fieldGroups | SearchFieldGroup: searchFieldGroupTablet.value; let j = index">
+      <div [ngClass]="fieldGroup === -1 ? 'fullScreenMob' : 'col-3'" 
+        *ngFor="let fieldGroup of fieldGroups 
+          | SearchFieldGroup: searchFieldGroupTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="fieldGroup === -1" class="center">
           <img src="../../../assets/fieldGroup-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema poteza za prikazivanje</h4>
@@ -300,6 +321,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="fieldGroups.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

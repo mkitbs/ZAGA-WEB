@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, NavigationEnd } from "@angular/router";
 import { Material } from "src/app/models/Material";
 import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
@@ -73,7 +73,19 @@ export class CreateworkOrderComponent implements OnInit {
     private canDeactivate: LeavePageGuard
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+
+    
   }
+
+  paramSapId;
+  paramDate;
+  paramField;
+  paramAtm;
+  paramCrop;
+  paramResponsible;
+
+  currentUrl;
+  previousUrl;
 
   modalHeader = "Dodavanje radnika";
   headerMachine = "Dodavanje mašine";
@@ -2447,5 +2459,6 @@ export class CreateworkOrderComponent implements OnInit {
     })
     console.log(this.treatedEntered);
   }
+
  
 }

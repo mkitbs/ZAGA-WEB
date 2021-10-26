@@ -19,6 +19,9 @@ export class OperationGroupComponent implements OnInit {
 
   loading;
 
+  page = 1;
+	pageSize = 12;
+
   ngOnInit() {
     this.spinner.show();
     this.loading = true;

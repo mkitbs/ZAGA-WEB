@@ -79,7 +79,8 @@
           | SearchCulture: searchCulture.value
           | SearchCultureType: searchCultureType.value
           | SearchCultureOrgCon: searchProductionType.value
-          | SearchCultureCultureGroup: searchCultureGroup.value; let j = index">
+          | SearchCultureCultureGroup: searchCultureGroup.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="culture === -1" class="center">
             <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
@@ -132,6 +133,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultures.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -218,7 +222,8 @@
           | SearchCulture: searchCultureTablet.value
           | SearchCultureType: searchCultureTypeTablet.value
           | SearchCultureOrgCon: searchProductionTypeTablet.value
-          | SearchCultureCultureGroup: searchCultureGroupTablet.value; let j = index">
+          | SearchCultureCultureGroup: searchCultureGroupTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="culture === -1" class="center">
             <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
@@ -271,6 +276,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultures.length">
+    </ngb-pagination>
     </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -357,7 +365,8 @@
           | SearchCulture: searchCultureLaptop.value
           | SearchCultureType: searchCultureTypeLaptop.value
           | SearchCultureOrgCon: searchProductionTypeLaptop.value
-          | SearchCultureCultureGroup: searchCultureGroupLaptop.value; let j = index">
+          | SearchCultureCultureGroup: searchCultureGroupLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="culture === -1" class="center">
             <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
@@ -410,6 +419,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultures.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -496,7 +508,8 @@
           | SearchCulture: searchCultureLaptop.value
           | SearchCultureType: searchCultureTypeLaptop.value
           | SearchCultureOrgCon: searchProductionTypeLaptop.value
-          | SearchCultureCultureGroup: searchCultureGroupLaptop.value; let j = index">
+          | SearchCultureCultureGroup: searchCultureGroupLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="culture === -1" class="center">
             <img src="../../../assets/wheat-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema kultura za prikazivanje</h4>
@@ -549,6 +562,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultures.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>

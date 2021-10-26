@@ -1685,8 +1685,11 @@ public class WorkOrderService {
 			atmReportResponse.setAtm(entry.getKey().getName());
 			List<ATMReportDTO> atmReports = new ArrayList<ATMReportDTO>();
 			for(WorkOrder wo : entry.getValue()) {
-				ATMReportDTO atmReport = new ATMReportDTO(wo);
-				atmReports.add(atmReport);
+				if(wo.getErpId() != null) {
+					ATMReportDTO atmReport = new ATMReportDTO(wo);
+					atmReports.add(atmReport);
+				}
+				
 			}
 			atmReportResponse.setWorkOrders(atmReports);
 			retValues.add(atmReportResponse);

@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { WorkOrderService } from "src/app/service/work-order.service";
 import { WorkOrder } from "src/app/models/WorkOrder";
 import { NgxSpinnerService } from "ngx-spinner";
 import { AllWorkOrdersResponseDTO } from "src/app/models/AllWorkOrdersResponseDTO";
+import { HttpParams } from "@angular/common/http";
 
 @Component({
   selector: "app-workOrder",
@@ -11,6 +12,8 @@ import { AllWorkOrdersResponseDTO } from "src/app/models/AllWorkOrdersResponseDT
   styleUrls: ["./workOrder.component.css"],
 })
 export class WorkOrderComponent implements OnInit {
+  @ViewChild('openFilters', null) openFilters: ElementRef<HTMLElement>;
+  
   click = false;
   collapseBool = true;
   empty = false;
@@ -35,18 +38,77 @@ export class WorkOrderComponent implements OnInit {
   status: any[] = [];
   dateOfCreateWO;
 
+  dateFilter;
+
+  paramSapId;
+  paramDate;
+  paramField;
+  paramCrop;
+  paramAtm;
+  paramResponsible;
+  paramOwnership;
+  paramWoStatus;
+
+  filterSapNumber;
+  filterWorkOrderDate;
+  filterField;
+  filterCrop;
+  filterAtm;
+  filterResponsible;
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private workOrderService: WorkOrderService,
     private spinner: NgxSpinnerService
-  ) { }
+  ) { 
+    this.route.queryParams.subscribe(params => {
+      this.paramSapId = params['sapId'];
+      this.paramDate = params['date'];
+      this.paramField = params['field'];
+      this.paramCrop = params['crop'];
+      this.paramAtm = params['atm'];
+      this.paramResponsible = params['responsible'];
+      this.paramOwnership = params['ownership'];
+      this.paramWoStatus = params['woStatus'];
+  });
+
+  }
 
   ngOnInit() {
+    console.log(localStorage.getItem("route"))
+    
+      if (!localStorage.getItem('foo')) { 
+        localStorage.setItem('foo', 'no reload') 
+        location.reload() 
+      } else {
+        localStorage.removeItem('foo') 
+      }
+      
+    
+    
     if (this.urlParam == "closing") {
       this.getAllWorkOrdersByStatus("IN_PROGRESS");
     } else {
-      this.getMyWorkOrders();
+      if(this.paramOwnership == "my") {
+        if(this.paramWoStatus != undefined && this.paramWoStatus != "") {
+          this.getMyWorkOrdersByStatus(this.paramWoStatus);
+        } else {
+          this.getMyWorkOrders();
+        }
+        
+      } else if (this.paramOwnership == "all") {
+        if(this.paramWoStatus != undefined && this.paramWoStatus != "") {
+          this.getAllWorkOrdersByStatus(this.paramWoStatus);
+        } else {
+          this.getAll();
+        }
+        
+      } else {
+        this.getMyWorkOrders();
+      }
+      
     }
     this.status.push(
       { name: "Novi", name2send: "NEW" },
@@ -66,7 +128,77 @@ export class WorkOrderComponent implements OnInit {
   }
 
   changeRoute(id) {
+   
     this.router.navigateByUrl("/create/workOrder/" + id);
+  }
+
+  onChangeSapId(id) {
+    const queryParams: Params = { sapId: id };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+        skipLocationChange: false
+        
+      });
+      
+  }
+
+  onChangeDate(day) {
+    const queryParams: Params = { date: day };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
+  }
+
+  onChangeField(table) {
+    const queryParams: Params = { field: table };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
+  }
+
+  onChangeCrop(cropname) {
+    const queryParams: Params = { crop: cropname };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
+  }
+
+  onChangeAtm(operation) {
+    const queryParams: Params = { atm: operation };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
+  }
+
+  onChangeResponsible(person) {
+    const queryParams: Params = { responsible: person };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
   }
 
   sortBySapId() {
@@ -131,9 +263,6 @@ export class WorkOrderComponent implements OnInit {
   }
 
   getAllWorkOrdersByStatus(status) {
-    console.log("GET ALL BY STATUS")
-    console.log("STATUS = " + status)
-    console.log("MY = " + this.my);
     this.spinner.show();
     this.workOrderService.getAllByStatus(status).subscribe((res) => {
       this.spinner.hide();
@@ -143,22 +272,46 @@ export class WorkOrderComponent implements OnInit {
         this.empty = true;
       } else {
         this.empty = false;
-        this.allWOResponse.forEach((workOrder) => {
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION") {
-            workOrder.status = "Storniran";
-          }
-        });
+        if(this.paramSapId != undefined && this.paramSapId != "") {
+          this.filterSapNumber = this.paramSapId;
+        }
+        if (this.paramDate != undefined && this.paramDate != ""){
+          this.filterWorkOrderDate = this.paramDate;
+        }
+        if (this.paramField != undefined && this.paramField != ""){
+          this.filterField = this.paramField;
+        }
+        if (this.paramCrop != undefined && this.paramCrop != ""){
+          this.filterCrop = this.paramCrop;
+        }
+        if (this.paramAtm != undefined && this.paramAtm != ""){
+          this.filterAtm = this.paramAtm;
+        }
+        if (this.paramResponsible != undefined && this.paramResponsible != ""){
+          this.filterResponsible = this.paramResponsible;
+        }
+        
+        if((this.paramSapId != undefined && this.paramSapId != "") 
+            || (this.paramDate != undefined && this.paramDate != "") 
+            || (this.paramField != undefined && this.paramField != "") 
+            || (this.paramCrop != undefined && this.paramCrop != "") 
+            || (this.paramAtm != undefined && this.paramAtm != "") 
+            || (this.paramResponsible != undefined && this.paramResponsible != "")) {
+              this.openFilters.nativeElement.click();
+        }
       }
       this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     });
+    const queryParams: Params = { woStatus: status };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
   }
 
   getAll() {
@@ -174,23 +327,48 @@ export class WorkOrderComponent implements OnInit {
         this.empty = true;
       } else {
         this.empty = false;
-        this.allWOResponse.forEach((workOrder) => {
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION") {
-            workOrder.status = "Storniran";
-          }
-         
-        });
+        if(this.paramSapId != undefined && this.paramSapId != "") {
+          this.filterSapNumber = this.paramSapId;
+        }
+        if (this.paramDate != undefined && this.paramDate != ""){
+          this.filterWorkOrderDate = this.paramDate;
+        }
+        if (this.paramField != undefined && this.paramField != ""){
+          this.filterField = this.paramField;
+        }
+        if (this.paramCrop != undefined && this.paramCrop != ""){
+          this.filterCrop = this.paramCrop;
+        }
+        if (this.paramAtm != undefined && this.paramAtm != ""){
+          this.filterAtm = this.paramAtm;
+        }
+        if (this.paramResponsible != undefined && this.paramResponsible != ""){
+          this.filterResponsible = this.paramResponsible;
+        }
+
+        if((this.paramSapId != undefined && this.paramSapId != "") 
+            || (this.paramDate != undefined && this.paramDate != "") 
+            || (this.paramField != undefined && this.paramField != "") 
+            || (this.paramCrop != undefined && this.paramCrop != "") 
+            || (this.paramAtm != undefined && this.paramAtm != "") 
+            || (this.paramResponsible != undefined && this.paramResponsible != "")) {
+              this.openFilters.nativeElement.click();
+        }
       }
       this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     });
+    
+    const queryParams: Params = { ownership: 'all' };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
+      
   }
 
   getMyWorkOrders() {
@@ -206,28 +384,50 @@ export class WorkOrderComponent implements OnInit {
         this.empty = true;
       } else {
         this.empty = false;
-        this.allWOResponse.forEach((workOrder) => {
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION") {
-            workOrder.status = "Storniran";
-          }
-        });
+        if(this.paramSapId != undefined && this.paramSapId != "") {
+          this.filterSapNumber = this.paramSapId;
+        }
+        if (this.paramDate != undefined && this.paramDate != ""){
+          this.filterWorkOrderDate = this.paramDate;
+        }
+        if (this.paramField != undefined && this.paramField != ""){
+          this.filterField = this.paramField;
+        }
+        if (this.paramCrop != undefined && this.paramCrop != ""){
+          this.filterCrop = this.paramCrop;
+        }
+        if (this.paramAtm != undefined && this.paramAtm != ""){
+          this.filterAtm = this.paramAtm;
+        }
+        if (this.paramResponsible != undefined && this.paramResponsible != ""){
+          this.filterResponsible = this.paramResponsible;
+        }
+        
+        if((this.paramSapId != undefined && this.paramSapId != "") 
+            || (this.paramDate != undefined && this.paramDate != "") 
+            || (this.paramField != undefined && this.paramField != "") 
+            || (this.paramCrop != undefined && this.paramCrop != "") 
+            || (this.paramAtm != undefined && this.paramAtm != "") 
+            || (this.paramResponsible != undefined && this.paramResponsible != "")) {
+              this.openFilters.nativeElement.click();
+        }
       }
+      
       this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     })
+    const queryParams: Params = { ownership: 'my' };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
   }
 
   getMyWorkOrdersByStatus(status) {
-    console.log("GET MY BY STATUS")
-    console.log("STATUS = " + status)
-    console.log("MY = " + this.my);
     this.spinner.show();
     this.workOrderService.getMyByStatus(status).subscribe((res) => {
       this.spinner.hide();
@@ -237,22 +437,47 @@ export class WorkOrderComponent implements OnInit {
         this.empty = true;
       } else {
         this.empty = false;
-        this.allWOResponse.forEach((workOrder) => {
-          if (workOrder.status == "NEW") {
-            workOrder.status = "Novi";
-          } else if (workOrder.status == "IN_PROGRESS") {
-            workOrder.status = "U radu";
-          } else if (workOrder.status == "CLOSED") {
-            workOrder.status = "Zatvoren";
-          } else if (workOrder.status == "CANCELLATION") {
-            workOrder.status = "Storniran";
-          }
-        });
+        if(this.paramSapId != undefined && this.paramSapId != "") {
+          this.filterSapNumber = this.paramSapId;
+        }
+        if (this.paramDate != undefined && this.paramDate != ""){
+          this.filterWorkOrderDate = this.paramDate;
+        }
+        if (this.paramField != undefined && this.paramField != ""){
+          this.filterField = this.paramField;
+        }
+        if (this.paramCrop != undefined && this.paramCrop != ""){
+          this.filterCrop = this.paramCrop;
+        }
+        if (this.paramAtm != undefined && this.paramAtm != ""){
+          this.filterAtm = this.paramAtm;
+        }
+        if (this.paramResponsible != undefined && this.paramResponsible != ""){
+          this.filterResponsible = this.paramResponsible;
+        }
+        
+        if((this.paramSapId != undefined && this.paramSapId != "") 
+            || (this.paramDate != undefined && this.paramDate != "") 
+            || (this.paramField != undefined && this.paramField != "") 
+            || (this.paramCrop != undefined && this.paramCrop != "") 
+            || (this.paramAtm != undefined && this.paramAtm != "") 
+            || (this.paramResponsible != undefined && this.paramResponsible != "")) {
+              this.openFilters.nativeElement.click();
+        }
+       
       }
       this.allWOResponse.sort((w1, w2) => w2.sapId - w1.sapId);
     }, error => {
       this.spinner.hide();
     });
+    const queryParams: Params = { woStatus: status };
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: queryParams, 
+        queryParamsHandling: 'merge', // remove to replace all query params by provided
+      });
   }
 
   displayFnStatus(status: any): string {

@@ -4,7 +4,7 @@
       nalozi</span></h3>
 
   <button class="btn btn-primary collapsing-button mb-2 shadow-none" data-toggle="collapse"
-    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()">
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" (click)="collapse()" #openFilters>
     Filteri
     <i *ngIf="collapseBool" class="fa fa-arrow-down" data-toggle="collapse" data-target="#collapseExample"
       aria-expanded="false" aria-controls="collapseExample"></i>
@@ -16,25 +16,30 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchNumber placeholder="Pretražite po šifri radnog naloga" />
+          <input type="text" matInput #searchNumber placeholder="Pretražite po šifri radnog naloga" id="sapId" 
+          [(ngModel)]="filterSapNumber" (input)="onChangeSapId(searchNumber.value)" name="sapNo" />
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
           <input ngbDatepicker #day="ngbDatepicker" (click)="day.toggle()" matInput #searchDate
-            placeholder="Pretražite po datumu" />
+            placeholder="Pretražite po datumu" id="date" (dateSelect)="onChangeDate(searchDate.value)"
+            [(ngModel)]="filterWorkOrderDate" name="workOrderFilterDate"
+            />
         </mat-form-field>
       </div>
     </div>
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchTable placeholder="Pretražite po parceli" />
+          <input type="text" matInput #searchTable placeholder="Pretražite po parceli" id="field" 
+          (input)="onChangeField(searchTable.value)" [(ngModel)]="filterField" name="workOrderFilterField"/>
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" />
+          <input type="text" matInput #searchCrop placeholder="Pretražite po usevu" id="crop" 
+          (input)="onChangeCrop(searchCrop.value)" [(ngModel)]="filterCrop" name="workOrderFilterCrop"/>
         </mat-form-field>
       </div>
 
@@ -42,12 +47,15 @@
     <div class="form-row">
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchOperation placeholder="Pretražite po operaciji" />
+          <input type="text" matInput #searchOperation placeholder="Pretražite po operaciji" id="atm" 
+          (input)="onChangeAtm(searchOperation.value)" [(ngModel)]="filterAtm" name="workOrderFilterAtm"/>
         </mat-form-field>
       </div>
       <div class="col">
         <mat-form-field class="inputAuto">
-          <input type="text" matInput #searchResponsible placeholder="Pretražite po odgovornoj osobi" />
+          <input type="text" matInput #searchResponsible placeholder="Pretražite po odgovornoj osobi" 
+          id="responsiblePerson" (input)="onChangeResponsible(searchResponsible.value)"
+          [(ngModel)]="filterResponsible" name="workOrderFilterResponsible"/>
         </mat-form-field>
       </div>
     </div>
@@ -109,19 +117,13 @@
     <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
     <h4 style="text-align: center; width: 200px;">Niste kreirali ni jedan nalog</h4>
   </div>
-  <ng-container *ngFor="let workOrder of allWOResponse 
-  | SearchWorkOrdersTable: searchTable.value
-  | SearchWorkOrdersDate: searchDate.value
-  | SearchWorkOrdersCrop: searchCrop.value
-  | SearchWorkOrderNumber: searchNumber.value
-  | SearchWorkOrderResponsible: searchResponsible.value
-  | SearchWorkOrdersOperation: searchOperation.value; let i = index">
+  <ng-container >
     <div *ngIf="workOrder === -1" class="center">
       <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
       <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
     </div>
     <div class="table-responsive">
-      <table *ngIf="!empty && workOrder !==-1 && i==0" class="table table-hover tabela-nalozi">
+      <table *ngIf="!empty && workOrder !==-1 " class="table table-hover tabela-nalozi">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -140,10 +142,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let workOrder of allWOResponse
-              | SearchWorkOrdersTable: searchTable.value
-              | SearchWorkOrdersDate: searchDate.value
-              | SearchWorkOrdersCrop: searchCrop.value
-              | SearchWorkOrdersOperation: searchOperation.value
+              | SearchWorkOrderField: searchTable.value
+              | SearchWorkOrderDay: searchDate.value
+              | SearchWorkOrderCrop: searchCrop.value
+              | SearchWorkOrderAtm: searchOperation.value
               | SearchWorkOrderNumber: searchNumber.value
               | SearchWorkOrderResponsible: searchResponsible.value
               | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
@@ -276,12 +278,12 @@
   <div style="padding-top: 30px"></div>
 
   <ng-container *ngFor="let workOrder of allWOResponse
-  | SearchWorkOrdersTable: searchTableMob.value
-  | SearchWorkOrdersDate: searchDateMob.value
-  | SearchWorkOrdersCrop: searchCropMob.value
+  | SearchWorkOrderField: searchTableMob.value
+  | SearchWorkOrderDay: searchDateMob.value
+  | SearchWorkOrderCrop: searchCropMob.value
   | SearchWorkOrderNumber: searchNumberMob.value
   | SearchWorkOrderResponsible: searchResponsibleMob.value
-  | SearchWorkOrdersOperation: searchOperationMob.value
+  | SearchWorkOrderAtm: searchOperationMob.value
   | SearchStatus: searchStatus.value
   | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
    let j = index">

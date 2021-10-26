@@ -131,8 +131,16 @@
         <ng-container *ngFor="let material of materials 
           | ReportMaterialMaterial: searchMaterial.value
           | SearchMaterialUnit: searchUnit.value 
+          | SearchWorkOrdersTable: searchTable.value
+          | SearchWorkOrdersOperation: searchOperation.value
+          | SearchWorkOrdersDate: searchDate.value
+          | SearchWorkOrdersCrop: searchCrop.value
+          | ReportMaterialSapId: searchWorkOrder.value
+          | SearchWoBetweenDates: filters
           | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;
             let i = index" >
+            
+        <ng-container *ngIf="material.workOrders.length > 0">
             <tr *ngIf="material === -1">
               <td colspan="10" >
                 <img src="../../../assets/report-not-found.png" width="200px" height="200px"/>
@@ -140,14 +148,7 @@
               </td>
             </tr>
           
-            <tr *ngFor="let workOrder of material.workOrders
-            | SearchWorkOrdersTable: searchTable.value
-            | SearchWorkOrdersOperation: searchOperation.value
-            | SearchWorkOrdersDate: searchDate.value
-            | SearchWorkOrdersCrop: searchCrop.value
-            | ReportMaterialSapId: searchWorkOrder.value
-            | SearchWoBetweenDates: filters; 
-            let j = index">
+            <tr *ngFor="let workOrder of material.workOrders; let j = index">
              
                 <td *ngIf="j==0 ; else elseBlockName" style="font-weight: bold;">{{material.material.material.Name}}</td>
                 <ng-template #elseBlockName><td></td></ng-template>
@@ -186,23 +187,13 @@
               <td style="font-weight: bold;" >
                 {{
                   getQuantitySum(material.workOrders 
-                  | SearchWorkOrdersCrop: searchCrop.value
-                  | SearchWorkOrdersTable: searchTable.value
-                  | SearchWorkOrdersOperation: searchOperation.value
-                  | SearchWoBetweenDates: filters
-                  | SearchWorkOrdersDate: searchDate.value
-                  | ReportMaterialSapId: searchWorkOrder.value)
+                  )
                 }}
               </td>
               <td style="font-weight: bold;" >
                 {{
                   getSpentSum(material.workOrders 
-                  | SearchWorkOrdersCrop: searchCrop.value
-                  | SearchWorkOrdersTable: searchTable.value
-                  | SearchWorkOrdersOperation: searchOperation.value
-                  | SearchWoBetweenDates: filters
-                  | SearchWorkOrdersDate: searchDate.value
-                  | ReportMaterialSapId: searchWorkOrder.value)
+                 )
                 }}
               </td>
               <td style="font-weight: bold;" >{{ material.material.material.Unit }}</td>
@@ -210,6 +201,7 @@
               <td ></td>
             
           </tr>
+        </ng-container>
         </ng-container>
       </tbody>
     </table>

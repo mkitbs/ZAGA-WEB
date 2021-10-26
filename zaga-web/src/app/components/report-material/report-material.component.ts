@@ -73,6 +73,7 @@ export class ReportMaterialComponent implements OnInit {
   }
 
   getSpentSum(workOrders){
+    console.log(workOrders)
     let spentSum = 0.0;
     if(workOrders != -1){
       workOrders.forEach(wo => {

@@ -29,7 +29,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroup.value; let j = index">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-4'" 
+          *ngFor="let cultureGroup of cultureGroups 
+            | SearchCultureGroup: searchCultureGroup.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="cultureGroup === -1" class="center">
             <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
@@ -74,6 +77,9 @@
           </div>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultureGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -107,7 +113,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupTablet.value; let j = index">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-7'" 
+          *ngFor="let cultureGroup of cultureGroups 
+            | SearchCultureGroup: searchCultureGroupTablet.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="cultureGroup === -1" class="center">
             <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
@@ -152,6 +161,9 @@
           </div>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultureGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -185,7 +197,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value; let j = index">
+        <div [ngClass]="cultureGroup === -1 ? 'fullScreen' : 'col-5'" 
+          *ngFor="let cultureGroup of cultureGroups 
+            | SearchCultureGroup: searchCultureGroupLaptop.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="cultureGroup === -1" class="center">
             <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
@@ -230,6 +245,9 @@
           </div>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultureGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -263,7 +281,10 @@
       <h4 style="text-align: center; width: 200px;">Nema grupa kultura za prikazivanje</h4>
     </div>
     <div class="row card-group">
-      <div [ngClass]="cultureGroup === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let cultureGroup of cultureGroups | SearchCultureGroup: searchCultureGroupLaptop.value; let j = index">
+      <div [ngClass]="cultureGroup === -1 ? 'fullScreenMob' : 'col-3'" 
+        *ngFor="let cultureGroup of cultureGroups 
+          | SearchCultureGroup: searchCultureGroupLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="cultureGroup === -1" class="center">
           <img src="../../../assets/crops-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema grupe kulture za prikazivanje</h4>
@@ -308,6 +329,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="cultureGroups.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

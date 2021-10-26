@@ -63,7 +63,8 @@
       <div [ngClass]="machine === -1 ? 'fullScreen' : 'col-4'" *ngFor="let machine of machines 
         | SearchMachineType: searchMachineType.value
         | SearchMachineMachineGroup: searchMachineGroup.value
-        | SearchMachine: searchMachine.value; let j = index">
+        | SearchMachine: searchMachine.value
+        | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="machine === -1" class="center">
           <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
@@ -112,6 +113,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="machines.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -179,7 +183,8 @@
       <div [ngClass]="machine === -1 ? 'fullScreen' : 'col-7'" *ngFor="let machine of machines
         | SearchMachineType: searchMachineTypeTablet.value
         | SearchMachineMachineGroup: searchMachineGroupTablet.value
-        | SearchMachine: searchMachineTablet.value; let j = index">
+        | SearchMachine: searchMachineTablet.value
+        | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="machine === -1" class="center">
           <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
@@ -236,6 +241,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="machines.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -303,7 +311,8 @@
       <div [ngClass]="machine === -1 ? 'fullScreen' : 'col-5'" *ngFor="let machine of machines
         | SearchMachineType: searchMachineTypeLaptop.value
         | SearchMachineMachineGroup: searchMachineGroupLaptop.value
-        | SearchMachine: searchMachineLaptop.value; let j = index">
+        | SearchMachine: searchMachineLaptop.value
+        | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="machine === -1" class="center">
           <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
@@ -360,6 +369,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="machines.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -427,7 +439,8 @@
       <div [ngClass]="machine === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let machine of machines
         | SearchMachineType: searchMachineTypeLaptop.value
         | SearchMachineMachineGroup: searchMachineGroupLaptop.value
-        | SearchMachine: searchMachineLaptop.value; let j = index">
+        | SearchMachine: searchMachineLaptop.value
+        | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="machine === -1" class="center">
           <img src="../../../assets/tractor-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema mašina za prikazivanje</h4>
@@ -484,6 +497,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="machines.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

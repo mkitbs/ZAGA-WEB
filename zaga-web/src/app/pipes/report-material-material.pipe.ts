@@ -9,6 +9,7 @@ export class ReportMaterialMaterialPipe implements PipeTransform {
 
   transform(materials: any[], query): any {
     if(!query){
+     
       return materials;
     }
     var result = materials.filter((mat =>

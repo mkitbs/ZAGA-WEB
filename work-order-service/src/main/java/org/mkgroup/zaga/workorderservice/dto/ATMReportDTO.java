@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class ATMReportDTO {
 
 	private UUID id;
-	private Long sapId;
-	private String operationName;
-	private String date;
-	private String table;
-	private String cropName;
+	private String sapId;
+	private String atm;
+	private Date workOrderDate;
+	private String field;
+	private String crop;
 	private double area;
 	private double treated;
 	private String status;
@@ -28,13 +28,12 @@ public class ATMReportDTO {
 	public ATMReportDTO(WorkOrder wo) {
 		this.id = wo.getId();
 		if(wo.getErpId() != null) {
-			this.sapId = wo.getErpId();
+			this.sapId = wo.getErpId().toString();
 		}
-		this.operationName = wo.getOperation().getName();
-		String[] dateStr = wo.getDate().toString().split("-");
-		this.date = dateStr[2].substring(0, 2) + "." + dateStr[1] + "." + dateStr[0] + ".";
-		this.table = wo.getCrop().getField().getName();
-		this.cropName = wo.getCrop().getName();
+		this.atm = wo.getOperation().getName();
+		this.workOrderDate = wo.getDate();
+		this.field = wo.getCrop().getField().getName();
+		this.crop = wo.getCrop().getName();
 		this.area = wo.getCrop().getArea();
 		this.treated = wo.getTreated();
 		if(wo.getStatus().equals(WorkOrderStatus.NEW)) {

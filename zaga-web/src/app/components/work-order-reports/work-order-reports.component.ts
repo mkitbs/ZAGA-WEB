@@ -32,6 +32,9 @@ export class WorkOrderReportsComponent implements OnInit {
   spentMachineWorkHoursBool = false;
   spentMachineFuelBool = false;
 
+  page = 1;
+	pageSize = 5;
+
   
   ngOnInit() {
     this.spentMaterialService.getSpentMaterialPerCulture().subscribe(data => {

@@ -29,7 +29,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-4'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroup.value; let j = index">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-4'" 
+          *ngFor="let operationGroup of operationGroups 
+            | SearchOperationGroup: searchOperationGroup.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operationGroup === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
@@ -70,6 +73,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operationGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -103,7 +109,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-5'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupLaptop.value; let j = index">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-5'" 
+          *ngFor="let operationGroup of operationGroups 
+            | SearchOperationGroup: searchOperationGroupLaptop.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operationGroup === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
@@ -142,6 +151,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operationGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -175,7 +187,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-7'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value; let j = index">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreen' : 'col-7'" 
+          *ngFor="let operationGroup of operationGroups 
+            | SearchOperationGroup: searchOperationGroupTablet.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operationGroup === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
@@ -214,6 +229,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operationGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -247,7 +265,10 @@
         <h4 style="text-align: center; width: 200px;">Nema grupa ATM za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="operationGroup === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let operationGroup of operationGroups | SearchOperationGroup: searchOperationGroupTablet.value; let j = index">
+        <div [ngClass]="operationGroup === -1 ? 'fullScreenMob' : 'col-3'" 
+          *ngFor="let operationGroup of operationGroups 
+            | SearchOperationGroup: searchOperationGroupTablet.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operationGroup === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema grupe ATM za prikazivanje</h4>
@@ -286,6 +307,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operationGroups.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
