@@ -118,12 +118,9 @@
     <h4 style="text-align: center; width: 200px;">Niste kreirali ni jedan nalog</h4>
   </div>
   <ng-container >
-    <div *ngIf="workOrder == -1" class="center">
-      <img src="../../../assets/work-order-not-found.png" width="200px" height="200px" />
-      <h4 style="text-align: center; width: 200px;">Nema kreiranih naloga</h4>
-    </div>
+    
     <div class="table-responsive">
-      <table *ngIf="!empty && workOrder !=-1 " class="table table-hover tabela-nalozi">
+      <table *ngIf="!empty" class="table table-hover tabela-nalozi">
         <thead>
           <tr>
             <th scope="col">#</th>
