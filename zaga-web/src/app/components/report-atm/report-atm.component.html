@@ -156,22 +156,22 @@
                             {{workOrder.status}}</td>
                     </tr>
                     <tr>
-                        <td *ngIf="workOrder != -1">Σ {{report.atm}}</td>
-                        <td *ngIf="workOrder != -1"></td>
-                        <td *ngIf="workOrder != -1"></td>
-                        <td *ngIf="workOrder != -1"></td>
-                        <td *ngIf="workOrder != -1"></td>
-                        <td *ngIf="workOrder != -1" style="font-weight: bold;">
+                        <td >Σ {{report.atm}}</td>
+                        <td ></td>
+                        <td ></td>
+                        <td ></td>
+                        <td ></td>
+                        <td style="font-weight: bold;">
                             {{
                                 getAreaSum(report.workOrders)
                               }}
                         </td>
-                        <td *ngIf="workOrder != -1" style="font-weight: bold;">
+                        <td style="font-weight: bold;">
                             {{
                                 getTreatedSum(report.workOrders)
                               }}
                         </td>
-                        <td *ngIf="workOrder != -1"></td>
+                        <td></td>
                     </tr>
                 </ng-container>
                
