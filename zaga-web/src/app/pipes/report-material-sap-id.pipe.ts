@@ -5,21 +5,24 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: false,
 })
 export class ReportMaterialSapIdPipe implements PipeTransform {
-
-  transform(workOrders: any[], query): any {
+  
+  transform(materials: any[], query): any {
     if(!query){
-      return workOrders;
-    }
-    console.log(workOrders)
-    workOrders.forEach((wo, index) => {
-      if(wo.sapId == null || wo.sapId == 0) {
-        workOrders.splice(index, 1);
-      }
-    })
-    var result = workOrders.filter((wo => 
-      wo.sapId.toString().toLowerCase().includes(query.toLowerCase())
-    ))
+      return materials;
     
-    return result;
+    }
+    const filtered = materials
+    // filter nested lists first
+    .map(mat => {
+         // here we can use Object.assign to make shallow copy of obj, to preserve previous instance unchanged
+         return Object.assign({}, mat, {
+             workOrders: mat.workOrders.filter(wo => wo.sapId.toLowerCase().includes(query.toLowerCase()))
+         })
+    })
+    // then omit all items with empty list
+    .filter(mat => mat.workOrders.length > 0)
+  
+    return filtered;
+  
   }
 }

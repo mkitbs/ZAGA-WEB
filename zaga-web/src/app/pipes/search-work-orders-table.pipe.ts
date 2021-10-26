@@ -6,15 +6,22 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SearchWorkOrdersTablePipe implements PipeTransform {
 
-  transform(workOrders: any[], query): any {
+  transform(materials: any[], query): any {
     if(!query){
-      return workOrders;
+      return materials;
     }
-    var result = workOrders.filter((wo =>
-      wo.table.toLowerCase().includes(query.toLowerCase())
-    ));
-    
-    return result;
+    const filtered = materials
+    // filter nested lists first
+    .map(mat => {
+         // here we can use Object.assign to make shallow copy of obj, to preserve previous instance unchanged
+         return Object.assign({}, mat, {
+             workOrders: mat.workOrders.filter(wo => wo.field.toLowerCase().includes(query.toLowerCase()))
+         })
+    })
+    // then omit all items with empty list
+    .filter(mat => mat.workOrders.length > 0)
+
+    return filtered;
   }
 
 }

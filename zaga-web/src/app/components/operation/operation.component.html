@@ -63,7 +63,8 @@
       <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-4'" *ngFor="let operation of operations
         | SearchOperations: searchOperation.value
         | SearchOperationType: searchOperationType.value
-        | SearchOperationOperationGroup: searchOperationGroup.value; let j = index">
+        | SearchOperationOperationGroup: searchOperationGroup.value
+        | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
         <div *ngIf="operation === -1" class="center">
           <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
           <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
@@ -112,6 +113,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+    [boundaryLinks]="true" [collectionSize]="operations.length">
+  </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -179,7 +183,8 @@
         <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-5'" *ngFor="let operation of operations
           | SearchOperations: searchOperationLaptop.value
           | SearchOperationType: searchOperationTypeLaptop.value
-          | SearchOperationOperationGroup: searchOperationGroupLaptop.value; let j = index">
+          | SearchOperationOperationGroup: searchOperationGroupLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operation === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
@@ -228,6 +233,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operations.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -295,7 +303,8 @@
         <div [ngClass]="operation === -1 ? 'fullScreen' : 'col-7'" *ngFor="let operation of operations
           | SearchOperations: searchOperationTablet.value
           | SearchOperationType: searchOperationTypeTablet.value
-          | SearchOperationOperationGroup: searchOperationGroupTablet.value; let j = index">
+          | SearchOperationOperationGroup: searchOperationGroupTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operation === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
@@ -344,6 +353,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operations.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -411,7 +423,8 @@
         <div [ngClass]="operation === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let operation of operations
           | SearchOperations: searchOperationTablet.value
           | SearchOperationType: searchOperationTypeTablet.value
-          | SearchOperationOperationGroup: searchOperationGroupTablet.value; let j = index">
+          | SearchOperationOperationGroup: searchOperationGroupTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="operation === -1" class="center">
             <img src="../../../assets/shovel-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema ATM za prikazivanje</h4>
@@ -460,6 +473,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="operations.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>

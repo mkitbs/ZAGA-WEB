@@ -46,7 +46,8 @@
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-4'" *ngFor="let variety of varieties 
           | SearchVariety: searchVariety.value
-          | SearchVarietyCultureGroup: searchCulture.value; let j = index">
+          | SearchVarietyCultureGroup: searchCulture.value          
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="variety === -1" class="center">
             <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
@@ -91,6 +92,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="varieties.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -141,7 +145,8 @@
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-5'" *ngFor="let variety of varieties
           | SearchVariety: searchVarietyLaptop.value
-          | SearchVarietyCultureGroup: searchCultureLaptop.value; let j = index">
+          | SearchVarietyCultureGroup: searchCultureLaptop.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="variety === -1" class="center">
             <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
@@ -186,6 +191,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="varieties.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -236,7 +244,8 @@
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreen' : 'col-7'" *ngFor="let variety of varieties
           | SearchVariety: searchVarietyTablet.value
-          | SearchVarietyCultureGroup: searchCultureTablet.value; let j = index">
+          | SearchVarietyCultureGroup: searchCultureTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="variety === -1" class="center">
             <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
@@ -281,6 +290,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="varieties.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -331,7 +343,8 @@
       <div class="row card-group">
         <div [ngClass]="variety === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let variety of varieties
           | SearchVariety: searchVarietyTablet.value
-          | SearchVarietyCultureGroup: searchCultureTablet.value; let j = index">
+          | SearchVarietyCultureGroup: searchCultureTablet.value
+          | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let j = index">
           <div *ngIf="variety === -1" class="center">
             <img src="../../../assets/seed-not-found.png" width="200px" height="200px" />
             <h4 style="text-align: center; width: 200px;">Nema sorti za prikazivanje</h4>
@@ -376,6 +389,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="varieties.length">
+    </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>

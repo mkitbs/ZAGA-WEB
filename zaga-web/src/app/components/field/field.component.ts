@@ -48,6 +48,9 @@ export class FieldComponent implements OnInit {
 
   loading;
 
+  page = 1;
+	pageSize = 12;
+
   ngOnInit() {
     this.getAll();
     

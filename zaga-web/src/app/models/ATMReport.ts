@@ -1,10 +1,10 @@
 export class ATMReport {
 	id;
     sapId;
-	operationName;
-	date;
-	table;
-	cropName;
+	atm;
+	workOrderDate;
+	field;
+	crop;
 	area;
 	treated;
     status;

@@ -117,6 +117,13 @@ import { LeavePageConfirmationComponent } from './components/leave-page-confirma
 import { WorkOrderReportsComponent } from './components/work-order-reports/work-order-reports.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReportAtmComponent } from './components/report-atm/report-atm.component';
+import { SearchMachineSapIdPipe } from './pipes/search-machine-sap-id.pipe';
+import { SearchMachineDatesPipe } from './pipes/search-machine-dates.pipe';
+import { SearchMachineDatePipe } from './pipes/search-machine-date.pipe';
+import { SearchWorkOrderDayPipe } from './pipes/search-work-order-day.pipe';
+import { SearchWorkOrderAtmPipe } from './pipes/search-work-order-atm.pipe';
+import { SearchWorkOrderCropPipe } from './pipes/search-work-order-crop.pipe';
+import { SearchWorkOrderFieldPipe } from './pipes/search-work-order-field.pipe';
 
 declare var require: any;
 var config = require("config");
@@ -233,6 +240,13 @@ const routes: Routes = [
     LeavePageConfirmationComponent,
     WorkOrderReportsComponent,
     ReportAtmComponent,
+    SearchMachineSapIdPipe,
+    SearchMachineDatesPipe,
+    SearchMachineDatePipe,
+    SearchWorkOrderDayPipe,
+    SearchWorkOrderAtmPipe,
+    SearchWorkOrderCropPipe,
+    SearchWorkOrderFieldPipe,
   ],
   imports: [
     BrowserModule,

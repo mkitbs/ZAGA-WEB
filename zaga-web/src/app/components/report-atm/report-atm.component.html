@@ -124,15 +124,16 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let report of atmReport | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-                    <tr *ngFor="let workOrder of report.workOrders  
+                <ng-container *ngFor="let report of atmReport 
                     | SearchWorkOrdersTable: searchTable.value
                     | SearchWorkOrdersOperation: searchOperation.value
                     | SearchWorkOrdersDate: searchDate.value
                     | SearchWorkOrdersCrop: searchCrop.value
                     | ReportMaterialSapId: searchWorkOrder.value
-                    | SearchWoBetweenDates: filters; let i = index">
-                        <td *ngIf="i == 0  && workOrder != -1; else elseBlock">{{report.atm}}</td>
+                    | SearchWoBetweenDates: filters
+                    | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                    <tr *ngFor="let workOrder of report.workOrders; let i = index">
+                        <td *ngIf="i == 0  && workOrder != -1; else elseBlock"><b>{{report.atm}}</b></td>
                         <ng-template #elseBlock>
                             <td *ngIf="workOrder != -1"></td>
                         </ng-template>
@@ -141,9 +142,9 @@
                             (click)="goToWorkOrder(workOrder.id)"
                             style="cursor: pointer;"
                             >{{workOrder.sapId}}</td>
-                        <td *ngIf="workOrder != -1">{{workOrder.date}}</td>
-                        <td *ngIf="workOrder != -1">{{workOrder.table}}</td>
-                        <td *ngIf="workOrder != -1">{{workOrder.cropName}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.workOrderDate | date:'dd.MM.yyyy.'}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.field}}</td>
+                        <td *ngIf="workOrder != -1">{{workOrder.crop}}</td>
                         <td *ngIf="workOrder != -1">{{workOrder.area}}</td>
                         <td *ngIf="workOrder != -1">{{workOrder.treated}}</td>
                         <td *ngIf="workOrder != -1" [ngClass]="{
@@ -154,41 +155,23 @@
                             }" >
                             {{workOrder.status}}</td>
                     </tr>
-                    <tr *ngFor="let workOrder of report.workOrders 
-                    | SearchWorkOrdersTable: searchTable.value
-                    | SearchWorkOrdersOperation: searchOperation.value
-                    | SearchWorkOrdersDate: searchDate.value
-                    | SearchWorkOrdersCrop: searchCrop.value
-                    | ReportMaterialSapId: searchWorkOrder.value
-                    | SearchWoBetweenDates: filters; let y = index">
-                        <td *ngIf="y == 0 && workOrder != -1">Σ {{workOrder.operationName}}</td>
-                        <td *ngIf="y == 0 && workOrder != -1"></td>
-                        <td *ngIf="y == 0 && workOrder != -1"></td>
-                        <td *ngIf="y == 0 && workOrder != -1"></td>
-                        <td *ngIf="y == 0 && workOrder != -1"></td>
-                        <td *ngIf="y == 0 && workOrder != -1" style="font-weight: bold;">
+                    <tr>
+                        <td *ngIf="workOrder != -1">Σ {{report.atm}}</td>
+                        <td *ngIf="workOrder != -1"></td>
+                        <td *ngIf="workOrder != -1"></td>
+                        <td *ngIf="workOrder != -1"></td>
+                        <td *ngIf="workOrder != -1"></td>
+                        <td *ngIf="workOrder != -1" style="font-weight: bold;">
                             {{
-                                getAreaSum(report.workOrders 
-                                | SearchWorkOrdersTable: searchTable.value
-                                | SearchWorkOrdersOperation: searchOperation.value
-                                | SearchWorkOrdersDate: searchDate.value
-                                | SearchWorkOrdersCrop: searchCrop.value
-                                | ReportMaterialSapId: searchWorkOrder.value
-                                | SearchWoBetweenDates: filters)
+                                getAreaSum(report.workOrders)
                               }}
                         </td>
-                        <td *ngIf="y == 0 && workOrder != -1" style="font-weight: bold;">
+                        <td *ngIf="workOrder != -1" style="font-weight: bold;">
                             {{
-                                getTreatedSum(report.workOrders 
-                                | SearchWorkOrdersTable: searchTable.value
-                                | SearchWorkOrdersOperation: searchOperation.value
-                                | SearchWorkOrdersDate: searchDate.value
-                                | SearchWorkOrdersCrop: searchCrop.value
-                                | ReportMaterialSapId: searchWorkOrder.value
-                                | SearchWoBetweenDates: filters)
+                                getTreatedSum(report.workOrders)
                               }}
                         </td>
-                        <td *ngIf="y == 0 && workOrder != -1"></td>
+                        <td *ngIf="workOrder != -1"></td>
                     </tr>
                 </ng-container>
                

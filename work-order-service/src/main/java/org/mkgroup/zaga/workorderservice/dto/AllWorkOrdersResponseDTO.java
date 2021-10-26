@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.model.WorkOrder;
+import org.mkgroup.zaga.workorderservice.model.WorkOrderStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,7 +41,16 @@ public class AllWorkOrdersResponseDTO {
 		this.area = workOrder.getCrop().getArea();
 		this.cropName = workOrder.getCrop().getName();
 		this.responsibleName = workOrder.getResponsible().getName();
-		this.status = workOrder.getStatus().toString();
+		if(workOrder.getStatus().equals(WorkOrderStatus.NEW)) {
+			this.status = "Novi";
+		} else if (workOrder.getStatus().equals(WorkOrderStatus.IN_PROGRESS)) {
+			this.status = "U radu";
+		} else if (workOrder.getStatus().equals(WorkOrderStatus.CLOSED)) {
+			this.status = "Zatvoren";
+		} else if (workOrder.getStatus().equals(WorkOrderStatus.CANCELLATION)) {
+			this.status = "Storniran";
+		}
+		
 		this.orgUnit = workOrder.getOrgUnit();
 		this.treated = workOrder.getTreated();
 	}

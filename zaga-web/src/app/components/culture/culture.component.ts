@@ -37,6 +37,9 @@ export class CultureComponent implements OnInit {
 
   loading;
 
+  page = 1;
+	pageSize = 12;
+
   ngOnInit() {
     this.getAll();
     this.getAllCultureTypes();

@@ -149,6 +149,12 @@
         <ng-container *ngFor="let worker of workers 
           | ReportEmployeeWorker: searchWorker.value
           | SearchEmployeePosition: searchWorkerPosition.value
+          | SearchWorkOrdersTable: searchTable.value
+          | SearchWorkOrdersOperation: searchOperation.value
+          | SearchWorkOrdersDate: searchDate.value
+          | SearchWorkOrdersCrop: searchCrop.value
+          | ReportMaterialSapId: searchWorkOrder.value
+          | SearchWoBetweenDates: filters
           | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; 
           let i = index" >
           <tr *ngIf="worker === -1">
@@ -159,14 +165,7 @@
           </tr>
         
 
-            <tr  *ngFor="let workOrder of worker.workOrders
-            | SearchWorkOrdersTable: searchTable.value
-            | SearchWorkOrdersOperation: searchOperation.value
-            | SearchWorkOrdersDate: searchDate.value
-            | SearchWorkOrdersCrop: searchCrop.value
-            | ReportMaterialSapId: searchWorkOrder.value
-            | SearchWoBetweenDates: filters; 
-            let j = index">
+            <tr  *ngFor="let workOrder of worker.workOrders; let j = index">
               <td *ngIf="j==0 && workOrder !== -1; else elseBlockName" style="font-weight: bold;">{{worker.worker}}</td>
               <ng-template #elseBlockName><td *ngIf="workOrder !== -1"></td></ng-template>
               <td (click)="changeRoute(workOrder.id)" style="cursor: pointer;">
@@ -204,33 +203,17 @@
                 <td></td>
                 <td style="font-weight: bold;" >
                   {{
-                    getDayPeriodSum(worker.workOrders 
-                    | SearchWorkOrdersCrop: searchCrop.value
-                    | SearchWorkOrdersTable: searchTable.value
-                    | SearchWorkOrdersOperation: searchOperation.value
-                    | SearchWorkOrdersDate: searchDate.value
-                    | ReportMaterialSapId: searchWorkOrder.value
-                    | SearchWoBetweenDates: filters)
+                    getDayPeriodSum(worker.workOrders)
                   }}
                 </td>
                 <td style="font-weight: bold;" >
                   {{
-                    getNightPeriodSum(worker.workOrders | SearchWorkOrdersCrop: searchCrop.value
-                    | SearchWorkOrdersTable: searchTable.value
-                    | SearchWorkOrdersOperation: searchOperation.value
-                    | SearchWorkOrdersDate: searchDate.value
-                    | ReportMaterialSapId: searchWorkOrder.value
-                    | SearchWoBetweenDates: filters)
+                    getNightPeriodSum(worker.workOrders)
                   }}
                 </td>
                 <td style="font-weight: bold;" >
                   {{
-                    getWorkPeriodSum(worker.workOrders | SearchWorkOrdersCrop: searchCrop.value
-                    | SearchWorkOrdersTable: searchTable.value
-                    | SearchWorkOrdersOperation: searchOperation.value
-                    | SearchWorkOrdersDate: searchDate.value
-                    | ReportMaterialSapId: searchWorkOrder.value
-                    | SearchWoBetweenDates: filters)
+                    getWorkPeriodSum(worker.workOrders)
                   }}
                 </td>
                 <td ></td>

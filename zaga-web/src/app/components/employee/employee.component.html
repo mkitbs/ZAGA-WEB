@@ -39,7 +39,11 @@
         <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-4'" *ngFor="let employee of allEmployees | SearchEmployees: search.value | SearchEmployeesPosition: searchP.value">
+        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-4'" 
+          *ngFor="let employee of allEmployees 
+            | SearchEmployees: search.value 
+            | SearchEmployeesPosition: searchP.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
           <div *ngIf="employee === -1" class="center">
             <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
             <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
@@ -97,6 +101,9 @@
           </button>
         </div>
       </div>
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+        [boundaryLinks]="true" [collectionSize]="allEmployees.length">
+      </ngb-pagination>
     </div>
     <ngx-spinner></ngx-spinner>
 </div>
@@ -141,7 +148,11 @@
         <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-5'" *ngFor="let employee of allEmployees | SearchEmployees: searchLaptop.value | SearchEmployeesPosition: searchPLaptop.value">
+        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-5'" 
+          *ngFor="let employee of allEmployees 
+            | SearchEmployees: searchLaptop.value 
+            | SearchEmployeesPosition: searchPLaptop.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
           <div *ngIf="employee === -1" class="center">
             <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
             <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
@@ -200,6 +211,9 @@
         </div>
       </div>
     </div>
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+        [boundaryLinks]="true" [collectionSize]="allEmployees.length">
+      </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -244,7 +258,11 @@
         <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-7'" *ngFor="let employee of allEmployees | SearchEmployees: searchTablet.value | SearchEmployeesPosition: searchPTablet.value">
+        <div [ngClass]="employee === -1 ? 'fullScreen' : 'col-7'" 
+          *ngFor="let employee of allEmployees 
+            | SearchEmployees: searchTablet.value 
+            | SearchEmployeesPosition: searchPTablet.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
           <div *ngIf="employee === -1" class="center">
             <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
             <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
@@ -302,7 +320,9 @@
           </button>
         </div>
       </div>
-    
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="allEmployees.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>
@@ -346,7 +366,11 @@
         <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
       </div>
       <div class="row card-group">
-        <div [ngClass]="employee === -1 ? 'fullScreenMob' : 'col-3'" *ngFor="let employee of allEmployees | SearchEmployees: searchTablet.value | SearchEmployeesPosition: searchPTablet.value">
+        <div [ngClass]="employee === -1 ? 'fullScreenMob' : 'col-3'" 
+          *ngFor="let employee of allEmployees 
+            | SearchEmployees: searchTablet.value 
+            | SearchEmployeesPosition: searchPTablet.value
+            | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
           <div *ngIf="employee === -1" class="center">
             <img src="../../../assets/farmer-not-found.png" width="250px" height="200px" />
             <h4 style="text-align: center; width: 250px;">Nema zaposlenih za prikazivanje</h4>
@@ -404,7 +428,9 @@
           </button>
         </div>
       </div>
-    
+      <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+      [boundaryLinks]="true" [collectionSize]="allEmployees.length">
+    </ngb-pagination>
   </div>
   <ngx-spinner></ngx-spinner>
 </div>

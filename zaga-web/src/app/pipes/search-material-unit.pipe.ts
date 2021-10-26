@@ -10,6 +10,7 @@ export class SearchMaterialUnitPipe implements PipeTransform {
     if(!query){
       return materials;
     }
+   
     var result = materials.filter(material =>
       material.material.material.Unit.toLowerCase().includes(query.toLowerCase()
     ));

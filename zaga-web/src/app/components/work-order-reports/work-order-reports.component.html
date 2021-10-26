@@ -125,7 +125,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let crop of spentMaterialsPerCulture; let i = index">
+                <ng-container *ngFor="let crop of spentMaterialsPerCulture | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let i = index">
                     <tr *ngFor="let mat of crop.spentMaterials; let z = index">
                         <td *ngIf="z==0; else elseBlockCrop"><b>{{crop.crop}} ({{crop.culture}})</b></td>
                         <ng-template #elseBlockCrop><td></td></ng-template>
@@ -134,7 +134,10 @@
                     </tr>
                 </ng-container>
             </tbody>
-        </table>
+        </table>       
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+          [boundaryLinks]="true" [collectionSize]="spentMaterialsPerCulture.length">
+        </ngb-pagination>
         <div style="padding-bottom: 10px;"></div>
     </div>
 
@@ -148,7 +151,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let crop of spentWorkerHourPerCulture; let i = index">
+                <ng-container *ngFor="let crop of spentWorkerHourPerCulture | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let i = index">
                     <tr *ngFor="let worker of crop.workers; let z = index">
                         <td *ngIf="z==0; else elseBlockCropWorkerHour"><b>{{crop.crop}} ({{crop.culture}})</b></td>
                         <ng-template #elseBlockCropWorkerHour><td></td></ng-template>
@@ -163,6 +166,9 @@
                 </ng-container>
             </tbody>
         </table>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+          [boundaryLinks]="true" [collectionSize]="spentWorkerHourPerCulture.length">
+        </ngb-pagination>
         <div style="padding-bottom: 10px;"></div>
     </div>
     
@@ -176,7 +182,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let crop of machineStatePerCulture; let i = index">
+                <ng-container *ngFor="let crop of machineStatePerCulture | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let i = index">
                     <tr *ngFor="let machine of crop.machines; let z = index">
                         <td *ngIf="z==0; else elseBlockCropMachineState"><b>{{crop.crop}} ({{crop.culture}})</b></td>
                         <ng-template #elseBlockCropMachineState><td></td></ng-template>
@@ -199,6 +205,9 @@
                 -->
             </tbody>
         </table>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+          [boundaryLinks]="true" [collectionSize]="machineStatePerCulture.length">
+        </ngb-pagination>
         <div style="padding-bottom: 10px;"></div>
     </div>
     
@@ -212,7 +221,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let crop of machineFuelPerCulture; let i = index">
+                <ng-container *ngFor="let crop of machineFuelPerCulture | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; let i = index">
                     <tr *ngFor="let machine of crop.machines; let z = index">
                         <td *ngIf="z==0; else elseBlockCropMachineState"><b>{{crop.crop}} ({{crop.culture}})</b></td>
                         <ng-template #elseBlockCropMachineState><td></td></ng-template>
@@ -227,6 +236,9 @@
                 </ng-container>
             </tbody>
         </table>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false"
+          [boundaryLinks]="true" [collectionSize]="machineFuelPerCulture.length">
+        </ngb-pagination>
         <div style="padding-bottom: 10px;"></div>
     </div>
 </div>
