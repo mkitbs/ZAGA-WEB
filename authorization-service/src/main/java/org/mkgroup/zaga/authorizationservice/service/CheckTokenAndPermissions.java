@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.jboss.logging.Logger;
 import org.mkgroup.zaga.authorizationservice.jwt.JwtTokenProvider;
 import org.mkgroup.zaga.authorizationservice.jwt.UserPrincipal;
 import org.mkgroup.zaga.authorizationservice.model.RoleName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class CheckTokenAndPermissions {
 	@Value("${auth.app.jwtSecret}")
 	private String jwtSecret;
 	
-	private static final Logger logger = LoggerFactory.getLogger(CheckTokenAndPermissions.class);
+	private static final Logger logger = Logger.getLogger(CheckTokenAndPermissions.class);
 	
 	@Autowired
 	private JwtTokenProvider jwtProvider;

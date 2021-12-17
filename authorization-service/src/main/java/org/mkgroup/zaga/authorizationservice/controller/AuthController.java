@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import org.jboss.logging.Logger;
 import org.joda.time.LocalDate;
 import org.mkgroup.zaga.authorizationservice.dto.ExceptionResponseDTO;
 import org.mkgroup.zaga.authorizationservice.dto.LoginRequestDTO;
@@ -35,8 +36,6 @@ import org.mkgroup.zaga.authorizationservice.repository.TenantRepository;
 import org.mkgroup.zaga.authorizationservice.repository.UserRepository;
 import org.mkgroup.zaga.authorizationservice.service.CheckTokenAndPermissions;
 import org.mkgroup.zaga.authorizationservice.service.MailNotification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,7 +88,7 @@ public class AuthController {
 	@Autowired
 	PasswordResetTokenRepository passwordResetRepo;
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	private static final Logger logger = Logger.getLogger(AuthController.class);
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequest) {
@@ -236,7 +235,7 @@ public class AuthController {
 				UserDTO us = new UserDTO(user);
 
 				mailNotification.sendEmail(signUpRequest.getEmail(), signUpRequest.getPassword());
-				logger.info("user: {} | R3USER | success", user.getId());
+				logger.info("user: " + user.getId() + " | R3USER | success");
 				return new ResponseEntity<>(HttpStatus.CREATED);
 
 			} catch (Exception e) {

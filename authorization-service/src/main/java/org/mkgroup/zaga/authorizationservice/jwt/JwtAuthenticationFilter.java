@@ -7,8 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtTokenProvider tokenProvider;
 
-	private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+	private static final Logger logger = Logger.getLogger(JwtTokenProvider.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					System.out.println(a);
 				});
 			} catch (Exception e) {
-				logger.error("Exception thrown {}", e.getMessage());
+				logger.error("Exception thrown " + e.getMessage());
 			}
 		}
 

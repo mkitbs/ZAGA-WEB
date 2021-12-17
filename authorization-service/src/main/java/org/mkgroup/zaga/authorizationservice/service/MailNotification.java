@@ -5,8 +5,7 @@ import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,7 +17,7 @@ public class MailNotification {
 	@Autowired
 	JavaMailSender javaMailSender;
 	
-	private static final Logger logger = LoggerFactory.getLogger(MailNotification.class);
+	private static final Logger logger = Logger.getLogger(MailNotification.class);
 	
 	public void sendEmail(String mail, String pass) throws MessagingException, IOException {
 		logger.info("Sending mail");

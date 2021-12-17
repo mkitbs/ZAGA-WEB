@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
+import org.jboss.logging.Logger;
 import org.mkgroup.zaga.authorizationservice.dto.SignupRequestDTO;
 import org.mkgroup.zaga.authorizationservice.jwt.UserPrincipal;
 import org.mkgroup.zaga.authorizationservice.model.Permission;
@@ -17,8 +18,6 @@ import org.mkgroup.zaga.authorizationservice.model.RoleName;
 import org.mkgroup.zaga.authorizationservice.model.User;
 import org.mkgroup.zaga.authorizationservice.repository.RoleRepository;
 import org.mkgroup.zaga.authorizationservice.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,7 +39,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	private static final Logger logger = LoggerFactory.getLogger(DomainUserDetailsService.class);
+	private static final Logger logger = Logger.getLogger(DomainUserDetailsService.class);
 
 	@Override
 	@Transactional
@@ -54,7 +53,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 	public void changePassword(User user, String newPassword) {
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
-		logger.info("User {} has changed their password.", user.getEmail());
+		logger.info("User " +  user.getEmail() + " has changed their password.");
 	}
 
 	public User findByEmail(String email) {
