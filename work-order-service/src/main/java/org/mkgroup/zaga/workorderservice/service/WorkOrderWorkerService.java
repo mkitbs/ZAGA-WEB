@@ -536,7 +536,7 @@ public class WorkOrderWorkerService {
 
 	public Map<String, String> getHeaderValues() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljukom454");
+		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica456");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
