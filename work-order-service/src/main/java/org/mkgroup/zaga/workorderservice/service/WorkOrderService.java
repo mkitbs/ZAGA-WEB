@@ -892,7 +892,7 @@ public class WorkOrderService {
 		System.out.println("URL FOR SYNC => " + url);
 
 		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":")
-				.append("Ljubica456");
+				.append("Ljubica789");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
@@ -986,7 +986,7 @@ public class WorkOrderService {
 		System.out.println("URL FOR SYNC => " + url);
 
 		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":")
-				.append("Ljubica456");
+				.append("Ljubica789");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
@@ -1071,7 +1071,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValues(WorkOrder wo) throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica456");
+		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica789");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
@@ -1114,7 +1114,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValues() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica456");
+		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica789");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 		// Testing HTTPS with RestTemplate
@@ -1142,7 +1142,7 @@ public class WorkOrderService {
 
 	public Map<String, String> getHeaderValuesClose() throws Exception {
 		log.info("Getting X-CSRF-Token started");
-		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica456");
+		StringBuilder authEncodingString = new StringBuilder().append("LJKOMNENOVIC").append(":").append("Ljubica789");
 		// Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(authEncodingString.toString().getBytes());
 
