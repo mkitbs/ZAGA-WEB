@@ -264,7 +264,7 @@ export class CreateworkOrderComponent implements OnInit {
       };
       this.userService.getAll().subscribe((data) => {
         this.allEmployees = data.content;
-        this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
+        //this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
         console.log(this.allEmployees)
       });
       //this.substances$ = this.materialService.getAll();
