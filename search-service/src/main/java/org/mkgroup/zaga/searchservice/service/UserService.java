@@ -2,7 +2,9 @@ package org.mkgroup.zaga.searchservice.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -23,6 +25,10 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.Comparator.comparingLong;
 
 @Service
 public class UserService {
@@ -66,7 +72,15 @@ public class UserService {
 	}
 
 	public Iterable<UserElastic> getAll() {
-		return userRepo.findAll();
+		Iterable<UserElastic> users = userRepo.findAll();
+		
+		List<UserElastic> result = new ArrayList<UserElastic>();
+		users.forEach(result::add);
+		
+		List<UserElastic> unique =  result.stream()
+                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(UserElastic::getPerNumber))),
+                		ArrayList::new));
+		return unique;
 	}
 
 	public UserElastic saveUser(UserElastic user) {
