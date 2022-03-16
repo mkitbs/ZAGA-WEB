@@ -263,8 +263,8 @@ export class CreateworkOrderComponent implements OnInit {
         day: today.getDate(),
       };
       this.userService.getAll().subscribe((data) => {
-        this.allEmployees = data.content;
-        //this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
+        this.allEmployees = data;
+        this.allEmployees = this.allEmployees.sort((a, b) => a.perNumber - b.perNumber);
         console.log(this.allEmployees)
       });
       //this.substances$ = this.materialService.getAll();
@@ -392,7 +392,7 @@ export class CreateworkOrderComponent implements OnInit {
           this.treatedEntered = null;
         }
         this.userService.getAll().subscribe((data) => {
-          this.allEmployees = data.content;
+          this.allEmployees = data;
           console.log(this.allEmployees)
           var comparableId = this.workOrder.responsibleId;
           var filterById = function (element) {
