@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.mkgroup.zaga.workorderservice.configuration.SAPAuthConfiguration;
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserElasticDTO;
 import org.mkgroup.zaga.workorderservice.feign.SAPGatewayProxy;
 import org.mkgroup.zaga.workorderservice.feign.SearchServiceProxy;
@@ -137,5 +138,15 @@ public class EmployeeService {
 		ResponseEntity<?> response = ssProxy.editEmployee(u);
 		System.out.println(response);
 		//System.out.println(response.getStatusCodeValue() + " STATUS");
+	}
+	
+	public List<UserDTO> getAll() {
+		List<User> users = userRepo.findByOrderByPerNumberAsc();
+		List<UserDTO> userDTOs = new ArrayList<UserDTO>();
+		users.forEach(user -> {
+			UserDTO userDTO = new UserDTO(user);
+			userDTOs.add(userDTO);
+		});
+		return userDTOs;
 	}
 }

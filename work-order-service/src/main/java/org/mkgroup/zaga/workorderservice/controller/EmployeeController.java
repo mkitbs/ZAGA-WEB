@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.mkgroup.zaga.workorderservice.dto.EmployeeDTO;
+import org.mkgroup.zaga.workorderservice.dto.UserDTO;
 import org.mkgroup.zaga.workorderservice.dto.UserElasticDTO;
 import org.mkgroup.zaga.workorderservice.model.User;
 import org.mkgroup.zaga.workorderservice.repository.UserRepository;
@@ -76,5 +77,11 @@ public class EmployeeController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
+	}
+	
+	@GetMapping("getAllEmployees")
+	public ResponseEntity<?> getAllEmployees(){
+		List<UserDTO> users = empService.getAll();
+		return new ResponseEntity<List<UserDTO>>(users,HttpStatus.OK);
 	}
 }
