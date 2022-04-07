@@ -174,6 +174,12 @@ public class MachineService {
 			oldMachine.setType(MachineType.PROPULSION);
 		}
 		
+		if(newMachine.getFuelErpId() != null) {
+			oldMachine.setFuelErpId(newMachine.getFuelErpId());
+		}else {
+			oldMachine.setFuelErpId(0L);
+		}
+		
 		oldMachine.setOrgUnit(newMachine.getOrgUnit());
 		MachineGroup machineGroup = machineGroupRepo.findByErpId(newMachine.getMachineGroupId()).get();
 		oldMachine.setMachineGroupId(machineGroup);
