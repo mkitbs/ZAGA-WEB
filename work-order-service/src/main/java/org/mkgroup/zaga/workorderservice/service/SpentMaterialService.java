@@ -410,7 +410,7 @@ public class SpentMaterialService {
 		StringBuilder authEncodingString = new StringBuilder()
 				.append("LJKOMNENOVIC")
 				.append(":")
-				.append("Ljubica789");
+				.append("LjubKom987");
 		//Encoding Authorization String
 		String authHeader = Base64.getEncoder().encodeToString(
 	    		authEncodingString.toString().getBytes());
