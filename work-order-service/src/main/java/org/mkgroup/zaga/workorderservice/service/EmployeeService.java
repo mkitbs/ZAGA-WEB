@@ -66,7 +66,7 @@ public class EmployeeService {
 						.ifPresentOrElse(foundUser -> updateUser(foundUser, em), 
 										() -> createUser(em));
 		}
-	    
+	    /*
 	    List<UserElasticDTO> sendUsers = new ArrayList<UserElasticDTO>();
 	    for(User u : userRepo.findByOrderByNameAsc()) {
 	    	UserElasticDTO sendUser = new UserElasticDTO(u);
@@ -74,6 +74,7 @@ public class EmployeeService {
 	    }
 	    ResponseEntity<?> response = ssProxy.sendEmployees(sendUsers);
 	    System.out.println(response.getStatusCodeValue() + " STATUS");
+	    */
 		return employeeList;
 	}
 	
