@@ -35,7 +35,7 @@ public class ATMReportDTO {
 		this.field = wo.getCrop().getField().getName();
 		this.crop = wo.getCrop().getName();
 		this.area = wo.getCrop().getArea();
-		this.treated = wo.getTreated();
+		this.treated = Math.round(wo.getTreated() * 100.0) / 100.0;
 		if(wo.getStatus().equals(WorkOrderStatus.NEW)) {
 			this.status = "Novi";
 		} else if(wo.getStatus().equals(WorkOrderStatus.IN_PROGRESS)) {

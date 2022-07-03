@@ -52,6 +52,6 @@ public class AllWorkOrdersResponseDTO {
 		}
 		
 		this.orgUnit = workOrder.getOrgUnit();
-		this.treated = workOrder.getTreated();
+		this.treated = Math.round(workOrder.getTreated() * 100.0) / 100.0;
 	}
 }

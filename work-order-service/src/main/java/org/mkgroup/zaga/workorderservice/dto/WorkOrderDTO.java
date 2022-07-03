@@ -65,7 +65,7 @@ public class WorkOrderDTO {
 		year = wo.getCrop().getYear();
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		userCreatedId = wo.getUserCreatedSapId().toString();
 		noOperationOutput = wo.isNoOperationOutput();
 		numOfRefOrder = wo.getNumOfRefOrder();
@@ -105,7 +105,7 @@ public class WorkOrderDTO {
 		responsibleName = wo.getResponsible().getName();
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
@@ -136,7 +136,7 @@ public class WorkOrderDTO {
 		responsibleName = wo.getResponsible().getName();
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
@@ -165,7 +165,7 @@ public class WorkOrderDTO {
 		responsibleName = wo.getResponsible().getName();
 		table = wo.getCrop().getField().getName();
 		cropName = wo.getCrop().getName();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		if (wo.getErpId() != null) {
 			sapId = wo.getErpId();
 		} else {
@@ -203,7 +203,7 @@ public class WorkOrderDTO {
 		year = wo.getCrop().getYear();
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		userCreatedId = wo.getUserCreatedSapId().toString();
 		noOperationOutput = wo.isNoOperationOutput();
 		numOfRefOrder = wo.getNumOfRefOrder();
@@ -252,7 +252,7 @@ public class WorkOrderDTO {
 		year = wo.getCrop().getYear();
 		creationDate = wo.getCreationDate();
 		closed = wo.isClosed();
-		treated = wo.getTreated();
+		treated = Math.round(wo.getTreated() * 100.0 ) / 100.0;
 		userCreatedId = wo.getUserCreatedSapId().toString();
 		noOperationOutput = wo.isNoOperationOutput();
 		numOfRefOrder = wo.getNumOfRefOrder();

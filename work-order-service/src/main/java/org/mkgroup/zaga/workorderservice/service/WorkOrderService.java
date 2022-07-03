@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.StringReader;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -553,7 +554,7 @@ public class WorkOrderService {
 			workOrder.setStatus(WorkOrderStatus.CLOSED);
 		}
 
-		workOrder.setTreated(workOrderDTO.getTreated());
+		workOrder.setTreated(Math.round(workOrderDTO.getTreated() * 100.0) / 100.0);
 
 		workOrder.setCreationDate(workOrderDTO.getCreationDate());
 
@@ -803,7 +804,7 @@ public class WorkOrderService {
 		CloseWorkOrderResponse closeWorkOrder = new CloseWorkOrderResponse();
 
 		WorkOrder workOrder = workOrderRepo.getOne(workOrderDTO.getId());
-		workOrder.setTreated(workOrderDTO.getTreated());
+		workOrder.setTreated(Math.round(workOrderDTO.getTreated() * 100.0) / 100.0);
 		workOrderRepo.save(workOrder);
 		CloseWorkOrderDTO closeWorkORder = new CloseWorkOrderDTO(workOrder);
 		if (workOrderDTO.isCancellation()) {
@@ -862,7 +863,7 @@ public class WorkOrderService {
 			System.out.println("USAO U SUCES");
 			closeWorkOrder.setStatus(true);
 			// this.updateWorkOrder(workOrderDTO);
-			workOrder.setTreated(workOrderDTO.getTreated());
+			workOrder.setTreated(Math.round(workOrderDTO.getTreated() * 100.0) / 100.0);
 			if (workOrderDTO.isCancellation()) {
 				workOrder.setStatus(WorkOrderStatus.CANCELLATION);
 			} else {
