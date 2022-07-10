@@ -570,6 +570,8 @@ public class WorkOrderService {
 		workOrder.setNumOfRefOrder(workOrderDTO.getNumOfRefOrder());
 		workOrder.setNote(workOrderDTO.getNote());
 		workOrder.setOrgUnit("PIKB");
+		
+		checkFuelQuantity(workOrder);
 
 		Map<String, String> headerValues = getHeaderValues();
 		String csrfToken = headerValues.get("csrf");
@@ -1817,6 +1819,26 @@ public class WorkOrderService {
 			}
 		}
 		System.out.println("DONE SYNC CANCELLATION");
+	}
+	
+	public void checkFuelQuantity(WorkOrder wo) {
+		for(SpentMaterial material : wo.getMaterials()) {
+			if(material.isFuel() && !material.isDeleted()) {
+				double fuelQuantity = 0;
+				for(WorkOrderWorker wow : wo.getWorkers()) {
+					if(wow.getFuel() != 0 && wow.getFuel() != -1 && !wow.isDeleted()) {
+						fuelQuantity += wow.getFuel();
+					}
+				}
+				material.setQuantity(fuelQuantity);
+				material.setSpent(fuelQuantity);
+				if(wo.getTreated() != 0 && wo.getTreated() != -1) {
+					material.setQuantityPerHectar(fuelQuantity / wo.getTreated());
+					material.setSpentPerHectar(fuelQuantity / wo.getTreated());	
+				}
+				spentMaterialRepo.save(material);			
+			}
+		}
 	}
 
 }
